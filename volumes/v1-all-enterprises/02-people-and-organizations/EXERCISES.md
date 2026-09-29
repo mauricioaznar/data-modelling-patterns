@@ -51,6 +51,21 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 13. **[general]** Universal models are generic up front. When is a plain `customers` table the
     *right* design, and what signal tells you it's time to refactor to PARTY?
 
+### Roles (Fig 2.4)
+14. **[2.4]** Roles and classifications both link a party to a type with dates. What's the
+    conceptual difference? Could "customer" be a classification instead? Could "industry" be a role?
+15. **[2.4]** PARTY ROLE has its own `party_role_id`, and `from_date` isn't part of its
+    identifier. PARTY CLASSIFICATION is identified by (party, type, from_date). Why would a role
+    need an identity of its own? What might reference it?
+16. **[2.4]** A company is both your customer and your supplier. How does a naive
+    `customer` + `supplier` table design handle that, and what breaks when its address changes?
+17. **[2.4]** "Ana is an EMPLOYEE." Employee *of whom*? What can't a role alone express, and
+    where should that information live?
+18. **[2.4]** Why is DEPARTMENT a *role* an organization plays, rather than an organization
+    *type* like CORPORATION in 2.1?
+19. **[2.4]** Some roles are person-only, some organization-only, some either. Should the
+    database enforce that (like we did for classifications), and how would you enforce "either"?
+
 ## 1. Redraw from memory
 *(completed at chapter end)*
 

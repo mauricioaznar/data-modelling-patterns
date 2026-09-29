@@ -173,3 +173,68 @@ left join person_name n on n.party_id = p.party_id and n.thru_date is null
 group by p.party_id, d.name
 having not (bool_or(n.person_name_type_id = 'FIRST') is true
         and bool_or(n.person_name_type_id = 'LAST')  is true);
+
+-- ============================================================
+-- Fig 2.4 — Party roles
+-- ============================================================
+
+-- name: 2.4 — Current roles per party
+select d.name, d.party_kind, string_agg(t.description, ', ' order by t.description) as current_roles
+from party_role r
+join role_type t using (role_type_id)
+join party_display_name d using (party_id)
+where r.thru_date is null
+group by d.name, d.party_kind
+order by d.party_kind, d.name;
+
+-- name: 2.4 — Current customers of any kind (every role under CUSTOMER)
+select distinct d.name, d.party_kind
+from party_role r
+join role_type t using (role_type_id)
+join party_display_name d using (party_id)
+where t.parent_type_id = 'CUSTOMER'
+  and r.thru_date is null
+order by d.name;
+
+-- name: 2.4 — Parties that are currently both our customer and our supplier
+select d.name
+from party_display_name d
+where exists (select 1 from party_role r join role_type t using (role_type_id)
+              where r.party_id = d.party_id and t.parent_type_id = 'CUSTOMER' and r.thru_date is null)
+  and exists (select 1 from party_role r
+              where r.party_id = d.party_id and r.role_type_id = 'SUPPLIER' and r.thru_date is null);
+
+-- name: 2.4 — Prospects that converted to customers, and how long it took
+select d.name,
+       p.from_date                as prospect_since,
+       min(c.from_date)           as customer_since,
+       min(c.from_date) - p.from_date as days_to_convert
+from party_role p
+join party_role c on c.party_id = p.party_id
+join role_type ct on ct.role_type_id = c.role_type_id and ct.parent_type_id = 'CUSTOMER'
+join party_display_name d on d.party_id = p.party_id
+where p.role_type_id = 'PROSPECT'
+  and c.from_date >= p.from_date
+group by d.name, p.from_date;
+
+-- name: 2.4 — Ana's role history
+select t.description as role, r.from_date, r.thru_date
+from party_role r
+join role_type t using (role_type_id)
+where r.party_id = 1
+order by r.from_date;
+
+-- name: 2.4 — Who were our employees on 2020-01-01?
+select d.name
+from party_role r
+join party_display_name d using (party_id)
+where r.role_type_id = 'EMPLOYEE'
+  and r.from_date <= date '2020-01-01'
+  and (r.thru_date is null or r.thru_date > date '2020-01-01');
+
+-- name: 2.4 — Contacts and departments: the role alone can't say for whom (see EXERCISES #17)
+select d.name, t.description as role, 'for whom? unknown' as of_whom
+from party_role r
+join role_type t using (role_type_id)
+join party_display_name d using (party_id)
+where r.role_type_id in ('CONTACT', 'DEPARTMENT');

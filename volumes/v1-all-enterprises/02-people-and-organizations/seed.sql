@@ -203,3 +203,96 @@ insert into party_classification (party_id, party_type_id, party_kind, from_date
   (1, 'INCOME_HIGH',       'PERSON',       '2019-01-01', null),
   (2, 'EEOC_EXECUTIVE',    'PERSON',       '2020-01-01', null),
   (2, 'INCOME_HIGH',       'PERSON',       '2020-01-01', null);
+
+-- ============================================================
+-- Fig 2.4 — Party roles
+-- ============================================================
+insert into role_type (role_type_id, parent_type_id, description) values
+  -- person roles
+  ('PERSON_ROLE',             null,                   'Person role'),
+  ('EMPLOYEE',                'PERSON_ROLE',          'Employee'),
+  ('CONTRACTOR',              'PERSON_ROLE',          'Contractor'),
+  ('FAMILY_MEMBER',           'PERSON_ROLE',          'Family member'),
+  ('CONTACT',                 'PERSON_ROLE',          'Contact'),
+  -- organization roles
+  ('ORGANIZATION_ROLE',       null,                   'Organization role'),
+  ('DISTRIBUTION_CHANNEL',    'ORGANIZATION_ROLE',    'Distribution channel'),
+  ('AGENT',                   'DISTRIBUTION_CHANNEL', 'Agent'),
+  ('DISTRIBUTOR',             'DISTRIBUTION_CHANNEL', 'Distributor'),
+  ('PARTNER',                 'ORGANIZATION_ROLE',    'Partner'),
+  ('COMPETITOR',              'ORGANIZATION_ROLE',    'Competitor'),
+  ('HOUSEHOLD',               'ORGANIZATION_ROLE',    'Household'),
+  ('REGULATORY_AGENCY',       'ORGANIZATION_ROLE',    'Regulatory agency'),
+  ('SUPPLIER',                'ORGANIZATION_ROLE',    'Supplier'),
+  ('ASSOCIATION',             'ORGANIZATION_ROLE',    'Association'),
+  ('ORGANIZATION_UNIT',       'ORGANIZATION_ROLE',    'Organization unit'),
+  ('PARENT_ORGANIZATION',     'ORGANIZATION_UNIT',    'Parent organization'),
+  ('SUBSIDIARY',              'ORGANIZATION_UNIT',    'Subsidiary'),
+  ('DEPARTMENT',              'ORGANIZATION_UNIT',    'Department'),
+  ('DIVISION',                'ORGANIZATION_UNIT',    'Division'),
+  ('OTHER_ORGANIZATION_UNIT', 'ORGANIZATION_UNIT',    'Other organization unit'),
+  ('INTERNAL_ORGANIZATION',   'ORGANIZATION_ROLE',    'Internal organization'),
+  -- roles either kind of party can play
+  ('CUSTOMER',                null,                   'Customer'),
+  ('BILL_TO_CUSTOMER',        'CUSTOMER',             'Bill-to customer'),
+  ('SHIP_TO_CUSTOMER',        'CUSTOMER',             'Ship-to customer'),
+  ('END_USER_CUSTOMER',       'CUSTOMER',             'End-user customer'),
+  ('PROSPECT',                null,                   'Prospect'),
+  ('SHAREHOLDER',             null,                   'Shareholder');
+
+insert into role_type_party_kind (role_type_id, party_kind) values
+  ('EMPLOYEE',                'PERSON'),
+  ('CONTRACTOR',              'PERSON'),
+  ('FAMILY_MEMBER',           'PERSON'),
+  ('CONTACT',                 'PERSON'),
+  ('AGENT',                   'ORGANIZATION'),
+  ('DISTRIBUTOR',             'ORGANIZATION'),
+  ('PARTNER',                 'ORGANIZATION'),
+  ('COMPETITOR',              'ORGANIZATION'),
+  ('HOUSEHOLD',               'ORGANIZATION'),
+  ('REGULATORY_AGENCY',       'ORGANIZATION'),
+  ('SUPPLIER',                'ORGANIZATION'),
+  ('ASSOCIATION',             'ORGANIZATION'),
+  ('PARENT_ORGANIZATION',     'ORGANIZATION'),
+  ('SUBSIDIARY',              'ORGANIZATION'),
+  ('DEPARTMENT',              'ORGANIZATION'),
+  ('DIVISION',                'ORGANIZATION'),
+  ('OTHER_ORGANIZATION_UNIT', 'ORGANIZATION'),
+  ('INTERNAL_ORGANIZATION',   'ORGANIZATION'),
+  ('BILL_TO_CUSTOMER',        'PERSON'), ('BILL_TO_CUSTOMER',  'ORGANIZATION'),
+  ('SHIP_TO_CUSTOMER',        'PERSON'), ('SHIP_TO_CUSTOMER',  'ORGANIZATION'),
+  ('END_USER_CUSTOMER',       'PERSON'), ('END_USER_CUSTOMER', 'ORGANIZATION'),
+  ('PROSPECT',                'PERSON'), ('PROSPECT',          'ORGANIZATION'),
+  ('SHAREHOLDER',             'PERSON'), ('SHAREHOLDER',       'ORGANIZATION');
+
+-- "Our" enterprise is Northwind (party 4). Rejected by the database, for example:
+--   insert into party_role (party_id, party_kind, role_type_id, from_date) values (4, 'ORGANIZATION', 'EMPLOYEE', '2020-01-01');
+insert into party_role (party_role_id, party_id, party_kind, role_type_id, from_date, thru_date) values
+  -- Northwind and its platform team are internal
+  (1,  4,  'ORGANIZATION', 'INTERNAL_ORGANIZATION', '2010-01-01', null),
+  (2,  4,  'ORGANIZATION', 'PARENT_ORGANIZATION',   '2010-01-01', null),
+  (3,  7,  'ORGANIZATION', 'INTERNAL_ORGANIZATION', '2019-03-01', null),
+  (4,  7,  'ORGANIZATION', 'DEPARTMENT',            '2019-03-01', null),   -- department of whom? a role can't say
+  -- Contoso is our supplier AND, since 2021, our customer: one party, three roles
+  (5,  5,  'ORGANIZATION', 'SUPPLIER',              '2016-01-01', null),
+  (6,  5,  'ORGANIZATION', 'BILL_TO_CUSTOMER',      '2021-04-01', null),
+  (7,  5,  'ORGANIZATION', 'SHIP_TO_CUSTOMER',      '2021-04-01', null),
+  (8,  6,  'ORGANIZATION', 'REGULATORY_AGENCY',     '2010-01-01', null),
+  (9,  8,  'ORGANIZATION', 'HOUSEHOLD',             '2019-06-15', null),
+  (10, 8,  'ORGANIZATION', 'END_USER_CUSTOMER',     '2020-02-01', null),
+  (11, 9,  'ORGANIZATION', 'ASSOCIATION',           '2018-01-01', null),
+  -- Ana: employee, then contractor after leaving; also a shareholder and family member
+  (12, 1,  'PERSON',       'EMPLOYEE',              '2018-07-01', '2023-01-01'),
+  (13, 1,  'PERSON',       'CONTRACTOR',            '2023-01-01', null),
+  (14, 1,  'PERSON',       'SHAREHOLDER',           '2020-05-01', null),
+  (15, 1,  'PERSON',       'FAMILY_MEMBER',         '2019-06-15', null),
+  -- Ben: a contact (for which organization? a role can't say), then a prospect who converted
+  (16, 2,  'PERSON',       'CONTACT',               '2016-01-01', null),
+  (17, 2,  'PERSON',       'PROSPECT',              '2023-01-10', '2023-06-01'),
+  (18, 2,  'PERSON',       'BILL_TO_CUSTOMER',      '2023-06-01', null),
+  -- Chloe: employee
+  (19, 3,  'PERSON',       'EMPLOYEE',              '2023-09-01', null),
+  -- Kiri: still a prospect
+  (20, 10, 'PERSON',       'PROSPECT',              '2025-02-01', null);
+
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));

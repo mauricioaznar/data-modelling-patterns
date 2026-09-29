@@ -15,6 +15,12 @@ erDiagram
   PARTY_TYPE   ||--o{ PARTY_CLASSIFICATION : "the description for"
   PARTY_TYPE   |o--o{ PARTY_TYPE           : "parent of"
 
+  %% Fig 2.4 — Party roles
+  PARTY                ||--o{ PARTY_ROLE           : "acting as"
+  ROLE_TYPE            |o--o{ ROLE_TYPE            : "parent of"
+  ROLE_TYPE            ||--o{ ROLE_TYPE_PARTY_KIND : "playable by"
+  ROLE_TYPE_PARTY_KIND ||--o{ PARTY_ROLE           : "allows"
+
   %% Fig 2.1 — Organization
   ORGANIZATION_TYPE |o--o{ ORGANIZATION_TYPE : "parent of"
   ORGANIZATION_TYPE ||--o{ ORGANIZATION      : "classifies"
@@ -47,6 +53,23 @@ erDiagram
     date from_date PK
     date thru_date
     text party_kind FK "checked against party and type"
+  }
+  ROLE_TYPE {
+    text role_type_id PK
+    text parent_type_id FK
+    text description
+  }
+  ROLE_TYPE_PARTY_KIND {
+    text role_type_id PK, FK
+    text party_kind PK "PERSON | ORGANIZATION"
+  }
+  PARTY_ROLE {
+    int  party_role_id PK
+    int  party_id FK
+    text party_kind FK
+    text role_type_id FK
+    date from_date
+    date thru_date
   }
   ORGANIZATION_TYPE {
     text organization_type_id PK

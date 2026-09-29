@@ -221,6 +221,62 @@ PARTY TYPE
 - EEOC is the US Equal Employment Opportunity Commission, whose reporting categories (race and
   ethnicity, job category) US employers have to report on.
 
+### Fig 2.4 — Party roles
+**Transcription** (confirmed against the book: ☑)
+
+```
+PARTY ROLE
+  # party_role_id                ← its own identifier (unlike PARTY CLASSIFICATION)
+  * from_date                    ← mandatory, NOT part of the identifier
+  o thru_date
+  -> PARTY                  (each role must be "for" 1 party; a party may be "acting as" many roles;
+                             part of identifier)
+  -> ROLE TYPE              (each role must be "described by" 1 role type;
+                             a role type may describe many roles)
+  subtypes:
+    PERSON ROLE
+      EMPLOYEE, CONTRACTOR, FAMILY MEMBER, CONTACT
+    ORGANIZATION ROLE
+      DISTRIBUTION CHANNEL
+        AGENT, DISTRIBUTOR
+      PARTNER, COMPETITOR, HOUSEHOLD, REGULATORY AGENCY, SUPPLIER, ASSOCIATION
+      ORGANIZATION UNIT
+        PARENT ORGANIZATION, SUBSIDIARY, DEPARTMENT, DIVISION, OTHER ORGANIZATION UNIT
+      INTERNAL ORGANIZATION
+    CUSTOMER                     ← person OR organization
+      BILL TO CUSTOMER, SHIP TO CUSTOMER, END USER CUSTOMER
+    PROSPECT                     ← person OR organization
+    SHAREHOLDER                  ← person OR organization
+
+ROLE TYPE
+  # role_type_id
+  * description
+  subtypes: PARTY ROLE TYPE      ← only one subtype drawn so far (others later?)
+
+PARTY
+  # party_id
+  subtypes: PERSON, ORGANIZATION
+```
+
+**Discussion**
+- **"Customer" isn't a kind of thing; it's a role a party plays.** The same party can be a
+  customer, a supplier and a shareholder at once, or a prospect that later becomes a customer,
+  stored once, with each role as a dated row. A naive model has `customer` and `supplier` tables
+  and duplicates the company that is both.
+- **There are three families of roles:** some only a person can play (employee, contact), some
+  only an organization can (supplier, department, internal organization), and some either can
+  (customer, prospect, shareholder). The subtype tree encodes which parties are allowed which roles.
+- **A role has its own identity (`party_role_id`),** while a classification (2.3) is identified by
+  (party, type, from_date). That hints that other things will *point at a role*: an order
+  references "this party acting as bill-to customer", not just a party.
+- **Organization units (department, division, subsidiary) are roles, not organization types.**
+  A department is an organization *playing the part of* a unit inside another organization.
+  That "inside another" part isn't in this figure; a role alone can't say *whose* department it is.
+- **ROLE TYPE has a subtype PARTY ROLE TYPE,** so role types are a broader concept that other
+  kinds of roles will reuse later.
+- **INTERNAL ORGANIZATION** marks the organizations that are part of *our own* enterprise,
+  as opposed to the outside world.
+
 ## Design decisions (book → SQL)
 
 ### Fig 2.1
@@ -293,6 +349,29 @@ PARTY TYPE
 - **Addition: `party_display_name` view.** It gives the current name of any party in one place.
   Later chapters (roles, orders, invoices) will need it constantly.
 
+### Fig 2.4
+- **Role subtypes become a `role_type` hierarchy** (PERSON_ROLE > EMPLOYEE,
+  ORGANIZATION_ROLE > DISTRIBUTION_CHANNEL > AGENT, CUSTOMER > BILL_TO_CUSTOMER…), for the
+  same reason as 2.1 and 2.3: the subtypes have no attributes.
+- **ROLE TYPE → PARTY ROLE TYPE is not modelled yet.** The book draws ROLE TYPE as a supertype
+  with a single subtype, PARTY ROLE TYPE. With only one subtype, a single `role_type` table is
+  enough. **Refactor later** if another role-type subtype appears (probably for relationships):
+  `role_type` becomes the supertype, with `party_role_type` as a subtype table, following the
+  `party_kind` pattern.
+- **Addition: `role_type_party_kind` (the pairs table).** It lists which kind of party may
+  play which role. Roles either kind can play (CUSTOMER, PROSPECT, SHAREHOLDER) get two rows.
+  `party_role` references `(role_type_id, party_kind)`, so the database rejects an organization
+  as EMPLOYEE or a person as SUPPLIER. Grouping types (PERSON_ROLE, CUSTOMER,
+  DISTRIBUTION_CHANNEL…) have no rows, which also means only concrete roles can be assigned.
+- **Identifier.** The book's identifier is (party, `party_role_id`). `party_role_id` is an
+  identity column, already unique, so it stays the primary key, plus `unique (party_id,
+  party_role_id)` so that later tables can reference "role X *of party Y*" and have both checked.
+- **Not enforced: overlapping periods of the same role.** Ana could hold two open EMPLOYEE rows.
+  It's the same gap as names and classifications.
+- **Known gap, on purpose:** a role says *what* a party is to us, but not *to whom*. Ben is a
+  CONTACT and the Platform Team is a DEPARTMENT, but of which organization? The seed and a query
+  show the hole; the book's relationship figures presumably fill it.
+
 ## When NOT to use this
 
 **The 2.2b shape (thing + type + from/thru):**
@@ -327,6 +406,15 @@ PARTY TYPE
   that reporting needs to slice by (industry, size, segment). Use a plain column when there's
   exactly one fixed type.
 
+**Party roles:**
+- When a system has exactly one kind of counterparty (a store with only consumer customers),
+  a `customer` table is simpler and roles add nothing. Roles pay off when the same real-world
+  party appears in several capacities (customer *and* supplier, employee *and* shareholder), or
+  when you need a lifecycle history (prospect → customer → former customer).
+- The cost is the same as with types: every "list our customers" query goes through a join and a
+  date filter, and role-specific data (credit limit, supplier rating) needs somewhere to live,
+  either a subtype table per role or attributes elsewhere.
+
 ## Open questions
 - **PERSON NAME → PERSON NAME TYPE optionality.** Assumed mandatory on the name side, the same
   pattern as gender. Not yet confirmed against the book.
@@ -336,6 +424,8 @@ PARTY TYPE
   *must* have a gender type.
 - PERSON NAME is identified by `name_seq_id` within its person.
 - ORGANIZATION is the first entity in the book and has no identifier until PARTY.
+- PARTY ROLE: must have 1 party (part of identifier) and 1 role type; CUSTOMER, PROSPECT and
+  SHAREHOLDER can be played by either kind of party.
 - PARTY CLASSIFICATION is identified by (party, party type, from_date); a PARTY TYPE may describe
   many classifications; first and last name are mandatory in 2.3.
 - PHYSICAL CHARACTERISTIC `from_date` is drawn as `*`. We deviate and include it in the key
