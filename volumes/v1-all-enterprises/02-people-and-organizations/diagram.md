@@ -18,4 +18,13 @@ erDiagram
     text name
     text federal_tax_id_num "legal orgs only"
   }
+  PERSON {
+    int  person_id PK
+    text current_first_name
+    text current_last_name
+    text gender "free text"
+    text marital_status "free text"
+    text current_passport_no
+    text etc "…12 more optional columns"
+  }
 ```

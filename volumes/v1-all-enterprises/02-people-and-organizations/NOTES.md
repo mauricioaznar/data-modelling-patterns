@@ -169,6 +169,11 @@ changes or something the author didn't consider worth keeping history for.
   `legal_organization` subtype table. We accept the gap for now.
 - **Also not enforced:** an organization should point at a *leaf* type (CORPORATION, not LEGAL).
 
+### Fig 2.2a
+- Implemented as drawn: one `person` table, all columns nullable, with a surrogate `person_id`.
+- Seeded with the same people 2.2b will use, so the queries show what the flat model loses:
+  inconsistent gender and marital-status spellings, and a former name that survives only in `comment`.
+
 ## When NOT to use this
 <!-- Filled in after implementation. -->
 
