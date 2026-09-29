@@ -18,6 +18,10 @@ holes in the user's understanding and help fill them.
 - Teach the pattern: the problem it solves, what the naive model gets wrong, the alternatives,
   and when not to use it. Then implement the schema, seed (with deliberate edge cases and bad
   rows) and queries.
+- **Any question, challenge or idea for the user to think about** that comes up while teaching
+  goes into the chapter's `EXERCISES.md`, section 0 "To ponder", in the same change and tagged
+  with its figure. The user is reading and may not answer in chat; nothing should be lost. Create
+  `EXERCISES.md` from the template at the chapter's first figure if it doesn't exist.
 - One figure per commit. `schema.sql` grows in book order, with a section header per figure.
 - Never copy book prose or reproduce figures verbatim in committed files. Write notes in our own
   words. `book-refs/` is gitignored and must stay that way.
