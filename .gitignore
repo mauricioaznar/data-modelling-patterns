@@ -1,0 +1,7 @@
+node_modules/
+.pgdata/
+.env
+
+# Photos/scans of the book are for personal study only - never commit them.
+book-refs/*
+!book-refs/README.md

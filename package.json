@@ -1,0 +1,14 @@
+{
+  "name": "data-modelling-patterns",
+  "private": true,
+  "type": "module",
+  "description": "Study notes and runnable SQL for Silverston's universal data model patterns",
+  "scripts": {
+    "db:rebuild": "node scripts/rebuild.js",
+    "sql": "node scripts/sql.js",
+    "queries": "node scripts/queries.js"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.8"
+  }
+}

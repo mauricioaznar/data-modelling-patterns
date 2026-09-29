@@ -1,0 +1,3 @@
+-- Chapter 2 seed data.
+-- Aim for data that exercises the tricky cases (history, overlapping roles,
+-- hierarchies), not just the happy path.
