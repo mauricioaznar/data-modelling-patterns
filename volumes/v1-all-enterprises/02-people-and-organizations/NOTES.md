@@ -1,4 +1,4 @@
-# Chapter 2 — People and Organizations
+# Vol 1, Chapter 2 — People and Organizations
 
 ## The problem this pattern solves
 <!-- What goes wrong with the naive model? -->

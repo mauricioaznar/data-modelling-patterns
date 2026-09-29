@@ -5,26 +5,60 @@ import { fileURLToPath } from 'node:url';
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 export const DATA_DIR = join(ROOT, '.pgdata');
-export const CHAPTERS_DIR = join(ROOT, 'chapters');
+export const VOLUMES_DIR = join(ROOT, 'volumes');
 
 export function openDb() {
   return new PGlite(DATA_DIR);
 }
 
-// Chapter folders are named "NN-slug"; they load in numeric order because
-// later chapters reference tables from earlier ones (everything hangs off PARTY).
-export function listChapters() {
-  return readdirSync(CHAPTERS_DIR, { withFileTypes: true })
-    .filter((d) => d.isDirectory() && /^\d{2}-/.test(d.name))
+function subdirs(dir, pattern) {
+  return readdirSync(dir, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && pattern.test(d.name))
     .map((d) => d.name)
     .sort();
 }
 
-// Resolve "02" or "02-people-and-organizations" to the chapter folder.
-export function resolveChapter(arg) {
-  const match = listChapters().find((c) => c === arg || c.startsWith(`${arg}-`));
-  if (!match) throw new Error(`No chapter matching "${arg}". Have: ${listChapters().join(', ')}`);
-  return join(CHAPTERS_DIR, match);
+// Volume folders are "vN-slug"; each volume gets its own Postgres schema "vN"
+// so the same table name can exist in several books without clashing.
+export function listVolumes() {
+  return subdirs(VOLUMES_DIR, /^v\d-/).map((dir) => ({
+    dir,
+    schema: dir.slice(0, 2),
+    path: join(VOLUMES_DIR, dir),
+  }));
+}
+
+// Chapter folders are "NN-slug" and load in numeric order, because later
+// chapters reference tables from earlier ones (everything hangs off PARTY).
+export function listChapters(volume) {
+  return subdirs(volume.path, /^\d{2}-/).map((dir) => ({
+    dir,
+    number: dir.slice(0, 2),
+    path: join(volume.path, dir),
+  }));
+}
+
+// A volume resolves unqualified names in its own schema first, then in earlier
+// volumes (Vol 2's industry models extend Vol 1's tables).
+export function searchPathFor(volume) {
+  const schemas = listVolumes()
+    .map((v) => v.schema)
+    .filter((s) => s <= volume.schema)
+    .reverse();
+  return `set search_path to ${schemas.join(', ')}, public;`;
+}
+
+// Parse "v1", "v1/02" or "1/2" into { volume, chapter? }.
+export function resolveTarget(arg) {
+  const m = /^v?(\d)(?:\/(\d{1,2}))?$/.exec(arg ?? '');
+  if (!m) throw new Error(`Expected "v1" or "v1/02", got "${arg}"`);
+  const volume = listVolumes().find((v) => v.schema === `v${m[1]}`);
+  if (!volume) throw new Error(`No volume v${m[1]} under volumes/`);
+  if (!m[2]) return { volume };
+  const number = m[2].padStart(2, '0');
+  const chapter = listChapters(volume).find((c) => c.number === number);
+  if (!chapter) throw new Error(`No chapter ${number} in ${volume.dir}`);
+  return { volume, chapter };
 }
 
 export function printResult(result) {

@@ -1,27 +1,35 @@
-// Wipes the local database and replays every chapter's schema.sql then seed.sql.
-// Usage: npm run db:rebuild            (all chapters)
-//        npm run db:rebuild -- 03      (chapters up to and including 03)
+// Wipes the local database and replays every chapter's schema.sql then seed.sql,
+// volume by volume. Each volume loads into its own Postgres schema (v1, v2, v3).
+// Usage: npm run db:rebuild             (everything)
+//        npm run db:rebuild -- v1       (up to the end of volume 1)
+//        npm run db:rebuild -- v1/03    (up to volume 1, chapter 03)
 import { rmSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { openDb, listChapters, CHAPTERS_DIR, DATA_DIR, existsSync } from './db.js';
+import { openDb, listVolumes, listChapters, searchPathFor, resolveTarget, DATA_DIR, existsSync } from './db.js';
 
-const upTo = process.argv[2];
+const stop = process.argv[2] ? resolveTarget(process.argv[2]) : null;
 rmSync(DATA_DIR, { recursive: true, force: true });
 const db = openDb();
 
-for (const chapter of listChapters()) {
-  if (upTo && chapter.slice(0, 2) > upTo.slice(0, 2)) break;
-  for (const file of ['schema.sql', 'seed.sql']) {
-    const path = join(CHAPTERS_DIR, chapter, file);
-    if (!existsSync(path)) continue;
-    const sql = readFileSync(path, 'utf8');
-    if (!sql.replace(/--.*$/gm, '').trim()) continue;
-    try {
-      await db.exec(sql);
-      console.log(`✓ ${chapter}/${file}`);
-    } catch (err) {
-      console.error(`✗ ${chapter}/${file}\n  ${err.message}`);
-      process.exit(1);
+for (const volume of listVolumes()) {
+  if (stop && volume.schema > stop.volume.schema) break;
+  await db.exec(`create schema ${volume.schema}; ${searchPathFor(volume)}`);
+
+  for (const chapter of listChapters(volume)) {
+    if (stop?.chapter && volume.schema === stop.volume.schema && chapter.number > stop.chapter.number) break;
+    for (const file of ['schema.sql', 'seed.sql']) {
+      const path = join(chapter.path, file);
+      if (!existsSync(path)) continue;
+      const sql = readFileSync(path, 'utf8');
+      if (!sql.replace(/--.*$/gm, '').trim()) continue;
+      const label = `${volume.dir}/${chapter.dir}/${file}`;
+      try {
+        await db.exec(sql);
+        console.log(`✓ ${label}`);
+      } catch (err) {
+        console.error(`✗ ${label}\n  ${err.message}`);
+        process.exit(1);
+      }
     }
   }
 }

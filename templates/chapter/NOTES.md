@@ -1,4 +1,4 @@
-# Chapter NN — Title
+# Vol N, Chapter NN — Title
 
 ## The problem this pattern solves
 <!-- What goes wrong with the naive model? -->

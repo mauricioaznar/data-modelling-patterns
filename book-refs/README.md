@@ -1,11 +1,11 @@
 # book-refs
 
-Drop photos of the book's figures here, one folder per chapter:
+Drop photos of the book's figures here, one folder per volume and chapter:
 
 ```
-book-refs/ch02/fig-2.1.jpg
-book-refs/ch02/fig-2.2a.jpg   <- a figure spanning two pages
-book-refs/ch02/fig-2.2b.jpg
+book-refs/v1/ch02/fig-2.1.jpg
+book-refs/v1/ch02/fig-2.2a.jpg   <- a figure spanning two pages
+book-refs/v1/ch02/fig-2.2b.jpg
 ```
 
 Everything in this folder except this README is gitignored. The scans are
