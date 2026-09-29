@@ -32,5 +32,13 @@ and any decisions made.
 - Identifying relationships are kept as composite keys (PASSPORT has a three-column FK to CITIZENSHIP).
 - Dates print as `YYYY-MM-DD` (PGlite date parser override).
 
+**Decisions (study flow)**
+- The user reads a whole chapter first, then shares its diagrams, and Claude builds everything.
+- At the end of each chapter, the user practises with small, varied exercises in `EXERCISES.md`
+  (redraw from memory, explain why, spot the flaw, extend, queries, break it, trade-offs,
+  own-words notes, capstone). No answers are given up front, and gaps found are tracked and revisited.
+- Every 3 chapters, a mini app framed as a problem: the user makes the modelling decisions and
+  Claude writes the plumbing, with a different JS stack and ops practice each time.
+
 **Next**
 - Vol 1, Ch 2: continue with the figures after 2.2b (toward PARTY).

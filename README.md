@@ -38,6 +38,7 @@ Each chapter folder contains:
 | `schema.sql` | DDL, grown one figure at a time |
 | `seed.sql` | Data that exercises the tricky cases |
 | `queries.sql` | The business questions the model can answer |
+| `EXERCISES.md` | Added when the chapter's figures are done: recall, queries, break-it tasks, capstone |
 
 A new chapter starts as a copy of `templates/chapter/`.
 

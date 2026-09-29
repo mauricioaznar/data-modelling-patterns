@@ -34,6 +34,15 @@ Chapter titles are from memory; verify them against the book's table of contents
 - [ ] Ch 12: Additional Star Schema Designs
 - [ ] Ch 13: Implementing the Universal Data Models
 
+## Mini apps (one per 3 finished chapters)
+
+Each uses a different JS stack and a different ops/testing practice. The suggestions below
+aren't final; agree on each one before starting.
+
+- [ ] App 1: Vol 1 Ch 02–04 (Party, Product, Order): order entry. Suggested: Express + Knex, deploy to a DigitalOcean droplet
+- [ ] App 2: Vol 1 Ch 05–07 (Shipment, Work Effort, Invoice): fulfilment and billing. Suggested: Fastify + Drizzle, k6 stress testing
+- [ ] App 3: Vol 1 Ch 08–10 (Accounting, HR, DW): reporting. Suggested: Next.js + Prisma, Playwright E2E
+
 ## Vol 2: A Library of Universal Data Models by Industry Types
 
 - [ ] Add chapter list once started
@@ -45,4 +54,3 @@ Chapter titles are from memory; verify them against the book's table of contents
 ## Open decisions
 
 - [ ] Should Vol 3 extend Vol 1's tables (current loader behaviour) or load into a clean slate?
-- [ ] Per-chapter mini JS app plus an ops/testing practice: decide scope once a few chapters are done
