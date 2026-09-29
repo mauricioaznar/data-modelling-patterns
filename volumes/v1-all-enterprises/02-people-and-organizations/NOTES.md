@@ -170,23 +170,64 @@ changes or something the author didn't consider worth keeping history for.
 - **Also not enforced:** an organization should point at a *leaf* type (CORPORATION, not LEGAL).
 
 ### Fig 2.2a
-- Implemented as drawn: one `person` table, all columns nullable, with a surrogate `person_id`.
-- Seeded with the same people 2.2b will use, so the queries show what the flat model loses:
+- Implemented as drawn: one table, all columns nullable, with a surrogate `person_id`.
+- Renamed to **`person_flat`** when 2.2b arrived, and kept loaded so both models can be queried
+  side by side.
+- Seeded with the same people as 2.2b, so the queries show what the flat model loses:
   inconsistent gender and marital-status spellings, and a former name that survives only in `comment`.
 
+### Fig 2.2b
+- **Identifying relationships become composite keys.** Where the book marks a relationship as
+  part of the identifier, the parent's key joins the child's primary key:
+  `person_name (person_id, name_seq_id)`, `marital_status (person_id, marital_status_type_id, from_date)`,
+  `citizenship (person_id, country_id, from_date)`.
+- **PASSPORT carries a three-column foreign key** to CITIZENSHIP. That's the cost of an
+  identifying relationship: the key travels down to every child. A surrogate `citizenship_id`
+  would shrink it to one column but hide the natural identity. We kept the book's version to
+  feel the weight of it.
+- **Deviation: PHYSICAL CHARACTERISTIC key includes `from_date`.** The book draws `from_date`
+  as `*` (confirmed), which would make the key (person, type) and allow one weight per person,
+  ever. Including it makes the from/thru history work, as the seed's weight change shows.
+- **`value` is `text`.** One column has to hold heights, weights and eye colours, so the
+  database can't check that a height is a number. The seed includes `'approx 170'`, and a
+  query catches it. The unit lives in the type's description (`Height (cm)`).
+- **Additions not in the figure:** `country.name` (so rows are readable), `unique
+  (country_id, passport_num)`, and `thru_date > from_date` checks on every dated table.
+- **Not enforced: overlapping periods.** Nothing stops two open `LAST` names or two current
+  marital statuses for the same person. Postgres could enforce it with an exclusion constraint
+  (`btree_gist`); for now it's up to the application.
+- **"No rows" ≠ "single."** Chloe has no marital status rows, which means *unknown*. The flat
+  model conflated unknown with null, which is the same thing but less visible.
+
 ## When NOT to use this
-<!-- Filled in after implementation. -->
+
+**The 2.2b shape (thing + type + from/thru):**
+- Every "current" read becomes a join plus `thru_date is null`, and every "as of" read needs the
+  date-range predicate. Rebuilding a display name takes a pivot (see queries.sql).
+- It's worth it when history matters to the business (legal names, compliance, KYC, HR) or when
+  the set of values changes often. For a signup form that shows a name, one `display_name`
+  column is the right answer.
+- Middle ground: keep the flat `current_*` columns for fast reads *and* a history table
+  written on change. That duplicates data, but it's what many production systems do.
+
+**Attributes as rows (PHYSICAL CHARACTERISTIC):**
+- This buys new characteristics without a migration. It costs type checking, constraints and
+  easy querying (a `value::numeric` cast breaks on bad data).
+- Use it for a long, open-ended, sparsely filled list of attributes. With 2–3 known attributes,
+  use columns. Postgres `jsonb` is a modern alternative for the same need.
+
+**Organization subtypes as a type table:**
+- This is fine while subtypes are just labels. Once a subtype gains several attributes of its
+  own, a subtype table is the better choice.
 
 ## Open questions
-- **PHYSICAL CHARACTERISTIC identifier.** Confirmed as drawn: `from_date` is `*`, not `#`, so
-  the book's identifier is (person, type). Read literally, that allows one height per person
-  ever, which makes `from_date`/`thru_date` pointless. We'll likely deviate and include
-  `from_date` in the key; to be decided when implementing 2.2b.
 - **PERSON NAME → PERSON NAME TYPE optionality.** Assumed mandatory on the name side, the same
-  pattern as gender. Not yet confirmed.
+  pattern as gender. Not yet confirmed against the book.
 
 ### Resolved
 - PERSON → GENDER TYPE: solid on the person side and dashed on the type side, so every person
   *must* have a gender type.
 - PERSON NAME is identified by `name_seq_id` within its person.
 - ORGANIZATION is the first entity in the book and has no identifier until PARTY.
+- PHYSICAL CHARACTERISTIC `from_date` is drawn as `*`. We deviate and include it in the key
+  (see Design decisions).

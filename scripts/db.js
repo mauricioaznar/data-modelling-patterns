@@ -7,8 +7,11 @@ export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 export const DATA_DIR = join(ROOT, '.pgdata');
 export const VOLUMES_DIR = join(ROOT, 'volumes');
 
+const DATE_OID = 1082;
+
 export function openDb() {
-  return new PGlite(DATA_DIR);
+  // Keep `date` columns as 'YYYY-MM-DD' strings instead of JS Date timestamps.
+  return new PGlite(DATA_DIR, { parsers: { [DATE_OID]: (value) => value } });
 }
 
 function subdirs(dir, pattern) {
