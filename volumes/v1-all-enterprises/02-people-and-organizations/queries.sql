@@ -55,7 +55,7 @@ where person_id = 1;
 -- ============================================================
 
 -- name: 2.2b — Everyone's current display name (the flat columns, rebuilt from name rows)
-select p.person_id,
+select p.party_id,
        concat_ws(' ',
          max(n.name) filter (where n.person_name_type_id = 'PERSONAL_TITLE'),
          max(n.name) filter (where n.person_name_type_id = 'FIRST'),
@@ -64,14 +64,14 @@ select p.person_id,
          max(n.name) filter (where n.person_name_type_id = 'SUFFIX')) as display_name,
        max(n.name) filter (where n.person_name_type_id = 'NICKNAME') as nickname
 from person p
-left join person_name n on n.person_id = p.person_id and n.thru_date is null
-group by p.person_id
-order by p.person_id;
+left join person_name n on n.party_id = p.party_id and n.thru_date is null
+group by p.party_id
+order by p.party_id;
 
 -- name: 2.2b — What was Ana's last name in 2015? (the question 2.2a couldn't answer)
 select n.name as last_name_on_2015_01_01
 from person_name n
-where n.person_id = 1
+where n.party_id = 1
   and n.person_name_type_id = 'LAST'
   and n.from_date <= date '2015-01-01'
   and (n.thru_date is null or n.thru_date > date '2015-01-01');
@@ -80,40 +80,96 @@ where n.person_id = 1
 select t.description as status, m.from_date, m.thru_date
 from marital_status m
 join marital_status_type t using (marital_status_type_id)
-where m.person_id = 2
+where m.party_id = 2
 order by m.from_date;
 
 -- name: 2.2b — Current marital status of everyone ("unknown" when there are no rows)
-select p.person_id, coalesce(t.description, 'unknown') as current_status
+select p.party_id, coalesce(t.description, 'unknown') as current_status
 from person p
-left join marital_status m on m.person_id = p.person_id and m.thru_date is null
+left join marital_status m on m.party_id = p.party_id and m.thru_date is null
 left join marital_status_type t using (marital_status_type_id)
-order by p.person_id;
+order by p.party_id;
 
 -- name: 2.2b — Current dual (or more) citizens
-select c.person_id, string_agg(co.name, ', ' order by co.name) as countries
+select c.party_id, string_agg(co.name, ', ' order by co.name) as countries
 from citizenship c
 join country co using (country_id)
 where c.thru_date is null
-group by c.person_id
+group by c.party_id
 having count(*) > 1;
 
 -- name: 2.2b — Passports and whether they are valid today
-select pp.person_id, co.name as country, pp.passport_num, pp.expiration_date,
+select pp.party_id, co.name as country, pp.passport_num, pp.expiration_date,
        case when pp.expiration_date >= current_date then 'valid' else 'expired' end as state
 from passport pp
 join country co using (country_id)
-order by pp.person_id, pp.expiration_date;
+order by pp.party_id, pp.expiration_date;
 
 -- name: 2.2b — Current weight per person (latest open WEIGHT_KG row)
-select person_id, value::numeric as weight_kg, from_date as since
+select party_id, value::numeric as weight_kg, from_date as since
 from physical_characteristic
 where physical_characteristic_type_id = 'WEIGHT_KG'
   and thru_date is null
-order by person_id;
+order by party_id;
 
 -- name: 2.2b — EAV cost: values of numeric characteristics that aren't numbers
-select person_id, physical_characteristic_type_id, value
+select party_id, physical_characteristic_type_id, value
 from physical_characteristic
 where physical_characteristic_type_id in ('HEIGHT_CM', 'WEIGHT_KG')
   and value !~ '^\d+(\.\d+)?$';
+
+-- ============================================================
+-- Fig 2.3 — Party
+-- ============================================================
+
+-- name: 2.3 — One list of every party, person or organization (the supertype payoff)
+select party_id, party_kind, name
+from party_display_name
+order by party_id;
+
+-- name: 2.3 — Current classifications per party, grouped by category
+select d.name,
+       cat.description as category,
+       t.description   as classification,
+       c.from_date
+from party_classification c
+join party_type t   on t.party_type_id = c.party_type_id
+join party_type cat on cat.party_type_id = t.parent_type_id
+join party_display_name d on d.party_id = c.party_id
+where c.thru_date is null
+order by d.name, category;
+
+-- name: 2.3 — Northwind's size history
+select t.description as size, c.from_date, c.thru_date
+from party_classification c
+join party_type t using (party_type_id)
+where c.party_id = 4
+  and t.parent_type_id = 'SIZE'
+order by c.from_date;
+
+-- name: 2.3 — Which organizations were small businesses on 2017-06-01?
+select d.name
+from party_classification c
+join party_display_name d using (party_id)
+where c.party_type_id = 'SIZE_SMALL'
+  and c.from_date <= date '2017-06-01'
+  and (c.thru_date is null or c.thru_date > date '2017-06-01');
+
+-- name: 2.3 — Minority- or woman-owned suppliers today (any type under MINORITY)
+select d.name, t.description
+from party_classification c
+join party_type t using (party_type_id)
+join party_display_name d using (party_id)
+where t.parent_type_id = 'MINORITY'
+  and c.thru_date is null;
+
+-- name: 2.3 — Data-quality check: persons missing a current first or last name (the book says both are mandatory)
+select p.party_id, d.name,
+       bool_or(n.person_name_type_id = 'FIRST') is true as has_first,
+       bool_or(n.person_name_type_id = 'LAST')  is true as has_last
+from person p
+join party_display_name d on d.party_id = p.party_id
+left join person_name n on n.party_id = p.party_id and n.thru_date is null
+group by p.party_id, d.name
+having not (bool_or(n.person_name_type_id = 'FIRST') is true
+        and bool_or(n.person_name_type_id = 'LAST')  is true);

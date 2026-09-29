@@ -3,11 +3,21 @@
 The diagram shows what `schema.sql` implements, not the book's figures.
 `person_flat` (Fig 2.2a) is also loaded, for comparison only, and is left out here.
 
+`PERSON` and `ORGANIZATION` are subtypes of `PARTY`: they share its `party_id` (1:1), and
+`party_kind` guarantees each party is exactly one of the two.
+
 ```mermaid
 erDiagram
+  %% Fig 2.3 — Party supertype and classification
+  PARTY        ||--o| PERSON               : "is a"
+  PARTY        ||--o| ORGANIZATION         : "is a"
+  PARTY        ||--o{ PARTY_CLASSIFICATION : "classified into"
+  PARTY_TYPE   ||--o{ PARTY_CLASSIFICATION : "the description for"
+  PARTY_TYPE   |o--o{ PARTY_TYPE           : "parent of"
+
   %% Fig 2.1 — Organization
   ORGANIZATION_TYPE |o--o{ ORGANIZATION_TYPE : "parent of"
-  ORGANIZATION_TYPE ||--o{ ORGANIZATION : "classifies"
+  ORGANIZATION_TYPE ||--o{ ORGANIZATION      : "classifies"
 
   %% Fig 2.2b — Person, alternate model
   GENDER_TYPE                  ||--o{ PERSON                  : "for"
@@ -21,19 +31,36 @@ erDiagram
   COUNTRY                      ||--o{ CITIZENSHIP             : "for"
   CITIZENSHIP                  ||--o{ PASSPORT                : "issuer of"
 
+  PARTY {
+    int  party_id PK
+    text party_kind "PERSON | ORGANIZATION"
+  }
+  PARTY_TYPE {
+    text party_type_id PK
+    text parent_type_id FK
+    text applies_to_kind
+    text description
+  }
+  PARTY_CLASSIFICATION {
+    int  party_id PK, FK
+    text party_type_id PK, FK
+    date from_date PK
+    date thru_date
+    text party_kind FK "checked against party and type"
+  }
   ORGANIZATION_TYPE {
     text organization_type_id PK
     text parent_type_id FK
     text description
   }
   ORGANIZATION {
-    int  organization_id PK
+    int  party_id PK, FK
     text organization_type_id FK
     text name
     text federal_tax_id_num "legal orgs only"
   }
   PERSON {
-    int  person_id PK
+    int  party_id PK, FK
     text gender_type_id FK
     date birth_date
     text mothers_maiden_name
@@ -42,7 +69,7 @@ erDiagram
     text comment
   }
   PERSON_NAME {
-    int  person_id PK, FK
+    int  party_id PK, FK
     int  name_seq_id PK
     text person_name_type_id FK
     date from_date
@@ -50,27 +77,27 @@ erDiagram
     text name
   }
   MARITAL_STATUS {
-    int  person_id PK, FK
+    int  party_id PK, FK
     text marital_status_type_id PK, FK
     date from_date PK
     date thru_date
   }
   PHYSICAL_CHARACTERISTIC {
-    int  person_id PK, FK
+    int  party_id PK, FK
     text physical_characteristic_type_id PK, FK
     date from_date PK "deviation: * in the book"
     date thru_date
     text value
   }
   CITIZENSHIP {
-    int  person_id PK, FK
+    int  party_id PK, FK
     text country_id PK, FK
     date from_date PK
     date thru_date
   }
   PASSPORT {
     int  passport_id PK
-    int  person_id FK
+    int  party_id FK
     text country_id FK
     date citizenship_from_date FK
     text passport_num

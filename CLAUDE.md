@@ -63,7 +63,11 @@ holes in the user's understanding and help fill them.
 - PostgreSQL (run through PGlite). Tables are singular snake_case (`party`, `party_role`), and
   primary keys are `<table>_id`.
 - Subtypes: the supertype table plus a subtype table sharing its PK (e.g. `person.party_id` → `party`).
-  Record in NOTES.md whenever another strategy is chosen.
+  Record in NOTES.md whenever another strategy is chosen. Exclusive subtypes use a discriminator:
+  `party (party_id, party_kind)` is unique, and each subtype has a fixed `party_kind` plus a
+  composite FK to that pair. Attribute-less subtypes become rows in a `*_type` hierarchy.
+- Parties: `organization` and `person` key on `party_id`. Use the `party_display_name` view for
+  a party's current name.
 - `*_TYPE` entities become lookup tables, not enums, to stay faithful to the book.
 - Effectivity: `from_date date not null`, `thru_date date` (null = still current).
 - Verify with `npm run db:rebuild && npm run queries -- vN/NN` after any change.

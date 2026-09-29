@@ -19,7 +19,7 @@ blockers, but each one unlocks something:
 Chapter titles are from memory; verify them against the book's table of contents.
 
 - [ ] Ch 01: Introduction (read only; key conventions go into README notation)
-- [ ] Ch 02: People and Organizations *(in progress: 2.1, 2.2a, 2.2b done)*
+- [ ] Ch 02: People and Organizations *(in progress: 2.1, 2.2a, 2.2b, 2.3 done)*
   - [ ] Confirm PERSON NAME → PERSON NAME TYPE optionality against the book
   - [ ] Try enforcing non-overlapping from/thru periods (exclusion constraint with `btree_gist`; check PGlite support)
 - [ ] Ch 03: Products

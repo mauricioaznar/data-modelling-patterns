@@ -153,10 +153,78 @@ changes or something the author didn't consider worth keeping history for.
 - A passport belongs to a *citizenship*, not directly to a person, which reads as "a country
   issues it to one of its citizens". The person is reached through the citizenship.
 
+### Fig 2.3 — Party
+**Transcription** (confirmed against the book: ☑)
+
+```
+PARTY
+  # party_id
+  subtypes:
+    ORGANIZATION
+      * name
+      subtypes:
+        LEGAL ORGANIZATION
+          o federal_tax_id_num
+        INFORMAL ORGANIZATION
+    PERSON
+      * current_last_name            ← mandatory here (optional in 2.2a)
+      * current_first_name           ← mandatory here (optional in 2.2a)
+      o current_middle_name
+      o current_personal_title
+      o current_suffix
+      o current_nickname
+      o gender
+      o birth_date
+      o height
+      o weight
+      o mothers_maiden_name
+      o marital_status
+      o social_security_no
+      o current_passport_no
+      o current_passport_expire_date
+      o total_years_work_experience
+      o comment
+
+PARTY CLASSIFICATION
+  # from_date
+  o thru_date
+  -> PARTY                  (many classifications "for" 1 party; part of identifier)
+  -> PARTY TYPE             (many "described by" 1 type; part of identifier;
+                             each type may describe many classifications)
+  subtypes:
+    ORGANIZATION CLASSIFICATION
+      subtypes: MINORITY CLASSIFICATION, INDUSTRY CLASSIFICATION, SIZE CLASSIFICATION
+    PERSON CLASSIFICATION
+      subtypes: EEOC CLASSIFICATION, INCOME CLASSIFICATION
+
+PARTY TYPE
+  # party_type_id
+  * description
+```
+
+**Discussion**
+- **The key idea:** PERSON and ORGANIZATION become subtypes of PARTY, and `party_id` is the
+  one identifier for both. Anything that can involve "a person *or* an organization" (a
+  customer, a supplier, an address, a contact) can now point at a single `party_id`, instead
+  of carrying two nullable foreign keys or being modelled twice.
+- **The subtypes are shown in their simplest form:** PERSON with the flat 2.2a attributes, and
+  ORGANIZATION without corporation/team/family. The figure is about the supertype and doesn't
+  choose between 2.2a and 2.2b. One detail changed: first and last name became mandatory.
+- **Classification is separate from subtype.** Being a person or an organization is fixed and
+  structural: exactly one, forever. *Classifications* (industry, size, minority-owned, income
+  bracket, EEOC category) are many per party, can change over time (from/thru), and are just
+  data. That's why they sit in PARTY CLASSIFICATION rows rather than more subtypes.
+- **PARTY CLASSIFICATION links PARTY and PARTY TYPE many-to-many, with history.** Compare 2.1,
+  where an organization had exactly one type through a single FK column.
+- The classification subtypes (minority, industry, EEOC…) have no attributes again, so they're
+  the same kind of pure labels we met in 2.1.
+- EEOC is the US Equal Employment Opportunity Commission, whose reporting categories (race and
+  ethnicity, job category) US employers have to report on.
+
 ## Design decisions (book → SQL)
 
 ### Fig 2.1
-- **Surrogate key `organization_id`.** The book draws no identifier; it arrives with PARTY later
+- **Surrogate key `organization_id`** (replaced by `party_id` in 2.3). The book draws no identifier; it arrives with PARTY later
   in the chapter.
 - **Subtypes become a type hierarchy, not tables.** Six of the seven subtypes have no attributes,
   so a table per subtype would give six tables holding nothing but a key. They are rows in
@@ -199,6 +267,32 @@ changes or something the author didn't consider worth keeping history for.
 - **"No rows" ≠ "single."** Chloe has no marital status rows, which means *unknown*. The flat
   model conflated unknown with null, which is the same thing but less visible.
 
+### Fig 2.3
+- **`organization` and `person` became subtypes of `party`.** Their primary key is now
+  `party_id` (it replaced `organization_id` and `person_id`), and every person child table
+  (`person_name`, `marital_status`, `citizenship`, …) was renamed to `party_id` too. We chose
+  the 2.2b person as the subtype. `person_flat` stays standalone, outside the party hierarchy.
+- **`party` is defined at the top of `schema.sql`**, ahead of 2.1, because the subtypes
+  reference it. This is the only exception to "schema.sql follows book order".
+- **Addition: `party_kind` discriminator + composite FKs.** `party (party_id, party_kind)` is
+  unique, and each subtype row carries a fixed `party_kind` and references that pair. The result
+  is that a party can't be both a person and an organization. The same trick guards
+  classifications: `party_type.applies_to_kind` plus a second composite FK means the database
+  rejects an INDUSTRY classification on a person. It costs one extra column per table, and it
+  replaces constraints the book leaves to the application.
+- **Not enforced:** that every party *has* a subtype row. A `party` row with no `person` or
+  `organization` is allowed. Closing that gap needs a deferred constraint trigger.
+- **Classification subtypes become a three-level `party_type` hierarchy:** root
+  (ORGANIZATION_ / PERSON_CLASSIFICATION), then category (INDUSTRY, SIZE, EEOC…), then the
+  actual values. As in 2.1, the subtypes have no attributes, so they're rows, not tables.
+- **Not enforced: one current value per category.** Nothing stops a party from being SMALL and
+  MEDIUM at the same time. It's the overlapping-periods problem again, this time per category.
+- **"First and last name are mandatory" (from 2.3) can't be declared** when names are rows (the
+  2.2b model). A data-quality query checks it instead, and it flags Kiri, a mononymous person.
+  The rule is questionable anyway: plenty of real people have only one name.
+- **Addition: `party_display_name` view.** It gives the current name of any party in one place.
+  Later chapters (roles, orders, invoices) will need it constantly.
+
 ## When NOT to use this
 
 **The 2.2b shape (thing + type + from/thru):**
@@ -220,6 +314,19 @@ changes or something the author didn't consider worth keeping history for.
 - This is fine while subtypes are just labels. Once a subtype gains several attributes of its
   own, a subtype table is the better choice.
 
+**The PARTY supertype:**
+- Every read of a name or subtype attribute becomes a join, and "list all parties with their
+  names" needs a view that stitches both subtypes together (`party_display_name`).
+- It pays off when the same business roles apply to both people and organizations: customers
+  can be consumers or companies, and suppliers can be freelancers or firms. If an app only ever
+  deals with companies (a B2B tool with company accounts), or only with individual users, a
+  plain `company` or `user` table is simpler, and nothing is lost.
+
+**Classification rows vs. a type column:**
+- Use classification rows when there are many, dated categorisations that change often and
+  that reporting needs to slice by (industry, size, segment). Use a plain column when there's
+  exactly one fixed type.
+
 ## Open questions
 - **PERSON NAME → PERSON NAME TYPE optionality.** Assumed mandatory on the name side, the same
   pattern as gender. Not yet confirmed against the book.
@@ -229,5 +336,7 @@ changes or something the author didn't consider worth keeping history for.
   *must* have a gender type.
 - PERSON NAME is identified by `name_seq_id` within its person.
 - ORGANIZATION is the first entity in the book and has no identifier until PARTY.
+- PARTY CLASSIFICATION is identified by (party, party type, from_date); a PARTY TYPE may describe
+  many classifications; first and last name are mandatory in 2.3.
 - PHYSICAL CHARACTERISTIC `from_date` is drawn as `*`. We deviate and include it in the key
   (see Design decisions).

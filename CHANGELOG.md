@@ -21,8 +21,8 @@ and any decisions made.
   the diagram, and the notes.
 
 **Studied**
-- Vol 1, Ch 2: Fig 2.1 Organization, 2.2a Person (flat), and 2.2b Person alternate model,
-  each transcribed, confirmed, implemented and committed separately.
+- Vol 1, Ch 2: Fig 2.1 Organization, 2.2a Person (flat), 2.2b Person alternate model, and
+  2.3 Party, each transcribed, confirmed, implemented and committed separately.
 
 **Decisions (Ch 2)**
 - Attribute-less organization subtypes are a self-referencing `organization_type` table, not
@@ -31,6 +31,9 @@ and any decisions made.
 - Deviation: PHYSICAL CHARACTERISTIC includes `from_date` in its key (the book draws it as `*`).
 - Identifying relationships are kept as composite keys (PASSPORT has a three-column FK to CITIZENSHIP).
 - Dates print as `YYYY-MM-DD` (PGlite date parser override).
+- 2.3: the 2.2b `person` became the Party subtype. `organization` and `person` now share
+  `party_id`, and `party_kind` with composite FKs makes the database enforce exactly one subtype
+  per party and classifications that match the party's kind.
 
 **Decisions (study flow)**
 - The user reads a whole chapter first, then shares its diagrams, and Claude builds everything.
