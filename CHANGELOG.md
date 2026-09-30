@@ -15,10 +15,14 @@ and any decisions made.
 - Fig 2.6a Common party relationships: one generic `party_relationship` plus
   `party_relationship_type` (book's single from/to role type), a recursive `role_type_ancestor`
   view, and one hierarchy-aware data-quality query. The 2.5 tables stay for comparison.
+- Table 2.5 loaded as seed data (the ABC corporate family), giving the org chart a two-level
+  hierarchy. CUSTOMER is now an assignable role type, as the table uses it. Table 2.5 confirmed
+  two of the assumed relationship directions (supplier, agent).
 
 **Decisions**
 - Key style: surrogate PKs and plain FKs everywhere. Deviating from the book to simplify is fine
   as long as NOTES.md records it (CLAUDE.md updated).
+- `thru_date` is exclusive; the book's inclusive thru dates are stored +1 day (CLAUDE.md updated).
 
 **Next**
 - Vol 1, Ch 2: remaining figures after 2.6a (the user sends them), then write the chapter exercises.

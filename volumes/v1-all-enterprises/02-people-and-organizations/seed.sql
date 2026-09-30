@@ -234,7 +234,7 @@ insert into role_type (role_type_id, parent_type_id, applies_to_kind, descriptio
   ('OTHER_ORGANIZATION_UNIT', 'ORGANIZATION_UNIT',    'ORGANIZATION', 'Other organization unit'),
   ('INTERNAL_ORGANIZATION',   'ORGANIZATION_ROLE',    'ORGANIZATION', 'Internal organization'),
   -- roles either kind of party can play
-  ('CUSTOMER',                null,                   null,           'Customer'),
+  ('CUSTOMER',                null,                   'EITHER',       'Customer'),                -- assignable itself: Table 2.5 gives ACME plain Customer
   ('BILL_TO_CUSTOMER',        'CUSTOMER',             'EITHER',       'Bill-to customer'),
   ('SHIP_TO_CUSTOMER',        'CUSTOMER',             'EITHER',       'Ship-to customer'),
   ('END_USER_CUSTOMER',       'CUSTOMER',             'EITHER',       'End-user customer'),
@@ -271,7 +271,7 @@ insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_d
   (20, 10, 'PROSPECT',              '2025-02-01', null),
   -- DATA ERRORS the FKs allow (caught by queries):
   (21, 9,  'EMPLOYEE',              '2024-01-01', null),   -- an organization as an employee
-  (22, 5,  'CUSTOMER',              '2024-01-01', null);   -- a grouping type assigned directly
+  (22, 7,  'ORGANIZATION_UNIT',     '2024-01-01', null);   -- a grouping type assigned directly
 
 select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
 
@@ -330,5 +330,57 @@ insert into party_relationship (party_relationship_id, party_relationship_type_i
   -- …plus kinds 2.5 had no table for: no schema change needed
   (9,  'SUPPLIER_RELATIONSHIP', 5,  1,  '2016-01-01', null,         'Freight services'),
   (10, 'ORGANIZATION_CONTACT',  16, 5,  '2016-01-01', null,         'Account manager at Contoso');
+
+select setval(pg_get_serial_sequence('party_relationship', 'party_relationship_id'), (select max(party_relationship_id) from party_relationship));
+
+-- ============================================================
+-- Table 2.5 — the book's organization-to-organization example
+-- ============================================================
+-- A second, separate corporate family (ABC) loaded end to end: parties,
+-- organizations, roles and relationships. It gives the org chart a real
+-- multi-level hierarchy.
+--
+-- thru_date is exclusive in this repo (the first day no longer valid). The
+-- book's inclusive "thru 12/31/2001" is stored as 2002-01-01.
+
+insert into party (party_id, party_kind) values
+  (12, 'ORGANIZATION'),   -- ABC Corporation
+  (13, 'ORGANIZATION'),   -- ABC Subsidiary
+  (14, 'ORGANIZATION'),   -- XYZ Subsidiary
+  (15, 'ORGANIZATION'),   -- Customer Service Division
+  (16, 'ORGANIZATION'),   -- ACME Company
+  (17, 'ORGANIZATION'),   -- Sellers Assistance Corporation
+  (18, 'ORGANIZATION');   -- Fantastic Supplies
+
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into organization (party_id, organization_type_id, name) values
+  (12, 'CORPORATION',    'ABC Corporation'),
+  (13, 'CORPORATION',    'ABC Subsidiary'),
+  (14, 'CORPORATION',    'XYZ Subsidiary'),
+  (15, 'OTHER_INFORMAL', 'Customer Service Division'),   -- a division is not a legal entity
+  (16, 'CORPORATION',    'ACME Company'),
+  (17, 'CORPORATION',    'Sellers Assistance Corporation'),
+  (18, 'CORPORATION',    'Fantastic Supplies');
+
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (30, 12, 'PARENT_ORGANIZATION',   '1998-03-04', null),
+  (31, 13, 'SUBSIDIARY',            '1998-03-04', null),         -- used as child AND as parent
+  (32, 13, 'INTERNAL_ORGANIZATION', '1999-01-01', null),         -- "to" end of three relationships
+  (33, 14, 'SUBSIDIARY',            '1999-07-07', null),
+  (34, 15, 'DIVISION',              '2000-01-02', null),
+  (35, 16, 'CUSTOMER',              '1999-01-01', null),         -- plain Customer, as the book has it
+  (36, 17, 'AGENT',                 '1999-06-01', '2002-01-01'),
+  (37, 18, 'SUPPLIER',              '2001-04-05', null);
+
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+insert into party_relationship (party_relationship_id, party_relationship_type_id, from_party_role_id, to_party_role_id, from_date, thru_date) values
+  (11, 'ORGANIZATION_ROLLUP',               31, 30, '1998-03-04', null),
+  (12, 'ORGANIZATION_ROLLUP',               33, 30, '1999-07-07', null),
+  (13, 'ORGANIZATION_ROLLUP',               34, 31, '2000-01-02', null),
+  (14, 'CUSTOMER_RELATIONSHIP',             35, 32, '1999-01-01', null),
+  (15, 'DISTRIBUTION_CHANNEL_RELATIONSHIP', 36, 32, '1999-06-01', '2002-01-01'),
+  (16, 'SUPPLIER_RELATIONSHIP',             37, 32, '2001-04-05', null);
 
 select setval(pg_get_serial_sequence('party_relationship', 'party_relationship_id'), (select max(party_relationship_id) from party_relationship));

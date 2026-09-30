@@ -316,7 +316,7 @@ select 'customer_relationship', c.customer_relationship_id, 'customer role is ' 
 from customer_relationship c
 join party_role r on r.party_role_id = c.customer_party_role_id
 join role_type t  on t.role_type_id = r.role_type_id
-where coalesce(t.parent_type_id, '') <> 'CUSTOMER';
+where t.role_type_id <> 'CUSTOMER' and coalesce(t.parent_type_id, '') <> 'CUSTOMER';
 
 -- ============================================================
 -- Fig 2.6a — Common party relationships (generic)
@@ -405,3 +405,34 @@ where not exists (select 1 from role_type_ancestor a
                   where a.role_type_id = f.role_type_id and a.ancestor_id = rt.from_role_type_id)
    or not exists (select 1 from role_type_ancestor a
                   where a.role_type_id = t.role_type_id and a.ancestor_id = rt.to_role_type_id);
+
+-- ============================================================
+-- Table 2.5 — the book's organization-to-organization example
+-- ============================================================
+
+-- name: Table 2.5 — Rebuilt from our rows (compare with the book)
+select rt.name as relationship,
+       fp.name as from_party, ft.description as from_role,
+       tp.name as to_party,   tt.description as to_role,
+       pr.from_date, pr.thru_date
+from party_relationship pr
+join party_relationship_type rt on rt.party_relationship_type_id = pr.party_relationship_type_id
+join party_role f on f.party_role_id = pr.from_party_role_id
+join party_role t on t.party_role_id = pr.to_party_role_id
+join role_type ft on ft.role_type_id = f.role_type_id
+join role_type tt on tt.role_type_id = t.role_type_id
+join party_display_name fp on fp.party_id = f.party_id
+join party_display_name tp on tp.party_id = t.party_id
+where pr.party_relationship_id between 11 and 16
+order by pr.party_relationship_id;
+
+-- name: Table 2.5 — One party, many roles, each role in many relationships (ABC Subsidiary)
+select t.description as role, r.party_role_id,
+       count(pr.party_relationship_id) as relationships_it_takes_part_in
+from party_role r
+join role_type t using (role_type_id)
+left join party_relationship pr
+  on r.party_role_id in (pr.from_party_role_id, pr.to_party_role_id)
+where r.party_id = 13
+group by t.description, r.party_role_id
+order by r.party_role_id;

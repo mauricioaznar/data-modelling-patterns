@@ -87,8 +87,8 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 28. **[2.6a]** The single data-quality query for 2.6a relies on the role hierarchy (the
     `role_type_ancestor` view). What happens to existing relationships if someone moves a role
     type to a different parent? Is the hierarchy data, or schema in disguise?
-29. **[2.6a]** We *assumed* the direction of four relationship types. If the book says otherwise,
-    which rows would have to change, and would any query notice?
+29. **[2.6a]** We *assumed* the direction of two relationship types (contact, partnership). If the
+    book says otherwise, which rows would have to change, and would any query notice?
 30. **[2.6a]** PARTY RELATIONSHIP reaches ROLE TYPE by two paths: through its two PARTY ROLEs
     (what the roles *are*) and through its PARTY RELATIONSHIP TYPE (what they *should be*). Which
     path is a fact and which is a rule? What would you gain and lose by pointing the relationship
@@ -97,6 +97,9 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
     Corporation and as the parent of the Customer Service Division. Its INTERNAL ORGANIZATION role
     is the "to" end of three relationships. Why is one role row per party per role enough? When
     would a party need *two* rows of the same role type?
+32. **[Table 2.5]** The book prints inclusive thru dates ("thru 12/31/2001"); we store exclusive
+    ones (2002-01-01). What goes wrong if one table in a system uses inclusive dates and another
+    exclusive? Which convention makes "consecutive periods" and "as of" queries simpler?
 
 ## 1. Redraw from memory
 *(completed at chapter end)*

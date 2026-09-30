@@ -78,5 +78,7 @@ holes in the user's understanding and help fill them.
 - Parties: `organization` and `person` key on `party_id`. Use the `party_display_name` view for
   a party's current name.
 - `*_TYPE` entities become lookup tables, not enums, to stay faithful to the book.
-- Effectivity: `from_date date not null`, `thru_date date` (null = still current).
+- Effectivity: `from_date date not null`, `thru_date date` (null = still current). `thru_date` is
+  **exclusive** (the first day no longer valid); store the book's inclusive thru dates +1 day. As-of
+  test: `from_date <= d and (thru_date is null or thru_date > d)`.
 - Verify with `npm run db:rebuild && npm run queries -- vN/NN` after any change.

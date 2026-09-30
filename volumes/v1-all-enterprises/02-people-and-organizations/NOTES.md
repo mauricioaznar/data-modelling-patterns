@@ -451,9 +451,11 @@ PARTY
   enough. Refactor if another role-type subtype ever appears.
 - **`role_type.applies_to_kind`** says which kind of party may play a role: PERSON,
   ORGANIZATION, EITHER (customer, prospect, shareholder), or null for grouping types
-  (PERSON_ROLE, CUSTOMER, DISTRIBUTION_CHANNEL…) that aren't assigned directly. A data-quality
-  query catches violations (the seed has the Book Club as EMPLOYEE, and Contoso as plain
-  CUSTOMER). *History:* this was first a `role_type_party_kind` pairs table with composite FKs,
+  (PERSON_ROLE, ORGANIZATION_UNIT, DISTRIBUTION_CHANNEL…) that aren't assigned directly. A
+  data-quality query catches violations (the seed has the Book Club as EMPLOYEE, and the
+  Platform Team as plain ORGANIZATION_UNIT). CUSTOMER itself *is* assignable, because Table 2.5
+  gives ACME the plain Customer role; its children (bill-to, ship-to, end-user) are more specific
+  options. *History:* this was first a `role_type_party_kind` pairs table with composite FKs,
   which the database enforced; we dropped it for simplicity.
 - **Identifier.** The book's identifier is (party, `party_role_id`). We use `party_role_id`
   alone, which is already unique.
@@ -488,10 +490,10 @@ PARTY
   its ancestors, so one data-quality query can check *every* relationship type at any depth
   ("is BILL_TO_CUSTOMER a kind of CUSTOMER?"). Compare 2.5, which needed one hand-written check
   per table.
-- **Assumed directions:** 2.5 gives from/to for EMPLOYMENT, CUSTOMER RELATIONSHIP and
-  ORGANIZATION ROLLUP. For SUPPLIER, ORGANIZATION CONTACT, DISTRIBUTION CHANNEL and PARTNERSHIP
-  we assumed the same pattern, from the outside party to us (contact → the organization they
-  represent). Change them if the book's text says otherwise.
+- **Directions:** 2.5 gives from/to for EMPLOYMENT, CUSTOMER RELATIONSHIP and ORGANIZATION
+  ROLLUP, and Table 2.5 confirms SUPPLIER and DISTRIBUTION CHANNEL (agent), both from the outside
+  party to the internal organization. ORGANIZATION CONTACT (contact → the organization they
+  represent) and PARTNERSHIP (partner → internal organization) are still assumed.
 - **The 2.5 tables stay loaded**, seeded with the same facts, and a consistency query checks
   that employment agrees in both models.
 - **Generic payoff in the seed:** SUPPLIER and ORGANIZATION CONTACT relationships were added
@@ -502,6 +504,16 @@ PARTY
   directions; and every query filters by type.
 - **Not enforced:** cycles in ORGANIZATION ROLLUP (A within B within A). The org-chart query caps
   its recursion depth as a guard.
+
+### Table 2.5
+- **Loaded as seed data:** the ABC corporate family, end to end (parties, organizations, roles,
+  relationships), in its own block at the end of `seed.sql`. A query rebuilds the table from our
+  rows so it can be compared with the book.
+- **`thru_date` is exclusive in this repo:** it's the first day the row is *no longer* valid, which
+  is why consecutive rows share a date (SINGLE thru 2019-06-15, MARRIED from 2019-06-15). The book
+  prints inclusive thru dates, so its "12/31/2001" is stored as 2002-01-01.
+- The Customer Service Division is typed OTHER_INFORMAL in `organization_type`, because a
+  division isn't a legal entity.
 
 ## When NOT to use this
 
@@ -558,8 +570,8 @@ PARTY
   business revolves around.
 
 ## Open questions
-- **Directions of four 2.6a relationship types** (supplier, organization contact, distribution
-  channel, partnership) are assumed, not taken from the book. Check the chapter text.
+- **Directions of two 2.6a relationship types** (organization contact, partnership) are assumed,
+  not taken from the book. Table 2.5 confirmed supplier and distribution channel.
 - **PERSON NAME → PERSON NAME TYPE optionality.** Assumed mandatory on the name side, the same
   pattern as gender. Not yet confirmed against the book.
 
