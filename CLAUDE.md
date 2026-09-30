@@ -66,10 +66,15 @@ holes in the user's understanding and help fill them.
 ## SQL conventions
 - PostgreSQL (run through PGlite). Tables are singular snake_case (`party`, `party_role`), and
   primary keys are `<table>_id`.
+- **Keep keys simple (the user's preference, applied to every table):** surrogate primary keys and plain
+  foreign keys. Don't add composite keys or composite FKs to enforce rules. Rules a plain FK can't
+  express become a data-quality query in `queries.sql` (and a deliberate bad seed row that it
+  catches). Deviating from the book to simplify is welcome; record it in NOTES.md.
 - Subtypes: the supertype table plus a subtype table sharing its PK (e.g. `person.party_id` → `party`).
-  Record in NOTES.md whenever another strategy is chosen. Exclusive subtypes use a discriminator:
-  `party (party_id, party_kind)` is unique, and each subtype has a fixed `party_kind` plus a
-  composite FK to that pair. Attribute-less subtypes become rows in a `*_type` hierarchy.
+  Record in NOTES.md whenever another strategy is chosen. Exclusive subtypes get a discriminator
+  column on the supertype (`party.party_kind`), checked by a data-quality query. Attribute-less
+  subtypes become rows in a `*_type` hierarchy, with `applies_to_kind` when only some parties may
+  use a type.
 - Parties: `organization` and `person` key on `party_id`. Use the `party_display_name` view for
   a party's current name.
 - `*_TYPE` entities become lookup tables, not enums, to stay faithful to the book.

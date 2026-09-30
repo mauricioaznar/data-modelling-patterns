@@ -32,18 +32,18 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
    the user?
 8. **[2.2b]** Chloe has no marital status rows. How is "unknown" different from "single", and
    why does the flat 2.2a model hide that difference?
-9. **[2.2b]** PASSPORT carries a three-column foreign key to CITIZENSHIP (the natural key). The
-   alternative is a surrogate `citizenship_id`. What does each choice give you, and which would
-   you pick in a real app?
+9. **[2.2b]** PASSPORT first used a three-column foreign key to CITIZENSHIP (the book's natural
+   key: person, country, from_date), and we replaced it with a surrogate `citizenship_id`. What
+   did each version give you? What does a surrogate key hide, and does that matter?
 
 ### Where rules should live
 10. **[2.1, 2.3]** These rules are *not* enforced by the schema: an informal organization can
     have a tax ID; a party can be SMALL and MEDIUM at once; two current last names can coexist;
     a party can exist with no person/organization row. For each one: database constraint,
     application code, or a periodic data-quality query? Why?
-11. **[2.3]** We added `party_kind` with composite foreign keys so the database rejects a person
-    being an organization. Was that worth an extra column on every subtype table? When would you
-    skip it?
+11. **[2.3, 2.4]** We first used composite foreign keys so the database itself rejected a
+    person being an organization, or an organization playing EMPLOYEE, and then dropped them for
+    data-quality queries. What did we give up? In what kind of system would you bring them back?
 
 ### When not to use it
 12. **[2.2b]** Attributes-as-rows (EAV) vs. plain columns vs. a Postgres `jsonb` column: when
@@ -64,7 +64,26 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 18. **[2.4]** Why is DEPARTMENT a *role* an organization plays, rather than an organization
     *type* like CORPORATION in 2.1?
 19. **[2.4]** Some roles are person-only, some organization-only, some either. Should the
-    database enforce that (like we did for classifications), and how would you enforce "either"?
+    database enforce that, or is a data-quality query enough? How would a constraint handle "either"?
+
+### Relationships (Fig 2.6a)
+20. **[2.6a]** A relationship links two *roles*, not two parties. What would be lost if
+    PARTY RELATIONSHIP pointed straight at two parties plus a type?
+21. **[2.6a]** Relationships have a direction (from → to). For a symmetric one like PARTNERSHIP,
+    which party is "from"? What does direction cost when querying "all of X's relationships"?
+22. **[2.6a]** PARTY RELATIONSHIP only carries dates and a comment. Where would data specific
+    to one kind of relationship go, such as an employee's salary or a customer's credit terms?
+23. **[2.6a]** ORGANIZATION ROLLUP builds a hierarchy out of relationships. How would you
+    query a department's whole chain up to the top? What stops a cycle (A rolls up to B, B to A)?
+24. **[2.6a]** With relationships in place, can a role exist *without* any relationship? Is
+    "Kiri is a PROSPECT" meaningful on its own, or should it always be "a prospect *of* someone"?
+25. **[2.6a]** Ana can hold two EMPLOYMENT relationships at the same time, with two internal
+    organizations. Is that a feature (part-time in two companies) or a data error? How would you tell?
+26. **[2.5 vs 2.6a]** Specific relationships (2.5: one subtype per relationship, each with its own
+    lines) vs. generic (2.6a: one PARTY RELATIONSHIP plus a TYPE row). What does each make easy,
+    and what does each make hard? Which one tells a new developer more about the business?
+27. **[2.5]** Employment is drawn *from* the internal organization *to* the employee. Would you
+    have drawn it the other way? Does direction carry meaning, or is it just a convention to agree on?
 
 ## 1. Redraw from memory
 *(completed at chapter end)*

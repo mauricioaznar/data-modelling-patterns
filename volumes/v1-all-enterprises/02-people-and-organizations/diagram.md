@@ -3,8 +3,9 @@
 The diagram shows what `schema.sql` implements, not the book's figures.
 `person_flat` (Fig 2.2a) is also loaded, for comparison only, and is left out here.
 
-`PERSON` and `ORGANIZATION` are subtypes of `PARTY`: they share its `party_id` (1:1), and
-`party_kind` guarantees each party is exactly one of the two.
+`PERSON` and `ORGANIZATION` are subtypes of `PARTY`: they share its `party_id` (1:1).
+`party_kind` says which one a party should be (checked by a data-quality query).
+Every table has a single-column key and plain foreign keys.
 
 ```mermaid
 erDiagram
@@ -16,10 +17,9 @@ erDiagram
   PARTY_TYPE   |o--o{ PARTY_TYPE           : "parent of"
 
   %% Fig 2.4 — Party roles
-  PARTY                ||--o{ PARTY_ROLE           : "acting as"
-  ROLE_TYPE            |o--o{ ROLE_TYPE            : "parent of"
-  ROLE_TYPE            ||--o{ ROLE_TYPE_PARTY_KIND : "playable by"
-  ROLE_TYPE_PARTY_KIND ||--o{ PARTY_ROLE           : "allows"
+  PARTY     ||--o{ PARTY_ROLE : "acting as"
+  ROLE_TYPE ||--o{ PARTY_ROLE : "describes"
+  ROLE_TYPE |o--o{ ROLE_TYPE  : "parent of"
 
   %% Fig 2.1 — Organization
   ORGANIZATION_TYPE |o--o{ ORGANIZATION_TYPE : "parent of"
@@ -44,29 +44,25 @@ erDiagram
   PARTY_TYPE {
     text party_type_id PK
     text parent_type_id FK
-    text applies_to_kind
+    text applies_to_kind "PERSON | ORGANIZATION"
     text description
   }
   PARTY_CLASSIFICATION {
-    int  party_id PK, FK
-    text party_type_id PK, FK
-    date from_date PK
+    int  party_classification_id PK
+    int  party_id FK
+    text party_type_id FK
+    date from_date
     date thru_date
-    text party_kind FK "checked against party and type"
   }
   ROLE_TYPE {
     text role_type_id PK
     text parent_type_id FK
+    text applies_to_kind "PERSON | ORGANIZATION | EITHER | null = grouping"
     text description
-  }
-  ROLE_TYPE_PARTY_KIND {
-    text role_type_id PK, FK
-    text party_kind PK "PERSON | ORGANIZATION"
   }
   PARTY_ROLE {
     int  party_role_id PK
     int  party_id FK
-    text party_kind FK
     text role_type_id FK
     date from_date
     date thru_date
@@ -92,37 +88,38 @@ erDiagram
     text comment
   }
   PERSON_NAME {
-    int  party_id PK, FK
-    int  name_seq_id PK
+    int  person_name_id PK
+    int  party_id FK
     text person_name_type_id FK
     date from_date
     date thru_date
     text name
   }
   MARITAL_STATUS {
-    int  party_id PK, FK
-    text marital_status_type_id PK, FK
-    date from_date PK
+    int  marital_status_id PK
+    int  party_id FK
+    text marital_status_type_id FK
+    date from_date
     date thru_date
   }
   PHYSICAL_CHARACTERISTIC {
-    int  party_id PK, FK
-    text physical_characteristic_type_id PK, FK
-    date from_date PK "deviation: * in the book"
+    int  physical_characteristic_id PK
+    int  party_id FK
+    text physical_characteristic_type_id FK
+    date from_date
     date thru_date
     text value
   }
   CITIZENSHIP {
-    int  party_id PK, FK
-    text country_id PK, FK
-    date from_date PK
+    int  citizenship_id PK
+    int  party_id FK
+    text country_id FK
+    date from_date
     date thru_date
   }
   PASSPORT {
     int  passport_id PK
-    int  party_id FK
-    text country_id FK
-    date citizenship_from_date FK
+    int  citizenship_id FK
     text passport_num
     date issue_date
     date expiration_date

@@ -16,7 +16,8 @@ insert into party (party_id, party_kind) values
   (7,  'ORGANIZATION'),   -- Northwind Platform Team
   (8,  'ORGANIZATION'),   -- García-López Family
   (9,  'ORGANIZATION'),   -- Saturday Book Club
-  (10, 'PERSON');         -- Kiri (mononymous)
+  (10, 'PERSON'),         -- Kiri (mononymous)
+  (11, 'ORGANIZATION');   -- DATA ERROR: a party with no organization row (caught by a query)
 
 select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
 
@@ -81,25 +82,25 @@ insert into person_name_type (person_name_type_id, description) values
   ('SUFFIX',         'Suffix'),
   ('NICKNAME',       'Nickname');
 
-insert into person_name (party_id, name_seq_id, person_name_type_id, from_date, thru_date, name) values
+insert into person_name (party_id, person_name_type_id, from_date, thru_date, name) values
   -- Ana: born García, became López on marriage, Dr. after her PhD
-  (1,  1, 'FIRST',          '1990-05-14', null,         'Ana'),
-  (1,  2, 'MIDDLE',         '1990-05-14', null,         'Lucía'),
-  (1,  3, 'LAST',           '1990-05-14', '2019-06-15', 'García'),
-  (1,  4, 'LAST',           '2019-06-15', null,         'López'),
-  (1,  5, 'NICKNAME',       '1995-01-01', null,         'Anita'),
-  (1,  6, 'PERSONAL_TITLE', '2018-07-01', null,         'Dr.'),
+  (1, 'FIRST',          '1990-05-14', null,         'Ana'),
+  (1, 'MIDDLE',         '1990-05-14', null,         'Lucía'),
+  (1, 'LAST',           '1990-05-14', '2019-06-15', 'García'),
+  (1, 'LAST',           '2019-06-15', null,         'López'),
+  (1, 'NICKNAME',       '1995-01-01', null,         'Anita'),
+  (1, 'PERSONAL_TITLE', '2018-07-01', null,         'Dr.'),
   -- Ben
-  (2,  1, 'PERSONAL_TITLE', '1985-11-02', null,         'Mr.'),
-  (2,  2, 'FIRST',          '1985-11-02', null,         'Ben'),
-  (2,  3, 'LAST',           '1985-11-02', null,         'Okafor'),
-  (2,  4, 'SUFFIX',         '1985-11-02', null,         'Jr.'),
+  (2, 'PERSONAL_TITLE', '1985-11-02', null,         'Mr.'),
+  (2, 'FIRST',          '1985-11-02', null,         'Ben'),
+  (2, 'LAST',           '1985-11-02', null,         'Okafor'),
+  (2, 'SUFFIX',         '1985-11-02', null,         'Jr.'),
   -- Chloe: dropped her childhood nickname in 2020
-  (3,  1, 'FIRST',          '2001-01-30', null,         'Chloe'),
-  (3,  2, 'LAST',           '2001-01-30', null,         'Martin'),
-  (3,  3, 'NICKNAME',       '2010-01-01', '2020-01-01', 'Coco'),
+  (3, 'FIRST',          '2001-01-30', null,         'Chloe'),
+  (3, 'LAST',           '2001-01-30', null,         'Martin'),
+  (3, 'NICKNAME',       '2010-01-01', '2020-01-01', 'Coco'),
   -- Kiri: one name only. Fig 2.3 says last name is mandatory; reality disagrees.
-  (10, 1, 'FIRST',          '2000-01-01', null,         'Kiri');
+  (10, 'FIRST',          '2000-01-01', null,         'Kiri');
 
 -- Marital status ----------------------------------------------
 insert into marital_status_type (marital_status_type_id, description) values
@@ -139,19 +140,21 @@ insert into country (country_id, name) values
   ('GB', 'United Kingdom'),
   ('FR', 'France');
 
-insert into citizenship (party_id, country_id, from_date, thru_date) values
-  (1, 'MX', '1990-05-14', null),
-  (1, 'ES', '2021-02-10', null),    -- dual citizen
-  (2, 'NG', '1985-11-02', null),
-  (2, 'GB', '2010-06-01', null),    -- dual citizen
-  (3, 'FR', '2001-01-30', null);    -- citizen with no passport
+insert into citizenship (citizenship_id, party_id, country_id, from_date, thru_date) values
+  (1, 1, 'MX', '1990-05-14', null),
+  (2, 1, 'ES', '2021-02-10', null),    -- dual citizen
+  (3, 2, 'NG', '1985-11-02', null),
+  (4, 2, 'GB', '2010-06-01', null),    -- dual citizen
+  (5, 3, 'FR', '2001-01-30', null);    -- citizen with no passport
 
-insert into passport (passport_id, party_id, country_id, citizenship_from_date, passport_num, issue_date, expiration_date) values
-  (1, 1, 'MX', '1990-05-14', 'G11111111', '2014-03-01', '2020-03-01'),   -- expired, replaced
-  (2, 1, 'MX', '1990-05-14', 'G22222222', '2020-02-15', '2030-02-15'),
-  (3, 1, 'ES', '2021-02-10', 'X1234567',  '2021-03-01', '2031-03-01'),
-  (4, 2, 'NG', '1985-11-02', 'A00123456', '2015-01-10', '2020-01-10'),   -- expired, never renewed
-  (5, 2, 'GB', '2010-06-01', '555000111', '2019-07-15', '2029-07-15');
+select setval(pg_get_serial_sequence('citizenship', 'citizenship_id'), (select max(citizenship_id) from citizenship));
+
+insert into passport (passport_id, citizenship_id, passport_num, issue_date, expiration_date) values
+  (1, 1, 'G11111111', '2014-03-01', '2020-03-01'),   -- Ana, Mexico: expired, replaced
+  (2, 1, 'G22222222', '2020-02-15', '2030-02-15'),   -- Ana, Mexico
+  (3, 2, 'X1234567',  '2021-03-01', '2031-03-01'),   -- Ana, Spain
+  (4, 3, 'A00123456', '2015-01-10', '2020-01-10'),   -- Ben, Nigeria: expired, never renewed
+  (5, 4, '555000111', '2019-07-15', '2029-07-15');   -- Ben, UK
 
 select setval(pg_get_serial_sequence('passport', 'passport_id'), (select max(passport_id) from passport));
 
@@ -183,116 +186,91 @@ insert into party_type (party_type_id, parent_type_id, applies_to_kind, descript
   ('INCOME_MIDDLE',               'INCOME',                      'PERSON',       'Middle income'),
   ('INCOME_HIGH',                 'INCOME',                      'PERSON',       'High income');
 
--- party_kind is repeated here so the composite FKs can check it against both
--- the party and the type. Wrong combinations are rejected by the database:
---   insert into party_classification values (1, 'SIZE_SMALL', 'PERSON', '2020-01-01', null);  -- fails
-insert into party_classification (party_id, party_type_id, party_kind, from_date, thru_date) values
+insert into party_classification (party_id, party_type_id, from_date, thru_date) values
   -- Northwind grew from small to medium in 2018
-  (4, 'IND_WHOLESALE',     'ORGANIZATION', '2010-01-01', null),
-  (4, 'SIZE_SMALL',        'ORGANIZATION', '2010-01-01', '2018-01-01'),
-  (4, 'SIZE_MEDIUM',       'ORGANIZATION', '2018-01-01', null),
-  (4, 'WOMAN_OWNED',       'ORGANIZATION', '2015-03-01', null),
+  (4, 'IND_WHOLESALE',     '2010-01-01', null),
+  (4, 'SIZE_SMALL',        '2010-01-01', '2018-01-01'),
+  (4, 'SIZE_MEDIUM',       '2018-01-01', null),
+  (4, 'WOMAN_OWNED',       '2015-03-01', null),
   -- Contoso: two classifications of different kinds at once
-  (5, 'IND_LOGISTICS',     'ORGANIZATION', '2016-01-01', null),
-  (5, 'SIZE_SMALL',        'ORGANIZATION', '2016-01-01', null),
-  (5, 'MINORITY_OWNED',    'ORGANIZATION', '2016-01-01', null),
-  (6, 'IND_PUBLIC_ADMIN',  'ORGANIZATION', '1950-01-01', null),
+  (5, 'IND_LOGISTICS',     '2016-01-01', null),
+  (5, 'SIZE_SMALL',        '2016-01-01', null),
+  (5, 'MINORITY_OWNED',    '2016-01-01', null),
+  (6, 'IND_PUBLIC_ADMIN',  '1950-01-01', null),
   -- people
-  (1, 'EEOC_PROFESSIONAL', 'PERSON',       '2018-07-01', null),
-  (1, 'INCOME_MIDDLE',     'PERSON',       '2014-01-01', '2019-01-01'),
-  (1, 'INCOME_HIGH',       'PERSON',       '2019-01-01', null),
-  (2, 'EEOC_EXECUTIVE',    'PERSON',       '2020-01-01', null),
-  (2, 'INCOME_HIGH',       'PERSON',       '2020-01-01', null);
+  (1, 'EEOC_PROFESSIONAL', '2018-07-01', null),
+  (1, 'INCOME_MIDDLE',     '2014-01-01', '2019-01-01'),
+  (1, 'INCOME_HIGH',       '2019-01-01', null),
+  (2, 'EEOC_EXECUTIVE',    '2020-01-01', null),
+  (2, 'INCOME_HIGH',       '2020-01-01', null),
+  (1, 'SIZE_SMALL',        '2022-01-01', null);   -- DATA ERROR: a company size on a person (caught by a query)
 
 -- ============================================================
 -- Fig 2.4 — Party roles
 -- ============================================================
-insert into role_type (role_type_id, parent_type_id, description) values
+insert into role_type (role_type_id, parent_type_id, applies_to_kind, description) values
   -- person roles
-  ('PERSON_ROLE',             null,                   'Person role'),
-  ('EMPLOYEE',                'PERSON_ROLE',          'Employee'),
-  ('CONTRACTOR',              'PERSON_ROLE',          'Contractor'),
-  ('FAMILY_MEMBER',           'PERSON_ROLE',          'Family member'),
-  ('CONTACT',                 'PERSON_ROLE',          'Contact'),
+  ('PERSON_ROLE',             null,                   null,           'Person role'),
+  ('EMPLOYEE',                'PERSON_ROLE',          'PERSON',       'Employee'),
+  ('CONTRACTOR',              'PERSON_ROLE',          'PERSON',       'Contractor'),
+  ('FAMILY_MEMBER',           'PERSON_ROLE',          'PERSON',       'Family member'),
+  ('CONTACT',                 'PERSON_ROLE',          'PERSON',       'Contact'),
   -- organization roles
-  ('ORGANIZATION_ROLE',       null,                   'Organization role'),
-  ('DISTRIBUTION_CHANNEL',    'ORGANIZATION_ROLE',    'Distribution channel'),
-  ('AGENT',                   'DISTRIBUTION_CHANNEL', 'Agent'),
-  ('DISTRIBUTOR',             'DISTRIBUTION_CHANNEL', 'Distributor'),
-  ('PARTNER',                 'ORGANIZATION_ROLE',    'Partner'),
-  ('COMPETITOR',              'ORGANIZATION_ROLE',    'Competitor'),
-  ('HOUSEHOLD',               'ORGANIZATION_ROLE',    'Household'),
-  ('REGULATORY_AGENCY',       'ORGANIZATION_ROLE',    'Regulatory agency'),
-  ('SUPPLIER',                'ORGANIZATION_ROLE',    'Supplier'),
-  ('ASSOCIATION',             'ORGANIZATION_ROLE',    'Association'),
-  ('ORGANIZATION_UNIT',       'ORGANIZATION_ROLE',    'Organization unit'),
-  ('PARENT_ORGANIZATION',     'ORGANIZATION_UNIT',    'Parent organization'),
-  ('SUBSIDIARY',              'ORGANIZATION_UNIT',    'Subsidiary'),
-  ('DEPARTMENT',              'ORGANIZATION_UNIT',    'Department'),
-  ('DIVISION',                'ORGANIZATION_UNIT',    'Division'),
-  ('OTHER_ORGANIZATION_UNIT', 'ORGANIZATION_UNIT',    'Other organization unit'),
-  ('INTERNAL_ORGANIZATION',   'ORGANIZATION_ROLE',    'Internal organization'),
+  ('ORGANIZATION_ROLE',       null,                   null,           'Organization role'),
+  ('DISTRIBUTION_CHANNEL',    'ORGANIZATION_ROLE',    null,           'Distribution channel'),
+  ('AGENT',                   'DISTRIBUTION_CHANNEL', 'ORGANIZATION', 'Agent'),
+  ('DISTRIBUTOR',             'DISTRIBUTION_CHANNEL', 'ORGANIZATION', 'Distributor'),
+  ('PARTNER',                 'ORGANIZATION_ROLE',    'ORGANIZATION', 'Partner'),
+  ('COMPETITOR',              'ORGANIZATION_ROLE',    'ORGANIZATION', 'Competitor'),
+  ('HOUSEHOLD',               'ORGANIZATION_ROLE',    'ORGANIZATION', 'Household'),
+  ('REGULATORY_AGENCY',       'ORGANIZATION_ROLE',    'ORGANIZATION', 'Regulatory agency'),
+  ('SUPPLIER',                'ORGANIZATION_ROLE',    'ORGANIZATION', 'Supplier'),
+  ('ASSOCIATION',             'ORGANIZATION_ROLE',    'ORGANIZATION', 'Association'),
+  ('ORGANIZATION_UNIT',       'ORGANIZATION_ROLE',    null,           'Organization unit'),
+  ('PARENT_ORGANIZATION',     'ORGANIZATION_UNIT',    'ORGANIZATION', 'Parent organization'),
+  ('SUBSIDIARY',              'ORGANIZATION_UNIT',    'ORGANIZATION', 'Subsidiary'),
+  ('DEPARTMENT',              'ORGANIZATION_UNIT',    'ORGANIZATION', 'Department'),
+  ('DIVISION',                'ORGANIZATION_UNIT',    'ORGANIZATION', 'Division'),
+  ('OTHER_ORGANIZATION_UNIT', 'ORGANIZATION_UNIT',    'ORGANIZATION', 'Other organization unit'),
+  ('INTERNAL_ORGANIZATION',   'ORGANIZATION_ROLE',    'ORGANIZATION', 'Internal organization'),
   -- roles either kind of party can play
-  ('CUSTOMER',                null,                   'Customer'),
-  ('BILL_TO_CUSTOMER',        'CUSTOMER',             'Bill-to customer'),
-  ('SHIP_TO_CUSTOMER',        'CUSTOMER',             'Ship-to customer'),
-  ('END_USER_CUSTOMER',       'CUSTOMER',             'End-user customer'),
-  ('PROSPECT',                null,                   'Prospect'),
-  ('SHAREHOLDER',             null,                   'Shareholder');
+  ('CUSTOMER',                null,                   null,           'Customer'),
+  ('BILL_TO_CUSTOMER',        'CUSTOMER',             'EITHER',       'Bill-to customer'),
+  ('SHIP_TO_CUSTOMER',        'CUSTOMER',             'EITHER',       'Ship-to customer'),
+  ('END_USER_CUSTOMER',       'CUSTOMER',             'EITHER',       'End-user customer'),
+  ('PROSPECT',                null,                   'EITHER',       'Prospect'),
+  ('SHAREHOLDER',             null,                   'EITHER',       'Shareholder');
 
-insert into role_type_party_kind (role_type_id, party_kind) values
-  ('EMPLOYEE',                'PERSON'),
-  ('CONTRACTOR',              'PERSON'),
-  ('FAMILY_MEMBER',           'PERSON'),
-  ('CONTACT',                 'PERSON'),
-  ('AGENT',                   'ORGANIZATION'),
-  ('DISTRIBUTOR',             'ORGANIZATION'),
-  ('PARTNER',                 'ORGANIZATION'),
-  ('COMPETITOR',              'ORGANIZATION'),
-  ('HOUSEHOLD',               'ORGANIZATION'),
-  ('REGULATORY_AGENCY',       'ORGANIZATION'),
-  ('SUPPLIER',                'ORGANIZATION'),
-  ('ASSOCIATION',             'ORGANIZATION'),
-  ('PARENT_ORGANIZATION',     'ORGANIZATION'),
-  ('SUBSIDIARY',              'ORGANIZATION'),
-  ('DEPARTMENT',              'ORGANIZATION'),
-  ('DIVISION',                'ORGANIZATION'),
-  ('OTHER_ORGANIZATION_UNIT', 'ORGANIZATION'),
-  ('INTERNAL_ORGANIZATION',   'ORGANIZATION'),
-  ('BILL_TO_CUSTOMER',        'PERSON'), ('BILL_TO_CUSTOMER',  'ORGANIZATION'),
-  ('SHIP_TO_CUSTOMER',        'PERSON'), ('SHIP_TO_CUSTOMER',  'ORGANIZATION'),
-  ('END_USER_CUSTOMER',       'PERSON'), ('END_USER_CUSTOMER', 'ORGANIZATION'),
-  ('PROSPECT',                'PERSON'), ('PROSPECT',          'ORGANIZATION'),
-  ('SHAREHOLDER',             'PERSON'), ('SHAREHOLDER',       'ORGANIZATION');
-
--- "Our" enterprise is Northwind (party 4). Rejected by the database, for example:
---   insert into party_role (party_id, party_kind, role_type_id, from_date) values (4, 'ORGANIZATION', 'EMPLOYEE', '2020-01-01');
-insert into party_role (party_role_id, party_id, party_kind, role_type_id, from_date, thru_date) values
+-- "Our" enterprise is Northwind (party 4).
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
   -- Northwind and its platform team are internal
-  (1,  4,  'ORGANIZATION', 'INTERNAL_ORGANIZATION', '2010-01-01', null),
-  (2,  4,  'ORGANIZATION', 'PARENT_ORGANIZATION',   '2010-01-01', null),
-  (3,  7,  'ORGANIZATION', 'INTERNAL_ORGANIZATION', '2019-03-01', null),
-  (4,  7,  'ORGANIZATION', 'DEPARTMENT',            '2019-03-01', null),   -- department of whom? a role can't say
+  (1,  4,  'INTERNAL_ORGANIZATION', '2010-01-01', null),
+  (2,  4,  'PARENT_ORGANIZATION',   '2010-01-01', null),
+  (3,  7,  'INTERNAL_ORGANIZATION', '2019-03-01', null),
+  (4,  7,  'DEPARTMENT',            '2019-03-01', null),   -- department of whom? a role can't say
   -- Contoso is our supplier AND, since 2021, our customer: one party, three roles
-  (5,  5,  'ORGANIZATION', 'SUPPLIER',              '2016-01-01', null),
-  (6,  5,  'ORGANIZATION', 'BILL_TO_CUSTOMER',      '2021-04-01', null),
-  (7,  5,  'ORGANIZATION', 'SHIP_TO_CUSTOMER',      '2021-04-01', null),
-  (8,  6,  'ORGANIZATION', 'REGULATORY_AGENCY',     '2010-01-01', null),
-  (9,  8,  'ORGANIZATION', 'HOUSEHOLD',             '2019-06-15', null),
-  (10, 8,  'ORGANIZATION', 'END_USER_CUSTOMER',     '2020-02-01', null),
-  (11, 9,  'ORGANIZATION', 'ASSOCIATION',           '2018-01-01', null),
+  (5,  5,  'SUPPLIER',              '2016-01-01', null),
+  (6,  5,  'BILL_TO_CUSTOMER',      '2021-04-01', null),
+  (7,  5,  'SHIP_TO_CUSTOMER',      '2021-04-01', null),
+  (8,  6,  'REGULATORY_AGENCY',     '2010-01-01', null),
+  (9,  8,  'HOUSEHOLD',             '2019-06-15', null),
+  (10, 8,  'END_USER_CUSTOMER',     '2020-02-01', null),
+  (11, 9,  'ASSOCIATION',           '2018-01-01', null),
   -- Ana: employee, then contractor after leaving; also a shareholder and family member
-  (12, 1,  'PERSON',       'EMPLOYEE',              '2018-07-01', '2023-01-01'),
-  (13, 1,  'PERSON',       'CONTRACTOR',            '2023-01-01', null),
-  (14, 1,  'PERSON',       'SHAREHOLDER',           '2020-05-01', null),
-  (15, 1,  'PERSON',       'FAMILY_MEMBER',         '2019-06-15', null),
+  (12, 1,  'EMPLOYEE',              '2018-07-01', '2023-01-01'),
+  (13, 1,  'CONTRACTOR',            '2023-01-01', null),
+  (14, 1,  'SHAREHOLDER',           '2020-05-01', null),
+  (15, 1,  'FAMILY_MEMBER',         '2019-06-15', null),
   -- Ben: a contact (for which organization? a role can't say), then a prospect who converted
-  (16, 2,  'PERSON',       'CONTACT',               '2016-01-01', null),
-  (17, 2,  'PERSON',       'PROSPECT',              '2023-01-10', '2023-06-01'),
-  (18, 2,  'PERSON',       'BILL_TO_CUSTOMER',      '2023-06-01', null),
+  (16, 2,  'CONTACT',               '2016-01-01', null),
+  (17, 2,  'PROSPECT',              '2023-01-10', '2023-06-01'),
+  (18, 2,  'BILL_TO_CUSTOMER',      '2023-06-01', null),
   -- Chloe: employee
-  (19, 3,  'PERSON',       'EMPLOYEE',              '2023-09-01', null),
+  (19, 3,  'EMPLOYEE',              '2023-09-01', null),
   -- Kiri: still a prospect
-  (20, 10, 'PERSON',       'PROSPECT',              '2025-02-01', null);
+  (20, 10, 'PROSPECT',              '2025-02-01', null),
+  -- DATA ERRORS the FKs allow (caught by queries):
+  (21, 9,  'EMPLOYEE',              '2024-01-01', null),   -- an organization as an employee
+  (22, 5,  'CUSTOMER',              '2024-01-01', null);   -- a grouping type assigned directly
 
 select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));

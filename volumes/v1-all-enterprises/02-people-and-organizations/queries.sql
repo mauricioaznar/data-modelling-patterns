@@ -99,11 +99,12 @@ group by c.party_id
 having count(*) > 1;
 
 -- name: 2.2b — Passports and whether they are valid today
-select pp.party_id, co.name as country, pp.passport_num, pp.expiration_date,
+select c.party_id, co.name as country, pp.passport_num, pp.expiration_date,
        case when pp.expiration_date >= current_date then 'valid' else 'expired' end as state
 from passport pp
-join country co using (country_id)
-order by pp.party_id, pp.expiration_date;
+join citizenship c using (citizenship_id)
+join country co    using (country_id)
+order by c.party_id, pp.expiration_date;
 
 -- name: 2.2b — Current weight per person (latest open WEIGHT_KG row)
 select party_id, value::numeric as weight_kg, from_date as since
@@ -174,6 +175,23 @@ group by p.party_id, d.name
 having not (bool_or(n.person_name_type_id = 'FIRST') is true
         and bool_or(n.person_name_type_id = 'LAST')  is true);
 
+-- name: 2.3 — Data-quality check: parties without exactly the subtype their kind says (should be empty)
+select p.party_id, p.party_kind,
+       (pe.party_id is not null) as has_person_row,
+       (o.party_id  is not null) as has_organization_row
+from party p
+left join person pe      on pe.party_id = p.party_id
+left join organization o on o.party_id  = p.party_id
+where (p.party_kind = 'PERSON'       and (pe.party_id is null or o.party_id is not null))
+   or (p.party_kind = 'ORGANIZATION' and (o.party_id is null or pe.party_id is not null));
+
+-- name: 2.3 — Data-quality check: classifications on the wrong kind of party (should be empty)
+select d.name, d.party_kind, t.party_type_id, t.applies_to_kind
+from party_classification c
+join party_type t using (party_type_id)
+join party_display_name d using (party_id)
+where t.applies_to_kind <> d.party_kind;
+
 -- ============================================================
 -- Fig 2.4 — Party roles
 -- ============================================================
@@ -238,3 +256,13 @@ from party_role r
 join role_type t using (role_type_id)
 join party_display_name d using (party_id)
 where r.role_type_id in ('CONTACT', 'DEPARTMENT');
+
+-- name: 2.4 — Data-quality check: roles played by the wrong kind of party, or grouping types assigned directly (should be empty)
+select d.name, d.party_kind, r.role_type_id,
+       case when t.applies_to_kind is null then 'grouping type, not assignable'
+            else 'role is for ' || t.applies_to_kind end as problem
+from party_role r
+join role_type t using (role_type_id)
+join party_display_name d using (party_id)
+where t.applies_to_kind is null
+   or (t.applies_to_kind <> 'EITHER' and t.applies_to_kind <> d.party_kind);

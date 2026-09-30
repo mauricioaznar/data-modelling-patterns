@@ -277,6 +277,100 @@ PARTY
 - **INTERNAL ORGANIZATION** marks the organizations that are part of *our own* enterprise,
   as opposed to the outside world.
 
+### Fig 2.5 — Specific party relationships
+**Transcription** (confirmed against the book: ☑)
+
+```
+PARTY RELATIONSHIP
+  # from_date
+  o thru_date
+  subtypes:
+    EMPLOYMENT
+      -> INTERNAL ORGANIZATION  "from"  (role is "employer of")
+      -> EMPLOYEE               "to"    (role is "employed within")
+    CUSTOMER RELATIONSHIP
+      -> CUSTOMER               "from"  (role "involved in")             ← the grouping role, not BILL TO etc.
+      -> INTERNAL ORGANIZATION  "to"    (role "involved in")
+    ORGANIZATION ROLLUP
+      -> ORGANIZATION UNIT      "from"  (role is "within")
+      -> ORGANIZATION ROLE      "to"    (role is "made up of")
+
+PARTY ROLE                  (same subtype tree as Fig 2.4)
+  # party_role_id
+  -> PARTY                  ("for" / "acting as")
+  -> ROLE TYPE              ("described by")
+
+ROLE TYPE
+  # party_role_type_id      ← labelled "party role type id" here, "role type id" in 2.6a
+  * description
+  subtypes: PARTY ROLE TYPE
+```
+
+**Discussion**
+- **This is the *specific* version:** each kind of relationship is its own subtype, and each draws
+  its own two lines to the exact roles it connects. The model *shows* that employment is between
+  an internal organization and an employee.
+- **2.6a is the *generic* version** of the same thing: one PARTY RELATIONSHIP with a TYPE, and the
+  allowed role pairs move out of the diagram into PARTY RELATIONSHIP TYPE rows. It's the same
+  pattern as 2.2a → 2.2b and 2.1 → 2.3: structure becomes data.
+- **Direction reads as "from the owner to the member":** the employer *employs* the employee,
+  and the customer *buys from* us (the internal organization).
+- **CUSTOMER RELATIONSHIP connects the CUSTOMER role itself,** not bill-to/ship-to/end-user
+  specifically. That matters for us, because in 2.4 we made grouping role types like CUSTOMER
+  non-assignable.
+
+### Fig 2.6a — Common party relationships
+**Transcription** (confirmed against the book: ☐)
+
+```
+PARTY RELATIONSHIP
+  # from_date
+  o thru_date
+  o comment
+  -> PARTY ROLE   "from"    (many relationships "from" 1 role; role "involved in")   ⚠ identifier bar?
+  -> PARTY ROLE   "to"      (many relationships "to" 1 role; role "involved in")     ⚠ identifier bar?
+  -> PARTY RELATIONSHIP TYPE (many "described by" 1 type)                             ⚠ identifier bar? optionality?
+  subtypes:
+    SUPPLIER RELATIONSHIP, ORGANIZATION CONTACT RELATIONSHIP, EMPLOYMENT,
+    CUSTOMER RELATIONSHIP, DISTRIBUTION CHANNEL RELATIONSHIP, PARTNERSHIP,
+    ORGANIZATION ROLLUP
+
+PARTY RELATIONSHIP TYPE
+  # party_relationship_type_id
+  * description
+  * name
+  -> PARTY ROLE TYPE  "from"   (many relationship types; role type "used to define")
+  -> PARTY ROLE TYPE  "to"     (many relationship types; role type "used to define")
+
+PARTY ROLE                  (same subtype tree as Fig 2.4; dates not drawn here)
+  # party_role_id
+  -> PARTY                  ("for" / "acting as")
+  -> ROLE TYPE              ("described by")
+
+ROLE TYPE
+  # role_type_id
+  * description
+  subtypes: PARTY ROLE TYPE
+
+PARTY
+  # party_id
+  subtypes: PERSON, ORGANIZATION
+```
+
+**Discussion**
+- **This answers "employee *of whom*?"** A relationship links two *roles*, not two parties:
+  Ana-as-EMPLOYEE → Northwind-as-INTERNAL ORGANIZATION is an EMPLOYMENT relationship, and
+  Ben-as-CONTACT → Contoso-as-SUPPLIER is an ORGANIZATION CONTACT RELATIONSHIP.
+- **Relationship types define which role pairs make sense.** PARTY RELATIONSHIP TYPE points at
+  the *role type* allowed on each end. EMPLOYMENT only makes sense from an EMPLOYEE to an
+  employer, never from a SUPPLIER to a PROSPECT.
+- **This is why ROLE TYPE → PARTY ROLE TYPE is drawn:** relationship types are "used to define"
+  by party role types. We deferred that subtype in 2.4, and this figure is its first real use.
+- **Relationships are dated and directional** (from/to), with a free-text comment. The
+  relationship subtypes have no attributes, so they're labels again.
+- **ORGANIZATION ROLLUP** is how org charts get built: department → division → parent
+  organization, all as relationships between organization roles.
+
 ## Design decisions (book → SQL)
 
 ### Fig 2.1
@@ -301,22 +395,23 @@ PARTY
   inconsistent gender and marital-status spellings, and a former name that survives only in `comment`.
 
 ### Fig 2.2b
-- **Identifying relationships become composite keys.** Where the book marks a relationship as
-  part of the identifier, the parent's key joins the child's primary key:
-  `person_name (person_id, name_seq_id)`, `marital_status (person_id, marital_status_type_id, from_date)`,
-  `citizenship (person_id, country_id, from_date)`.
-- **PASSPORT carries a three-column foreign key** to CITIZENSHIP. That's the cost of an
-  identifying relationship: the key travels down to every child. A surrogate `citizenship_id`
-  would shrink it to one column but hide the natural identity. We kept the book's version to
-  feel the weight of it.
-- **Deviation: PHYSICAL CHARACTERISTIC key includes `from_date`.** The book draws `from_date`
-  as `*` (confirmed), which would make the key (person, type) and allow one weight per person,
-  ever. Including it makes the from/thru history work, as the seed's weight change shows.
+- **Surrogate keys instead of the book's identifying relationships.** The book identifies
+  PERSON NAME by (person, seq), MARITAL STATUS by (person, type, from_date), CITIZENSHIP by
+  (person, country, from_date). Each table has a single surrogate id instead
+  (`person_name_id`, which replaces `name_seq_id`, plus `marital_status_id`, `citizenship_id`…)
+  and a plain FK to the person. *History:* the first version used the book's composite keys; we
+  dropped them for simplicity when 2.5 was built.
+- **PASSPORT → CITIZENSHIP is a single `citizenship_id` FK.** It used to be a three-column
+  composite FK (person, country, from_date), which showed how an identifying key travels down to
+  every child. The person and country are now reached through the citizenship.
+- **PHYSICAL CHARACTERISTIC.** The book draws `from_date` as `*`, so its identifier (person,
+  type) would allow one weight per person, ever. With a surrogate key that problem disappears:
+  `from_date` is simply mandatory, which now matches the book.
 - **`value` is `text`.** One column has to hold heights, weights and eye colours, so the
   database can't check that a height is a number. The seed includes `'approx 170'`, and a
   query catches it. The unit lives in the type's description (`Height (cm)`).
-- **Additions not in the figure:** `country.name` (so rows are readable), `unique
-  (country_id, passport_num)`, and `thru_date > from_date` checks on every dated table.
+- **Additions not in the figure:** `country.name` (so rows are readable) and
+  `thru_date > from_date` checks on every dated table.
 - **Not enforced: overlapping periods.** Nothing stops two open `LAST` names or two current
   marital statuses for the same person. Postgres could enforce it with an exclusion constraint
   (`btree_gist`); for now it's up to the application.
@@ -324,23 +419,21 @@ PARTY
   model conflated unknown with null, which is the same thing but less visible.
 
 ### Fig 2.3
-- **`organization` and `person` became subtypes of `party`.** Their primary key is now
-  `party_id` (it replaced `organization_id` and `person_id`), and every person child table
-  (`person_name`, `marital_status`, `citizenship`, …) was renamed to `party_id` too. We chose
+- **`organization` and `person` became subtypes of `party`.** Their primary key is `party_id`,
+  which is also a plain FK to `party`, and every person child table uses `party_id` too. We chose
   the 2.2b person as the subtype. `person_flat` stays standalone, outside the party hierarchy.
 - **`party` is defined at the top of `schema.sql`**, ahead of 2.1, because the subtypes
   reference it. This is the only exception to "schema.sql follows book order".
-- **Addition: `party_kind` discriminator + composite FKs.** `party (party_id, party_kind)` is
-  unique, and each subtype row carries a fixed `party_kind` and references that pair. The result
-  is that a party can't be both a person and an organization. The same trick guards
-  classifications: `party_type.applies_to_kind` plus a second composite FK means the database
-  rejects an INDUSTRY classification on a person. It costs one extra column per table, and it
-  replaces constraints the book leaves to the application.
-- **Not enforced:** that every party *has* a subtype row. A `party` row with no `person` or
-  `organization` is allowed. Closing that gap needs a deferred constraint trigger.
+- **Addition: `party_kind` discriminator.** It says which subtype a party *should* have. A
+  data-quality query checks that every party has exactly that subtype row (the seed's party 11
+  has none). *History:* this was first enforced with composite FKs on `(party_id, party_kind)`;
+  we dropped those for simplicity.
 - **Classification subtypes become a three-level `party_type` hierarchy:** root
   (ORGANIZATION_ / PERSON_CLASSIFICATION), then category (INDUSTRY, SIZE, EEOC…), then the
   actual values. As in 2.1, the subtypes have no attributes, so they're rows, not tables.
+  `party_type.applies_to_kind` says which kind of party a type is for, and a data-quality query
+  catches mismatches (the seed classifies Ana, a person, as SIZE_SMALL).
+- **Surrogate `party_classification_id`** instead of the book's (party, type, from_date).
 - **Not enforced: one current value per category.** Nothing stops a party from being SMALL and
   MEDIUM at the same time. It's the overlapping-periods problem again, this time per category.
 - **"First and last name are mandatory" (from 2.3) can't be declared** when names are rows (the
@@ -353,24 +446,22 @@ PARTY
 - **Role subtypes become a `role_type` hierarchy** (PERSON_ROLE > EMPLOYEE,
   ORGANIZATION_ROLE > DISTRIBUTION_CHANNEL > AGENT, CUSTOMER > BILL_TO_CUSTOMER…), for the
   same reason as 2.1 and 2.3: the subtypes have no attributes.
-- **ROLE TYPE → PARTY ROLE TYPE is not modelled yet.** The book draws ROLE TYPE as a supertype
+- **ROLE TYPE → PARTY ROLE TYPE is not modelled.** The book draws ROLE TYPE as a supertype
   with a single subtype, PARTY ROLE TYPE. With only one subtype, a single `role_type` table is
-  enough. **Refactor later** if another role-type subtype appears (probably for relationships):
-  `role_type` becomes the supertype, with `party_role_type` as a subtype table, following the
-  `party_kind` pattern.
-- **Addition: `role_type_party_kind` (the pairs table).** It lists which kind of party may
-  play which role. Roles either kind can play (CUSTOMER, PROSPECT, SHAREHOLDER) get two rows.
-  `party_role` references `(role_type_id, party_kind)`, so the database rejects an organization
-  as EMPLOYEE or a person as SUPPLIER. Grouping types (PERSON_ROLE, CUSTOMER,
-  DISTRIBUTION_CHANNEL…) have no rows, which also means only concrete roles can be assigned.
-- **Identifier.** The book's identifier is (party, `party_role_id`). `party_role_id` is an
-  identity column, already unique, so it stays the primary key, plus `unique (party_id,
-  party_role_id)` so that later tables can reference "role X *of party Y*" and have both checked.
+  enough. Refactor if another role-type subtype ever appears.
+- **`role_type.applies_to_kind`** says which kind of party may play a role: PERSON,
+  ORGANIZATION, EITHER (customer, prospect, shareholder), or null for grouping types
+  (PERSON_ROLE, CUSTOMER, DISTRIBUTION_CHANNEL…) that aren't assigned directly. A data-quality
+  query catches violations (the seed has the Book Club as EMPLOYEE, and Contoso as plain
+  CUSTOMER). *History:* this was first a `role_type_party_kind` pairs table with composite FKs,
+  which the database enforced; we dropped it for simplicity.
+- **Identifier.** The book's identifier is (party, `party_role_id`). We use `party_role_id`
+  alone, which is already unique.
 - **Not enforced: overlapping periods of the same role.** Ana could hold two open EMPLOYEE rows.
   It's the same gap as names and classifications.
 - **Known gap, on purpose:** a role says *what* a party is to us, but not *to whom*. Ben is a
   CONTACT and the Platform Team is a DEPARTMENT, but of which organization? The seed and a query
-  show the hole; the book's relationship figures presumably fill it.
+  show the hole, and the relationship figures (2.5, 2.6a) fill it.
 
 ## When NOT to use this
 
@@ -428,5 +519,5 @@ PARTY
   SHAREHOLDER can be played by either kind of party.
 - PARTY CLASSIFICATION is identified by (party, party type, from_date); a PARTY TYPE may describe
   many classifications; first and last name are mandatory in 2.3.
-- PHYSICAL CHARACTERISTIC `from_date` is drawn as `*`. We deviate and include it in the key
+- PHYSICAL CHARACTERISTIC `from_date` is drawn as `*`. With surrogate keys that now matches the book
   (see Design decisions).

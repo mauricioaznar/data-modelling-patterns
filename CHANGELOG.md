@@ -3,6 +3,21 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-09-30
+
+**Built**
+- Simplified keys across Ch 2 (the user asked for consistency): every table now has a single-column
+  primary key and plain foreign keys. The composite keys and composite FKs from 2.2b–2.4
+  (`party_kind` pairs, the `role_type_party_kind` table, passport → citizenship) are gone. The
+  rules they enforced are now data-quality queries, each with a deliberate bad seed row to catch.
+
+**Decisions**
+- Key style: surrogate PKs and plain FKs everywhere. Deviating from the book to simplify is fine
+  as long as NOTES.md records it (CLAUDE.md updated).
+
+**Next**
+- Vol 1, Ch 2: Fig 2.5 (specific relationships) is transcribed and built; then 2.6a (generic).
+
 ## 2026-09-29
 
 **Built**
