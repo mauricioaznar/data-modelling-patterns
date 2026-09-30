@@ -317,3 +317,91 @@ from customer_relationship c
 join party_role r on r.party_role_id = c.customer_party_role_id
 join role_type t  on t.role_type_id = r.role_type_id
 where coalesce(t.parent_type_id, '') <> 'CUSTOMER';
+
+-- ============================================================
+-- Fig 2.6a — Common party relationships (generic)
+-- ============================================================
+
+-- name: 2.6a — Every current relationship, read as a sentence
+select fp.name as from_party, ft.description as as_role,
+       rt.name as relationship,
+       tp.name as to_party, tt.description as to_role
+from party_relationship pr
+join party_relationship_type rt on rt.party_relationship_type_id = pr.party_relationship_type_id
+join party_role f  on f.party_role_id = pr.from_party_role_id
+join party_role t  on t.party_role_id = pr.to_party_role_id
+join role_type ft  on ft.role_type_id = f.role_type_id
+join role_type tt  on tt.role_type_id = t.role_type_id
+join party_display_name fp on fp.party_id = f.party_id
+join party_display_name tp on tp.party_id = t.party_id
+where pr.thru_date is null
+order by relationship, from_party;
+
+-- name: 2.6a — Who is Ben a contact for? (the other gap from 2.4, which 2.5 had no table for)
+select o.name as contact_for, pr.from_date, pr.comment
+from party_relationship pr
+join party_role f on f.party_role_id = pr.from_party_role_id
+join party_role t on t.party_role_id = pr.to_party_role_id
+join party_display_name o on o.party_id = t.party_id
+where pr.party_relationship_type_id = 'ORGANIZATION_CONTACT'
+  and f.party_id = 2;
+
+-- name: 2.6a — All of Contoso's relationships, in either direction (direction makes this an OR)
+select rt.name as relationship,
+       case when f.party_id = 5 then 'from Contoso' else 'to Contoso' end as direction,
+       other.name as other_party
+from party_relationship pr
+join party_relationship_type rt on rt.party_relationship_type_id = pr.party_relationship_type_id
+join party_role f on f.party_role_id = pr.from_party_role_id
+join party_role t on t.party_role_id = pr.to_party_role_id
+join party_display_name other
+  on other.party_id = case when f.party_id = 5 then t.party_id else f.party_id end
+where 5 in (f.party_id, t.party_id)
+order by relationship;
+
+-- name: 2.6a — Org chart: every unit's chain up to the top (recursive walk over ORGANIZATION_ROLLUP)
+with recursive chain (unit_party_id, parent_party_id, depth) as (
+  select c.party_id, p.party_id, 1
+  from party_relationship pr
+  join party_role c on c.party_role_id = pr.from_party_role_id
+  join party_role p on p.party_role_id = pr.to_party_role_id
+  where pr.party_relationship_type_id = 'ORGANIZATION_ROLLUP' and pr.thru_date is null
+  union all
+  select ch.unit_party_id, p.party_id, ch.depth + 1
+  from chain ch
+  join party_role c on c.party_id = ch.parent_party_id
+  join party_relationship pr on pr.from_party_role_id = c.party_role_id
+                            and pr.party_relationship_type_id = 'ORGANIZATION_ROLLUP'
+                            and pr.thru_date is null
+  join party_role p on p.party_role_id = pr.to_party_role_id
+  where ch.depth < 10   -- guard against cycles
+)
+select u.name as unit, p.name as rolls_up_to, depth
+from chain
+join party_display_name u on u.party_id = unit_party_id
+join party_display_name p on p.party_id = parent_party_id
+order by unit, depth;
+
+-- name: 2.6a — Consistency check: 2.5's employment table and 2.6a's generic rows agree (should be empty)
+(select employer_party_role_id, employee_party_role_id, from_date from employment
+ except
+ select from_party_role_id, to_party_role_id, from_date from party_relationship
+ where party_relationship_type_id = 'EMPLOYMENT')
+union all
+(select from_party_role_id, to_party_role_id, from_date from party_relationship
+ where party_relationship_type_id = 'EMPLOYMENT'
+ except
+ select employer_party_role_id, employee_party_role_id, from_date from employment);
+
+-- name: 2.6a — Data-quality check: relationships whose roles don't fit their type, at any depth of the role hierarchy (should be empty)
+select pr.party_relationship_id, pr.party_relationship_type_id,
+       f.role_type_id as from_role, rt.from_role_type_id as expected_from,
+       t.role_type_id as to_role,   rt.to_role_type_id   as expected_to
+from party_relationship pr
+join party_relationship_type rt on rt.party_relationship_type_id = pr.party_relationship_type_id
+join party_role f on f.party_role_id = pr.from_party_role_id
+join party_role t on t.party_role_id = pr.to_party_role_id
+where not exists (select 1 from role_type_ancestor a
+                  where a.role_type_id = f.role_type_id and a.ancestor_id = rt.from_role_type_id)
+   or not exists (select 1 from role_type_ancestor a
+                  where a.role_type_id = t.role_type_id and a.ancestor_id = rt.to_role_type_id);

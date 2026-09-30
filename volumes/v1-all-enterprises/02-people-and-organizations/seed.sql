@@ -301,3 +301,34 @@ insert into organization_rollup (organization_rollup_id, child_party_role_id, pa
 select setval(pg_get_serial_sequence('employment', 'employment_id'), (select max(employment_id) from employment));
 select setval(pg_get_serial_sequence('customer_relationship', 'customer_relationship_id'), (select max(customer_relationship_id) from customer_relationship));
 select setval(pg_get_serial_sequence('organization_rollup', 'organization_rollup_id'), (select max(organization_rollup_id) from organization_rollup));
+
+-- ============================================================
+-- Fig 2.6a — Common party relationships (generic)
+-- ============================================================
+-- Directions for EMPLOYMENT, CUSTOMER and ROLLUP come from Fig 2.5; the other
+-- four are assumed by analogy (outside party → us). See NOTES.md.
+insert into party_relationship_type (party_relationship_type_id, name, from_role_type_id, to_role_type_id, description) values
+  ('EMPLOYMENT',                        'Employment',                        'INTERNAL_ORGANIZATION', 'EMPLOYEE',              'An internal organization employs a person'),
+  ('CUSTOMER_RELATIONSHIP',             'Customer relationship',             'CUSTOMER',              'INTERNAL_ORGANIZATION', 'A customer buys from an internal organization'),
+  ('ORGANIZATION_ROLLUP',               'Organization rollup',               'ORGANIZATION_UNIT',     'ORGANIZATION_ROLE',     'A unit sits within a larger organization'),
+  ('SUPPLIER_RELATIONSHIP',             'Supplier relationship',             'SUPPLIER',              'INTERNAL_ORGANIZATION', 'A supplier sells to an internal organization'),
+  ('ORGANIZATION_CONTACT',              'Organization contact relationship', 'CONTACT',               'ORGANIZATION_ROLE',     'A person represents an organization'),
+  ('DISTRIBUTION_CHANNEL_RELATIONSHIP', 'Distribution channel relationship', 'DISTRIBUTION_CHANNEL',  'INTERNAL_ORGANIZATION', 'An agent or distributor sells for an internal organization'),
+  ('PARTNERSHIP',                       'Partnership',                       'PARTNER',               'INTERNAL_ORGANIZATION', 'A partner works with an internal organization');
+
+-- Party role ids as in Fig 2.5, plus 5 Contoso SUPPLIER.
+insert into party_relationship (party_relationship_id, party_relationship_type_id, from_party_role_id, to_party_role_id, from_date, thru_date, comment) values
+  -- the same facts as the three 2.5 tables…
+  (1,  'EMPLOYMENT',            1,  12, '2018-07-01', '2023-01-01', null),
+  (2,  'EMPLOYMENT',            1,  19, '2023-09-01', null,         null),
+  (3,  'EMPLOYMENT',            1,  16, '2024-01-01', null,         'DATA ERROR: role 16 is Ben''s CONTACT role'),
+  (4,  'CUSTOMER_RELATIONSHIP', 6,  1,  '2021-04-01', null,         null),
+  (5,  'CUSTOMER_RELATIONSHIP', 7,  1,  '2021-04-01', null,         null),
+  (6,  'CUSTOMER_RELATIONSHIP', 10, 1,  '2020-02-01', null,         null),
+  (7,  'CUSTOMER_RELATIONSHIP', 18, 1,  '2023-06-01', null,         null),
+  (8,  'ORGANIZATION_ROLLUP',   4,  2,  '2019-03-01', null,         null),
+  -- …plus kinds 2.5 had no table for: no schema change needed
+  (9,  'SUPPLIER_RELATIONSHIP', 5,  1,  '2016-01-01', null,         'Freight services'),
+  (10, 'ORGANIZATION_CONTACT',  16, 5,  '2016-01-01', null,         'Account manager at Contoso');
+
+select setval(pg_get_serial_sequence('party_relationship', 'party_relationship_id'), (select max(party_relationship_id) from party_relationship));

@@ -84,6 +84,11 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
     and what does each make hard? Which one tells a new developer more about the business?
 27. **[2.5]** Employment is drawn *from* the internal organization *to* the employee. Would you
     have drawn it the other way? Does direction carry meaning, or is it just a convention to agree on?
+28. **[2.6a]** The single data-quality query for 2.6a relies on the role hierarchy (the
+    `role_type_ancestor` view). What happens to existing relationships if someone moves a role
+    type to a different parent? Is the hierarchy data, or schema in disguise?
+29. **[2.6a]** We *assumed* the direction of four relationship types. If the book says otherwise,
+    which rows would have to change, and would any query notice?
 
 ## 1. Redraw from memory
 *(completed at chapter end)*

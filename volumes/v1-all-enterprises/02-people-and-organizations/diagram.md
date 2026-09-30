@@ -29,6 +29,13 @@ erDiagram
   PARTY_ROLE ||--o{ ORGANIZATION_ROLLUP   : "within"
   PARTY_ROLE ||--o{ ORGANIZATION_ROLLUP   : "made up of"
 
+  %% Fig 2.6a — Common party relationships (generic)
+  PARTY_RELATIONSHIP_TYPE ||--o{ PARTY_RELATIONSHIP      : "describes"
+  PARTY_ROLE              ||--o{ PARTY_RELATIONSHIP      : "from"
+  PARTY_ROLE              ||--o{ PARTY_RELATIONSHIP      : "to"
+  ROLE_TYPE               ||--o{ PARTY_RELATIONSHIP_TYPE : "used to define (from)"
+  ROLE_TYPE               ||--o{ PARTY_RELATIONSHIP_TYPE : "used to define (to)"
+
   %% Fig 2.1 — Organization
   ORGANIZATION_TYPE |o--o{ ORGANIZATION_TYPE : "parent of"
   ORGANIZATION_TYPE ||--o{ ORGANIZATION      : "classifies"
@@ -74,6 +81,22 @@ erDiagram
     text role_type_id FK
     date from_date
     date thru_date
+  }
+  PARTY_RELATIONSHIP_TYPE {
+    text party_relationship_type_id PK
+    text name
+    text description
+    text from_role_type_id FK
+    text to_role_type_id FK
+  }
+  PARTY_RELATIONSHIP {
+    int  party_relationship_id PK
+    text party_relationship_type_id FK
+    int  from_party_role_id FK
+    int  to_party_role_id FK
+    date from_date
+    date thru_date
+    text comment
   }
   EMPLOYMENT {
     int  employment_id PK

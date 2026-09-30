@@ -320,16 +320,16 @@ ROLE TYPE
   non-assignable.
 
 ### Fig 2.6a — Common party relationships
-**Transcription** (confirmed against the book: ☐)
+**Transcription** (confirmed against the book: ☑; identifier bars left unconfirmed, moot with surrogate keys)
 
 ```
 PARTY RELATIONSHIP
   # from_date
   o thru_date
   o comment
-  -> PARTY ROLE   "from"    (many relationships "from" 1 role; role "involved in")   ⚠ identifier bar?
-  -> PARTY ROLE   "to"      (many relationships "to" 1 role; role "involved in")     ⚠ identifier bar?
-  -> PARTY RELATIONSHIP TYPE (many "described by" 1 type)                             ⚠ identifier bar? optionality?
+  -> PARTY ROLE   "from"    (many relationships "from" 1 role; role "involved in")
+  -> PARTY ROLE   "to"      (many relationships "to" 1 role; role "involved in")  
+  -> PARTY RELATIONSHIP TYPE (many "described by" 1 type)
   subtypes:
     SUPPLIER RELATIONSHIP, ORGANIZATION CONTACT RELATIONSHIP, EMPLOYMENT,
     CUSTOMER RELATIONSHIP, DISTRIBUTION CHANNEL RELATIONSHIP, PARTNERSHIP,
@@ -477,6 +477,32 @@ PARTY
   it, and it catches the seed's deliberate error (Ben "employed" through his CONTACT role).
 - **Also not enforced:** that a relationship's dates fall within the dates of both roles.
 
+### Fig 2.6a
+- **One `party_relationship` table** with a surrogate id, a type, `from_party_role_id`,
+  `to_party_role_id`, dates and a comment. The relationship subtypes (EMPLOYMENT, CUSTOMER
+  RELATIONSHIP…) are rows in `party_relationship_type`, as everywhere else in the chapter.
+- **`party_relationship_type` keeps the book's single from/to role type**, pointing at
+  whatever level of the role hierarchy the book uses (CUSTOMER, ORGANIZATION_ROLE, not only
+  leaves). No expanded pairs table.
+- **Addition: `role_type_ancestor` view** (recursive). It pairs every role type with itself and
+  its ancestors, so one data-quality query can check *every* relationship type at any depth
+  ("is BILL_TO_CUSTOMER a kind of CUSTOMER?"). Compare 2.5, which needed one hand-written check
+  per table.
+- **Assumed directions:** 2.5 gives from/to for EMPLOYMENT, CUSTOMER RELATIONSHIP and
+  ORGANIZATION ROLLUP. For SUPPLIER, ORGANIZATION CONTACT, DISTRIBUTION CHANNEL and PARTNERSHIP
+  we assumed the same pattern, from the outside party to us (contact → the organization they
+  represent). Change them if the book's text says otherwise.
+- **The 2.5 tables stay loaded**, seeded with the same facts, and a consistency query checks
+  that employment agrees in both models.
+- **Generic payoff in the seed:** SUPPLIER and ORGANIZATION CONTACT relationships were added
+  with no schema change. 2.5 would have needed two new tables. That finally answers "Ben is a
+  contact *for whom*?" (Contoso).
+- **Generic cost in the queries:** column names no longer explain themselves (`from_party_role_id`
+  instead of `employer_party_role_id`); "all of X's relationships" needs an OR across both
+  directions; and every query filters by type.
+- **Not enforced:** cycles in ORGANIZATION ROLLUP (A within B within A). The org-chart query caps
+  its recursion depth as a guard.
+
 ## When NOT to use this
 
 **The 2.2b shape (thing + type + from/thru):**
@@ -520,7 +546,20 @@ PARTY
   date filter, and role-specific data (credit limit, supplier rating) needs somewhere to live,
   either a subtype table per role or attributes elsewhere.
 
+**Specific (2.5) vs. generic (2.6a) relationships:**
+- **Specific tables** fit a system with a few relationship kinds that are central to it
+  (an HR system's employment, a CRM's account-contact). You get readable columns, one FK per
+  meaning, and a place for kind-specific attributes (salary, credit terms).
+- **Generic** fits many relationship kinds that keep growing, or a need to ask "everything
+  connected to party X". New kinds are data, not migrations. The price is weaker constraints,
+  queries full of type filters, and nowhere obvious to put kind-specific attributes.
+- **A common middle ground:** the generic table for the long tail, plus specific tables (or
+  extension tables keyed by `party_relationship_id`) for the one or two relationships the
+  business revolves around.
+
 ## Open questions
+- **Directions of four 2.6a relationship types** (supplier, organization contact, distribution
+  channel, partnership) are assumed, not taken from the book. Check the chapter text.
 - **PERSON NAME → PERSON NAME TYPE optionality.** Assumed mandatory on the name side, the same
   pattern as gender. Not yet confirmed against the book.
 

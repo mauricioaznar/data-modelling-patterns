@@ -12,13 +12,16 @@ and any decisions made.
   rules they enforced are now data-quality queries, each with a deliberate bad seed row to catch.
 - Fig 2.5 Specific party relationships: `employment`, `customer_relationship` and
   `organization_rollup`, each linking two party roles. They answer "employee of whom?" from 2.4.
+- Fig 2.6a Common party relationships: one generic `party_relationship` plus
+  `party_relationship_type` (book's single from/to role type), a recursive `role_type_ancestor`
+  view, and one hierarchy-aware data-quality query. The 2.5 tables stay for comparison.
 
 **Decisions**
 - Key style: surrogate PKs and plain FKs everywhere. Deviating from the book to simplify is fine
   as long as NOTES.md records it (CLAUDE.md updated).
 
 **Next**
-- Vol 1, Ch 2: build Fig 2.6a (generic party relationships), keeping the 2.5 tables for comparison.
+- Vol 1, Ch 2: remaining figures after 2.6a (the user sends them), then write the chapter exercises.
 
 ## 2026-09-29
 
