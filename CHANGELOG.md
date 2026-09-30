@@ -22,6 +22,9 @@ and any decisions made.
   (`priority_type`, a parent-grouped `status_type`), and `communication_event` logged within a
   relationship. Three new data-quality queries (wrong status group, status contradicting dates,
   events outside the relationship period). Timestamps print in UTC.
+- Fig 2.8 Postal address information: addresses linked to parties with dates, city/state/postal
+  code/country as geographic boundaries nesting through a many-to-many association, a recursive
+  `geographic_boundary_ancestor` view, and `country` folded into `geographic_boundary`.
 
 **Decisions**
 - Key style: surrogate PKs and plain FKs everywhere. Deviating from the book to simplify is fine

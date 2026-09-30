@@ -93,7 +93,7 @@ order by p.party_id;
 -- name: 2.2b — Current dual (or more) citizens
 select c.party_id, string_agg(co.name, ', ' order by co.name) as countries
 from citizenship c
-join country co using (country_id)
+join geographic_boundary co on co.geographic_boundary_id = c.country_id
 where c.thru_date is null
 group by c.party_id
 having count(*) > 1;
@@ -103,7 +103,7 @@ select c.party_id, co.name as country, pp.passport_num, pp.expiration_date,
        case when pp.expiration_date >= current_date then 'valid' else 'expired' end as state
 from passport pp
 join citizenship c using (citizenship_id)
-join country co    using (country_id)
+join geographic_boundary co on co.geographic_boundary_id = c.country_id
 order by c.party_id, pp.expiration_date;
 
 -- name: 2.2b — Current weight per person (latest open WEIGHT_KG row)
@@ -500,3 +500,79 @@ from communication_event ce
 join party_relationship pr on pr.party_relationship_id = ce.party_relationship_id
 where ce.datetime_started::date < pr.from_date
    or (pr.thru_date is not null and ce.datetime_started::date >= pr.thru_date);
+
+-- ============================================================
+-- Fig 2.8 — Postal address information
+-- ============================================================
+
+-- name: 2.8 — Mailing labels: current addresses with city, state, postal code and country (rebuilt from boundaries)
+select d.name,
+       a.address1, a.address2,
+       max(g.name) filter (where g.geographic_boundary_type_id = 'CITY')         as city,
+       max(g.abbreviation) filter (where g.geographic_boundary_type_id = 'STATE') as state,
+       max(g.geo_code) filter (where g.geographic_boundary_type_id = 'POSTAL_CODE') as postal_code,
+       max(g.name) filter (where g.geographic_boundary_type_id = 'COUNTRY')      as country
+from party_postal_address ppa
+join postal_address a using (postal_address_id)
+join party_display_name d using (party_id)
+left join postal_address_boundary pab using (postal_address_id)
+left join geographic_boundary g using (geographic_boundary_id)
+where ppa.thru_date is null
+group by d.name, a.postal_address_id, a.address1, a.address2
+order by d.name;
+
+-- name: 2.8 — Where did Ana live on 2015-01-01? (the move keeps history)
+select a.address1, a.address2, ppa.from_date, ppa.thru_date
+from party_postal_address ppa
+join postal_address a using (postal_address_id)
+where ppa.party_id = 1
+  and ppa.from_date <= date '2015-01-01'
+  and (ppa.thru_date is null or ppa.thru_date > date '2015-01-01');
+
+-- name: 2.8 — Addresses shared by more than one party
+select a.address1, string_agg(d.name, ', ' order by d.name) as parties
+from party_postal_address ppa
+join postal_address a using (postal_address_id)
+join party_display_name d using (party_id)
+where ppa.thru_date is null
+group by a.postal_address_id, a.address1
+having count(*) > 1;
+
+-- name: 2.8 — Postal codes that cross more than one city
+select pc.geo_code as postal_code, string_agg(c.name, ', ' order by c.name) as cities
+from geographic_boundary_association x
+join geographic_boundary pc on pc.geographic_boundary_id = x.from_geographic_boundary_id
+join geographic_boundary c  on c.geographic_boundary_id  = x.to_geographic_boundary_id
+where pc.geographic_boundary_type_id = 'POSTAL_CODE'
+  and c.geographic_boundary_type_id  = 'CITY'
+group by pc.geo_code
+having count(*) > 1;
+
+-- name: 2.8 — Parties with a current address anywhere inside the Midwest Sales territory (any depth)
+select distinct d.name, a.address1
+from party_postal_address ppa
+join postal_address a using (postal_address_id)
+join postal_address_boundary pab using (postal_address_id)
+join geographic_boundary_ancestor anc on anc.geographic_boundary_id = pab.geographic_boundary_id
+join party_display_name d using (party_id)
+where anc.ancestor_id = 30
+  and ppa.thru_date is null
+order by d.name;
+
+-- name: 2.8 — Data-quality check: addresses without a city or a country (should be empty)
+select a.postal_address_id, a.address1,
+       bool_or(g.geographic_boundary_type_id = 'CITY')    is true as has_city,
+       bool_or(g.geographic_boundary_type_id = 'COUNTRY') is true as has_country
+from postal_address a
+left join postal_address_boundary pab using (postal_address_id)
+left join geographic_boundary g using (geographic_boundary_id)
+group by a.postal_address_id, a.address1
+having not (bool_or(g.geographic_boundary_type_id = 'CITY')    is true
+        and bool_or(g.geographic_boundary_type_id = 'COUNTRY') is true);
+
+-- name: 2.8 — Data-quality check: citizenships that point at something other than a country (should be empty)
+select c.citizenship_id, d.name, g.name as boundary, g.geographic_boundary_type_id
+from citizenship c
+join geographic_boundary g on g.geographic_boundary_id = c.country_id
+join party_display_name d on d.party_id = c.party_id
+where g.geographic_boundary_type_id <> 'COUNTRY';

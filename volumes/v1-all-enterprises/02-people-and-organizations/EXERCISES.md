@@ -117,6 +117,21 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 37. **[2.7 vs 2.3]** "Contoso is a high-priority customer." Is that a PRIORITY TYPE on the customer
     *relationship*, or a CLASSIFICATION of the *party*? When would the answer differ?
 
+### Postal addresses (Fig 2.8)
+38. **[2.8]** The address is a separate entity from the party, joined by dated PARTY POSTAL ADDRESS
+    rows. What's the difference between "Ana moved" and "Ana's address had a typo"? How does each
+    one change the rows?
+39. **[2.8]** City, state and postal code are *not* columns on POSTAL ADDRESS; they're linked
+    GEOGRAPHIC BOUNDARY rows. What does that buy you? What does it cost when you just want to
+    print a mailing label?
+40. **[2.8]** Boundaries nest through a many-to-many association instead of a `parent_id` column.
+    Give a real example that a single parent column couldn't represent.
+41. **[2.8, 2.2b]** COUNTRY is a geographic boundary here, but our citizenship uses a standalone
+    `country` table. What goes wrong if both exist side by side?
+42. **[2.8]** Nothing in this figure says *what an address is for* (billing, shipping, home).
+    Where would that information belong: on the address, on the party-address link, or
+    somewhere else?
+
 ## 1. Redraw from memory
 *(completed at chapter end)*
 

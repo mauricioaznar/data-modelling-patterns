@@ -22,6 +22,52 @@ insert into party (party_id, party_kind) values
 select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
 
 -- ============================================================
+-- Fig 2.8 (part 1, moved up) — Geographic boundaries
+-- ============================================================
+-- Seeded early because citizenship (2.2b) points at countries. How the
+-- boundaries nest is in the 2.8 section at the end (geographic_boundary_association).
+insert into geographic_boundary_type (geographic_boundary_type_id, description) values
+  ('COUNTRY',           'Country'),
+  ('STATE',             'State'),
+  ('PROVINCE',          'Province'),
+  ('TERRITORY',         'Territory'),
+  ('COUNTY',            'County'),
+  ('CITY',              'City'),
+  ('COUNTY_CITY',       'County city'),
+  ('POSTAL_CODE',       'Postal code'),
+  ('SALES_TERRITORY',   'Sales territory'),
+  ('SERVICE_TERRITORY', 'Service territory'),
+  ('REGION',            'Region');
+
+insert into geographic_boundary (geographic_boundary_id, geographic_boundary_type_id, geo_code, name, abbreviation) values
+  -- countries (ISO code in geo_code)
+  (1,  'COUNTRY',         'MX',    'Mexico',              'MX'),
+  (2,  'COUNTRY',         'ES',    'Spain',               'ES'),
+  (3,  'COUNTRY',         'NG',    'Nigeria',             'NG'),
+  (4,  'COUNTRY',         'GB',    'United Kingdom',      'UK'),
+  (5,  'COUNTRY',         'FR',    'France',              'FR'),
+  (6,  'COUNTRY',         'US',    'United States',       'USA'),
+  -- United States
+  (10, 'STATE',           'IL',    'Illinois',            'IL'),
+  (11, 'STATE',           'MO',    'Missouri',            'MO'),
+  (12, 'COUNTY',          null,    'Sangamon County',     null),
+  (13, 'CITY',            null,    'Springfield',         null),
+  (14, 'CITY',            null,    'Chatham',             null),
+  (15, 'POSTAL_CODE',     '62704', '62704',               null),
+  (16, 'POSTAL_CODE',     '62707', '62707',               null),   -- crosses two cities
+  (17, 'CITY',            null,    'St. Louis',           null),
+  (18, 'POSTAL_CODE',     '63101', '63101',               null),
+  -- Mexico
+  (20, 'STATE',           'JAL',   'Jalisco',             'Jal.'),
+  (21, 'CITY',            null,    'Guadalajara',         null),
+  (22, 'POSTAL_CODE',     '44100', '44100',               null),
+  -- business-defined boundaries
+  (30, 'SALES_TERRITORY', 'MW',    'Midwest Sales',       null),   -- spans two states
+  (31, 'REGION',          'NA',    'North America',       null);
+
+select setval(pg_get_serial_sequence('geographic_boundary', 'geographic_boundary_id'), (select max(geographic_boundary_id) from geographic_boundary));
+
+-- ============================================================
 -- Fig 2.1 — Organization
 -- ============================================================
 insert into organization_type (organization_type_id, parent_type_id, description) values
@@ -133,19 +179,15 @@ insert into physical_characteristic (party_id, physical_characteristic_type_id, 
   (3, 'HEIGHT_CM', '2019-01-01', null,         'approx 170');   -- the EAV cost: nothing rejects this
 
 -- Citizenship and passports -----------------------------------
-insert into country (country_id, name) values
-  ('MX', 'Mexico'),
-  ('ES', 'Spain'),
-  ('NG', 'Nigeria'),
-  ('GB', 'United Kingdom'),
-  ('FR', 'France');
-
+-- country_id is a geographic boundary id (countries are seeded in the 2.8
+-- block at the top): 1 Mexico, 2 Spain, 3 Nigeria, 4 United Kingdom, 5 France.
 insert into citizenship (citizenship_id, party_id, country_id, from_date, thru_date) values
-  (1, 1, 'MX', '1990-05-14', null),
-  (2, 1, 'ES', '2021-02-10', null),    -- dual citizen
-  (3, 2, 'NG', '1985-11-02', null),
-  (4, 2, 'GB', '2010-06-01', null),    -- dual citizen
-  (5, 3, 'FR', '2001-01-30', null);    -- citizen with no passport
+  (1, 1, 1, '1990-05-14', null),
+  (2, 1, 2, '2021-02-10', null),    -- dual citizen
+  (3, 2, 3, '1985-11-02', null),
+  (4, 2, 4, '2010-06-01', null),    -- dual citizen
+  (5, 3, 5, '2001-01-30', null),    -- citizen with no passport
+  (6, 10, 10, '2020-01-01', null);  -- DATA ERROR: boundary 10 is Illinois, a state, not a country
 
 select setval(pg_get_serial_sequence('citizenship', 'citizenship_id'), (select max(citizenship_id) from citizenship));
 
@@ -417,3 +459,49 @@ insert into communication_event (communication_event_id, party_relationship_id, 
   (5, 15, '2005-03-01 16:00+00', '2005-03-01 16:20+00', 'DATA ERROR: call logged against the agent relationship three years after it ended');
 
 select setval(pg_get_serial_sequence('communication_event', 'communication_event_id'), (select max(communication_event_id) from communication_event));
+
+-- ============================================================
+-- Fig 2.8 (part 2) — Postal address information
+-- ============================================================
+-- Boundary ids from the top block: 1 MX, 6 US, 10 IL, 11 MO, 12 Sangamon Co.,
+-- 13 Springfield, 14 Chatham, 15 62704, 16 62707, 17 St. Louis, 18 63101,
+-- 20 Jalisco, 21 Guadalajara, 22 44100, 30 Midwest Sales, 31 North America.
+insert into geographic_boundary_association (from_geographic_boundary_id, to_geographic_boundary_id) values
+  (10, 6), (11, 6),               -- Illinois, Missouri within the US
+  (12, 10),                       -- Sangamon County in Illinois
+  (13, 12), (13, 10),             -- Springfield within Sangamon County and Illinois
+  (14, 12), (14, 10),             -- Chatham within Sangamon County and Illinois
+  (15, 13),                       -- 62704 within Springfield
+  (16, 13), (16, 14),             -- 62707 crosses Springfield AND Chatham
+  (17, 11), (18, 17),             -- St. Louis in Missouri; 63101 within St. Louis
+  (20, 1), (21, 20), (22, 21),    -- Jalisco in Mexico; Guadalajara in Jalisco; 44100 in Guadalajara
+  (10, 30), (11, 30),             -- the Midwest Sales territory spans Illinois and Missouri
+  (6, 31), (1, 31);               -- US and Mexico in the North America region
+
+insert into postal_address (postal_address_id, address1, address2, directions) values
+  (1, '742 Evergreen Terrace', null,        null),
+  (2, 'Av. Juárez 123',        'Depto. 4',  null),
+  (3, '100 Commerce Dr',       'Suite 400', null),
+  (4, '55 Warehouse Rd',       null,        'Dock entrance on the north side'),
+  (5, '1 Market St',           null,        null),
+  (6, 'PO Box 99',             null,        null);   -- DATA ERROR: only linked to a postal code (no city or country)
+
+select setval(pg_get_serial_sequence('postal_address', 'postal_address_id'), (select max(postal_address_id) from postal_address));
+
+-- Each address is linked to its postal code, city, state and country explicitly.
+insert into postal_address_boundary (postal_address_id, geographic_boundary_id) values
+  (1, 15), (1, 13), (1, 10), (1, 6),   -- 742 Evergreen Terrace, Springfield IL 62704, US
+  (2, 22), (2, 21), (2, 20), (2, 1),   -- Av. Juárez, Guadalajara, Jalisco 44100, MX
+  (3, 16), (3, 13), (3, 10), (3, 6),   -- Northwind HQ, Springfield IL 62707
+  (4, 16), (4, 14), (4, 10), (4, 6),   -- Northwind warehouse, Chatham IL 62707 (same postal code)
+  (5, 18), (5, 17), (5, 11), (5, 6),   -- Contoso, St. Louis MO 63101
+  (6, 15);
+
+insert into party_postal_address (party_id, postal_address_id, from_date, thru_date, comment) values
+  (1, 2, '1990-05-14', '2019-06-15', 'Family home in Guadalajara'),
+  (1, 1, '2019-06-15', null,         'Moved on marriage'),
+  (8, 1, '2019-06-15', null,         'Household shares Ana''s address'),
+  (4, 3, '2010-01-01', null,         'Headquarters'),
+  (4, 4, '2015-06-01', null,         'Warehouse'),
+  (5, 5, '2016-01-01', null,         null),
+  (6, 6, '2010-01-01', null,         null);

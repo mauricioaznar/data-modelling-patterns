@@ -42,6 +42,15 @@ erDiagram
   STATUS_TYPE        |o--o{ STATUS_TYPE         : "parent of"
   PARTY_RELATIONSHIP ||--o{ COMMUNICATION_EVENT : "contacted via"
 
+  %% Fig 2.8 — Postal address information
+  PARTY                    ||--o{ PARTY_POSTAL_ADDRESS            : "residing at"
+  POSTAL_ADDRESS           ||--o{ PARTY_POSTAL_ADDRESS            : "the location for"
+  POSTAL_ADDRESS           ||--o{ POSTAL_ADDRESS_BOUNDARY         : "within"
+  GEOGRAPHIC_BOUNDARY      ||--o{ POSTAL_ADDRESS_BOUNDARY         : "for"
+  GEOGRAPHIC_BOUNDARY      ||--o{ GEOGRAPHIC_BOUNDARY_ASSOCIATION : "from (within)"
+  GEOGRAPHIC_BOUNDARY      ||--o{ GEOGRAPHIC_BOUNDARY_ASSOCIATION : "to (in)"
+  GEOGRAPHIC_BOUNDARY_TYPE ||--o{ GEOGRAPHIC_BOUNDARY             : "the description for"
+
   %% Fig 2.1 — Organization
   ORGANIZATION_TYPE |o--o{ ORGANIZATION_TYPE : "parent of"
   ORGANIZATION_TYPE ||--o{ ORGANIZATION      : "classifies"
@@ -55,7 +64,7 @@ erDiagram
   PERSON                       ||--o{ PHYSICAL_CHARACTERISTIC : "having"
   PHYSICAL_CHARACTERISTIC_TYPE ||--o{ PHYSICAL_CHARACTERISTIC : "describes"
   PERSON                       ||--o{ CITIZENSHIP             : "from"
-  COUNTRY                      ||--o{ CITIZENSHIP             : "for"
+  GEOGRAPHIC_BOUNDARY          ||--o{ CITIZENSHIP             : "country for"
   CITIZENSHIP                  ||--o{ PASSPORT                : "issuer of"
 
   PARTY {
@@ -189,7 +198,7 @@ erDiagram
   CITIZENSHIP {
     int  citizenship_id PK
     int  party_id FK
-    text country_id FK
+    int  country_id FK "a COUNTRY boundary"
     date from_date
     date thru_date
   }
@@ -200,8 +209,39 @@ erDiagram
     date issue_date
     date expiration_date
   }
-  COUNTRY {
-    text country_id PK
+  GEOGRAPHIC_BOUNDARY_TYPE {
+    text geographic_boundary_type_id PK
+    text description
+  }
+  GEOGRAPHIC_BOUNDARY {
+    int  geographic_boundary_id PK
+    text geographic_boundary_type_id FK
+    text geo_code
     text name
+    text abbreviation
+  }
+  GEOGRAPHIC_BOUNDARY_ASSOCIATION {
+    int geographic_boundary_association_id PK
+    int from_geographic_boundary_id FK "within"
+    int to_geographic_boundary_id FK "in"
+  }
+  POSTAL_ADDRESS {
+    int  postal_address_id PK
+    text address1
+    text address2
+    text directions
+  }
+  PARTY_POSTAL_ADDRESS {
+    int  party_postal_address_id PK
+    int  party_id FK
+    int  postal_address_id FK
+    date from_date
+    date thru_date
+    text comment
+  }
+  POSTAL_ADDRESS_BOUNDARY {
+    int postal_address_boundary_id PK
+    int postal_address_id FK
+    int geographic_boundary_id FK
   }
 ```

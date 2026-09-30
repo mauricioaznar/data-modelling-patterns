@@ -415,6 +415,66 @@ COMMUNICATION EVENT
   from Ben *as Contoso's contact* to us is logged against that contact relationship. The date is a
   datetime here, the first time-of-day attribute in the chapter.
 
+### Fig 2.8 — Postal address information
+**Transcription** (confirmed against the book: ☑)
+
+```
+PARTY POSTAL ADDRESS
+  # from_date
+  o thru_date
+  o comment
+  -> PARTY                  (many "specified for" 1 party; party "residing at")
+  -> POSTAL ADDRESS         (many "located at" 1 address; address "the location for")
+
+POSTAL ADDRESS
+  (no identifier drawn)
+  * address1
+  o address2
+  o directions
+
+POSTAL ADDRESS BOUNDARY     (no attributes drawn)
+  -> POSTAL ADDRESS         (many "specified for" 1 address; address "within")
+  -> GEOGRAPHIC BOUNDARY    (many "in" 1 boundary; boundary "for")
+
+GEOGRAPHIC BOUNDARY ASSOCIATION   (no attributes drawn)
+  -> GEOGRAPHIC BOUNDARY  "from"   ("within")
+  -> GEOGRAPHIC BOUNDARY  "to"     ("in")
+
+GEOGRAPHIC BOUNDARY
+  # geo_id
+  o geo_code
+  * name
+  o abbreviation
+  -> GEOGRAPHIC BOUNDARY TYPE  ("described by" / "the description for")
+  subtypes:
+    COUNTY CITY, CITY, COUNTY, POSTAL CODE, PROVINCE, TERRITORY, STATE,
+    COUNTRY, SALES TERRITORY, SERVICE TERRITORY, REGION
+  specific relationships drawn between subtypes (confirmed with a close-up photo):
+    COUNTY CITY: intersection of CITY ("within" / city "containing") and COUNTY ("specified for")
+    CITY, COUNTY within STATE ("composed of")
+    POSTAL CODE, PROVINCE, TERRITORY, STATE within COUNTRY ("having" / "composed of")
+    SALES TERRITORY, SERVICE TERRITORY, REGION: no specific lines, only the generic association
+
+GEOGRAPHIC BOUNDARY TYPE
+  # geo_boundary_type_id
+  * description
+```
+
+**Discussion**
+- **The address is separated from the party.** PARTY POSTAL ADDRESS links them many-to-many with
+  dates: a person moves (new row, old one gets a thru date), a family shares one address, and a
+  company has many sites. The address itself is stored once.
+- **Only the street part stays on the address** (address1, address2, directions). City, state,
+  postal code and country aren't columns; they're GEOGRAPHIC BOUNDARY rows the address is linked
+  to through POSTAL ADDRESS BOUNDARY. One address sits inside many boundaries at once: a city, a
+  state, a postal code, a country, and also a *sales territory*.
+- **Boundaries nest through a many-to-many association,** not a single parent column. A postal code
+  can cross city lines, and a sales territory can cover parts of several states.
+- **Same move as 2.5 → 2.6a:** the specific "city within state" lines inside the box are the
+  readable version; GEOGRAPHIC BOUNDARY ASSOCIATION is the generic one.
+- **COUNTRY is a geographic boundary here,** while our 2.2b schema already has a standalone
+  `country` table for citizenship. The two need reconciling.
+
 ## Design decisions (book → SQL)
 
 ### Fig 2.1
@@ -454,8 +514,8 @@ COMMUNICATION EVENT
 - **`value` is `text`.** One column has to hold heights, weights and eye colours, so the
   database can't check that a height is a number. The seed includes `'approx 170'`, and a
   query catches it. The unit lives in the type's description (`Height (cm)`).
-- **Additions not in the figure:** `country.name` (so rows are readable) and
-  `thru_date > from_date` checks on every dated table.
+- **Additions not in the figure:** a standalone `country` table (with a readable name), later folded
+  into `geographic_boundary` by Fig 2.8, and `thru_date > from_date` checks on every dated table.
 - **Not enforced: overlapping periods.** Nothing stops two open `LAST` names or two current
   marital statuses for the same person. Postgres could enforce it with an exclusion constraint
   (`btree_gist`); for now it's up to the application.
@@ -576,6 +636,29 @@ COMMUNICATION EVENT
 - **Tooling:** timestamps print as text in UTC (`scripts/db.js` sets the session time zone), so
   results don't depend on the machine.
 
+### Fig 2.8
+- **`country` folded into `geographic_boundary`.** A country is a boundary of type COUNTRY
+  (ISO code in `geo_code`). `citizenship.country_id` now references `geographic_boundary`, and a
+  data-quality query checks that it points at a COUNTRY (the seed plants Kiri with a
+  "citizenship" of Illinois). The standalone `country` table from 2.2b is gone.
+- **`geographic_boundary_type` and `geographic_boundary` are defined at the top of `schema.sql`**
+  (and all boundaries are seeded at the top of `seed.sql`), because citizenship references them.
+  This is the second "moved up" exception after `party`.
+- **The boundary subtypes are rows** in the book's own GEOGRAPHIC BOUNDARY TYPE table. The book
+  draws that type entity itself, so this matches the figure.
+- **Keys:** surrogate `geographic_boundary_id` (the book's `geo_id`), `postal_address_id` (no
+  identifier drawn in the book), and surrogate ids on the three link tables.
+- **`geographic_boundary_association`:** `from` is the smaller boundary (within), `to` the one
+  containing it (in), matching the child → parent direction of ORGANIZATION ROLLUP. The specific
+  lines drawn between subtypes, COUNTY CITY included, are all just rows here.
+- **Addition: `geographic_boundary_ancestor` view** (recursive, depth-capped against cycles).
+  It answers "is this address anywhere inside the Midwest Sales territory?" at any depth.
+- **Each address links explicitly to its postal code, city, state and country**, even though the
+  association could derive the higher levels from the postal code. That's simpler to query, but
+  it's duplication: nothing checks that an address's city really lies in its state.
+- **Not enforced:** that every address has a city and a country. A data-quality query checks it
+  (the seed plants a PO box linked only to a postal code).
+
 ## When NOT to use this
 
 **The 2.2b shape (thing + type + from/thru):**
@@ -629,6 +712,16 @@ COMMUNICATION EVENT
 - **A common middle ground:** the generic table for the long tail, plus specific tables (or
   extension tables keyed by `party_relationship_id`) for the one or two relationships the
   business revolves around.
+
+**Addresses as boundaries:**
+- Printing one address becomes a pivot over boundary rows (see the mailing-label query), and
+  address entry needs a boundary picker instead of free-text fields.
+- It pays off when the business *reasons* about geography: tax jurisdictions, sales and service
+  territories, "all customers in region X", or keeping boundary names consistent. For an app that
+  only prints shipping labels, `city`, `state`, `postal_code` and `country` columns on the address
+  (or even on the party) are the right call, usually with a separate validated `country` code.
+- **Separating the address from the party** is cheap and nearly always worth it once more than
+  one party can share an address or a party can have several.
 
 ## Open questions
 - **Directions of two 2.6a relationship types** (organization contact, partnership) are assumed,
