@@ -5,7 +5,7 @@
 //        npm run db:rebuild -- v1/03    (up to volume 1, chapter 03)
 import { rmSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { openDb, listVolumes, listChapters, searchPathFor, resolveTarget, DATA_DIR, existsSync } from './db.js';
+import { openDb, listVolumes, listChapters, sessionSetupFor, resolveTarget, DATA_DIR, existsSync } from './db.js';
 
 const stop = process.argv[2] ? resolveTarget(process.argv[2]) : null;
 rmSync(DATA_DIR, { recursive: true, force: true });
@@ -13,7 +13,7 @@ const db = openDb();
 
 for (const volume of listVolumes()) {
   if (stop && volume.schema > stop.volume.schema) break;
-  await db.exec(`create schema ${volume.schema}; ${searchPathFor(volume)}`);
+  await db.exec(`create schema ${volume.schema}; ${sessionSetupFor(volume)}`);
 
   for (const chapter of listChapters(volume)) {
     if (stop?.chapter && volume.schema === stop.volume.schema && chapter.number > stop.chapter.number) break;

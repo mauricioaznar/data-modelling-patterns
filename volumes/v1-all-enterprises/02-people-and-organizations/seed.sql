@@ -384,3 +384,36 @@ insert into party_relationship (party_relationship_id, party_relationship_type_i
   (16, 'SUPPLIER_RELATIONSHIP',             37, 32, '2001-04-05', null);
 
 select setval(pg_get_serial_sequence('party_relationship', 'party_relationship_id'), (select max(party_relationship_id) from party_relationship));
+
+-- ============================================================
+-- Fig 2.7 — Party relationship information
+-- ============================================================
+insert into priority_type (priority_type_id, description) values
+  ('HIGH',   'High'),
+  ('MEDIUM', 'Medium'),
+  ('LOW',    'Low');
+
+insert into status_type (status_type_id, parent_type_id, description) values
+  ('PARTY_RELATIONSHIP_STATUS', null,                        'Party relationship status'),
+  ('REL_ACTIVE',                'PARTY_RELATIONSHIP_STATUS', 'Active'),
+  ('REL_ON_HOLD',               'PARTY_RELATIONSHIP_STATUS', 'On hold'),
+  ('REL_INACTIVE',              'PARTY_RELATIONSHIP_STATUS', 'Inactive');
+
+-- Priority and status for the relationships loaded in 2.6a and Table 2.5.
+update party_relationship set priority_type_id = 'HIGH',   status_type_id = 'REL_ACTIVE'   where party_relationship_id in (4, 5, 9);   -- Contoso: customer and supplier
+update party_relationship set priority_type_id = 'MEDIUM', status_type_id = 'REL_ACTIVE'   where party_relationship_id in (7, 10, 14); -- Ben, Ben-as-contact, ACME
+update party_relationship set priority_type_id = 'LOW',    status_type_id = 'REL_ON_HOLD'  where party_relationship_id = 6;            -- the household
+update party_relationship set                              status_type_id = 'REL_ACTIVE'   where party_relationship_id in (2, 8, 11, 12, 13, 16);
+update party_relationship set                              status_type_id = 'REL_INACTIVE' where party_relationship_id = 15;           -- agent, ended 2002
+-- DATA ERRORS the FKs allow (caught by queries):
+update party_relationship set status_type_id = 'REL_ACTIVE'                where party_relationship_id = 1;  -- ended in 2023, still "active"
+update party_relationship set status_type_id = 'PARTY_RELATIONSHIP_STATUS' where party_relationship_id = 3;  -- a grouping row used as a status
+
+insert into communication_event (communication_event_id, party_relationship_id, datetime_started, datetime_ended, note) values
+  (1, 10, '2024-02-12 09:30+00', '2024-02-12 10:00+00', 'Quarterly freight review call with Ben'),
+  (2, 10, '2024-05-20 14:00+00', null,                  'Email from Ben: rate increase notice'),
+  (3, 4,  '2024-06-03 11:00+00', '2024-06-03 12:15+00', 'Contract renewal meeting with Contoso purchasing'),
+  (4, 14, '1999-02-01 10:00+00', '1999-02-01 10:45+00', 'First sales call with ACME'),
+  (5, 15, '2005-03-01 16:00+00', '2005-03-01 16:20+00', 'DATA ERROR: call logged against the agent relationship three years after it ended');
+
+select setval(pg_get_serial_sequence('communication_event', 'communication_event_id'), (select max(communication_event_id) from communication_event));

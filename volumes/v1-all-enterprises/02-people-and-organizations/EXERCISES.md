@@ -105,6 +105,18 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
     party-role row: list three things that would break. Then name the three places where the
     model *does* get its reuse.
 
+### Relationship information (Fig 2.7)
+34. **[2.7]** A communication event hangs off a PARTY RELATIONSHIP, not off two parties. What
+    does that buy you? How would you log a cold call to someone you have no relationship with yet?
+35. **[2.7]** Status and priority are single values on the relationship, with no dates. When would
+    the business need status *history* ("when did this customer become inactive?"), and how would
+    you model it using a pattern from earlier in the chapter?
+36. **[2.7]** STATUS TYPE is a shared supertype, with PARTY RELATIONSHIP STATUS TYPE as a subtype.
+    One shared status table for every entity, or one status table per entity: what does each make
+    easier, and what can go wrong with the shared one?
+37. **[2.7 vs 2.3]** "Contoso is a high-priority customer." Is that a PRIORITY TYPE on the customer
+    *relationship*, or a CLASSIFICATION of the *party*? When would the answer differ?
+
 ## 1. Redraw from memory
 *(completed at chapter end)*
 

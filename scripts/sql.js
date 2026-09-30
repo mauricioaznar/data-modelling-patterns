@@ -5,7 +5,7 @@
 //        npm run sql -- --vol 2 "select * from party"
 //        npm run sql -- path/to/file.sql
 import { readFileSync } from 'node:fs';
-import { openDb, resolveTarget, searchPathFor, printResult, existsSync } from './db.js';
+import { openDb, resolveTarget, sessionSetupFor, printResult, existsSync } from './db.js';
 
 const args = process.argv.slice(2);
 let vol = 'v1';
@@ -21,7 +21,7 @@ if (!arg) {
 const sql = arg.endsWith('.sql') && existsSync(arg) ? readFileSync(arg, 'utf8') : arg;
 const db = openDb();
 try {
-  await db.exec(searchPathFor(resolveTarget(vol).volume));
+  await db.exec(sessionSetupFor(resolveTarget(vol).volume));
   for (const result of await db.exec(sql)) printResult(result);
 } catch (err) {
   console.error(err.message);

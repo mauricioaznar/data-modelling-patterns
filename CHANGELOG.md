@@ -18,6 +18,10 @@ and any decisions made.
 - Table 2.5 loaded as seed data (the ABC corporate family), giving the org chart a two-level
   hierarchy. CUSTOMER is now an assignable role type, as the table uses it. Table 2.5 confirmed
   two of the assumed relationship directions (supplier, agent).
+- Fig 2.7 Party relationship information: optional priority and status on relationships
+  (`priority_type`, a parent-grouped `status_type`), and `communication_event` logged within a
+  relationship. Three new data-quality queries (wrong status group, status contradicting dates,
+  events outside the relationship period). Timestamps print in UTC.
 
 **Decisions**
 - Key style: surrogate PKs and plain FKs everywhere. Deviating from the book to simplify is fine

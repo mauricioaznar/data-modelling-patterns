@@ -36,6 +36,12 @@ erDiagram
   ROLE_TYPE               ||--o{ PARTY_RELATIONSHIP_TYPE : "used to define (from)"
   ROLE_TYPE               ||--o{ PARTY_RELATIONSHIP_TYPE : "used to define (to)"
 
+  %% Fig 2.7 — Party relationship information
+  PRIORITY_TYPE      |o--o{ PARTY_RELATIONSHIP  : "set the priority for"
+  STATUS_TYPE        |o--o{ PARTY_RELATIONSHIP  : "set the status for"
+  STATUS_TYPE        |o--o{ STATUS_TYPE         : "parent of"
+  PARTY_RELATIONSHIP ||--o{ COMMUNICATION_EVENT : "contacted via"
+
   %% Fig 2.1 — Organization
   ORGANIZATION_TYPE |o--o{ ORGANIZATION_TYPE : "parent of"
   ORGANIZATION_TYPE ||--o{ ORGANIZATION      : "classifies"
@@ -97,6 +103,24 @@ erDiagram
     date from_date
     date thru_date
     text comment
+    text priority_type_id FK "optional (2.7)"
+    text status_type_id FK "optional (2.7)"
+  }
+  PRIORITY_TYPE {
+    text priority_type_id PK
+    text description
+  }
+  STATUS_TYPE {
+    text status_type_id PK
+    text parent_type_id FK
+    text description
+  }
+  COMMUNICATION_EVENT {
+    int         communication_event_id PK
+    int         party_relationship_id FK
+    timestamptz datetime_started
+    timestamptz datetime_ended
+    text        note
   }
   EMPLOYMENT {
     int  employment_id PK

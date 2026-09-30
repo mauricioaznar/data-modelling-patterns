@@ -8,10 +8,15 @@ export const DATA_DIR = join(ROOT, '.pgdata');
 export const VOLUMES_DIR = join(ROOT, 'volumes');
 
 const DATE_OID = 1082;
+const TIMESTAMP_OID = 1114;
+const TIMESTAMPTZ_OID = 1184;
 
 export function openDb() {
-  // Keep `date` columns as 'YYYY-MM-DD' strings instead of JS Date timestamps.
-  return new PGlite(DATA_DIR, { parsers: { [DATE_OID]: (value) => value } });
+  // Keep date/time columns as the strings Postgres prints instead of JS Date objects.
+  const asText = (value) => value;
+  return new PGlite(DATA_DIR, {
+    parsers: { [DATE_OID]: asText, [TIMESTAMP_OID]: asText, [TIMESTAMPTZ_OID]: asText },
+  });
 }
 
 function subdirs(dir, pattern) {
@@ -41,14 +46,16 @@ export function listChapters(volume) {
   }));
 }
 
-// A volume resolves unqualified names in its own schema first, then in earlier
-// volumes (Vol 2's industry models extend Vol 1's tables).
-export function searchPathFor(volume) {
+// Session settings for working in a volume. Unqualified names resolve in its
+// own schema first, then in earlier volumes (Vol 2's industry models extend
+// Vol 1's tables), and timestamps print in UTC so results don't depend on the
+// machine's time zone.
+export function sessionSetupFor(volume) {
   const schemas = listVolumes()
     .map((v) => v.schema)
     .filter((s) => s <= volume.schema)
     .reverse();
-  return `set search_path to ${schemas.join(', ')}, public;`;
+  return `set search_path to ${schemas.join(', ')}, public; set time zone 'UTC';`;
 }
 
 // Parse "v1", "v1/02" or "1/2" into { volume, chapter? }.

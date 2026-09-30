@@ -371,6 +371,50 @@ PARTY
 - **ORGANIZATION ROLLUP** is how org charts get built: department → division → parent
   organization, all as relationships between organization roles.
 
+### Fig 2.7 — Party relationship information
+**Transcription** (confirmed against the book: ☑)
+
+```
+PARTY RELATIONSHIP          (same entity and subtypes as Fig 2.6a)
+  # from_date
+  o thru_date
+  o comment
+  -> PARTY ROLE "from" / "to"          ("involved in")
+  -> PARTY RELATIONSHIP TYPE           ("described by" / "the description for")
+  -> PRIORITY TYPE                     ("prioritized by" / "set the priority for"; optional)
+  -> PARTY RELATIONSHIP STATUS TYPE    ("defined by" / "set the status for"; optional)
+
+PRIORITY TYPE
+  # priority_type_id
+  * description
+
+STATUS TYPE
+  # status_type_id
+  * description
+  subtypes: PARTY RELATIONSHIP STATUS TYPE      ← the line lands on this subtype
+
+COMMUNICATION EVENT
+  # communication_event_id
+  * datetime_started
+  o datetime_ended
+  o note
+  -> PARTY RELATIONSHIP     (many events "in the context of" 1 relationship;
+                             a relationship is "contacted via" many events; mandatory for the event)
+```
+
+**Discussion**
+- **A relationship carries information of its own,** not just the two roles and dates: how
+  important it is (priority), where it stands (status), and the history of contact within it
+  (communication events).
+- **Priority and status are single values with no dates.** The relationship knows its current
+  status but not its past statuses. Compare marital status in 2.2b, which kept full history.
+- **STATUS TYPE is a supertype, and PARTY RELATIONSHIP STATUS TYPE its only subtype.** It's the
+  same shape as ROLE TYPE → PARTY ROLE TYPE: a shared place for "statuses" that other entities
+  (orders, shipments…) will presumably get in later chapters.
+- **A communication event happens *within a relationship*,** not just between two parties: a call
+  from Ben *as Contoso's contact* to us is logged against that contact relationship. The date is a
+  datetime here, the first time-of-day attribute in the chapter.
+
 ## Design decisions (book → SQL)
 
 ### Fig 2.1
@@ -514,6 +558,23 @@ PARTY
   prints inclusive thru dates, so its "12/31/2001" is stored as 2002-01-01.
 - The Customer Service Division is typed OTHER_INFORMAL in `organization_type`, because a
   division isn't a legal entity.
+
+### Fig 2.7
+- **Priority and status are added to the 2.6a table with `alter table`** in the 2.7 section of
+  `schema.sql`, so each figure's contribution stays visible. Both are optional, current-value-only
+  FKs, with no history.
+- **`status_type` is one table with a parent column,** like `role_type`. Relationship statuses sit
+  under a PARTY_RELATIONSHIP_STATUS grouping row, and later chapters can add their own groups. A
+  data-quality query checks that a relationship only uses a relationship status (the seed plants
+  the grouping row as a status).
+- **Status duplicates what the dates already say.** An ended relationship (`thru_date` in the
+  past) that is still "Active" is a contradiction, and a data-quality query catches it (the seed
+  plants Ana's ended employment as Active). That's the price of storing a status next to dates.
+- **`communication_event`** has a surrogate id, a mandatory FK to its relationship, `timestamptz`
+  start and end, and a note. A data-quality query flags events outside the relationship's period
+  (the seed plants a call three years after the agent relationship ended).
+- **Tooling:** timestamps print as text in UTC (`scripts/db.js` sets the session time zone), so
+  results don't depend on the machine.
 
 ## When NOT to use this
 

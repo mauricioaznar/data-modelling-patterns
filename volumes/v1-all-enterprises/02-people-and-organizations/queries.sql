@@ -436,3 +436,67 @@ left join party_relationship pr
 where r.party_id = 13
 group by t.description, r.party_role_id
 order by r.party_role_id;
+
+-- ============================================================
+-- Fig 2.7 — Party relationship information
+-- ============================================================
+
+-- name: 2.7 — Current relationships by priority, with status
+select rt.name as relationship, fp.name as from_party, tp.name as to_party,
+       coalesce(p.description, '—') as priority, coalesce(s.description, '—') as status
+from party_relationship pr
+join party_relationship_type rt on rt.party_relationship_type_id = pr.party_relationship_type_id
+join party_role f on f.party_role_id = pr.from_party_role_id
+join party_role t on t.party_role_id = pr.to_party_role_id
+join party_display_name fp on fp.party_id = f.party_id
+join party_display_name tp on tp.party_id = t.party_id
+left join priority_type p on p.priority_type_id = pr.priority_type_id
+left join status_type s   on s.status_type_id   = pr.status_type_id
+where pr.thru_date is null
+order by case pr.priority_type_id when 'HIGH' then 1 when 'MEDIUM' then 2 when 'LOW' then 3 else 4 end,
+         relationship, from_party;
+
+-- name: 2.7 — Contact history with Contoso, across every relationship it is part of
+select ce.datetime_started, rt.name as in_relationship, ce.note
+from communication_event ce
+join party_relationship pr on pr.party_relationship_id = ce.party_relationship_id
+join party_relationship_type rt on rt.party_relationship_type_id = pr.party_relationship_type_id
+join party_role f on f.party_role_id = pr.from_party_role_id
+join party_role t on t.party_role_id = pr.to_party_role_id
+where 5 in (f.party_id, t.party_id)
+order by ce.datetime_started;
+
+-- name: 2.7 — Active high-priority relationships and days since last contact
+select fp.name as from_party, rt.name as relationship, tp.name as to_party,
+       max(ce.datetime_started)::date as last_contact,
+       current_date - max(ce.datetime_started)::date as days_since
+from party_relationship pr
+join party_relationship_type rt on rt.party_relationship_type_id = pr.party_relationship_type_id
+join party_role f on f.party_role_id = pr.from_party_role_id
+join party_role t on t.party_role_id = pr.to_party_role_id
+join party_display_name fp on fp.party_id = f.party_id
+join party_display_name tp on tp.party_id = t.party_id
+left join communication_event ce on ce.party_relationship_id = pr.party_relationship_id
+where pr.priority_type_id = 'HIGH' and pr.status_type_id = 'REL_ACTIVE'
+group by fp.name, rt.name, tp.name
+order by last_contact nulls first;
+
+-- name: 2.7 — Data-quality check: relationships using a status that isn't a relationship status (should be empty)
+select pr.party_relationship_id, pr.status_type_id
+from party_relationship pr
+join status_type s on s.status_type_id = pr.status_type_id
+where coalesce(s.parent_type_id, '') <> 'PARTY_RELATIONSHIP_STATUS';
+
+-- name: 2.7 — Data-quality check: status contradicts the dates (should be empty)
+select pr.party_relationship_id, pr.thru_date, pr.status_type_id
+from party_relationship pr
+where (pr.thru_date is not null and pr.thru_date <= current_date and pr.status_type_id = 'REL_ACTIVE')
+   or (pr.thru_date is null and pr.status_type_id = 'REL_INACTIVE');
+
+-- name: 2.7 — Data-quality check: communication events outside their relationship's period (should be empty)
+select ce.communication_event_id, ce.datetime_started::date as event_date,
+       pr.from_date, pr.thru_date, ce.note
+from communication_event ce
+join party_relationship pr on pr.party_relationship_id = ce.party_relationship_id
+where ce.datetime_started::date < pr.from_date
+   or (pr.thru_date is not null and ce.datetime_started::date >= pr.thru_date);
