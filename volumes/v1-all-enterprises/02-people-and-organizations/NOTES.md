@@ -463,6 +463,20 @@ PARTY
   CONTACT and the Platform Team is a DEPARTMENT, but of which organization? The seed and a query
   show the hole, and the relationship figures (2.5, 2.6a) fill it.
 
+### Fig 2.5
+- **Key style:** surrogate primary keys and plain FKs, as everywhere in the chapter since the
+  simplification. Rules a plain FK can't express become data-quality queries.
+- **One table per relationship subtype** (`employment`, `customer_relationship`,
+  `organization_rollup`), each with a surrogate id, two FKs to `party_role`, and dates. The
+  PARTY RELATIONSHIP supertype only holds dates, so there's no supertype table; each subtype
+  carries its own dates.
+- **Columns are named for meaning** (`employer_party_role_id`, `employee_party_role_id`) with
+  comments saying which is "from" and which is "to". The specific model can afford
+  self-explaining names; the generic one in 2.6a can't.
+- **Not enforced:** that each FK points at the right *kind* of role. A data-quality query checks
+  it, and it catches the seed's deliberate error (Ben "employed" through his CONTACT role).
+- **Also not enforced:** that a relationship's dates fall within the dates of both roles.
+
 ## When NOT to use this
 
 **The 2.2b shape (thing + type + from/thru):**

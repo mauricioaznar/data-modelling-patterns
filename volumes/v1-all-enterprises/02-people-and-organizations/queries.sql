@@ -266,3 +266,54 @@ join role_type t using (role_type_id)
 join party_display_name d using (party_id)
 where t.applies_to_kind is null
    or (t.applies_to_kind <> 'EITHER' and t.applies_to_kind <> d.party_kind);
+
+-- ============================================================
+-- Fig 2.5 — Specific party relationships
+-- ============================================================
+
+-- name: 2.5 — Employment history: who employed whom (answers "employee of whom?" from 2.4)
+select er.name as employer, ee.name as employee, e.from_date, e.thru_date
+from employment e
+join party_role r1 on r1.party_role_id = e.employer_party_role_id
+join party_role r2 on r2.party_role_id = e.employee_party_role_id
+join party_display_name er on er.party_id = r1.party_id
+join party_display_name ee on ee.party_id = r2.party_id
+order by e.from_date;
+
+-- name: 2.5 — Northwind's current customers, and in which capacity
+select c.name as customer, t.description as capacity, cr.from_date
+from customer_relationship cr
+join party_role rc on rc.party_role_id = cr.customer_party_role_id
+join party_role ri on ri.party_role_id = cr.internal_org_party_role_id
+join role_type t   on t.role_type_id = rc.role_type_id
+join party_display_name c on c.party_id = rc.party_id
+where ri.party_id = 4
+  and cr.thru_date is null
+order by c.name, capacity;
+
+-- name: 2.5 — Org chart: which units roll up into which parent
+select child.name as unit, ct.description as unit_role, parent.name as within
+from organization_rollup o
+join party_role rc on rc.party_role_id = o.child_party_role_id
+join party_role rp on rp.party_role_id = o.parent_party_role_id
+join role_type ct  on ct.role_type_id = rc.role_type_id
+join party_display_name child  on child.party_id = rc.party_id
+join party_display_name parent on parent.party_id = rp.party_id
+where o.thru_date is null;
+
+-- name: 2.5 — Data-quality check: relationships whose roles are the wrong type (should be empty)
+select 'employment' as relationship, e.employment_id as id, 'employee role is ' || r.role_type_id as problem
+from employment e
+join party_role r on r.party_role_id = e.employee_party_role_id
+where r.role_type_id <> 'EMPLOYEE'
+union all
+select 'employment', e.employment_id, 'employer role is ' || r.role_type_id
+from employment e
+join party_role r on r.party_role_id = e.employer_party_role_id
+where r.role_type_id <> 'INTERNAL_ORGANIZATION'
+union all
+select 'customer_relationship', c.customer_relationship_id, 'customer role is ' || r.role_type_id
+from customer_relationship c
+join party_role r on r.party_role_id = c.customer_party_role_id
+join role_type t  on t.role_type_id = r.role_type_id
+where coalesce(t.parent_type_id, '') <> 'CUSTOMER';

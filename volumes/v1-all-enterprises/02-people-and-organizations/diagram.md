@@ -21,6 +21,14 @@ erDiagram
   ROLE_TYPE ||--o{ PARTY_ROLE : "describes"
   ROLE_TYPE |o--o{ ROLE_TYPE  : "parent of"
 
+  %% Fig 2.5 — Specific party relationships (each links two party roles)
+  PARTY_ROLE ||--o{ EMPLOYMENT            : "employer of"
+  PARTY_ROLE ||--o{ EMPLOYMENT            : "employed within"
+  PARTY_ROLE ||--o{ CUSTOMER_RELATIONSHIP : "customer in"
+  PARTY_ROLE ||--o{ CUSTOMER_RELATIONSHIP : "internal org in"
+  PARTY_ROLE ||--o{ ORGANIZATION_ROLLUP   : "within"
+  PARTY_ROLE ||--o{ ORGANIZATION_ROLLUP   : "made up of"
+
   %% Fig 2.1 — Organization
   ORGANIZATION_TYPE |o--o{ ORGANIZATION_TYPE : "parent of"
   ORGANIZATION_TYPE ||--o{ ORGANIZATION      : "classifies"
@@ -64,6 +72,27 @@ erDiagram
     int  party_role_id PK
     int  party_id FK
     text role_type_id FK
+    date from_date
+    date thru_date
+  }
+  EMPLOYMENT {
+    int  employment_id PK
+    int  employer_party_role_id FK "from: INTERNAL ORGANIZATION"
+    int  employee_party_role_id FK "to: EMPLOYEE"
+    date from_date
+    date thru_date
+  }
+  CUSTOMER_RELATIONSHIP {
+    int  customer_relationship_id PK
+    int  customer_party_role_id FK "from: CUSTOMER"
+    int  internal_org_party_role_id FK "to: INTERNAL ORGANIZATION"
+    date from_date
+    date thru_date
+  }
+  ORGANIZATION_ROLLUP {
+    int  organization_rollup_id PK
+    int  child_party_role_id FK "from: ORGANIZATION UNIT"
+    int  parent_party_role_id FK "to: ORGANIZATION ROLE"
     date from_date
     date thru_date
   }

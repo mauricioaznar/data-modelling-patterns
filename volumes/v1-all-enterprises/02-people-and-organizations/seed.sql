@@ -274,3 +274,30 @@ insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_d
   (22, 5,  'CUSTOMER',              '2024-01-01', null);   -- a grouping type assigned directly
 
 select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+-- ============================================================
+-- Fig 2.5 — Specific party relationships
+-- ============================================================
+-- Party role ids used below (from Fig 2.4):
+--   1 Northwind INTERNAL_ORGANIZATION    2 Northwind PARENT_ORGANIZATION
+--   4 Platform Team DEPARTMENT           6 Contoso BILL_TO   7 Contoso SHIP_TO
+--  10 García-López END_USER             12 Ana EMPLOYEE     16 Ben CONTACT
+--  18 Ben BILL_TO                       19 Chloe EMPLOYEE
+
+insert into employment (employment_id, employer_party_role_id, employee_party_role_id, from_date, thru_date) values
+  (1, 1, 12, '2018-07-01', '2023-01-01'),   -- Northwind employed Ana until she became a contractor
+  (2, 1, 19, '2023-09-01', null),           -- Northwind employs Chloe
+  (3, 1, 16, '2024-01-01', null);           -- DATA ERROR the FKs allow: Ben's role is CONTACT, not EMPLOYEE
+
+insert into customer_relationship (customer_relationship_id, customer_party_role_id, internal_org_party_role_id, from_date, thru_date) values
+  (1, 6,  1, '2021-04-01', null),   -- Contoso buys from Northwind (billed)
+  (2, 7,  1, '2021-04-01', null),   -- ... and receives the goods
+  (3, 10, 1, '2020-02-01', null),   -- the García-López household uses Northwind's products
+  (4, 18, 1, '2023-06-01', null);   -- Ben, after converting from prospect
+
+insert into organization_rollup (organization_rollup_id, child_party_role_id, parent_party_role_id, from_date, thru_date) values
+  (1, 4, 2, '2019-03-01', null);    -- the Platform Team is a department within Northwind
+
+select setval(pg_get_serial_sequence('employment', 'employment_id'), (select max(employment_id) from employment));
+select setval(pg_get_serial_sequence('customer_relationship', 'customer_relationship_id'), (select max(customer_relationship_id) from customer_relationship));
+select setval(pg_get_serial_sequence('organization_rollup', 'organization_rollup_id'), (select max(organization_rollup_id) from organization_rollup));
