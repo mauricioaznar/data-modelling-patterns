@@ -100,6 +100,10 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 32. **[Table 2.5]** The book prints inclusive thru dates ("thru 12/31/2001"); we store exclusive
     ones (2002-01-01). What goes wrong if one table in a system uses inclusive dates and another
     exclusive? Which convention makes "consecutive periods" and "as of" queries simpler?
+33. **[2.4, Table 2.5]** ACME and XYZ are both customers, and each gets its own PARTY ROLE row
+    pointing at the one CUSTOMER role type. Suppose instead they shared a single CUSTOMER
+    party-role row: list three things that would break. Then name the three places where the
+    model *does* get its reuse.
 
 ## 1. Redraw from memory
 *(completed at chapter end)*
