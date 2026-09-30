@@ -89,6 +89,14 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
     type to a different parent? Is the hierarchy data, or schema in disguise?
 29. **[2.6a]** We *assumed* the direction of four relationship types. If the book says otherwise,
     which rows would have to change, and would any query notice?
+30. **[2.6a]** PARTY RELATIONSHIP reaches ROLE TYPE by two paths: through its two PARTY ROLEs
+    (what the roles *are*) and through its PARTY RELATIONSHIP TYPE (what they *should be*). Which
+    path is a fact and which is a rule? What would you gain and lose by pointing the relationship
+    straight at two *parties* and letting the type imply the roles?
+31. **[Table 2.5]** ABC Subsidiary's SUBSIDIARY role is used twice: as the child of ABC
+    Corporation and as the parent of the Customer Service Division. Its INTERNAL ORGANIZATION role
+    is the "to" end of three relationships. Why is one role row per party per role enough? When
+    would a party need *two* rows of the same role type?
 
 ## 1. Redraw from memory
 *(completed at chapter end)*
