@@ -1,13 +1,14 @@
 # Vol 1, Chapter 2 — Exercises
 
-The chapter is still being read and built. Section 0 collects every question and idea raised
-along the way. The remaining sections are completed when the chapter's last figure is done.
-Answers go in this file (or the chapter's SQL files) and get reviewed; no answers are provided
-up front.
+All figures (2.1–2.13) are built. Work through sections 1–9; each exercise is small. Answers go
+in this file (or the chapter's SQL files) and get reviewed; no answers are provided up front.
 
 ## 0. To ponder (collected while reading)
 
 Answer in a sentence or three under each item. Tags show which figure raised it.
+
+**Core set: start here.** These 12 cover the chapter's main ideas: **1, 13, 14, 17, 20, 26, 38,
+43, 44, 46, 49, 51.** The rest are optional; pick any that catch your interest.
 
 ### Why the model is shaped this way
 1. **[before 2.1]** Why make PARTY a supertype at all, instead of separate `customer`,
@@ -173,31 +174,102 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
     of events can't?
 
 ## 1. Redraw from memory
-*(completed at chapter end)*
+Do one piece per sitting, without the book, NOTES or schema. Write it in the transcription
+notation (entities, key attributes, relationships with cardinality), then diff it against
+`NOTES.md` and list what you missed or got wrong.
+1. **Parties:** PARTY, its subtypes, PARTY ROLE, PARTY RELATIONSHIP and their type tables
+   (Figs 2.3, 2.4, 2.6a).
+2. **Reaching parties:** CONTACT MECHANISM with its subtypes, PARTY CONTACT MECHANISM, purposes,
+   and FACILITY with its links (Figs 2.10, 2.11).
+3. **Talking to parties:** COMMUNICATION EVENT, its roles and purposes, CASE and the work-effort
+   link (Figs 2.12, 2.13).
 
 ## 2. Explain why
-*(completed at chapter end; section 0 feeds into it)*
+Short answers, 2–3 sentences each.
+1. Why does Northwind's switchboard number exist once, with three party links, instead of
+   being stored three times?
+2. Almost every link table here has from/thru dates. Name one business question for each of
+   party role, party contact mechanism purpose and facility role that needs them.
+3. FACILITY TYPE, ORGANIZATION TYPE and CONTACT MECHANISM TYPE are lookup rows, but
+   TELECOMMUNICATIONS NUMBER is its own table. What's the rule?
+4. A CASE and a PARTY RELATIONSHIP can both group communication events. What's the
+   difference in what each one *means*?
+5. Relationship, event and case statuses all live in one `status_type` table. What does that
+   save, and what does it cost? (Look at the data-quality queries.)
 
 ## 3. Spot the flaw
-*(completed at chapter end)*
+Three small models, each with a mistake. For each: what data can't it hold, or what does it
+corrupt? Then fix it.
+
+**a)** (two flaws)
+```
+PARTY CONTACT MECHANISM
+  # party_id               -> PARTY
+  # contact_mechanism_id   -> CONTACT MECHANISM
+  * from_date
+  o thru_date
+  o purpose_type_id        -> CONTACT MECHANISM PURPOSE TYPE
+```
+
+**b)**
+```
+FACILITY
+  # facility_id
+  * description
+  * postal_address_id      -> POSTAL ADDRESS
+  o part_of_facility_id    -> FACILITY
+```
+
+**c)**
+```
+COMMUNICATION EVENT
+  # communication_event_id
+  * from_party_id          -> PARTY
+  * to_party_id            -> PARTY
+  * datetime_started
+  o note
+```
 
 ## 4. Extend it
-*(completed at chapter end)*
+**Requirement:** Privacy law says Northwind must keep a *history* of marketing consent: for each
+party and channel (e-mail, phone, post), when consent was given or withdrawn, and how it was
+collected (web form, phone call, signed letter). Today there's only a single
+`non_solicitation_ind` flag on the party's link.
+
+Change the model to support it, then add the SQL and seed rows (Ana withdrew phone consent on
+a call in 2024). Decide what happens to `non_solicitation_ind`, and say whether the
+communication event that captured the consent should be linked.
 
 ## 5. Write the queries
 Add each one to `queries.sql` under a `-- name:` header.
 1. **[2.2b]** Who changed their last name in the last 10 years? Show the old and new name.
-2. *(more at chapter end)*
+2. **[2.10]** Each party's billing address as of 2024-01-01 (purposes and dates both matter).
+3. **[2.10]** Parties with no current way to reach them at all: no address, no number, no
+   e-mail.
+4. **[2.11 + 2.10]** A truck broke down outside the Chatham warehouse. List every party with a
+   current role at that warehouse, with their current phone numbers.
+5. **[2.12 + 2.13]** For each case that isn't closed: its owner, the date of its last event and
+   the days since then.
+6. **[2.11]** Recursive: for each facility, the total square footage of its *direct* children.
+   Flag any facility whose children add up to more than itself.
 
 ## 6. Break the model
 Try to insert data that *should* be invalid. For each attempt, note whether it got through,
 and if it did, whether it deserves a constraint, a data-quality query, or just a note.
 1. **[2.2b]** Give someone two current (open) last names.
 2. **[2.3]** Classify Contoso as SIZE_SMALL and SIZE_LARGE for the same period.
-3. *(more at chapter end)*
+3. **[2.6a]** Make Contoso its own customer (both roles in the relationship belong to Contoso).
+4. **[2.10]** Give Ana a SHIPPING purpose on her mobile number.
+5. **[2.11]** Make the HQ building part of Office 412.
+6. **[2.12]** Log an e-mail with no participants at all.
 
 ## 7. Trade-offs
-*(completed at chapter end; see section 0, items 9, 11 and 12)*
+Two ways to model the same thing. Which would you choose, for which kind of system, and why?
+1. **Specific relationship tables (2.5) vs one generic PARTY RELATIONSHIP (2.6a).** Take two
+   systems: a 3-person startup's CRM, and a company-wide master-data hub.
+2. **Rules as rows vs rules in the schema.** `valid_contact_mechanism_role` and
+   `applies_to_kind` keep rules as data and check them with queries. The composite FKs we
+   removed enforced similar rules in the schema. (Section 0 items 9, 11 and 52 cover this too.)
 
 ## 8. In your own words
 Rewrite these NOTES.md sections yourself, 3–5 bullets each:
@@ -205,7 +277,15 @@ Rewrite these NOTES.md sections yourself, 3–5 bullets each:
 - When NOT to use this
 
 ## 9. Capstone
-*(completed at chapter end)*
+**Scenario:** A co-working space wants a small system. Members are people, and many work for
+member companies, which pay their bills. The building has floors, and each floor has desks and
+bookable meeting rooms. Some rooms have their own phone. Each company has a billing address,
+and some have a separate mail-forwarding address. Reception logs calls, e-mails and visits.
+Some of these are complaints ("the Wi-Fi on floor 3 is down again") that are tracked until they
+are fixed, and some turn into maintenance jobs.
+
+Model it on paper, without the book: entities, keys, relationships and a few sample rows.
+Then compare with this chapter's models and note where you differ and why.
 
 ---
 

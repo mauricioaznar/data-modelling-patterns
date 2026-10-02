@@ -22,6 +22,7 @@ and any decisions made.
 - Fig 2.13 Communication event follow-up: `communication_case` groups events, with its own
   roles and status; `work_effort` (minimal, Ch 6 preview) links to events many-to-many. This was
   the last figure of Ch 2.
+- Ch 2 end-of-chapter exercises (sections 1–9) and a 12-question core set for section 0.
 
 **Decisions**
 - Fig 2.10 folds the 2.8 address tables in: `postal_address` keys on `contact_mechanism_id` and
@@ -35,8 +36,9 @@ and any decisions made.
   drift from the book (e.g. `contact_number`) is fine as long as NOTES.md records it.
 
 **Next**
-- Vol 1, Ch 2: remaining figures after 2.12 (the user sends them), then write the chapter
-  exercises and distill section 0 into a short core set.
+- The user works through the Ch 2 exercises; review them like a PR and record gaps.
+- Next session opens with 3 recall questions on Ch 2.
+- Then Ch 3 (Products).
 
 ## 2026-09-30
 

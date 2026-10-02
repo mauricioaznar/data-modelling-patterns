@@ -27,7 +27,7 @@ volumes. Vol 2's industry models can therefore extend Vol 1's `party` directly.
 
 | Vol | Ch | Chapter | Status |
 |-----|----|---------|--------|
-| 1 | 02 | [People and Organizations](volumes/v1-all-enterprises/02-people-and-organizations/NOTES.md) | in progress |
+| 1 | 02 | [People and Organizations](volumes/v1-all-enterprises/02-people-and-organizations/NOTES.md) | exercises pending |
 
 Each chapter folder contains:
 
