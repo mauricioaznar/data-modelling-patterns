@@ -651,7 +651,7 @@ having count(s.kind) <> 1 or bool_or(s.kind <> cm.contact_mechanism_kind);
 select cm.contact_mechanism_id, cm.contact_mechanism_kind, t.contact_mechanism_type_id, t.applies_to_kind
 from contact_mechanism cm
 join contact_mechanism_type t using (contact_mechanism_type_id)
-where t.applies_to_kind <> cm.contact_mechanism_kind;
+where t.applies_to_kind is distinct from cm.contact_mechanism_kind;   -- also catches a mechanism typed FACE_TO_FACE (2.12)
 
 -- ============================================================
 -- Fig 2.10 — Party contact mechanism (expanded)
@@ -803,3 +803,62 @@ select distinct f.facility_id, f.description
 from walk w
 join facility f using (facility_id)
 where w.ancestor_id = w.facility_id;
+
+-- ============================================================
+-- Fig 2.12 — Communication event
+-- ============================================================
+
+-- name: 2.12 — Event log: medium, status, purposes, participants and (optional) relationship
+select ce.communication_event_id as id, ce.datetime_started::date as day,
+       mt.description as medium, st.description as status,
+       (select string_agg(pt.description, ', ' order by pt.description)
+          from communication_event_purpose p
+          join communication_event_purpose_type pt using (communication_event_purpose_type_id)
+         where p.communication_event_id = ce.communication_event_id) as purposes,
+       (select string_agg(d.name || ' (' || lower(r.communication_event_role_type_id) || ')', ', ' order by d.name)
+          from communication_event_role r
+          join party_display_name d using (party_id)
+         where r.communication_event_id = ce.communication_event_id) as participants,
+       coalesce(prt.description, '(none)') as relationship
+from communication_event ce
+join contact_mechanism_type mt using (contact_mechanism_type_id)
+join status_type st using (status_type_id)
+left join party_relationship pr using (party_relationship_id)
+left join party_relationship_type prt using (party_relationship_type_id)
+order by ce.datetime_started;
+
+-- name: 2.12 — Every communication Ben took part in (through event roles, relationship or not)
+select ce.datetime_started::date as day, ce.note, r.communication_event_role_type_id as as_role,
+       ce.party_relationship_id is null as outside_any_relationship
+from communication_event_role r
+join communication_event ce using (communication_event_id)
+where r.party_id = 2
+order by ce.datetime_started;
+
+-- name: 2.12 — Upcoming scheduled communications
+select ce.datetime_started, ce.note, mt.description as medium,
+       string_agg(d.name, ', ' order by d.name) as participants
+from communication_event ce
+join contact_mechanism_type mt using (contact_mechanism_type_id)
+join communication_event_role r using (communication_event_id)
+join party_display_name d using (party_id)
+where ce.status_type_id = 'EVENT_SCHEDULED'
+group by ce.communication_event_id, ce.datetime_started, ce.note, mt.description
+order by ce.datetime_started;
+
+-- name: 2.12 — Data-quality check: participant roles that don't fit the event's medium (should be empty)
+select ce.communication_event_id, ce.note, ce.contact_mechanism_type_id as medium,
+       d.name, r.communication_event_role_type_id as role
+from communication_event_role r
+join communication_event ce using (communication_event_id)
+join party_display_name d using (party_id)
+where not exists (
+  select 1 from valid_contact_mechanism_role v
+  where v.contact_mechanism_type_id        = ce.contact_mechanism_type_id
+    and v.communication_event_role_type_id = r.communication_event_role_type_id);
+
+-- name: 2.12 — Data-quality check: events using a status that isn't a communication event status (should be empty)
+select ce.communication_event_id, ce.note, ce.status_type_id
+from communication_event ce
+join status_type s using (status_type_id)
+where coalesce(s.parent_type_id, '') <> 'COMMUNICATION_EVENT_STATUS';

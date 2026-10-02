@@ -159,6 +159,14 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
     needed a many-to-many association. Why is the simpler structure good enough here? What
     real case would break it?
 
+### Communication events (Fig 2.12)
+51. **[2.12 vs 2.7]** In 2.7 every communication event belonged to one party relationship. Now
+    the relationship is optional and parties join through COMMUNICATION EVENT ROLE. Give two
+    events the 2.7 model couldn't store properly.
+52. **[2.12]** VALID CONTACT MECHANISM ROLE stores a rule as rows ("cc" only makes sense for
+    e-mail). Compare that with writing the rule as a CHECK constraint or a data-quality query:
+    who can change it, and when is each one the better choice?
+
 ## 1. Redraw from memory
 *(completed at chapter end)*
 

@@ -16,16 +16,21 @@ and any decisions made.
 - Fig 2.11 Facility versus contact mechanism: `facility` (typed, nesting through `part_of`),
   `facility_role` and `facility_contact_mechanism`. The seed shows a warehouse with two
   addresses and one address shared by two buildings. A recursive query catches facility cycles.
+- Fig 2.12 Communication event: participants through `communication_event_role`, several
+  purposes per event, a status and a medium on each event, and the `valid_contact_mechanism_role`
+  rule table. The relationship is now optional context.
 
 **Decisions**
 - Fig 2.10 folds the 2.8 address tables in: `postal_address` keys on `contact_mechanism_id` and
   `party_postal_address` is gone. The 2.8 queries now go through contact mechanism.
 - Fig 2.11: dates added to facility roles and facility contact mechanisms (the book has none).
+- Fig 2.12: the event subtypes became `contact_mechanism_type` rows (FACE_TO_FACE added), and
+  event statuses are a group in the shared `status_type`.
 - "To ponder" stays small: at most about 3 questions per figure, focused on the pattern. Small
   drift from the book (e.g. `contact_number`) is fine as long as NOTES.md records it.
 
 **Next**
-- Vol 1, Ch 2: remaining figures after 2.11 (the user sends them), then write the chapter
+- Vol 1, Ch 2: remaining figures after 2.12 (the user sends them), then write the chapter
   exercises and distill section 0 into a short core set.
 
 ## 2026-09-30

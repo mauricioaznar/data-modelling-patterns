@@ -40,7 +40,7 @@ erDiagram
   PRIORITY_TYPE      |o--o{ PARTY_RELATIONSHIP  : "set the priority for"
   STATUS_TYPE        |o--o{ PARTY_RELATIONSHIP  : "set the status for"
   STATUS_TYPE        |o--o{ STATUS_TYPE         : "parent of"
-  PARTY_RELATIONSHIP ||--o{ COMMUNICATION_EVENT : "contacted via"
+  PARTY_RELATIONSHIP |o--o{ COMMUNICATION_EVENT : "contacted via"
 
   %% Fig 2.8 — Postal address information
   POSTAL_ADDRESS           ||--o{ POSTAL_ADDRESS_BOUNDARY         : "within"
@@ -72,6 +72,17 @@ erDiagram
   FACILITY_ROLE_TYPE ||--o{ FACILITY_ROLE              : "the description for"
   FACILITY           ||--o{ FACILITY_CONTACT_MECHANISM : "contacted via"
   CONTACT_MECHANISM  ||--o{ FACILITY_CONTACT_MECHANISM : "used by"
+
+  %% Fig 2.12 — Communication event
+  STATUS_TYPE                      ||--o{ COMMUNICATION_EVENT          : "used to monitor"
+  CONTACT_MECHANISM_TYPE           ||--o{ COMMUNICATION_EVENT          : "the contact medium for"
+  COMMUNICATION_EVENT              ||--o{ COMMUNICATION_EVENT_PURPOSE  : "categorized by"
+  COMMUNICATION_EVENT_PURPOSE_TYPE ||--o{ COMMUNICATION_EVENT_PURPOSE  : "the description for"
+  COMMUNICATION_EVENT              ||--o{ COMMUNICATION_EVENT_ROLE     : "involving"
+  PARTY                            ||--o{ COMMUNICATION_EVENT_ROLE     : "involved in"
+  COMMUNICATION_EVENT_ROLE_TYPE    ||--o{ COMMUNICATION_EVENT_ROLE     : "the description for"
+  CONTACT_MECHANISM_TYPE           ||--o{ VALID_CONTACT_MECHANISM_ROLE : "used for"
+  COMMUNICATION_EVENT_ROLE_TYPE    ||--o{ VALID_CONTACT_MECHANISM_ROLE : "the description for"
 
   %% Fig 2.1 — Organization
   ORGANIZATION_TYPE |o--o{ ORGANIZATION_TYPE : "parent of"
@@ -148,10 +159,12 @@ erDiagram
   }
   COMMUNICATION_EVENT {
     int         communication_event_id PK
-    int         party_relationship_id FK
+    int         party_relationship_id FK "optional since 2.12"
     timestamptz datetime_started
     timestamptz datetime_ended
     text        note
+    text        status_type_id FK
+    text        contact_mechanism_type_id FK
   }
   EMPLOYMENT {
     int  employment_id PK
@@ -334,5 +347,30 @@ erDiagram
     int  contact_mechanism_id FK
     date from_date
     date thru_date
+  }
+  COMMUNICATION_EVENT_PURPOSE_TYPE {
+    text communication_event_purpose_type_id PK
+    text description
+  }
+  COMMUNICATION_EVENT_PURPOSE {
+    int  communication_event_purpose_id PK
+    int  communication_event_id FK
+    text communication_event_purpose_type_id FK
+    text description
+  }
+  COMMUNICATION_EVENT_ROLE_TYPE {
+    text communication_event_role_type_id PK
+    text description
+  }
+  COMMUNICATION_EVENT_ROLE {
+    int  communication_event_role_id PK
+    int  communication_event_id FK
+    int  party_id FK
+    text communication_event_role_type_id FK
+  }
+  VALID_CONTACT_MECHANISM_ROLE {
+    int  valid_contact_mechanism_role_id PK
+    text contact_mechanism_type_id FK
+    text communication_event_role_type_id FK
   }
 ```

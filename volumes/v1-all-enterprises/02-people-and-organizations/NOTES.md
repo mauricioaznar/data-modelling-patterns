@@ -638,6 +638,66 @@ drawn; "part of" is optional; every facility has a type.
   the same "party plays a role in something" idea as PARTY ROLE, but scoped to one facility.
 - **The subtypes have no attributes,** so (as in Fig 2.1 and 2.8) they become FACILITY TYPE rows.
 
+### Fig 2.12 — Communication event
+**Transcription** (confirmed against the book: ☑)
+
+```
+COMMUNICATION EVENT
+  # communication_event_id
+  * datetime_started
+  o datetime_ended
+  o note
+  -> COMMUNICATION EVENT STATUS TYPE  ("monitored by" / "used to monitor")
+  -> PARTY RELATIONSHIP               ("in the context of" / "contacted via")
+  -> CONTACT MECHANISM TYPE           ("occurs via" / "the contact medium for")
+  subtypes (no attributes): PHONE, FAX, FACE-TO-FACE, LETTER CORRESPONDENCE, EMAIL,
+                            WEB SITE COMMUNICATION
+
+COMMUNICATION EVENT PURPOSE
+  o description
+  -> COMMUNICATION EVENT               (many "the category for" 1 event; event "categorized by")
+  -> COMMUNICATION EVENT PURPOSE TYPE  ("described by" / "the description for")
+  subtypes (no attributes): SUPPORT CALL, INQUIRY, CUSTOMER SERVICE CALL, SALES FOLLOW UP,
+                            MEETING, CONFERENCE, ACTIVITY REQUEST, SEMINAR
+
+COMMUNICATION EVENT PURPOSE TYPE
+  # comm_event_purpose_type_id
+  * description
+
+COMMUNICATION EVENT ROLE             (no attributes drawn)
+  -> COMMUNICATION EVENT       ("of" / "involving")
+  -> PARTY                     ("for" / "involved in")
+  -> COMMUNICATION EVENT ROLE TYPE  ("described by" / "the description for")
+
+COMMUNICATION EVENT ROLE TYPE        (no attributes drawn)
+
+VALID CONTACT MECHANISM ROLE         (no attributes drawn)
+  -> CONTACT MECHANISM TYPE         ("for" / "used for")
+  -> COMMUNICATION EVENT ROLE TYPE  ("described by" / "the description for")
+
+COMMUNICATION EVENT STATUS TYPE      (no attributes drawn)
+
+PARTY RELATIONSHIP, PARTY ROLE, PARTY, CONTACT MECHANISM TYPE   (as before)
+```
+
+Optionality (confirmed): the relationship is optional; status type and contact mechanism type
+are mandatory.
+
+**Discussion**
+- **Events get their own participants.** In 2.7 an event hung off one relationship, so it could
+  only involve that relationship's two parties. COMMUNICATION EVENT ROLE lets any number of
+  parties take part, each with a role (caller, receiver, attendee, organizer…). A seminar with 30
+  attendees fits; a single relationship can't hold it.
+- **The relationship is now optional context,** not the owner of the event.
+- **An event can have several purposes** (a sales follow-up that turns into a support call), each
+  with an optional free-text description.
+- **VALID CONTACT MECHANISM ROLE is a rule stored as data:** which event role types make sense for
+  each medium (an e-mail has a sender and cc'd parties; a phone call has a caller and a
+  receiver).
+- **The event subtypes repeat CONTACT MECHANISM TYPE** ("occurs via"): phone, fax, letter,
+  e-mail, web site. The type relationship already says the medium, so the subtypes add nothing
+  in the schema. FACE-TO-FACE is the odd one: it's a medium with no contact mechanism behind it.
+
 ## Design decisions (book → SQL)
 
 ### Fig 2.1
@@ -869,6 +929,23 @@ drawn; "part of" is optional; every facility has a type.
   nesting order (nothing stops a building being part of a room).
 - **Roles sit on whole facilities**, so summing square footage over a party's roles is safe in the
   seed. If a party had roles on a building *and* its floors, the sum would count space twice.
+### Fig 2.12
+- **The 2.7 table grows:** `communication_event.party_relationship_id` is now nullable, and the
+  event gains mandatory `status_type_id` and `contact_mechanism_type_id`. The five 2.7 events
+  moved to the 2.12 section of `seed.sql`, so the new columns can be NOT NULL.
+- **Event subtypes → `contact_mechanism_type` rows.** The "occurs via" medium already says phone,
+  fax, letter (POSTAL_ADDRESS), e-mail or web. FACE_TO_FACE was added as a medium with no
+  mechanism behind it, so `applies_to_kind` became nullable. The 2.9 "type fits kind" check now
+  uses `is distinct from`, so a mechanism typed FACE_TO_FACE gets caught.
+- **Purpose subtypes → `communication_event_purpose_type` rows** (the book's own type table).
+- **Event statuses are a new group** (COMMUNICATION_EVENT_STATUS) in the shared `status_type` from
+  2.7. A data-quality query catches an event using a relationship status (planted: ACME call).
+- **`valid_contact_mechanism_role` is the book's rule table.** Event roles are checked against it
+  by a data-quality query, not a composite FK (planted: Ana as "caller" on an e-mail).
+- **No dates on event roles,** as drawn: the event's own start and end times cover it.
+- **Seen in the queries:** the 2.7 "contact history with Contoso" query only finds events through
+  a relationship, so it misses the follow-up e-mail to Ben that has none. Going through event
+  roles (2.12) finds it.
 
 ## When NOT to use this
 

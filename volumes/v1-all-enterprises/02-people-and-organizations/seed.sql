@@ -451,14 +451,7 @@ update party_relationship set                              status_type_id = 'REL
 update party_relationship set status_type_id = 'REL_ACTIVE'                where party_relationship_id = 1;  -- ended in 2023, still "active"
 update party_relationship set status_type_id = 'PARTY_RELATIONSHIP_STATUS' where party_relationship_id = 3;  -- a grouping row used as a status
 
-insert into communication_event (communication_event_id, party_relationship_id, datetime_started, datetime_ended, note) values
-  (1, 10, '2024-02-12 09:30+00', '2024-02-12 10:00+00', 'Quarterly freight review call with Ben'),
-  (2, 10, '2024-05-20 14:00+00', null,                  'Email from Ben: rate increase notice'),
-  (3, 4,  '2024-06-03 11:00+00', '2024-06-03 12:15+00', 'Contract renewal meeting with Contoso purchasing'),
-  (4, 14, '1999-02-01 10:00+00', '1999-02-01 10:45+00', 'First sales call with ACME'),
-  (5, 15, '2005-03-01 16:00+00', '2005-03-01 16:20+00', 'DATA ERROR: call logged against the agent relationship three years after it ended');
-
-select setval(pg_get_serial_sequence('communication_event', 'communication_event_id'), (select max(communication_event_id) from communication_event));
+-- Communication events are seeded in Fig 2.12, once they need a status and a medium.
 
 -- ============================================================
 -- Fig 2.8 (part 2) — Postal address information
@@ -687,3 +680,89 @@ insert into facility_contact_mechanism (facility_id, contact_mechanism_id, from_
   (5, 18, '2015-06-01', null),   --   ... and its dock address
   (6, 15, '2016-01-01', null),   -- one address ...
   (7, 15, '2016-01-01', null);   --   ... two buildings
+
+-- ============================================================
+-- Fig 2.12 — Communication event
+-- ============================================================
+insert into contact_mechanism_type (contact_mechanism_type_id, applies_to_kind, description) values
+  ('FACE_TO_FACE', null, 'Face to face');   -- a medium with no contact mechanism behind it
+
+insert into status_type (status_type_id, parent_type_id, description) values
+  ('COMMUNICATION_EVENT_STATUS', null,                         'Communication event status'),
+  ('EVENT_SCHEDULED',            'COMMUNICATION_EVENT_STATUS', 'Scheduled'),
+  ('EVENT_IN_PROGRESS',          'COMMUNICATION_EVENT_STATUS', 'In progress'),
+  ('EVENT_COMPLETED',            'COMMUNICATION_EVENT_STATUS', 'Completed'),
+  ('EVENT_CANCELLED',            'COMMUNICATION_EVENT_STATUS', 'Cancelled');
+
+-- Events 1–5 are the 2.7 events (moved here: they now need a status and a
+-- medium). 6–8 have no single relationship to belong to.
+-- Relationships: 4 Contoso bill-to customer, 10 Ben as Contoso's contact,
+-- 14 ACME customer, 15 the agent relationship that ended in 2002.
+insert into communication_event (communication_event_id, party_relationship_id, datetime_started, datetime_ended, note, status_type_id, contact_mechanism_type_id) values
+  (1, 10,   '2024-02-12 09:30+00', '2024-02-12 10:00+00', 'Quarterly freight review call with Ben',           'EVENT_COMPLETED', 'PHONE'),
+  (2, 10,   '2024-05-20 14:00+00', null,                  'Email from Ben: rate increase notice',             'EVENT_COMPLETED', 'EMAIL'),
+  (3, 4,    '2024-06-03 11:00+00', '2024-06-03 12:15+00', 'Contract renewal meeting with Contoso purchasing', 'EVENT_COMPLETED', 'FACE_TO_FACE'),
+  (4, 14,   '1999-02-01 10:00+00', '1999-02-01 10:45+00', 'First sales call with ACME',                       'REL_ACTIVE',      'PHONE'),   -- DATA ERROR: a relationship status on an event
+  (5, 15,   '2005-03-01 16:00+00', '2005-03-01 16:20+00', 'DATA ERROR: call logged against the agent relationship three years after it ended', 'EVENT_COMPLETED', 'PHONE'),
+  (6, null, '2025-09-10 15:00+00', '2025-09-10 17:00+00', 'Northwind logistics seminar',                      'EVENT_COMPLETED', 'FACE_TO_FACE'),
+  (7, null, '2024-06-04 08:15+00', null,                  'Follow-up e-mail after the renewal meeting',       'EVENT_COMPLETED', 'EMAIL'),
+  (8, null, '2026-11-05 16:00+00', null,                  'Call Kiri about the seminar',                      'EVENT_SCHEDULED', 'PHONE');
+
+select setval(pg_get_serial_sequence('communication_event', 'communication_event_id'), (select max(communication_event_id) from communication_event));
+
+insert into communication_event_purpose_type (communication_event_purpose_type_id, description) values
+  ('SUPPORT_CALL',          'Support call'),
+  ('INQUIRY',               'Inquiry'),
+  ('CUSTOMER_SERVICE_CALL', 'Customer service call'),
+  ('SALES_FOLLOW_UP',       'Sales follow-up'),
+  ('MEETING',               'Meeting'),
+  ('CONFERENCE',            'Conference'),
+  ('ACTIVITY_REQUEST',      'Activity request'),
+  ('SEMINAR',               'Seminar');
+
+insert into communication_event_purpose (communication_event_id, communication_event_purpose_type_id, description) values
+  (1, 'SALES_FOLLOW_UP', 'Quarterly review'),
+  (1, 'SUPPORT_CALL',    'Ben also raised a late delivery'),   -- one event, two purposes
+  (2, 'INQUIRY',         'Rate increase notice'),
+  (3, 'MEETING',         null),
+  (4, 'SALES_FOLLOW_UP', null),
+  (6, 'SEMINAR',         null),
+  (7, 'SALES_FOLLOW_UP', null),
+  (8, 'SALES_FOLLOW_UP', 'Prospect met at the seminar');
+
+insert into communication_event_role_type (communication_event_role_type_id, description) values
+  ('CALLER',    'Caller'),
+  ('CALLEE',    'Callee'),
+  ('SENDER',    'Sender'),
+  ('RECIPIENT', 'Recipient'),
+  ('CC',        'Copied recipient'),
+  ('ORGANIZER', 'Organizer'),
+  ('ATTENDEE',  'Attendee');
+
+insert into valid_contact_mechanism_role (contact_mechanism_type_id, communication_event_role_type_id) values
+  ('PHONE', 'CALLER'), ('PHONE', 'CALLEE'),
+  ('MOBILE', 'CALLER'), ('MOBILE', 'CALLEE'),
+  ('FAX', 'SENDER'), ('FAX', 'RECIPIENT'),
+  ('EMAIL', 'SENDER'), ('EMAIL', 'RECIPIENT'), ('EMAIL', 'CC'),
+  ('POSTAL_ADDRESS', 'SENDER'), ('POSTAL_ADDRESS', 'RECIPIENT'),
+  ('FACE_TO_FACE', 'ORGANIZER'), ('FACE_TO_FACE', 'ATTENDEE');
+
+-- Parties: 1 Ana, 2 Ben, 3 Chloe, 10 Kiri. ACME and ABC come from the event 4 relationship's roles.
+insert into communication_event_role (communication_event_id, party_id, communication_event_role_type_id) values
+  (1, 3,  'CALLER'),
+  (1, 2,  'CALLEE'),
+  (2, 2,  'SENDER'),
+  (2, 3,  'RECIPIENT'),
+  (3, 3,  'ORGANIZER'),
+  (3, 2,  'ATTENDEE'),
+  (4, (select party_id from party_role where party_role_id = 32), 'CALLER'),
+  (4, (select party_id from party_role where party_role_id = 35), 'CALLEE'),
+  (6, 3,  'ORGANIZER'),   -- four participants, no single relationship
+  (6, 1,  'ATTENDEE'),
+  (6, 2,  'ATTENDEE'),
+  (6, 10, 'ATTENDEE'),
+  (7, 3,  'SENDER'),
+  (7, 2,  'RECIPIENT'),
+  (7, 1,  'CALLER'),      -- DATA ERROR: nobody is a caller on an e-mail
+  (8, 3,  'CALLER'),
+  (8, 10, 'CALLEE');
