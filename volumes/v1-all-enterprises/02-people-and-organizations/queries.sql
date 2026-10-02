@@ -862,3 +862,67 @@ select ce.communication_event_id, ce.note, ce.status_type_id
 from communication_event ce
 join status_type s using (status_type_id)
 where coalesce(s.parent_type_id, '') <> 'COMMUNICATION_EVENT_STATUS';
+
+-- ============================================================
+-- Fig 2.13 — Communication event follow-up
+-- ============================================================
+
+-- name: 2.13 — Cases at a glance: status, parties by case role, and the span of their events
+select c.communication_case_id as id, c.description, s.description as status,
+       (select string_agg(d.name || ' (' || lower(r.communication_case_role_type_id) || ')', ', ' order by d.name)
+          from communication_case_role r
+          join party_display_name d using (party_id)
+         where r.communication_case_id = c.communication_case_id) as parties,
+       count(ce.communication_event_id) as events,
+       min(ce.datetime_started)::date as first_event,
+       max(ce.datetime_started)::date as last_event
+from communication_case c
+join status_type s using (status_type_id)
+left join communication_event ce using (communication_case_id)
+group by c.communication_case_id, c.description, s.description
+order by c.communication_case_id;
+
+-- name: 2.13 — Timeline of the Contoso renewal case: every event and the work it triggered
+select ce.datetime_started::date as day, mt.description as medium, ce.note,
+       string_agg(we.name, ', ' order by we.name) as triggered_work
+from communication_event ce
+join contact_mechanism_type mt using (contact_mechanism_type_id)
+left join communication_event_work_effort cewe using (communication_event_id)
+left join work_effort we using (work_effort_id)
+where ce.communication_case_id = 2
+group by ce.communication_event_id, ce.datetime_started, mt.description, ce.note
+order by ce.datetime_started;
+
+-- name: 2.13 — Work efforts and the events that led to them (many-to-many)
+select we.name, we.work_effort_type_id as type, we.scheduled_start_date, we.scheduled_completion_date,
+       count(*) as from_events,
+       string_agg(ce.note, ' | ' order by ce.datetime_started) as events
+from work_effort we
+join communication_event_work_effort cewe using (work_effort_id)
+join communication_event ce using (communication_event_id)
+group by we.work_effort_id, we.name, we.work_effort_type_id, we.scheduled_start_date, we.scheduled_completion_date
+order by we.scheduled_start_date;
+
+-- name: 2.13 — Data-quality check: cases using a status that isn't a case status (should be empty)
+select c.communication_case_id, c.description, c.status_type_id
+from communication_case c
+join status_type s using (status_type_id)
+where coalesce(s.parent_type_id, '') <> 'CASE_STATUS';
+
+-- name: 2.13 — Data-quality check: events filed under a case that hadn't started yet (should be empty)
+select ce.communication_event_id, ce.note, ce.datetime_started, c.description as case_description, c.start_datetime
+from communication_event ce
+join communication_case c using (communication_case_id)
+where ce.datetime_started < c.start_datetime;
+
+-- name: 2.13 — Data-quality check: work scheduled to start before the event that triggered it (should be empty)
+select we.name, we.scheduled_start_date, ce.note, ce.datetime_started::date as event_day
+from communication_event_work_effort cewe
+join work_effort we using (work_effort_id)
+join communication_event ce using (communication_event_id)
+where we.scheduled_start_date < ce.datetime_started::date
+  -- a work effort started by several events only needs to follow the first of them
+  and ce.datetime_started = (select min(e2.datetime_started)
+                               from communication_event_work_effort x
+                               join communication_event e2 using (communication_event_id)
+                              where x.work_effort_id = we.work_effort_id);

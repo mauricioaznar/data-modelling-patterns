@@ -84,6 +84,16 @@ erDiagram
   CONTACT_MECHANISM_TYPE           ||--o{ VALID_CONTACT_MECHANISM_ROLE : "used for"
   COMMUNICATION_EVENT_ROLE_TYPE    ||--o{ VALID_CONTACT_MECHANISM_ROLE : "the description for"
 
+  %% Fig 2.13 — Communication event follow-up
+  COMMUNICATION_EVENT          ||--o{ COMMUNICATION_EVENT_WORK_EFFORT : "followed up with"
+  WORK_EFFORT                  ||--o{ COMMUNICATION_EVENT_WORK_EFFORT : "has"
+  WORK_EFFORT_TYPE             ||--o{ WORK_EFFORT                     : "classifies"
+  COMMUNICATION_CASE           |o--o{ COMMUNICATION_EVENT             : "encompassing"
+  STATUS_TYPE                  ||--o{ COMMUNICATION_CASE              : "the status of"
+  COMMUNICATION_CASE           ||--o{ COMMUNICATION_CASE_ROLE         : "involving"
+  PARTY                        ||--o{ COMMUNICATION_CASE_ROLE         : "involved in"
+  COMMUNICATION_CASE_ROLE_TYPE ||--o{ COMMUNICATION_CASE_ROLE         : "the description for"
+
   %% Fig 2.1 — Organization
   ORGANIZATION_TYPE |o--o{ ORGANIZATION_TYPE : "parent of"
   ORGANIZATION_TYPE ||--o{ ORGANIZATION      : "classifies"
@@ -165,6 +175,7 @@ erDiagram
     text        note
     text        status_type_id FK
     text        contact_mechanism_type_id FK
+    int         communication_case_id FK "optional, 2.13"
   }
   EMPLOYMENT {
     int  employment_id PK
@@ -372,5 +383,42 @@ erDiagram
     int  valid_contact_mechanism_role_id PK
     text contact_mechanism_type_id FK
     text communication_event_role_type_id FK
+  }
+  WORK_EFFORT_TYPE {
+    text work_effort_type_id PK
+    text description
+  }
+  WORK_EFFORT {
+    int     work_effort_id PK
+    text    work_effort_type_id FK
+    text    name
+    text    description
+    date    scheduled_start_date
+    date    scheduled_completion_date
+    numeric total_dollars_allowed
+    numeric total_hours_allowed
+    numeric estimated_hours
+  }
+  COMMUNICATION_EVENT_WORK_EFFORT {
+    int  communication_event_work_effort_id PK
+    int  communication_event_id FK
+    int  work_effort_id FK
+    text description
+  }
+  COMMUNICATION_CASE {
+    int         communication_case_id PK
+    text        description
+    timestamptz start_datetime
+    text        status_type_id FK
+  }
+  COMMUNICATION_CASE_ROLE_TYPE {
+    text communication_case_role_type_id PK
+    text description
+  }
+  COMMUNICATION_CASE_ROLE {
+    int  communication_case_role_id PK
+    int  communication_case_id FK
+    int  party_id FK
+    text communication_case_role_type_id FK
   }
 ```

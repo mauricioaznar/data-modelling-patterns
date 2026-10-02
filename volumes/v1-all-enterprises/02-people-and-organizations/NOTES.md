@@ -698,6 +698,57 @@ are mandatory.
   e-mail, web site. The type relationship already says the medium, so the subtypes add nothing
   in the schema. FACE-TO-FACE is the odd one: it's a medium with no contact mechanism behind it.
 
+### Fig 2.13 — Communication event follow-up
+**Transcription** (confirmed against the book: ☑)
+
+```
+COMMUNICATION EVENT WORK EFFORT
+  o description
+  -> COMMUNICATION EVENT  (many "from" 1 event; event "followed up with")
+  -> WORK EFFORT          (many "for" 1 work effort; work effort "has")
+
+WORK EFFORT
+  # work_effort_id
+  * name
+  * description
+  o scheduled_start_date
+  o scheduled_completion_date
+  o total_dollars_allowed
+  o total_hours_allowed
+  o estimated_hours
+  subtypes (no attributes): PROGRAM, PROJECT, PHASE, TASK, ACTIVITY
+
+COMMUNICATION EVENT          (as in 2.12, plus:)
+  -> CASE                    ("communicated as part of" / case "encompassing")
+
+CASE
+  # case_id
+  * description
+  * start_datetime
+  -> CASE STATUS TYPE        ("in the state of" / "the status of")
+
+CASE ROLE                    (no attributes drawn)
+  -> CASE                    ("for" / "involving")
+  -> PARTY                   ("of" / "involved in")
+  -> CASE ROLE TYPE          ("described by" / "the description for")
+
+CASE STATUS TYPE, CASE ROLE TYPE   (no attributes drawn)
+COMMUNICATION EVENT PURPOSE        (as in 2.12)
+```
+
+Optionality (confirmed): an event may be part of a case; every case has a status.
+
+**Discussion**
+- **Two kinds of follow-up.** Looking back, a CASE groups the events that belong to one issue
+  ("late deliveries in June": a call, two e-mails, a meeting). Looking forward, a WORK EFFORT is
+  the work an event triggers ("send a revised quote", "fix the routing").
+- **A case has its own participants** through CASE ROLE (owner, customer, reporter…), separate
+  from who took part in each event.
+- **Event ↔ work effort is many-to-many** through COMMUNICATION EVENT WORK EFFORT: one meeting can
+  start two tasks, and a project can come out of several calls.
+- **WORK EFFORT is a preview of Ch 6.** Only the attributes needed here are drawn; Ch 6 builds it
+  out.
+
 ## Design decisions (book → SQL)
 
 ### Fig 2.1
@@ -946,6 +997,19 @@ are mandatory.
 - **Seen in the queries:** the 2.7 "contact history with Contoso" query only finds events through
   a relationship, so it misses the follow-up e-mail to Ben that has none. Going through event
   roles (2.12) finds it.
+### Fig 2.13
+- **CASE → `communication_case`** (and `communication_case_role`, `communication_case_role_type`),
+  because CASE is a reserved word in SQL.
+- **`work_effort` is minimal** (only the attributes drawn here); Ch 6 will extend it. Its
+  subtypes are rows in an added `work_effort_type` table, which this figure doesn't draw.
+- **Case statuses are another group** (CASE_STATUS) in the shared `status_type`, like relationship
+  and event statuses. A data-quality query catches a case using an event status.
+- **`communication_event.communication_case_id`** is a plain optional FK, set by updates in the
+  2.13 seed.
+- **No dates on case roles,** as drawn.
+- **Not enforced, checked by queries:** an event filed under a case that hadn't started yet
+  (planted: the 1999 ACME call under a 2024 case), and work scheduled to start before the first
+  event that triggered it.
 
 ## When NOT to use this
 

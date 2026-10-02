@@ -19,7 +19,7 @@ blockers, but each one unlocks something:
 Chapter titles are from memory; verify them against the book's table of contents.
 
 - [ ] Ch 01: Introduction (read only; key conventions go into README notation)
-- [ ] Ch 02: People and Organizations *(in progress: 2.1–2.12 done)*
+- [ ] Ch 02: People and Organizations *(figures 2.1–2.13 built; exercises pending)*
   - [ ] Confirm PERSON NAME → PERSON NAME TYPE optionality against the book
   - [ ] Try enforcing non-overlapping from/thru periods (exclusion constraint with `btree_gist`; check PGlite support)
   - [ ] Refactor `role_type` into a ROLE TYPE supertype with a PARTY ROLE TYPE subtype once another role-type subtype appears (see NOTES, Fig 2.4)

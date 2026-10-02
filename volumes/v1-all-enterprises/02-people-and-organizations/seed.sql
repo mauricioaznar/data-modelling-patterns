@@ -766,3 +766,66 @@ insert into communication_event_role (communication_event_id, party_id, communic
   (7, 1,  'CALLER'),      -- DATA ERROR: nobody is a caller on an e-mail
   (8, 3,  'CALLER'),
   (8, 10, 'CALLEE');
+
+-- ============================================================
+-- Fig 2.13 — Communication event follow-up
+-- ============================================================
+-- Events (2.12): 1 freight review call with Ben (raised a late delivery),
+-- 2 rate increase e-mail, 3 renewal meeting, 4 ACME call (1999),
+-- 6 seminar, 7 follow-up e-mail, 8 scheduled call with Kiri.
+insert into work_effort_type (work_effort_type_id, description) values
+  ('PROGRAM',  'Program'),
+  ('PROJECT',  'Project'),
+  ('PHASE',    'Phase'),
+  ('TASK',     'Task'),
+  ('ACTIVITY', 'Activity');
+
+insert into work_effort (work_effort_id, work_effort_type_id, name, description, scheduled_start_date, scheduled_completion_date, total_dollars_allowed, total_hours_allowed, estimated_hours) values
+  (1, 'PROJECT',  'Freight rate renegotiation',  'Renegotiate Contoso freight rates before renewal', '2024-06-01', '2024-09-01', 15000, 120, 100),
+  (2, 'TASK',     'Send revised freight quote',  'Quote with the new volume tiers',                  '2024-06-03', '2024-06-08', null,  4,   3),
+  (3, 'TASK',     'Investigate late deliveries', 'Find out why February shipments were late',        '2024-02-01', '2024-03-01', null,  16,  12),   -- DATA ERROR: scheduled to start before the call that raised it
+  (4, 'ACTIVITY', 'Seminar follow-up calls',     'Call every prospect who attended',                 '2025-09-15', null,         null,  null, 6);
+
+select setval(pg_get_serial_sequence('work_effort', 'work_effort_id'), (select max(work_effort_id) from work_effort));
+
+insert into communication_event_work_effort (communication_event_id, work_effort_id, description) values
+  (2, 1, 'The rate notice started the renegotiation'),   -- one work effort ...
+  (3, 1, 'Agreed in the meeting to renegotiate'),        --   ... from two events
+  (3, 2, null),                                          -- one event, two work efforts
+  (1, 3, 'Ben reported late deliveries'),
+  (6, 4, null);
+
+insert into status_type (status_type_id, parent_type_id, description) values
+  ('CASE_STATUS',   null,          'Case status'),
+  ('CASE_OPEN',     'CASE_STATUS', 'Open'),
+  ('CASE_RESOLVED', 'CASE_STATUS', 'Resolved'),
+  ('CASE_CLOSED',   'CASE_STATUS', 'Closed');
+
+insert into communication_case (communication_case_id, description, start_datetime, status_type_id) values
+  (1, 'Late deliveries to Contoso, early 2024', '2024-02-12 09:30+00', 'CASE_RESOLVED'),
+  (2, 'Contoso contract renewal 2024',          '2024-05-20 14:00+00', 'CASE_CLOSED'),
+  (3, 'Kiri: from seminar to first order',      '2025-09-10 15:00+00', 'EVENT_SCHEDULED');   -- DATA ERROR: an event status on a case
+
+select setval(pg_get_serial_sequence('communication_case', 'communication_case_id'), (select max(communication_case_id) from communication_case));
+
+update communication_event set communication_case_id = 1 where communication_event_id = 1;
+update communication_event set communication_case_id = 2 where communication_event_id in (2, 3, 7);
+update communication_event set communication_case_id = 3 where communication_event_id in (6, 8);
+update communication_event set communication_case_id = 1 where communication_event_id = 4;   -- DATA ERROR: a 1999 ACME call filed under a 2024 Contoso case
+
+insert into communication_case_role_type (communication_case_role_type_id, description) values
+  ('OWNER',    'Case owner'),
+  ('CUSTOMER', 'Customer'),
+  ('REPORTER', 'Reporter'),
+  ('WATCHER',  'Watcher');
+
+-- Parties: 1 Ana, 2 Ben, 3 Chloe, 5 Contoso, 10 Kiri.
+insert into communication_case_role (communication_case_id, party_id, communication_case_role_type_id) values
+  (1, 3,  'OWNER'),
+  (1, 2,  'REPORTER'),
+  (1, 5,  'CUSTOMER'),   -- an organization in a case role: not a participant in any single event
+  (2, 3,  'OWNER'),
+  (2, 5,  'CUSTOMER'),
+  (2, 1,  'WATCHER'),
+  (3, 3,  'OWNER'),
+  (3, 10, 'CUSTOMER');

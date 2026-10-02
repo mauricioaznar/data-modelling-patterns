@@ -19,6 +19,9 @@ and any decisions made.
 - Fig 2.12 Communication event: participants through `communication_event_role`, several
   purposes per event, a status and a medium on each event, and the `valid_contact_mechanism_role`
   rule table. The relationship is now optional context.
+- Fig 2.13 Communication event follow-up: `communication_case` groups events, with its own
+  roles and status; `work_effort` (minimal, Ch 6 preview) links to events many-to-many. This was
+  the last figure of Ch 2.
 
 **Decisions**
 - Fig 2.10 folds the 2.8 address tables in: `postal_address` keys on `contact_mechanism_id` and
@@ -26,6 +29,8 @@ and any decisions made.
 - Fig 2.11: dates added to facility roles and facility contact mechanisms (the book has none).
 - Fig 2.12: the event subtypes became `contact_mechanism_type` rows (FACE_TO_FACE added), and
   event statuses are a group in the shared `status_type`.
+- Fig 2.13: CASE is `communication_case` (reserved word); `work_effort_type` added for the
+  work-effort subtypes.
 - "To ponder" stays small: at most about 3 questions per figure, focused on the pattern. Small
   drift from the book (e.g. `contact_number`) is fine as long as NOTES.md records it.
 

@@ -167,6 +167,11 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
     e-mail). Compare that with writing the rule as a CHECK constraint or a data-quality query:
     who can change it, and when is each one the better choice?
 
+### Follow-up (Fig 2.13)
+53. **[2.13]** CASE groups related events. Why not just link events to each other ("this e-mail
+    follows up that call") instead of adding a CASE entity? What can a case hold that a chain
+    of events can't?
+
 ## 1. Redraw from memory
 *(completed at chapter end)*
 
