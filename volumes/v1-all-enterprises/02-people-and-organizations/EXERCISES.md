@@ -132,6 +132,16 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
     Where would that information belong: on the address, on the party-address link, or
     somewhere else?
 
+### Contact mechanisms (Fig 2.9)
+43. **[2.9]** NON-SOLICITATION IND is on PARTY CONTACT MECHANISM, not on CONTACT MECHANISM or
+    PARTY. Give a case where putting it on each of the other two gives the wrong answer.
+44. **[2.9]** "Mobile" and "fax" are CONTACT MECHANISM TYPE rows, but TELECOMMUNICATIONS NUMBER is
+    a subtype. What rule decides whether a kind of thing becomes a subtype or a type row?
+    (Compare the Fig 2.1 decision on attribute-less organization subtypes.)
+45. **[2.9 vs 2.8]** Phone numbers and e-mail addresses share one supertype, but postal address
+    has its own separate model. What do a phone number, an e-mail and a street address have in
+    common? Would you merge them, and what would you gain?
+
 ## 1. Redraw from memory
 *(completed at chapter end)*
 

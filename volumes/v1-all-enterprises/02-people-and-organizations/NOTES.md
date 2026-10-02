@@ -475,6 +475,52 @@ GEOGRAPHIC BOUNDARY TYPE
 - **COUNTRY is a geographic boundary here,** while our 2.2b schema already has a standalone
   `country` table for citizenship. The two need reconciling.
 
+### Fig 2.9 — Party contact mechanism: telecommunications numbers and electronic addresses
+**Transcription** (confirmed against the book: ☑)
+
+```
+PARTY CONTACT MECHANISM
+  # from_date
+  o thru_date
+  o non_solicitation_ind
+  o comment
+  -> PARTY               (many "the mechanism to contact" 1 party; party "contacted via")
+  -> CONTACT MECHANISM   (many "specified for" 1 mechanism; mechanism "used by")
+
+CONTACT MECHANISM
+  # contact_mechanism_id
+  -> CONTACT MECHANISM TYPE  (many "described by" 1 type; type "the description for")
+  subtypes:
+    TELECOMMUNICATIONS NUMBER
+      o country_code
+      * area_code
+      * contact_number      (the book prints "contact mechanism" here; confirmed as contact number)
+    ELECTRONIC ADDRESS
+      * electronic_address_string
+
+CONTACT MECHANISM TYPE
+  # contact_mechanism_type_id
+  * description
+```
+
+Optionality (confirmed): a party contact mechanism must point to one party and one mechanism;
+a party may have none, and a mechanism may be unused.
+
+**Discussion**
+- **Same shape as 2.8:** a contact mechanism is stored once and linked to parties through a
+  dated intersection. A shared switchboard number or a team inbox is one row used by many
+  parties.
+- **The intersection carries the business facts.** `non_solicitation_ind` ("don't market to me
+  on this number") belongs to *this party on this mechanism*, not to the number. The same number
+  can be off-limits for one person and fine for another.
+- **Subtypes vs. type: two classifications at once.** The subtypes split mechanisms by *structure*
+  (phone numbers have country/area/number parts, electronic addresses are one string). CONTACT
+  MECHANISM TYPE splits by *use* (phone, mobile, fax, modem, e-mail). Mobile and fax are both
+  telecommunications numbers with the same columns, so they don't need their own subtype.
+- **The type hangs off the mechanism, not the intersection.** A number is a fax line no matter
+  who uses it. *What it's for* (work, home, billing) isn't drawn here.
+- **Postal address is still separate** from contact mechanism in this figure.
+
 ## Design decisions (book → SQL)
 
 ### Fig 2.1
@@ -658,6 +704,22 @@ GEOGRAPHIC BOUNDARY TYPE
   it's duplication: nothing checks that an address's city really lies in its state.
 - **Not enforced:** that every address has a city and a country. A data-quality query checks it
   (the seed plants a PO box linked only to a postal code).
+
+### Fig 2.9
+- **Real subtype tables:** `telecommunications_number` and `electronic_address` carry attributes,
+  so each one shares `contact_mechanism_id` with the supertype. `contact_mechanism_kind` is the
+  discriminator, and a data-quality query checks it matches the subtype row (the seed plants an
+  e-mail mechanism with no address row).
+- **`contact_mechanism_type` stays the book's lookup table** (phone, mobile, fax, modem, pager,
+  e-mail, web address). Addition: `applies_to_kind`, so a data-quality query catches a phone
+  number typed as e-mail (planted in the seed). Same idea as `role_type.applies_to_kind`.
+- **Small drift from the book:** the book labels the local number "contact mechanism"; we call it
+  `contact_number`.
+- **`non_solicitation_ind` is a nullable boolean** (optional in the book): null means nobody asked.
+  The seed shows one inbox (Contoso sales) where Contoso may be solicited and Ben may not.
+- **Keys:** surrogate `party_contact_mechanism_id`; the book identifies the row by party +
+  mechanism + from_date.
+- **Not enforced:** overlapping periods for the same party and mechanism (same as 2.8).
 
 ## When NOT to use this
 

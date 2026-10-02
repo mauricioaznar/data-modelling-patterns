@@ -576,3 +576,72 @@ from citizenship c
 join geographic_boundary g on g.geographic_boundary_id = c.country_id
 join party_display_name d on d.party_id = c.party_id
 where g.geographic_boundary_type_id <> 'COUNTRY';
+
+-- ============================================================
+-- Fig 2.9 — Party contact mechanism: telecommunications numbers and electronic addresses
+-- ============================================================
+
+-- name: 2.9 — Contact sheet: every party's current contact mechanisms, formatted by subtype
+select d.name, t.description as type,
+       coalesce('+' || tn.country_code || ' ', '') || tn.area_code || ' ' || tn.contact_number as phone,
+       ea.electronic_address_string as electronic_address,
+       pcm.non_solicitation_ind as do_not_solicit
+from party_contact_mechanism pcm
+join contact_mechanism cm using (contact_mechanism_id)
+join contact_mechanism_type t using (contact_mechanism_type_id)
+join party_display_name d using (party_id)
+left join telecommunications_number tn using (contact_mechanism_id)
+left join electronic_address ea using (contact_mechanism_id)
+where pcm.thru_date is null
+order by d.name, t.description;
+
+-- name: 2.9 — Who may we e-mail a promotion to? (same inbox, different answer per party)
+select d.name, ea.electronic_address_string,
+       case when pcm.non_solicitation_ind then 'no: opted out' else 'yes' end as may_solicit
+from party_contact_mechanism pcm
+join contact_mechanism cm using (contact_mechanism_id)
+join electronic_address ea using (contact_mechanism_id)
+join party_display_name d using (party_id)
+where cm.contact_mechanism_type_id = 'EMAIL'
+  and pcm.thru_date is null
+order by ea.electronic_address_string, d.name;
+
+-- name: 2.9 — Mechanisms shared by more than one party
+select cm.contact_mechanism_id, t.description as type,
+       string_agg(d.name, ', ' order by d.name) as parties
+from party_contact_mechanism pcm
+join contact_mechanism cm using (contact_mechanism_id)
+join contact_mechanism_type t using (contact_mechanism_type_id)
+join party_display_name d using (party_id)
+where pcm.thru_date is null
+group by cm.contact_mechanism_id, t.description
+having count(*) > 1;
+
+-- name: 2.9 — How could we reach Ana on 2015-01-01? (history kept, like her address in 2.8)
+select t.description as type,
+       coalesce('+' || tn.country_code || ' ', '') || tn.area_code || ' ' || tn.contact_number as phone,
+       ea.electronic_address_string as electronic_address
+from party_contact_mechanism pcm
+join contact_mechanism cm using (contact_mechanism_id)
+join contact_mechanism_type t using (contact_mechanism_type_id)
+left join telecommunications_number tn using (contact_mechanism_id)
+left join electronic_address ea using (contact_mechanism_id)
+where pcm.party_id = 1
+  and pcm.from_date <= date '2015-01-01'
+  and (pcm.thru_date is null or pcm.thru_date > date '2015-01-01');
+
+-- name: 2.9 — Data-quality check: mechanisms without exactly the subtype row their kind says (should be empty)
+select cm.contact_mechanism_id, cm.contact_mechanism_kind,
+       (tn.contact_mechanism_id is not null) as has_telecommunications_row,
+       (ea.contact_mechanism_id is not null) as has_electronic_row
+from contact_mechanism cm
+left join telecommunications_number tn using (contact_mechanism_id)
+left join electronic_address ea using (contact_mechanism_id)
+where (cm.contact_mechanism_kind = 'TELECOMMUNICATIONS_NUMBER' and (tn.contact_mechanism_id is null or ea.contact_mechanism_id is not null))
+   or (cm.contact_mechanism_kind = 'ELECTRONIC_ADDRESS'        and (ea.contact_mechanism_id is null or tn.contact_mechanism_id is not null));
+
+-- name: 2.9 — Data-quality check: mechanisms whose type doesn't fit their kind (should be empty)
+select cm.contact_mechanism_id, cm.contact_mechanism_kind, t.contact_mechanism_type_id, t.applies_to_kind
+from contact_mechanism cm
+join contact_mechanism_type t using (contact_mechanism_type_id)
+where t.applies_to_kind <> cm.contact_mechanism_kind;

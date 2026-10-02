@@ -505,3 +505,56 @@ insert into party_postal_address (party_id, postal_address_id, from_date, thru_d
   (4, 4, '2015-06-01', null,         'Warehouse'),
   (5, 5, '2016-01-01', null,         null),
   (6, 6, '2010-01-01', null,         null);
+
+-- ============================================================
+-- Fig 2.9 — Party contact mechanism: telecommunications numbers and electronic addresses
+-- ============================================================
+insert into contact_mechanism_type (contact_mechanism_type_id, applies_to_kind, description) values
+  ('PHONE',       'TELECOMMUNICATIONS_NUMBER', 'Phone'),
+  ('MOBILE',      'TELECOMMUNICATIONS_NUMBER', 'Mobile phone'),
+  ('FAX',         'TELECOMMUNICATIONS_NUMBER', 'Fax number'),
+  ('MODEM',       'TELECOMMUNICATIONS_NUMBER', 'Modem'),
+  ('PAGER',       'TELECOMMUNICATIONS_NUMBER', 'Pager'),
+  ('EMAIL',       'ELECTRONIC_ADDRESS',        'E-mail address'),
+  ('WEB_ADDRESS', 'ELECTRONIC_ADDRESS',        'Web address');
+
+insert into contact_mechanism (contact_mechanism_id, contact_mechanism_kind, contact_mechanism_type_id) values
+  (1,  'TELECOMMUNICATIONS_NUMBER', 'PHONE'),         -- Northwind switchboard (shared)
+  (2,  'TELECOMMUNICATIONS_NUMBER', 'FAX'),           -- Northwind fax
+  (3,  'TELECOMMUNICATIONS_NUMBER', 'MOBILE'),        -- Ana's old mobile (Mexico)
+  (4,  'TELECOMMUNICATIONS_NUMBER', 'MOBILE'),        -- Ana's current mobile
+  (5,  'TELECOMMUNICATIONS_NUMBER', 'PHONE'),         -- Kiri, no country code
+  (6,  'ELECTRONIC_ADDRESS',        'EMAIL'),         -- Ana's personal e-mail
+  (7,  'ELECTRONIC_ADDRESS',        'EMAIL'),         -- Contoso sales inbox (shared with Ben)
+  (8,  'ELECTRONIC_ADDRESS',        'WEB_ADDRESS'),   -- Northwind website
+  (9,  'TELECOMMUNICATIONS_NUMBER', 'EMAIL'),         -- DATA ERROR: a phone number typed as e-mail
+  (10, 'ELECTRONIC_ADDRESS',        'EMAIL');         -- DATA ERROR: no electronic_address row
+
+select setval(pg_get_serial_sequence('contact_mechanism', 'contact_mechanism_id'), (select max(contact_mechanism_id) from contact_mechanism));
+
+insert into telecommunications_number (contact_mechanism_id, country_code, area_code, contact_number) values
+  (1, '1',  '217', '555-0100'),
+  (2, '1',  '217', '555-0199'),
+  (3, '52', '33',  '1234-5678'),
+  (4, '1',  '217', '555-0142'),
+  (5, null, '314', '555-0177'),   -- country code is optional
+  (9, '1',  '314', '555-0123');
+
+insert into electronic_address (contact_mechanism_id, electronic_address_string) values
+  (6, 'ana.garcia@example.com'),
+  (7, 'sales@contoso.example'),
+  (8, 'https://northwind.example');
+
+insert into party_contact_mechanism (party_id, contact_mechanism_id, from_date, thru_date, non_solicitation_ind, comment) values
+  (4,  1, '2010-01-01', null,         false, 'Main switchboard'),
+  (7,  1, '2018-03-01', null,         null,  'Platform Team is reached through the switchboard'),
+  (1,  1, '2019-07-01', null,         true,  'Work line: business calls only'),
+  (4,  2, '2010-01-01', null,         false, null),
+  (1,  3, '2008-01-01', '2019-06-15', null,  'Mexican mobile, dropped after the move'),
+  (1,  4, '2019-06-15', null,         true,  'Do not call for marketing'),
+  (10, 5, '2021-02-01', null,         null,  null),
+  (1,  6, '2012-09-01', null,         false, null),
+  (5,  7, '2016-01-01', null,         false, 'Contoso is happy to receive offers here'),
+  (2,  7, '2017-04-01', null,         true,  'Ben reads this inbox but opted out of marketing'),
+  (4,  8, '2010-01-01', null,         null,  null),
+  (5,  9, '2016-01-01', null,         null,  null);
