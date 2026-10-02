@@ -478,33 +478,7 @@ insert into geographic_boundary_association (from_geographic_boundary_id, to_geo
   (10, 30), (11, 30),             -- the Midwest Sales territory spans Illinois and Missouri
   (6, 31), (1, 31);               -- US and Mexico in the North America region
 
-insert into postal_address (postal_address_id, address1, address2, directions) values
-  (1, '742 Evergreen Terrace', null,        null),
-  (2, 'Av. Juárez 123',        'Depto. 4',  null),
-  (3, '100 Commerce Dr',       'Suite 400', null),
-  (4, '55 Warehouse Rd',       null,        'Dock entrance on the north side'),
-  (5, '1 Market St',           null,        null),
-  (6, 'PO Box 99',             null,        null);   -- DATA ERROR: only linked to a postal code (no city or country)
-
-select setval(pg_get_serial_sequence('postal_address', 'postal_address_id'), (select max(postal_address_id) from postal_address));
-
--- Each address is linked to its postal code, city, state and country explicitly.
-insert into postal_address_boundary (postal_address_id, geographic_boundary_id) values
-  (1, 15), (1, 13), (1, 10), (1, 6),   -- 742 Evergreen Terrace, Springfield IL 62704, US
-  (2, 22), (2, 21), (2, 20), (2, 1),   -- Av. Juárez, Guadalajara, Jalisco 44100, MX
-  (3, 16), (3, 13), (3, 10), (3, 6),   -- Northwind HQ, Springfield IL 62707
-  (4, 16), (4, 14), (4, 10), (4, 6),   -- Northwind warehouse, Chatham IL 62707 (same postal code)
-  (5, 18), (5, 17), (5, 11), (5, 6),   -- Contoso, St. Louis MO 63101
-  (6, 15);
-
-insert into party_postal_address (party_id, postal_address_id, from_date, thru_date, comment) values
-  (1, 2, '1990-05-14', '2019-06-15', 'Family home in Guadalajara'),
-  (1, 1, '2019-06-15', null,         'Moved on marriage'),
-  (8, 1, '2019-06-15', null,         'Household shares Ana''s address'),
-  (4, 3, '2010-01-01', null,         'Headquarters'),
-  (4, 4, '2015-06-01', null,         'Warehouse'),
-  (5, 5, '2016-01-01', null,         null),
-  (6, 6, '2010-01-01', null,         null);
+-- The addresses themselves are seeded in Fig 2.10, as contact mechanisms.
 
 -- ============================================================
 -- Fig 2.9 — Party contact mechanism: telecommunications numbers and electronic addresses
@@ -545,16 +519,104 @@ insert into electronic_address (contact_mechanism_id, electronic_address_string)
   (7, 'sales@contoso.example'),
   (8, 'https://northwind.example');
 
-insert into party_contact_mechanism (party_id, contact_mechanism_id, from_date, thru_date, non_solicitation_ind, comment) values
-  (4,  1, '2010-01-01', null,         false, 'Main switchboard'),
-  (7,  1, '2018-03-01', null,         null,  'Platform Team is reached through the switchboard'),
-  (1,  1, '2019-07-01', null,         true,  'Work line: business calls only'),
-  (4,  2, '2010-01-01', null,         false, null),
-  (1,  3, '2008-01-01', '2019-06-15', null,  'Mexican mobile, dropped after the move'),
-  (1,  4, '2019-06-15', null,         true,  'Do not call for marketing'),
-  (10, 5, '2021-02-01', null,         null,  null),
-  (1,  6, '2012-09-01', null,         false, null),
-  (5,  7, '2016-01-01', null,         false, 'Contoso is happy to receive offers here'),
-  (2,  7, '2017-04-01', null,         true,  'Ben reads this inbox but opted out of marketing'),
-  (4,  8, '2010-01-01', null,         null,  null),
-  (5,  9, '2016-01-01', null,         null,  null);
+insert into party_contact_mechanism (party_contact_mechanism_id, party_id, contact_mechanism_id, from_date, thru_date, non_solicitation_ind, comment) values
+  (1,  4,  1, '2010-01-01', null,         false, 'Main switchboard'),
+  (2,  7,  1, '2018-03-01', null,         null,  'Platform Team is reached through the switchboard'),
+  (3,  1,  1, '2019-07-01', null,         true,  'Work line: business calls only'),
+  (4,  4,  2, '2010-01-01', null,         false, null),
+  (5,  1,  3, '2008-01-01', '2019-06-15', null,  'Mexican mobile, dropped after the move'),
+  (6,  1,  4, '2019-06-15', null,         true,  'Do not call for marketing'),
+  (7,  10, 5, '2021-02-01', null,         null,  null),
+  (8,  1,  6, '2012-09-01', null,         false, null),
+  (9,  5,  7, '2016-01-01', null,         false, 'Contoso is happy to receive offers here'),
+  (10, 2,  7, '2017-04-01', null,         true,  'Ben reads this inbox but opted out of marketing'),
+  (11, 4,  8, '2010-01-01', null,         null,  null),
+  (12, 5,  9, '2016-01-01', null,         null,  null);
+
+-- ============================================================
+-- Fig 2.10 — Party contact mechanism (expanded)
+-- ============================================================
+-- The 2.8 addresses, now contact mechanisms 11–16. Boundary ids: 1 MX, 6 US,
+-- 10 IL, 11 MO, 13 Springfield, 14 Chatham, 15 62704, 16 62707, 17 St. Louis,
+-- 18 63101, 20 Jalisco, 21 Guadalajara, 22 44100.
+insert into contact_mechanism_type (contact_mechanism_type_id, applies_to_kind, description) values
+  ('POSTAL_ADDRESS', 'POSTAL_ADDRESS', 'Postal address');
+
+insert into contact_mechanism (contact_mechanism_id, contact_mechanism_kind, contact_mechanism_type_id) values
+  (11, 'POSTAL_ADDRESS', 'POSTAL_ADDRESS'),
+  (12, 'POSTAL_ADDRESS', 'POSTAL_ADDRESS'),
+  (13, 'POSTAL_ADDRESS', 'POSTAL_ADDRESS'),
+  (14, 'POSTAL_ADDRESS', 'POSTAL_ADDRESS'),
+  (15, 'POSTAL_ADDRESS', 'POSTAL_ADDRESS'),
+  (16, 'POSTAL_ADDRESS', 'POSTAL_ADDRESS');
+
+select setval(pg_get_serial_sequence('contact_mechanism', 'contact_mechanism_id'), (select max(contact_mechanism_id) from contact_mechanism));
+
+insert into postal_address (contact_mechanism_id, address1, address2, directions) values
+  (11, '742 Evergreen Terrace', null,        null),
+  (12, 'Av. Juárez 123',        'Depto. 4',  null),
+  (13, '100 Commerce Dr',       'Suite 400', null),
+  (14, '55 Warehouse Rd',       null,        'Dock entrance on the north side'),
+  (15, '1 Market St',           null,        null),
+  (16, 'PO Box 99',             null,        null);   -- DATA ERROR: only linked to a postal code (no city or country)
+
+-- Each address is linked to its postal code, city, state and country explicitly.
+insert into postal_address_boundary (contact_mechanism_id, geographic_boundary_id) values
+  (11, 15), (11, 13), (11, 10), (11, 6),   -- 742 Evergreen Terrace, Springfield IL 62704, US
+  (12, 22), (12, 21), (12, 20), (12, 1),   -- Av. Juárez, Guadalajara, Jalisco 44100, MX
+  (13, 16), (13, 13), (13, 10), (13, 6),   -- Northwind HQ, Springfield IL 62707
+  (14, 16), (14, 14), (14, 10), (14, 6),   -- Northwind warehouse, Chatham IL 62707 (same postal code)
+  (15, 18), (15, 17), (15, 11), (15, 6),   -- Contoso, St. Louis MO 63101
+  (16, 15);
+
+-- The 2.8 PARTY POSTAL ADDRESS rows, now ordinary contact-mechanism links (13–19),
+-- plus Ana's shipping address at work (20).
+insert into party_contact_mechanism (party_contact_mechanism_id, party_id, contact_mechanism_id, from_date, thru_date, non_solicitation_ind, role_type_id, comment) values
+  (13, 1, 12, '1990-05-14', '2019-06-15', null,  null,       'Family home in Guadalajara'),
+  (14, 1, 11, '2019-06-15', null,         false, null,       'Moved on marriage'),
+  (15, 8, 11, '2019-06-15', null,         null,  'HOUSEHOLD', 'Household shares Ana''s address'),
+  (16, 4, 13, '2010-01-01', null,         false, null,       'Headquarters'),
+  (17, 4, 14, '2015-06-01', null,         true,  null,       'Warehouse: no sales mail'),
+  (18, 5, 15, '2016-01-01', null,         null,  null,       null),
+  (19, 6, 16, '2010-01-01', null,         null,  null,       null),
+  (20, 1, 13, '2024-03-01', null,         null,  'CONTRACTOR', 'Parcels go to the office now');
+
+select setval(pg_get_serial_sequence('party_contact_mechanism', 'party_contact_mechanism_id'), (select max(party_contact_mechanism_id) from party_contact_mechanism));
+
+-- Extensions and role types on the 2.9 links.
+update party_contact_mechanism set extension = '300' where party_contact_mechanism_id = 2;   -- Platform Team on the switchboard
+update party_contact_mechanism set extension = '214', role_type_id = 'EMPLOYEE' where party_contact_mechanism_id = 3;   -- Ana's work line
+update party_contact_mechanism set role_type_id = 'CONTACT' where party_contact_mechanism_id = 10;   -- Ben reads Contoso's inbox as its contact
+update party_contact_mechanism set role_type_id = 'BILL_TO_CUSTOMER' where party_contact_mechanism_id = 7;   -- DATA ERROR: Kiri is a prospect, never a customer
+
+insert into contact_mechanism_purpose_type (contact_mechanism_purpose_type_id, description) values
+  ('GENERAL',        'General correspondence'),
+  ('HOME',           'Main home'),
+  ('WORK',           'Work'),
+  ('BILLING',        'Billing'),
+  ('SHIPPING',       'Shipping'),
+  ('HEADQUARTERS',   'Headquarters'),
+  ('SALES',          'Sales enquiries'),
+  ('CENTRAL_FAX',    'Central fax');
+
+insert into party_contact_mechanism_purpose (party_contact_mechanism_id, contact_mechanism_purpose_type_id, from_date, thru_date) values
+  (1,  'GENERAL',      '2010-01-01', null),         -- Northwind switchboard
+  (3,  'WORK',         '2019-07-01', null),         -- Ana's work line
+  (4,  'CENTRAL_FAX',  '2010-01-01', null),
+  (8,  'GENERAL',      '2012-09-01', null),         -- Ana's personal e-mail
+  (8,  'BILLING',      '2023-06-01', null),         --   ... also where her invoices go
+  (9,  'SALES',        '2016-01-01', null),         -- Contoso sales inbox
+  (13, 'HOME',         '1990-05-14', '2020-01-01'), -- DATA ERROR: purpose outlives its link (ended 2019-06-15)
+  (14, 'HOME',         '2019-06-15', null),
+  (14, 'BILLING',      '2019-06-15', null),
+  (14, 'SHIPPING',     '2019-06-15', '2024-03-01'), -- shipping moved to the office (link 20)
+  (20, 'SHIPPING',     '2024-03-01', null),
+  (15, 'HOME',         '2019-06-15', null),
+  (16, 'HEADQUARTERS', '2010-01-01', null),
+  (16, 'BILLING',      '2010-01-01', null),
+  (17, 'SHIPPING',     '2015-06-01', null),
+  (18, 'GENERAL',      '2016-01-01', null);
+
+insert into contact_mechanism_link (from_contact_mechanism_id, to_contact_mechanism_id) values
+  (3, 4),   -- Ana's old Mexican mobile forwarded to her current one
+  (2, 1);   -- Northwind's fax line belongs with the switchboard

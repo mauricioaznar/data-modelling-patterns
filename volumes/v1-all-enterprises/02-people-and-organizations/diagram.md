@@ -43,8 +43,6 @@ erDiagram
   PARTY_RELATIONSHIP ||--o{ COMMUNICATION_EVENT : "contacted via"
 
   %% Fig 2.8 — Postal address information
-  PARTY                    ||--o{ PARTY_POSTAL_ADDRESS            : "residing at"
-  POSTAL_ADDRESS           ||--o{ PARTY_POSTAL_ADDRESS            : "the location for"
   POSTAL_ADDRESS           ||--o{ POSTAL_ADDRESS_BOUNDARY         : "within"
   GEOGRAPHIC_BOUNDARY      ||--o{ POSTAL_ADDRESS_BOUNDARY         : "for"
   GEOGRAPHIC_BOUNDARY      ||--o{ GEOGRAPHIC_BOUNDARY_ASSOCIATION : "from (within)"
@@ -57,6 +55,14 @@ erDiagram
   CONTACT_MECHANISM      ||--o| TELECOMMUNICATIONS_NUMBER : "is a"
   CONTACT_MECHANISM      ||--o| ELECTRONIC_ADDRESS        : "is a"
   CONTACT_MECHANISM_TYPE ||--o{ CONTACT_MECHANISM         : "the description for"
+
+  %% Fig 2.10 — Party contact mechanism (expanded); postal address joins the subtypes
+  CONTACT_MECHANISM              ||--o| POSTAL_ADDRESS                  : "is a"
+  ROLE_TYPE                      |o--o{ PARTY_CONTACT_MECHANISM         : "used to specify"
+  PARTY_CONTACT_MECHANISM        ||--o{ PARTY_CONTACT_MECHANISM_PURPOSE : "used for the purpose of"
+  CONTACT_MECHANISM_PURPOSE_TYPE ||--o{ PARTY_CONTACT_MECHANISM_PURPOSE : "used to specify"
+  CONTACT_MECHANISM              ||--o{ CONTACT_MECHANISM_LINK          : "from"
+  CONTACT_MECHANISM              ||--o{ CONTACT_MECHANISM_LINK          : "to"
 
   %% Fig 2.1 — Organization
   ORGANIZATION_TYPE |o--o{ ORGANIZATION_TYPE : "parent of"
@@ -233,32 +239,24 @@ erDiagram
     int to_geographic_boundary_id FK "in"
   }
   POSTAL_ADDRESS {
-    int  postal_address_id PK
+    int  contact_mechanism_id PK "FK to CONTACT_MECHANISM"
     text address1
     text address2
     text directions
   }
-  PARTY_POSTAL_ADDRESS {
-    int  party_postal_address_id PK
-    int  party_id FK
-    int  postal_address_id FK
-    date from_date
-    date thru_date
-    text comment
-  }
   POSTAL_ADDRESS_BOUNDARY {
     int postal_address_boundary_id PK
-    int postal_address_id FK
+    int contact_mechanism_id FK
     int geographic_boundary_id FK
   }
   CONTACT_MECHANISM_TYPE {
     text contact_mechanism_type_id PK
-    text applies_to_kind "TELECOMMUNICATIONS_NUMBER | ELECTRONIC_ADDRESS"
+    text applies_to_kind "POSTAL_ADDRESS | TELECOMMUNICATIONS_NUMBER | ELECTRONIC_ADDRESS"
     text description
   }
   CONTACT_MECHANISM {
     int  contact_mechanism_id PK
-    text contact_mechanism_kind "TELECOMMUNICATIONS_NUMBER | ELECTRONIC_ADDRESS"
+    text contact_mechanism_kind "POSTAL_ADDRESS | TELECOMMUNICATIONS_NUMBER | ELECTRONIC_ADDRESS"
     text contact_mechanism_type_id FK
   }
   TELECOMMUNICATIONS_NUMBER {
@@ -278,6 +276,24 @@ erDiagram
     date from_date
     date thru_date
     bool non_solicitation_ind
+    text extension
+    text role_type_id FK
     text comment
+  }
+  CONTACT_MECHANISM_PURPOSE_TYPE {
+    text contact_mechanism_purpose_type_id PK
+    text description
+  }
+  PARTY_CONTACT_MECHANISM_PURPOSE {
+    int  party_contact_mechanism_purpose_id PK
+    int  party_contact_mechanism_id FK
+    text contact_mechanism_purpose_type_id FK
+    date from_date
+    date thru_date
+  }
+  CONTACT_MECHANISM_LINK {
+    int contact_mechanism_link_id PK
+    int from_contact_mechanism_id FK
+    int to_contact_mechanism_id FK
   }
 ```

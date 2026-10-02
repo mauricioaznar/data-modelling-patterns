@@ -142,6 +142,15 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
     has its own separate model. What do a phone number, an e-mail and a street address have in
     common? Would you merge them, and what would you gain?
 
+### Contact mechanisms expanded (Fig 2.10)
+46. **[2.10]** Ana's home address is her billing and shipping address, and it stops being her
+    shipping address next year. Why does purpose need its own dated entity instead of a
+    `purpose` column on PARTY CONTACT MECHANISM?
+47. **[2.10]** EXTENSION is on PARTY CONTACT MECHANISM, not on TELECOMMUNICATIONS NUMBER. Why?
+    (Think of the Northwind switchboard.)
+48. **[2.10 vs 2.8]** Folding POSTAL ADDRESS into CONTACT MECHANISM: what does it gain, and what
+    gets harder? (A query that only wants mailing labels, the geographic boundaries…)
+
 ## 1. Redraw from memory
 *(completed at chapter end)*
 

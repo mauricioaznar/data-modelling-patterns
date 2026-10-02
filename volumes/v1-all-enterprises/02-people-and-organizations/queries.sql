@@ -504,6 +504,8 @@ where ce.datetime_started::date < pr.from_date
 -- ============================================================
 -- Fig 2.8 — Postal address information
 -- ============================================================
+-- Since 2.10 an address is a contact mechanism: parties reach it through
+-- party_contact_mechanism, and postal_address shares contact_mechanism_id.
 
 -- name: 2.8 — Mailing labels: current addresses with city, state, postal code and country (rebuilt from boundaries)
 select d.name,
@@ -512,30 +514,30 @@ select d.name,
        max(g.abbreviation) filter (where g.geographic_boundary_type_id = 'STATE') as state,
        max(g.geo_code) filter (where g.geographic_boundary_type_id = 'POSTAL_CODE') as postal_code,
        max(g.name) filter (where g.geographic_boundary_type_id = 'COUNTRY')      as country
-from party_postal_address ppa
-join postal_address a using (postal_address_id)
+from party_contact_mechanism pcm
+join postal_address a using (contact_mechanism_id)
 join party_display_name d using (party_id)
-left join postal_address_boundary pab using (postal_address_id)
+left join postal_address_boundary pab using (contact_mechanism_id)
 left join geographic_boundary g using (geographic_boundary_id)
-where ppa.thru_date is null
-group by d.name, a.postal_address_id, a.address1, a.address2
-order by d.name;
+where pcm.thru_date is null
+group by d.name, a.contact_mechanism_id, a.address1, a.address2
+order by d.name, a.address1;
 
 -- name: 2.8 — Where did Ana live on 2015-01-01? (the move keeps history)
-select a.address1, a.address2, ppa.from_date, ppa.thru_date
-from party_postal_address ppa
-join postal_address a using (postal_address_id)
-where ppa.party_id = 1
-  and ppa.from_date <= date '2015-01-01'
-  and (ppa.thru_date is null or ppa.thru_date > date '2015-01-01');
+select a.address1, a.address2, pcm.from_date, pcm.thru_date
+from party_contact_mechanism pcm
+join postal_address a using (contact_mechanism_id)
+where pcm.party_id = 1
+  and pcm.from_date <= date '2015-01-01'
+  and (pcm.thru_date is null or pcm.thru_date > date '2015-01-01');
 
 -- name: 2.8 — Addresses shared by more than one party
 select a.address1, string_agg(d.name, ', ' order by d.name) as parties
-from party_postal_address ppa
-join postal_address a using (postal_address_id)
+from party_contact_mechanism pcm
+join postal_address a using (contact_mechanism_id)
 join party_display_name d using (party_id)
-where ppa.thru_date is null
-group by a.postal_address_id, a.address1
+where pcm.thru_date is null
+group by a.contact_mechanism_id, a.address1
 having count(*) > 1;
 
 -- name: 2.8 — Postal codes that cross more than one city
@@ -550,23 +552,23 @@ having count(*) > 1;
 
 -- name: 2.8 — Parties with a current address anywhere inside the Midwest Sales territory (any depth)
 select distinct d.name, a.address1
-from party_postal_address ppa
-join postal_address a using (postal_address_id)
-join postal_address_boundary pab using (postal_address_id)
+from party_contact_mechanism pcm
+join postal_address a using (contact_mechanism_id)
+join postal_address_boundary pab using (contact_mechanism_id)
 join geographic_boundary_ancestor anc on anc.geographic_boundary_id = pab.geographic_boundary_id
 join party_display_name d using (party_id)
 where anc.ancestor_id = 30
-  and ppa.thru_date is null
+  and pcm.thru_date is null
 order by d.name;
 
 -- name: 2.8 — Data-quality check: addresses without a city or a country (should be empty)
-select a.postal_address_id, a.address1,
+select a.contact_mechanism_id, a.address1,
        bool_or(g.geographic_boundary_type_id = 'CITY')    is true as has_city,
        bool_or(g.geographic_boundary_type_id = 'COUNTRY') is true as has_country
 from postal_address a
-left join postal_address_boundary pab using (postal_address_id)
+left join postal_address_boundary pab using (contact_mechanism_id)
 left join geographic_boundary g using (geographic_boundary_id)
-group by a.postal_address_id, a.address1
+group by a.contact_mechanism_id, a.address1
 having not (bool_or(g.geographic_boundary_type_id = 'CITY')    is true
         and bool_or(g.geographic_boundary_type_id = 'COUNTRY') is true);
 
@@ -630,18 +632,98 @@ where pcm.party_id = 1
   and pcm.from_date <= date '2015-01-01'
   and (pcm.thru_date is null or pcm.thru_date > date '2015-01-01');
 
--- name: 2.9 — Data-quality check: mechanisms without exactly the subtype row their kind says (should be empty)
+-- name: 2.9 — Data-quality check: mechanisms without exactly the subtype row their kind says (should be empty; postal addresses since 2.10)
+with subtype_row as (
+  select contact_mechanism_id, 'POSTAL_ADDRESS' as kind from postal_address
+  union all
+  select contact_mechanism_id, 'TELECOMMUNICATIONS_NUMBER' from telecommunications_number
+  union all
+  select contact_mechanism_id, 'ELECTRONIC_ADDRESS' from electronic_address
+)
 select cm.contact_mechanism_id, cm.contact_mechanism_kind,
-       (tn.contact_mechanism_id is not null) as has_telecommunications_row,
-       (ea.contact_mechanism_id is not null) as has_electronic_row
+       string_agg(s.kind, ', ') as subtype_rows_found
 from contact_mechanism cm
-left join telecommunications_number tn using (contact_mechanism_id)
-left join electronic_address ea using (contact_mechanism_id)
-where (cm.contact_mechanism_kind = 'TELECOMMUNICATIONS_NUMBER' and (tn.contact_mechanism_id is null or ea.contact_mechanism_id is not null))
-   or (cm.contact_mechanism_kind = 'ELECTRONIC_ADDRESS'        and (ea.contact_mechanism_id is null or tn.contact_mechanism_id is not null));
+left join subtype_row s using (contact_mechanism_id)
+group by cm.contact_mechanism_id, cm.contact_mechanism_kind
+having count(s.kind) <> 1 or bool_or(s.kind <> cm.contact_mechanism_kind);
 
 -- name: 2.9 — Data-quality check: mechanisms whose type doesn't fit their kind (should be empty)
 select cm.contact_mechanism_id, cm.contact_mechanism_kind, t.contact_mechanism_type_id, t.applies_to_kind
 from contact_mechanism cm
 join contact_mechanism_type t using (contact_mechanism_type_id)
 where t.applies_to_kind <> cm.contact_mechanism_kind;
+
+-- ============================================================
+-- Fig 2.10 — Party contact mechanism (expanded)
+-- ============================================================
+
+-- name: 2.10 — Where do we ship to each party today? (purpose decides, whatever the mechanism)
+select d.name, a.address1, p.from_date as shipping_since
+from party_contact_mechanism_purpose p
+join party_contact_mechanism pcm using (party_contact_mechanism_id)
+join postal_address a using (contact_mechanism_id)
+join party_display_name d using (party_id)
+where p.contact_mechanism_purpose_type_id = 'SHIPPING'
+  and p.thru_date is null and pcm.thru_date is null
+order by d.name;
+
+-- name: 2.10 — Ana's contact points with every current purpose, across all three subtypes
+select cm.contact_mechanism_kind as kind,
+       coalesce(a.address1,
+                coalesce('+' || tn.country_code || ' ', '') || tn.area_code || ' ' || tn.contact_number,
+                ea.electronic_address_string) as reach_at,
+       pcm.extension,
+       r.description as as_role,
+       string_agg(pt.description, ', ' order by pt.description) as purposes
+from party_contact_mechanism pcm
+join contact_mechanism cm using (contact_mechanism_id)
+left join postal_address a            using (contact_mechanism_id)
+left join telecommunications_number tn using (contact_mechanism_id)
+left join electronic_address ea       using (contact_mechanism_id)
+left join role_type r using (role_type_id)
+left join party_contact_mechanism_purpose p
+       on p.party_contact_mechanism_id = pcm.party_contact_mechanism_id and p.thru_date is null
+left join contact_mechanism_purpose_type pt using (contact_mechanism_purpose_type_id)
+where pcm.party_id = 1 and pcm.thru_date is null
+group by cm.contact_mechanism_kind, reach_at, pcm.extension, r.description
+order by kind, reach_at;
+
+-- name: 2.10 — Switchboard directory: one number, an extension per party
+select d.name, tn.area_code || ' ' || tn.contact_number as number, pcm.extension
+from party_contact_mechanism pcm
+join telecommunications_number tn using (contact_mechanism_id)
+join party_display_name d using (party_id)
+where pcm.contact_mechanism_id = 1 and pcm.thru_date is null
+order by pcm.extension nulls first;
+
+-- name: 2.10 — Linked mechanisms (forwarding, fax tied to a phone)
+select l.from_contact_mechanism_id as from_id, ft.description as from_type,
+       l.to_contact_mechanism_id   as to_id,   tt.description as to_type
+from contact_mechanism_link l
+join contact_mechanism f on f.contact_mechanism_id = l.from_contact_mechanism_id
+join contact_mechanism t on t.contact_mechanism_id = l.to_contact_mechanism_id
+join contact_mechanism_type ft on ft.contact_mechanism_type_id = f.contact_mechanism_type_id
+join contact_mechanism_type tt on tt.contact_mechanism_type_id = t.contact_mechanism_type_id;
+
+-- name: 2.10 — Data-quality check: purposes outside their link's period (should be empty)
+select p.party_contact_mechanism_purpose_id, d.name, p.contact_mechanism_purpose_type_id,
+       p.from_date, p.thru_date, pcm.from_date as link_from, pcm.thru_date as link_thru
+from party_contact_mechanism_purpose p
+join party_contact_mechanism pcm using (party_contact_mechanism_id)
+join party_display_name d using (party_id)
+where p.from_date < pcm.from_date
+   or (pcm.thru_date is not null and (p.thru_date is null or p.thru_date > pcm.thru_date));
+
+-- name: 2.10 — Data-quality check: links specified for a role the party never plays during the link (should be empty)
+select pcm.party_contact_mechanism_id, d.name, pcm.role_type_id
+from party_contact_mechanism pcm
+join party_display_name d using (party_id)
+where pcm.role_type_id is not null
+  and not exists (
+    select 1
+    from party_role r
+    join role_type_ancestor anc on anc.role_type_id = r.role_type_id
+    where r.party_id = pcm.party_id
+      and anc.ancestor_id = pcm.role_type_id
+      and r.from_date < coalesce(pcm.thru_date, 'infinity')
+      and (r.thru_date is null or r.thru_date > pcm.from_date));

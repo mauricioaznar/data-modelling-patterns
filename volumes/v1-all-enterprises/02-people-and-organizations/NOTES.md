@@ -521,6 +521,72 @@ a party may have none, and a mechanism may be unused.
   who uses it. *What it's for* (work, home, billing) isn't drawn here.
 - **Postal address is still separate** from contact mechanism in this figure.
 
+### Fig 2.10 — Party contact mechanism (expanded)
+**Transcription** (confirmed against the book: ☑)
+
+```
+PARTY CONTACT MECHANISM PURPOSE
+  # from_date
+  o thru_date
+  -> PARTY CONTACT MECHANISM         (many "used within" 1; pcm "used for the purpose of")
+  -> CONTACT MECHANISM PURPOSE TYPE  (many "defined via" 1; type "used to specify")
+
+CONTACT MECHANISM PURPOSE TYPE
+  # contact_mechanism_purpose_type_id
+  * description
+
+PARTY CONTACT MECHANISM
+  # from_date
+  o thru_date
+  o non_solicitation_indicator
+  o extension                        (new in 2.10)
+  o comment
+  -> PARTY              (many "the mechanism to contact" 1; party "contacted via")
+  -> CONTACT MECHANISM  (many "specified via" 1; mechanism "used by")
+  -> PARTY ROLE TYPE    (many "specified for" 1; role type "used to specify")   new in 2.10
+
+CONTACT MECHANISM LINK               (no attributes drawn)
+  -> CONTACT MECHANISM  "from"  ("related to")
+  -> CONTACT MECHANISM  "to"    ("related to")
+
+CONTACT MECHANISM
+  # contact_mechanism_id
+  -> CONTACT MECHANISM TYPE  ("described by" / "the description for")
+  subtypes:
+    POSTAL ADDRESS               (moved in from 2.8)
+      * address1
+      o address2
+      o directions
+    TELECOMMUNICATIONS NUMBER
+      * area_code
+      * contact_number
+      o country_code
+    ELECTRONIC ADDRESS
+      * electronic_address_string
+
+CONTACT MECHANISM TYPE
+  # contact_mechanism_type_id
+  * description
+```
+
+Optionality (confirmed): PARTY CONTACT MECHANISM → PARTY ROLE TYPE is optional; a purpose must
+point to one link and one purpose type.
+
+**Discussion**
+- **Postal address becomes a contact mechanism.** A street address, a phone number and an e-mail
+  all answer "how do I reach this party?", so they share one link (PARTY CONTACT MECHANISM), one
+  set of dates, one do-not-solicit flag and one set of purposes. PARTY POSTAL ADDRESS from 2.8 is
+  absorbed.
+- **Purpose is its own dated entity,** not a column. One link can be billing *and* shipping, and
+  each purpose can start and stop on its own. This answers the 2.8 question about *what an
+  address is for*.
+- **Extension sits on the link, not the number.** Everyone at the Northwind switchboard shares
+  one number but has their own extension.
+- **The role type says which hat the party wears** when using this mechanism: Ana's work line as
+  an EMPLOYEE, not for her as a CUSTOMER.
+- **CONTACT MECHANISM LINK** relates mechanisms to each other, e.g. a phone that forwards to
+  another number, or a fax line tied to a phone.
+
 ## Design decisions (book → SQL)
 
 ### Fig 2.1
@@ -720,6 +786,25 @@ a party may have none, and a mechanism may be unused.
 - **Keys:** surrogate `party_contact_mechanism_id`; the book identifies the row by party +
   mechanism + from_date.
 - **Not enforced:** overlapping periods for the same party and mechanism (same as 2.8).
+### Fig 2.10
+- **2.8 folded in (option A).** `postal_address` is now a contact-mechanism subtype keyed on
+  `contact_mechanism_id`, and `postal_address_boundary` keys on it too. `party_postal_address`
+  is gone: its rows are ordinary `party_contact_mechanism` rows. The address tables moved from
+  the 2.8 section to the 2.10 section of `schema.sql` (they need `contact_mechanism`), and the
+  2.8 queries were rewritten to go through contact mechanism. Same move as folding `country`
+  into `geographic_boundary`.
+- **`contact_mechanism_kind` gains POSTAL_ADDRESS,** and so does `applies_to_kind` (one new
+  type row, POSTAL_ADDRESS). The 2.9 subtype check now covers all three subtype tables.
+- **`role_type_id` on the link points at our `role_type`** (the book's PARTY ROLE TYPE).
+  Not enforced: that the party actually plays that role during the link. A data-quality query
+  checks it, at any depth of the role hierarchy (the seed gives Kiri, a prospect, a
+  bill-to-customer link).
+- **Purposes:** a surrogate key, with the book's from/thru dates. Not enforced: that a purpose
+  stays inside its link's period. A data-quality query checks it (planted: a HOME purpose that
+  outlives the Guadalajara link).
+- **`contact_mechanism_link`** keeps only from/to, as drawn. With no type or dates it can't say
+  *why* two mechanisms are linked (forwarding? same line?); a real system would add a
+  link type.
 
 ## When NOT to use this
 

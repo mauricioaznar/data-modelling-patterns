@@ -3,6 +3,27 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-02
+
+**Built**
+- Fig 2.9 Party contact mechanism: `contact_mechanism` supertype with `telecommunications_number`
+  and `electronic_address` subtype tables, a `contact_mechanism_type` lookup (with an added
+  `applies_to_kind`), and dated `party_contact_mechanism` links carrying the do-not-solicit flag.
+- Fig 2.10 Party contact mechanism (expanded): postal address became a third contact-mechanism
+  subtype, plus dated purposes per link, a phone extension and an optional role type on the link,
+  and `contact_mechanism_link`. Two new data-quality queries (purpose outside its link's period,
+  link for a role the party never plays).
+
+**Decisions**
+- Fig 2.10 folds the 2.8 address tables in: `postal_address` keys on `contact_mechanism_id` and
+  `party_postal_address` is gone. The 2.8 queries now go through contact mechanism.
+- "To ponder" stays small: at most about 3 questions per figure, focused on the pattern. Small
+  drift from the book (e.g. `contact_number`) is fine as long as NOTES.md records it.
+
+**Next**
+- Vol 1, Ch 2: remaining figures after 2.10 (the user sends them), then write the chapter
+  exercises and distill section 0 into a short core set.
+
 ## 2026-09-30
 
 **Built**
