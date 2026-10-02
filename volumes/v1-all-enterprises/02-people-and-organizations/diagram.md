@@ -64,6 +64,15 @@ erDiagram
   CONTACT_MECHANISM              ||--o{ CONTACT_MECHANISM_LINK          : "from"
   CONTACT_MECHANISM              ||--o{ CONTACT_MECHANISM_LINK          : "to"
 
+  %% Fig 2.11 — Facility versus contact mechanism
+  FACILITY_TYPE      ||--o{ FACILITY                   : "the description for"
+  FACILITY           |o--o{ FACILITY                   : "made up of"
+  PARTY              ||--o{ FACILITY_ROLE              : "involved in"
+  FACILITY           ||--o{ FACILITY_ROLE              : "involving"
+  FACILITY_ROLE_TYPE ||--o{ FACILITY_ROLE              : "the description for"
+  FACILITY           ||--o{ FACILITY_CONTACT_MECHANISM : "contacted via"
+  CONTACT_MECHANISM  ||--o{ FACILITY_CONTACT_MECHANISM : "used by"
+
   %% Fig 2.1 — Organization
   ORGANIZATION_TYPE |o--o{ ORGANIZATION_TYPE : "parent of"
   ORGANIZATION_TYPE ||--o{ ORGANIZATION      : "classifies"
@@ -295,5 +304,35 @@ erDiagram
     int contact_mechanism_link_id PK
     int from_contact_mechanism_id FK
     int to_contact_mechanism_id FK
+  }
+  FACILITY_TYPE {
+    text facility_type_id PK
+    text description
+  }
+  FACILITY {
+    int     facility_id PK
+    text    facility_type_id FK
+    int     part_of_facility_id FK
+    text    description
+    numeric square_footage
+  }
+  FACILITY_ROLE_TYPE {
+    text facility_role_type_id PK
+    text description
+  }
+  FACILITY_ROLE {
+    int  facility_role_id PK
+    int  party_id FK
+    int  facility_id FK
+    text facility_role_type_id FK
+    date from_date
+    date thru_date
+  }
+  FACILITY_CONTACT_MECHANISM {
+    int  facility_contact_mechanism_id PK
+    int  facility_id FK
+    int  contact_mechanism_id FK
+    date from_date
+    date thru_date
   }
 ```

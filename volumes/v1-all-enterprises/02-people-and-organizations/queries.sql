@@ -727,3 +727,79 @@ where pcm.role_type_id is not null
       and anc.ancestor_id = pcm.role_type_id
       and r.from_date < coalesce(pcm.thru_date, 'infinity')
       and (r.thru_date is null or r.thru_date > pcm.from_date));
+
+-- ============================================================
+-- Fig 2.11 — Facility versus contact mechanism
+-- ============================================================
+
+-- name: 2.11 — Northwind HQ broken down: building → floors → rooms (recursive "part of")
+with recursive tree (facility_id, path, depth) as (
+  select facility_id, description, 0 from facility where facility_id = 1
+  union all
+  select f.facility_id, t.path || ' → ' || f.description, t.depth + 1
+  from tree t
+  join facility f on f.part_of_facility_id = t.facility_id
+  where t.depth < 10   -- guard against cycles
+)
+select t.path, f.facility_type_id as type, f.square_footage
+from tree t
+join facility f using (facility_id)
+order by t.path;
+
+-- name: 2.11 — Who is involved with the Chatham warehouse, and how (several parties, one facility)
+select d.name, rt.description as role, fr.from_date, fr.thru_date
+from facility_role fr
+join facility_role_type rt using (facility_role_type_id)
+join party_display_name d using (party_id)
+where fr.facility_id = 5
+order by fr.from_date;
+
+-- name: 2.11 — Facility directory: how to reach each facility (an address is not a facility)
+select f.description as facility,
+       coalesce(a.address1 || coalesce(', ' || a.address2, ''),
+                tn.area_code || ' ' || tn.contact_number) as reach_at
+from facility_contact_mechanism fcm
+join facility f using (facility_id)
+left join postal_address a             using (contact_mechanism_id)
+left join telecommunications_number tn using (contact_mechanism_id)
+where fcm.thru_date is null
+order by f.description, reach_at;
+
+-- name: 2.11 — Addresses shared by more than one facility
+select a.address1, string_agg(f.description, ', ' order by f.description) as facilities
+from facility_contact_mechanism fcm
+join postal_address a using (contact_mechanism_id)
+join facility f using (facility_id)
+where fcm.thru_date is null
+group by a.contact_mechanism_id, a.address1
+having count(*) > 1;
+
+-- name: 2.11 — Space Northwind currently owns or leases (summing a building AND its floors would count space twice)
+select f.description, rt.description as role, f.square_footage
+from facility_role fr
+join facility f using (facility_id)
+join facility_role_type rt using (facility_role_type_id)
+where fr.party_id = 4
+  and fr.facility_role_type_id in ('OWNER', 'LESSEE')
+  and fr.thru_date is null
+union all
+select 'Total', null, sum(f.square_footage)
+from facility_role fr
+join facility f using (facility_id)
+where fr.party_id = 4
+  and fr.facility_role_type_id in ('OWNER', 'LESSEE')
+  and fr.thru_date is null;
+
+-- name: 2.11 — Data-quality check: facilities that end up part of themselves (should be empty)
+with recursive walk (facility_id, ancestor_id, depth) as (
+  select facility_id, part_of_facility_id, 1 from facility where part_of_facility_id is not null
+  union all
+  select w.facility_id, f.part_of_facility_id, w.depth + 1
+  from walk w
+  join facility f on f.facility_id = w.ancestor_id
+  where f.part_of_facility_id is not null and w.depth < 10
+)
+select distinct f.facility_id, f.description
+from walk w
+join facility f using (facility_id)
+where w.ancestor_id = w.facility_id;

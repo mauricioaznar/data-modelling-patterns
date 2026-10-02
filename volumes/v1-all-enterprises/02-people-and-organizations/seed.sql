@@ -620,3 +620,70 @@ insert into party_contact_mechanism_purpose (party_contact_mechanism_id, contact
 insert into contact_mechanism_link (from_contact_mechanism_id, to_contact_mechanism_id) values
   (3, 4),   -- Ana's old Mexican mobile forwarded to her current one
   (2, 1);   -- Northwind's fax line belongs with the switchboard
+
+-- ============================================================
+-- Fig 2.11 — Facility versus contact mechanism
+-- ============================================================
+insert into facility_type (facility_type_id, description) values
+  ('WAREHOUSE', 'Warehouse'),
+  ('PLANT',     'Plant'),
+  ('BUILDING',  'Building'),
+  ('FLOOR',     'Floor'),
+  ('OFFICE',    'Office'),
+  ('ROOM',      'Room');
+
+insert into facility (facility_id, facility_type_id, part_of_facility_id, description, square_footage) values
+  (1,  'BUILDING',  null, 'Northwind HQ building',         40000),
+  (2,  'FLOOR',     1,    'HQ floor 4',                    8000),
+  (3,  'OFFICE',    2,    'Office 412',                    150),
+  (4,  'ROOM',      2,    'Lagoon conference room',        600),
+  (5,  'WAREHOUSE', null, 'Chatham warehouse',             120000),
+  (6,  'BUILDING',  null, 'Market St North building',      25000),   -- two Contoso buildings,
+  (7,  'BUILDING',  null, 'Market St South building',      18000),   --   one street address
+  (8,  'WAREHOUSE', null, 'Old Springfield warehouse',     60000),
+  (9,  'BUILDING',  10,   'Annex A',                       null),    -- DATA ERROR: Annex A is part of Annex B ...
+  (10, 'BUILDING',  9,    'Annex B',                       null);    --   ... and Annex B is part of Annex A (a cycle)
+
+select setval(pg_get_serial_sequence('facility', 'facility_id'), (select max(facility_id) from facility));
+
+insert into facility_role_type (facility_role_type_id, description) values
+  ('OWNER',   'Owner'),
+  ('LESSEE',  'Lessee'),
+  ('MANAGER', 'Manager'),
+  ('USER',    'User');
+
+insert into facility_role (party_id, facility_id, facility_role_type_id, from_date, thru_date) values
+  (4, 1, 'OWNER',   '2010-01-01', null),
+  (7, 2, 'USER',    '2019-03-01', null),           -- the Platform Team uses floor 4
+  (1, 3, 'USER',    '2019-07-01', null),           -- Ana's office
+  (4, 8, 'LESSEE',  '2010-01-01', '2015-06-01'),   -- Northwind left the old warehouse ...
+  (4, 5, 'LESSEE',  '2015-06-01', null),           --   ... for the Chatham one
+  (5, 5, 'MANAGER', '2021-04-01', null),           -- Contoso runs the Chatham warehouse for Northwind
+  (5, 6, 'OWNER',   '2016-01-01', null),
+  (5, 7, 'OWNER',   '2016-01-01', null);
+
+-- Two new contact mechanisms: a conference-room phone and the warehouse's
+-- delivery-dock address (a second address for the same facility).
+insert into contact_mechanism (contact_mechanism_id, contact_mechanism_kind, contact_mechanism_type_id) values
+  (17, 'TELECOMMUNICATIONS_NUMBER', 'PHONE'),
+  (18, 'POSTAL_ADDRESS',            'POSTAL_ADDRESS');
+
+select setval(pg_get_serial_sequence('contact_mechanism', 'contact_mechanism_id'), (select max(contact_mechanism_id) from contact_mechanism));
+
+insert into telecommunications_number (contact_mechanism_id, country_code, area_code, contact_number) values
+  (17, '1', '217', '555-0150');
+
+insert into postal_address (contact_mechanism_id, address1, address2, directions) values
+  (18, '57 Warehouse Rd', 'Dock gate', 'Trucks only; enter from the east');
+
+insert into postal_address_boundary (contact_mechanism_id, geographic_boundary_id) values
+  (18, 16), (18, 14), (18, 10), (18, 6);   -- Chatham IL 62707, US
+
+-- Contact mechanism ids: 13 Northwind HQ address, 14 warehouse address, 15 Contoso address.
+insert into facility_contact_mechanism (facility_id, contact_mechanism_id, from_date, thru_date) values
+  (1, 13, '2010-01-01', null),
+  (4, 17, '2019-03-01', null),   -- the conference room has its own phone
+  (5, 14, '2015-06-01', null),   -- the warehouse's mailing address ...
+  (5, 18, '2015-06-01', null),   --   ... and its dock address
+  (6, 15, '2016-01-01', null),   -- one address ...
+  (7, 15, '2016-01-01', null);   --   ... two buildings

@@ -587,6 +587,57 @@ point to one link and one purpose type.
 - **CONTACT MECHANISM LINK** relates mechanisms to each other, e.g. a phone that forwards to
   another number, or a fax line tied to a phone.
 
+### Fig 2.11 — Facility versus contact mechanism
+**Transcription** (confirmed against the book: ☑)
+
+```
+PARTY CONTACT MECHANISM      (as in 2.10; purposes and role type not redrawn)
+  -> PARTY, -> CONTACT MECHANISM
+
+FACILITY CONTACT MECHANISM   (no attributes drawn)
+  -> FACILITY           (many "the mechanism to contact" 1 facility; facility "contacted via")
+  -> CONTACT MECHANISM  (many "specified via" 1 mechanism; mechanism "used by")
+
+FACILITY ROLE                (no attributes drawn)
+  -> PARTY               (many "for" 1 party; party "involved in")
+  -> FACILITY            (many "of" 1 facility; facility "involving")
+  -> FACILITY ROLE TYPE  (many "described by" 1 type; type "the description for")
+
+FACILITY ROLE TYPE           (no attributes drawn)
+
+FACILITY
+  # facility_id
+  * description
+  o square_footage
+  -> FACILITY       (recursive: "part of" / "made up of")
+  -> FACILITY TYPE  ("described by" / "the description for")
+  subtypes: WAREHOUSE, PLANT, BUILDING, FLOOR, OFFICE, ROOM   (no attributes)
+
+FACILITY TYPE
+  # facility_type_id
+  * description
+
+CONTACT MECHANISM            (as in 2.10: POSTAL ADDRESS, TELECOMMUNICATIONS NUMBER,
+                              ELECTRONIC ADDRESS)
+```
+
+Confirmed: FACILITY ROLE, FACILITY CONTACT MECHANISM and FACILITY ROLE TYPE have no attributes
+drawn; "part of" is optional; every facility has a type.
+
+**Discussion**
+- **A facility is a physical place; a contact mechanism is a way to reach someone.** A warehouse
+  has square footage, is made of floors and rooms, and parties own, rent or use it. A postal
+  address only says where to send mail. They often line up 1:1, but not always: a campus has
+  several buildings at one address, and a warehouse can have a mailing address and a separate
+  delivery-dock address.
+- **Facilities get contact mechanisms the same way parties do,** through their own intersection
+  (FACILITY CONTACT MECHANISM). The conference room has a phone, the warehouse has an address.
+- **Facilities nest with a single "part of" link** (room → floor → building), not a many-to-many
+  association like geographic boundaries. A room is in exactly one floor.
+- **FACILITY ROLE says how a party is involved with a facility** (owner, tenant, user, manager):
+  the same "party plays a role in something" idea as PARTY ROLE, but scoped to one facility.
+- **The subtypes have no attributes,** so (as in Fig 2.1 and 2.8) they become FACILITY TYPE rows.
+
 ## Design decisions (book → SQL)
 
 ### Fig 2.1
@@ -805,6 +856,19 @@ point to one link and one purpose type.
 - **`contact_mechanism_link`** keeps only from/to, as drawn. With no type or dates it can't say
   *why* two mechanisms are linked (forwarding? same line?); a real system would add a
   link type.
+### Fig 2.11
+- **Deviation: dates added** to `facility_role` and `facility_contact_mechanism` (the book draws
+  none). Every other link in the chapter is dated, and "Northwind leased the old warehouse until
+  2015" needs them.
+- **`facility_role_type`** gets the usual id + description (the book draws no attributes).
+- **Subtypes are rows** in the book's FACILITY TYPE table (WAREHOUSE, PLANT, BUILDING, FLOOR,
+  OFFICE, ROOM), as in 2.1 and 2.8.
+- **"Part of" is a plain `part_of_facility_id` column** (one parent), unlike the many-to-many
+  geographic boundary association. Not enforced: cycles. A recursive data-quality query catches
+  them (planted: Annex A and Annex B are each part of the other). Also not enforced: a sensible
+  nesting order (nothing stops a building being part of a room).
+- **Roles sit on whole facilities**, so summing square footage over a party's roles is safe in the
+  seed. If a party had roles on a building *and* its floors, the sum would count space twice.
 
 ## When NOT to use this
 

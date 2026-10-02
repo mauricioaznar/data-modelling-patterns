@@ -151,6 +151,14 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 48. **[2.10 vs 2.8]** Folding POSTAL ADDRESS into CONTACT MECHANISM: what does it gain, and what
     gets harder? (A query that only wants mailing labels, the geographic boundaries…)
 
+### Facilities (Fig 2.11)
+49. **[2.11]** Give one facility with two postal addresses, and one postal address with several
+    facilities. What question does FACILITY answer that POSTAL ADDRESS can't, and the other way
+    round?
+50. **[2.11 vs 2.8]** Facilities nest with a single "part of" link, while geographic boundaries
+    needed a many-to-many association. Why is the simpler structure good enough here? What
+    real case would break it?
+
 ## 1. Redraw from memory
 *(completed at chapter end)*
 
