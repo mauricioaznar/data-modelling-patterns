@@ -6,20 +6,24 @@ and any decisions made.
 ## 2026-10-06
 
 **Built**
-- Started the Ch 2 exercises. Warm-up recall (3 questions) done, plus core set items 1, 13, 14,
-  17 and 43 in section 0. Answers and review notes are recorded in EXERCISES.md.
-- Four gaps logged: subtype vs type row, the as-of condition (especially null `thru_date`),
-  arguing for the generic model without weighing its cost, and relationship ends (direction and
-  INTERNAL_ORGANIZATION).
+- Ch 2 exercises: warm-up recall (3 questions) and the whole section 0 core set (12 items)
+  done. Answers and review notes are recorded in EXERCISES.md.
+- Five gaps logged: subtype vs type row (later stated correctly in item 44), the as-of
+  condition (especially null `thru_date`), arguing for the generic model without weighing its
+  cost, relationship ends (direction and INTERNAL_ORGANIZATION), and reading generic PARTY
+  RELATIONSHIP as single-table inheritance.
 
 **Decisions**
 - Relationship direction: working rule is to read the type as a sentence, subject → object.
   Not every type is "us → them". Whether this is Silverston's rule is still open (item 27).
+- Exercise rules (set by the user): explain the book's reasoning before any pragmatic critique,
+  push back plainly when an answer is wrong, and check the schema before claiming how the
+  model works.
+- The user's question about rules for purpose types is parked on section 6 exercise 4.
 
 **Next**
-- Continue the core set at item 20 (why a relationship links roles, not parties), then 26, 38,
-  44, 46, 49, 51.
-- Then section 3 (Spot the flaw) and sections 5–6 (queries, breaking the model).
+- Section 3 (Spot the flaw), starting at 3a, then sections 5–6 (queries, breaking the model).
+- Then sections 1, 2, 4, 7, 8 and the capstone; recheck the open gaps along the way.
 
 ## 2026-10-02
 

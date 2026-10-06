@@ -89,6 +89,12 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 ### Relationships (Fig 2.6a)
 20. **[2.6a]** A relationship links two *roles*, not two parties. What would be lost if
     PARTY RELATIONSHIP pointed straight at two parties plus a type?
+    > **Answered 2026-10-06 ✓** Without roles, the type's rule has nothing to check against.
+    > Putting the role on PARTY allows only one role per party. Dropping it means deriving
+    > roles from relationships, so a role can't exist without a relationship and an ended
+    > relationship leaves the role ambiguous. (In review, Claude claimed 2.10 links contact
+    > mechanisms to PARTY ROLE. The user challenged it, and it was wrong: 2.10 has an optional
+    > ROLE TYPE on the party link, which overlaps a lot with purpose.)
 21. **[2.6a]** Relationships have a direction (from → to). For a symmetric one like PARTNERSHIP,
     which party is "from"? What does direction cost when querying "all of X's relationships"?
 22. **[2.6a]** PARTY RELATIONSHIP only carries dates and a comment. Where would data specific
@@ -102,6 +108,11 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 26. **[2.5 vs 2.6a]** Specific relationships (2.5: one subtype per relationship, each with its own
     lines) vs. generic (2.6a: one PARTY RELATIONSHIP plus a TYPE row). What does each make easy,
     and what does each make hard? Which one tells a new developer more about the business?
+    > **Answered 2026-10-06 ✓** (after correction) First read 2.6a as single-table inheritance.
+    > Corrected: the generic table has no per-kind columns, and a new kind is an *insert*.
+    > Salary goes in an `employment` subtype table sharing the relationship's PK, so the
+    > specific design is used only where a kind has attributes. Specific tables show the
+    > business in the *schema*; generic ones move that meaning into the *data* (type rows).
 27. **[2.5]** Employment is drawn *from* the internal organization *to* the employee. Would you
     have drawn it the other way? Does direction carry meaning, or is it just a convention to agree on?
     > **Discussed 2026-10-06:** The user assumed direction is always us → them. The seed shows
@@ -145,6 +156,11 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 38. **[2.8]** The address is a separate entity from the party, joined by dated PARTY POSTAL ADDRESS
     rows. What's the difference between "Ana moved" and "Ana's address had a typo"? How does each
     one change the rows?
+    > **Answered 2026-10-06 ✓** (with multiple-choice scaffolding) Move: insert a new mechanism
+    > and a new link, and end the old link, to keep history. Typo: update the mechanism in
+    > place, leaving the link untouched. A move changes a *fact about the party* (the link);
+    > a typo fixes a *fact about the place* (the mechanism). Needed help turning the principle
+    > into concrete row changes.
 39. **[2.8]** City, state and postal code are *not* columns on POSTAL ADDRESS; they're linked
     GEOGRAPHIC BOUNDARY rows. What does that buy you? What does it cost when you just want to
     print a mailing label?
@@ -165,6 +181,10 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 44. **[2.9]** "Mobile" and "fax" are CONTACT MECHANISM TYPE rows, but TELECOMMUNICATIONS NUMBER is
     a subtype. What rule decides whether a kind of thing becomes a subtype or a type row?
     (Compare the Fig 2.1 decision on attribute-less organization subtypes.)
+    > **Answered 2026-10-06 ✓** "A subtype earns its own table once it has attributes the
+    > generic entity doesn't share." TELECOMMUNICATIONS NUMBER has country/area code, while FAX
+    > has nothing of its own, so it's a type row. Closes the warm-up "fax is a subtype" gap.
+    > (Review addition: its own *relationships* can also earn a subtype a table.)
 45. **[2.9 vs 2.8]** Phone numbers and e-mail addresses share one supertype, but postal address
     has its own separate model. What do a phone number, an e-mail and a street address have in
     common? Would you merge them, and what would you gain?
@@ -173,6 +193,10 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 46. **[2.10]** Ana's home address is her billing and shipping address, and it stops being her
     shipping address next year. Why does purpose need its own dated entity instead of a
     `purpose` column on PARTY CONTACT MECHANISM?
+    > **Answered 2026-10-06 ✓** A link can have several purposes, and each one can end sooner
+    > than the link but never outlive it, so purposes need their own rows and dates. With a
+    > single column, a second purpose means a duplicate link. At first thought the mechanism
+    > itself had dates; corrected: only the link and the purposes do.
 47. **[2.10]** EXTENSION is on PARTY CONTACT MECHANISM, not on TELECOMMUNICATIONS NUMBER. Why?
     (Think of the Northwind switchboard.)
 48. **[2.10 vs 2.8]** Folding POSTAL ADDRESS into CONTACT MECHANISM: what does it gain, and what
@@ -182,6 +206,11 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 49. **[2.11]** Give one facility with two postal addresses, and one postal address with several
     facilities. What question does FACILITY answer that POSTAL ADDRESS can't, and the other way
     round?
+    > **Answered 2026-10-06 ✓** (after scaffolding) Facilities are physical spaces that nest,
+    > have a size and have parties playing roles in them. Addresses are official "where to
+    > deliver" locations. First attempts gave party↔address queries, and read a corner
+    > warehouse's two addresses as a legal-boundary question. Corrected: nesting is by
+    > *containment*, not size.
 50. **[2.11 vs 2.8]** Facilities nest with a single "part of" link, while geographic boundaries
     needed a many-to-many association. Why is the simpler structure good enough here? What
     real case would break it?
@@ -190,6 +219,10 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 51. **[2.12 vs 2.7]** In 2.7 every communication event belonged to one party relationship. Now
     the relationship is optional and parties join through COMMUNICATION EVENT ROLE. Give two
     events the 2.7 model couldn't store properly.
+    > **Answered 2026-10-06 ✓** (after a recap of 2.7) A cold call: no relationship exists yet
+    > to hang it on. A meeting with more than two people: one relationship has only two ends.
+    > 2.12 makes the relationship optional context and adds COMMUNICATION EVENT ROLE for
+    > any number of participants.
 52. **[2.12]** VALID CONTACT MECHANISM ROLE stores a rule as rows ("cc" only makes sense for
     e-mail). Compare that with writing the rule as a CHECK constraint or a data-quality query:
     who can change it, and when is each one the better choice?
@@ -286,6 +319,9 @@ and if it did, whether it deserves a constraint, a data-quality query, or just a
 2. **[2.3]** Classify Contoso as SIZE_SMALL and SIZE_LARGE for the same period.
 3. **[2.6a]** Make Contoso its own customer (both roles in the relationship belong to Contoso).
 4. **[2.10]** Give Ana a SHIPPING purpose on her mobile number.
+   *(The user asked on 2026-10-06 which rules govern purposes. The book gives PURPOSE TYPE
+   none: it's a plain list. When you do this one, pick where the rule "SHIPPING needs a postal
+   address" should live: `applies_to_kind`, a 2.12-style rule table, or a query.)*
 5. **[2.11]** Make the HQ building part of Office 412.
 6. **[2.12]** Log an e-mail with no participants at all.
 
@@ -321,6 +357,7 @@ Filled in during review: misunderstandings to revisit in warm-ups and later exer
 - **2026-10-06, warm-up: subtype vs type row.** Listed "fax" as a CONTACT MECHANISM subtype.
   The subtypes are POSTAL ADDRESS, TELECOMMUNICATIONS NUMBER and ELECTRONIC ADDRESS. Fax, mobile
   and e-mail are CONTACT MECHANISM TYPE rows. Revisit with section 0 item 44 and section 2.3.
+  *Item 44 (same day): stated the rule correctly. Still check it in section 2.3 and the capstone.*
 - **2026-10-06, warm-up: effectivity convention.** Couldn't recall the as-of condition or the
   exclusive `thru_date` rule. Revisit in section 5 queries (every as-of query uses it).
   Worked through a concrete timeline: got `<=` / `>` right, but at first missed that a null
@@ -333,3 +370,8 @@ Filled in during review: misunderstandings to revisit in warm-ups and later exer
 - **2026-10-06, item 17: relationship ends.** Put the person at the "from" end of EMPLOYMENT
   and invented an EMPLOYER role. Revisit: relationship types fix both direction and the role
   type at each end, and "our side" is always INTERNAL_ORGANIZATION.
+- **2026-10-06, item 26: generic ≠ single-table inheritance.** Read 2.6a's generic PARTY
+  RELATIONSHIP as one wide table with a column group per relationship kind. In fact the
+  subtypes have no columns and are *rows* in PARTY RELATIONSHIP TYPE, so a new kind is an
+  insert, not a schema change. Revisit: "attribute-less subtype → type row" (same root as the
+  subtype vs type row gap).
