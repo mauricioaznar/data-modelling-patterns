@@ -3,6 +3,24 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-06
+
+**Built**
+- Started the Ch 2 exercises. Warm-up recall (3 questions) done, plus core set items 1, 13, 14,
+  17 and 43 in section 0. Answers and review notes are recorded in EXERCISES.md.
+- Four gaps logged: subtype vs type row, the as-of condition (especially null `thru_date`),
+  arguing for the generic model without weighing its cost, and relationship ends (direction and
+  INTERNAL_ORGANIZATION).
+
+**Decisions**
+- Relationship direction: working rule is to read the type as a sentence, subject → object.
+  Not every type is "us → them". Whether this is Silverston's rule is still open (item 27).
+
+**Next**
+- Continue the core set at item 20 (why a relationship links roles, not parties), then 26, 38,
+  44, 46, 49, 51.
+- Then section 3 (Spot the flaw) and sections 5–6 (queries, breaking the model).
+
 ## 2026-10-02
 
 **Built**

@@ -13,6 +13,11 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 ### Why the model is shaped this way
 1. **[before 2.1]** Why make PARTY a supertype at all, instead of separate `customer`,
    `supplier` and `employee` tables? What goes wrong with the separate tables?
+   > **Answered 2026-10-06 ✓** (with prompting) The same company gets stored once per role.
+   > Updates then miss a copy (cheque sent to the old address), and nothing ties the copies
+   > together, so "everything about Contoso" means matching by name. One PARTY with many
+   > PARTY ROLE rows fixes both. Started at "avoids duplication"; needed a nudge to name the
+   > consequences.
 2. **[2.2b]** Height and weight moved from columns into PHYSICAL CHARACTERISTIC rows (type +
    value). What can you do with rows that you can't with columns? What does the database stop
    checking for you?
@@ -51,10 +56,19 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
     would you choose each one?
 13. **[general]** Universal models are generic up front. When is a plain `customers` table the
     *right* design, and what signal tells you it's time to refactor to PARTY?
+    > **Answered 2026-10-06 (partial)** Built a ladder: `customers` → `account` with
+    > `is_client`/`is_supplier` flags → PARTY + PARTY ROLE. Saw that flags lose role dates
+    > and need a new column per role. Didn't name what PARTY *costs* a tiny shop (more joins,
+    > more complex forms, more to learn) without being asked twice.
 
 ### Roles (Fig 2.4)
 14. **[2.4]** Roles and classifications both link a party to a type with dates. What's the
     conceptual difference? Could "customer" be a classification instead? Could "industry" be a role?
+    > **Answered 2026-10-06 ✓** A role takes part in relationships; a classification only
+    > labels. Industry can't be a role because it "points to no one" (no *of/to whom*). A role
+    > can do a classification's grouping job (count CUSTOMER roles), but a classification
+    > can't say *whose* customer: only PARTY RELATIONSHIP (from/to roles, checked against
+    > its type) can.
 15. **[2.4]** PARTY ROLE has its own `party_role_id`, and `from_date` isn't part of its
     identifier. PARTY CLASSIFICATION is identified by (party, type, from_date). Why would a role
     need an identity of its own? What might reference it?
@@ -62,6 +76,11 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
     `customer` + `supplier` table design handle that, and what breaks when its address changes?
 17. **[2.4]** "Ana is an EMPLOYEE." Employee *of whom*? What can't a role alone express, and
     where should that information live?
+    > **Answered 2026-10-06 ✓** (with corrections) A role has one end and can't name the
+    > counterparty; that lives in PARTY RELATIONSHIP. First draft flipped the direction and
+    > invented an EMPLOYER role. Fixed: EMPLOYMENT goes from INTERNAL_ORGANIZATION to EMPLOYEE.
+    > INTERNAL_ORGANIZATION marks "our" parties and is the shared anchor for every
+    > relationship type.
 18. **[2.4]** Why is DEPARTMENT a *role* an organization plays, rather than an organization
     *type* like CORPORATION in 2.1?
 19. **[2.4]** Some roles are person-only, some organization-only, some either. Should the
@@ -85,6 +104,10 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
     and what does each make hard? Which one tells a new developer more about the business?
 27. **[2.5]** Employment is drawn *from* the internal organization *to* the employee. Would you
     have drawn it the other way? Does direction carry meaning, or is it just a convention to agree on?
+    > **Discussed 2026-10-06:** The user assumed direction is always us → them. The seed shows
+    > it isn't: CUSTOMER and SUPPLIER relationships point *to* INTERNAL_ORGANIZATION. A
+    > working rule is to read the type as a sentence, subject → object ("Acme *employs* Ana",
+    > "Contoso *buys from* Acme"). Still open: is that Silverston's rule, or just ours?
 28. **[2.6a]** The single data-quality query for 2.6a relies on the role hierarchy (the
     `role_type_ancestor` view). What happens to existing relationships if someone moves a role
     type to a different parent? Is the hierarchy data, or schema in disguise?
@@ -136,6 +159,9 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 ### Contact mechanisms (Fig 2.9)
 43. **[2.9]** NON-SOLICITATION IND is on PARTY CONTACT MECHANISM, not on CONTACT MECHANISM or
     PARTY. Give a case where putting it on each of the other two gives the wrong answer.
+    > **Answered 2026-10-06 ✓** On the mechanism: one opt-out on a shared number (Northwind
+    > switchboard) blocks everyone linked to it. On the party: Ana opting out of one channel
+    > blocks all her channels. Only the party-mechanism link gets both cases right.
 44. **[2.9]** "Mobile" and "fax" are CONTACT MECHANISM TYPE rows, but TELECOMMUNICATIONS NUMBER is
     a subtype. What rule decides whether a kind of thing becomes a subtype or a type row?
     (Compare the Fig 2.1 decision on attribute-less organization subtypes.)
@@ -291,3 +317,19 @@ Then compare with this chapter's models and note where you differ and why.
 
 ## Gaps found
 Filled in during review: misunderstandings to revisit in warm-ups and later exercises.
+
+- **2026-10-06, warm-up: subtype vs type row.** Listed "fax" as a CONTACT MECHANISM subtype.
+  The subtypes are POSTAL ADDRESS, TELECOMMUNICATIONS NUMBER and ELECTRONIC ADDRESS. Fax, mobile
+  and e-mail are CONTACT MECHANISM TYPE rows. Revisit with section 0 item 44 and section 2.3.
+- **2026-10-06, warm-up: effectivity convention.** Couldn't recall the as-of condition or the
+  exclusive `thru_date` rule. Revisit in section 5 queries (every as-of query uses it).
+  Worked through a concrete timeline: got `<=` / `>` right, but at first missed that a null
+  `thru_date` makes `thru_date > d` null, which drops current rows. Check that the null case is
+  handled in every as-of query the user writes.
+- **2026-10-06, item 13: argues for the generic model without weighing its cost.** When asked
+  "when *not* to use PARTY", the user argued for PARTY ("they'll undoubtedly need it"). Revisit
+  in section 7 trade-offs: every answer should name what the generic design costs, not only
+  what it buys.
+- **2026-10-06, item 17: relationship ends.** Put the person at the "from" end of EMPLOYMENT
+  and invented an EMPLOYER role. Revisit: relationship types fix both direction and the role
+  type at each end, and "our side" is always INTERNAL_ORGANIZATION.
