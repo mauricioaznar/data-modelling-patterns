@@ -378,7 +378,7 @@ main concept; 4 comes from the capstone.
 | Non-solicitation on the link | 2.9 | party_contact_mechanism | 2 | Right table in warm-up; reasons came via the switchboard scenario |
 | Purpose (dated, within link) | 2.10 | contact_mechanism_purpose_type, party_contact_mechanism_purpose | 3 | 10-07: many purposes per link → own table; own dates because a purpose can end before its link but never outlive it (unprompted) |
 | Type / fact / rule layers | all | cross-cutting (every `*_type`; valid_contact_mechanism_role) | 2 | Spotted unprompted, but "type enforces a rule" needed correcting |
-| Subtype vs type row | 2.1, 2.9 | cross-cutting (organization_type, contact_mechanism_type) | 1 | Rule stated in item 44 after the employment/reseller hint; 10-07 reappeared: "each new type gets its own table" |
+| Subtype vs type row | 2.1, 2.9 | cross-cutting (organization_type, contact_mechanism_type) | 2 | Rule stated in item 44 after the employment/reseller hint; 10-07 reappeared: "each new type gets its own table"; later 10-07, table by table: "the type points to a subtype the mechanism should use" (after much help) |
 | PARTY RELATIONSHIP + TYPE | 2.6a | party_relationship_type, party_relationship, role_type_ancestor (view) | 2 | Item 20 strong; item 17 flipped direction, invented EMPLOYER |
 | Specific vs generic relationships | 2.5, 2.6a | employment, customer_relationship, organization_rollup | 2 | Item 26: misread as one wide table; salary subtype after questions |
 | Move vs typo; shared mechanism | 2.8, 2.10 | contact_mechanism, party_contact_mechanism | 3 | 10-07: Contoso/Fabrikam unprompted; in-place update "returns a false time frame" and loses the old number |
@@ -454,5 +454,7 @@ main concept; 4 comes from the capstone.
   summary: mechanism = facts, type = "rules" (corrected: type = category; only
   `applies_to_kind` is a rule), DQ queries check after the fact; new kind = table + CHECK value
   + query branch (asked what the branch means: the union line that registers the table).
-  **Open:** which part doesn't click (two lists, or one row using both). Start there next
-  session.
+  Then, table by table: mechanism = "a way to reach a party that can be shared"; type =
+  "categories, with a rule naming the domain (kind) they belong to, possibly none". Then the
+  click: "the type points to a subtype the mechanism should enforce; creating a mechanism =
+  pick a category, which fixes the subtype table". Subtype vs type row 1 → 2. Retest cold.
