@@ -64,6 +64,9 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 ### When not to use it
 12. **[2.2b]** Attributes-as-rows (EAV) vs. plain columns vs. a Postgres `jsonb` column: when
     would you choose each one?
+55. **[2.9, raised by the user 2026-10-07]** Why doesn't CONTACT MECHANISM hold one generic
+    `value` column instead of subtype tables? (Discussed in chat: parts, boundary links and
+    per-shape rules vs the join cost. Revisit with item 12 in section 7.)
 13. **[general]** Universal models are generic up front. When is a plain `customers` table the
     *right* design, and what signal tells you it's time to refactor to PARTY?
     > **Answered 2026-10-06 (partial)** Built a ladder: `customers` → `account` with
