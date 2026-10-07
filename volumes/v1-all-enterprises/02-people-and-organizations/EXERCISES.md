@@ -1,12 +1,50 @@
-work_effort_type, work_effort, communication_event_work_effort, communication_case, communication_case_role_type, communication_case_role | priority_type, status_type | geographic_boundary_type, geographic_boundary, geographic_boundary_association, geographic_boundary_ancestor (view), postal_address_boundary | organization_type | person_flat, gender_type, person_name_type, person_name, marital_status_type, marital_status, physical_characteristic_type, physical_characteristic, citizenship, passport | cross-cutting (every from_date/thru_date) | communication_event, communication_event_role_type, communication_event_role, communication_event_purpose_type, communication_event_purpose, valid_contact_mechanism_role | facility_type, facility, facility_role_type, facility_role, facility_contact_mechanism | contact_mechanism_type, contact_mechanism, telecommunications_number, electronic_address, postal_address, contact_mechanism_link | contact_mechanism, party_contact_mechanism | employment, customer_relationship, organization_rollup | party_relationship_type, party_relationship, role_type_ancestor (view) | cross-cutting (organization_type, contact_mechanism_type) | cross-cutting (every *_type; valid_contact_mechanism_role) | contact_mechanism_purpose_type, party_contact_mechanism_purpose | party_contact_mechanism | party, organization, person, party_display_name (view) | role_type, party_role | party_type, party_classification (vs party_role) | # Vol 1, Chapter 2 — Exercises
+# Vol 1, Chapter 2 — Exercises
 
-All figures (2.1–2.13) are built. Answers go in this file (or the chapter's SQL files) and get
-reviewed; no answers are provided up front.
+All figures (2.1–2.13) are built. Answers and the gaps log go in `EXERCISES-log.md` (or the
+chapter's SQL files) and get reviewed; no answers are provided up front.
 
 **Plan (agreed 2026-10-07):** the section 0 core set served as the exam (done). Next: reinforce
-the gaps and untested figures in the comprehension table under *Gaps found*, then the capstone
-(section 9) on paper. Sections 1–8 are a menu of formats, not a checklist. Ch 2 is done when the
-capstone holds up and no gap reappears when tested cold.
+the gaps and untested figures in the tracker below, then the capstone (section 9) on paper.
+Sections 1–8 are a menu of formats, not a checklist. Ch 2 is done when the capstone holds up
+and no gap reappears when tested cold.
+
+## Progress
+
+### Comprehension (0–4 scale, scored 2026-10-07)
+0 untested · 1 recognises (understood once explained, or picked from options) · 2 explains with
+help (right after hints or corrections) · 3 explains unprompted (right first time, own words) ·
+4 applies cold (new setting, later session, no hints). Target before moving on: 3+ on every
+main concept; 4 comes from the capstone.
+
+| Concept | Fig | Tables | Level | Evidence |
+|---|---|---|---|---|
+| Role vs classification | 2.3, 2.4 | party_type, party_classification (vs party_role) | 3 | Item 14: first answer right; "points to no one" in own words |
+| PARTY ROLE + ROLE TYPE | 2.4 | role_type, party_role | 3 | Item 20 unprompted (one slip: roles set at party creation) |
+| PARTY supertype | 2.3 | party, organization, person, party_display_name (view) | 2 | Item 1: "avoid duplication", needed a nudge to name the anomalies |
+| Non-solicitation on the link | 2.9 | party_contact_mechanism | 2 | Right table in warm-up; reasons came via the switchboard scenario |
+| Purpose (dated, within link) | 2.10 | contact_mechanism_purpose_type, party_contact_mechanism_purpose | 3 | 10-07: many purposes per link → own table; own dates because a purpose can end before its link but never outlive it (unprompted) |
+| Type / fact / rule layers | all | cross-cutting (every `*_type`; valid_contact_mechanism_role) | 2 | Spotted unprompted, but "type enforces a rule" needed correcting |
+| Subtype vs type row | 2.1, 2.9 | cross-cutting (organization_type, contact_mechanism_type) | 2 | Rule stated in item 44 after the employment/reseller hint; 10-07 reappeared: "each new type gets its own table"; later 10-07, table by table: "the type points to a subtype the mechanism should use" (after much help) |
+| PARTY RELATIONSHIP + TYPE | 2.6a | party_relationship_type, party_relationship, role_type_ancestor (view) | 2 | Item 20 strong; item 17 flipped direction, invented EMPLOYER |
+| Specific vs generic relationships | 2.5, 2.6a | employment, customer_relationship, organization_rollup | 2 | Item 26: misread as one wide table; salary subtype after questions |
+| Move vs typo; shared mechanism | 2.8, 2.10 | contact_mechanism, party_contact_mechanism | 3 | 10-07: Contoso/Fabrikam unprompted; in-place update "returns a false time frame" and loses the old number |
+| CONTACT MECHANISM + subtypes | 2.9, 2.10 | contact_mechanism_type, contact_mechanism, telecommunications_number, electronic_address, postal_address, contact_mechanism_link | 2 | Fax as subtype; telecom number needed the "tele…" hint; 10-07: pager inserts (kind → subtype table holds the value, PCM links the party) after three angles |
+| Facility vs postal address | 2.11 | facility_type, facility, facility_role_type, facility_role, facility_contact_mechanism | 1 | Needed the definition; "legal boundary", "nesting by size" |
+| Communication event + roles | 2.7, 2.12 | communication_event, communication_event_role_type, communication_event_role, communication_event_purpose_type, communication_event_purpose, valid_contact_mechanism_role | 1 | Item 51 with hints; then "cold call within a relationship" |
+| Effectivity (as-of, exclusive thru) | all | cross-cutting (every from_date / thru_date) | 2 | 10-07: Contoso rows right except inclusive thru (fixed after one guiding question); asked why exclusive |
+| Person details (name, marital status, physical characteristic, citizenship/passport) | 2.2 | person_flat, gender_type, person_name_type, person_name, marital_status_type, marital_status, physical_characteristic_type, physical_characteristic, citizenship, passport | 0 | |
+| Organization type | 2.1 | organization_type | 0 | Partly covered by the subtype rule |
+| Geographic boundary | 2.8 | geographic_boundary_type, geographic_boundary, geographic_boundary_association, geographic_boundary_ancestor (view), postal_address_boundary | 0 | |
+| Priority / status types | 2.7 | priority_type, status_type | 0 | |
+| Case and work effort | 2.13 | work_effort_type, work_effort, communication_event_work_effort, communication_case, communication_case_role_type, communication_case_role | 0 | |
+
+### Open threads
+- **Subtype vs type row:** retest cold next session (kind = subtype table, type = category row).
+  Continue table by table through the contact-mechanism group; next: `telecommunications_number`.
+- **Move vs typo and purpose (both 3):** neighbourhood question parked. What connects to
+  `contact_mechanism`, directly or through `party_contact_mechanism`, and what each connection means.
+- **Item 27:** is "read the relationship type as a sentence, subject → object" Silverston's rule?
+- **Section 6 exercise 4:** where the rule "SHIPPING needs a postal address" should live.
 
 ## 0. To ponder (collected while reading)
 
@@ -18,11 +56,7 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 ### Why the model is shaped this way
 1. **[before 2.1]** Why make PARTY a supertype at all, instead of separate `customer`,
    `supplier` and `employee` tables? What goes wrong with the separate tables?
-   > **Answered 2026-10-06 ✓** (with prompting) The same company gets stored once per role.
-   > Updates then miss a copy (cheque sent to the old address), and nothing ties the copies
-   > together, so "everything about Contoso" means matching by name. One PARTY with many
-   > PARTY ROLE rows fixes both. Started at "avoids duplication"; needed a nudge to name the
-   > consequences.
+   > **Answered 2026-10-06 ✓** See EXERCISES-log.md.
 2. **[2.2b]** Height and weight moved from columns into PHYSICAL CHARACTERISTIC rows (type +
    value). What can you do with rows that you can't with columns? What does the database stop
    checking for you?
@@ -69,19 +103,12 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
     per-shape rules vs the join cost. Revisit with item 12 in section 7.)
 13. **[general]** Universal models are generic up front. When is a plain `customers` table the
     *right* design, and what signal tells you it's time to refactor to PARTY?
-    > **Answered 2026-10-06 (partial)** Built a ladder: `customers` → `account` with
-    > `is_client`/`is_supplier` flags → PARTY + PARTY ROLE. Saw that flags lose role dates
-    > and need a new column per role. Didn't name what PARTY *costs* a tiny shop (more joins,
-    > more complex forms, more to learn) without being asked twice.
+    > **Answered 2026-10-06 (partial)** See EXERCISES-log.md.
 
 ### Roles (Fig 2.4)
 14. **[2.4]** Roles and classifications both link a party to a type with dates. What's the
     conceptual difference? Could "customer" be a classification instead? Could "industry" be a role?
-    > **Answered 2026-10-06 ✓** A role takes part in relationships; a classification only
-    > labels. Industry can't be a role because it "points to no one" (no *of/to whom*). A role
-    > can do a classification's grouping job (count CUSTOMER roles), but a classification
-    > can't say *whose* customer: only PARTY RELATIONSHIP (from/to roles, checked against
-    > its type) can.
+    > **Answered 2026-10-06 ✓** See EXERCISES-log.md.
 15. **[2.4]** PARTY ROLE has its own `party_role_id`, and `from_date` isn't part of its
     identifier. PARTY CLASSIFICATION is identified by (party, type, from_date). Why would a role
     need an identity of its own? What might reference it?
@@ -89,11 +116,7 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
     `customer` + `supplier` table design handle that, and what breaks when its address changes?
 17. **[2.4]** "Ana is an EMPLOYEE." Employee *of whom*? What can't a role alone express, and
     where should that information live?
-    > **Answered 2026-10-06 ✓** (with corrections) A role has one end and can't name the
-    > counterparty; that lives in PARTY RELATIONSHIP. First draft flipped the direction and
-    > invented an EMPLOYER role. Fixed: EMPLOYMENT goes from INTERNAL_ORGANIZATION to EMPLOYEE.
-    > INTERNAL_ORGANIZATION marks "our" parties and is the shared anchor for every
-    > relationship type.
+    > **Answered 2026-10-06 ✓** See EXERCISES-log.md.
 18. **[2.4]** Why is DEPARTMENT a *role* an organization plays, rather than an organization
     *type* like CORPORATION in 2.1?
 19. **[2.4]** Some roles are person-only, some organization-only, some either. Should the
@@ -102,12 +125,7 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 ### Relationships (Fig 2.6a)
 20. **[2.6a]** A relationship links two *roles*, not two parties. What would be lost if
     PARTY RELATIONSHIP pointed straight at two parties plus a type?
-    > **Answered 2026-10-06 ✓** Without roles, the type's rule has nothing to check against.
-    > Putting the role on PARTY allows only one role per party. Dropping it means deriving
-    > roles from relationships, so a role can't exist without a relationship and an ended
-    > relationship leaves the role ambiguous. (In review, Claude claimed 2.10 links contact
-    > mechanisms to PARTY ROLE. The user challenged it, and it was wrong: 2.10 has an optional
-    > ROLE TYPE on the party link, which overlaps a lot with purpose.)
+    > **Answered 2026-10-06 ✓** See EXERCISES-log.md.
 21. **[2.6a]** Relationships have a direction (from → to). For a symmetric one like PARTNERSHIP,
     which party is "from"? What does direction cost when querying "all of X's relationships"?
 22. **[2.6a]** PARTY RELATIONSHIP only carries dates and a comment. Where would data specific
@@ -121,17 +139,10 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 26. **[2.5 vs 2.6a]** Specific relationships (2.5: one subtype per relationship, each with its own
     lines) vs. generic (2.6a: one PARTY RELATIONSHIP plus a TYPE row). What does each make easy,
     and what does each make hard? Which one tells a new developer more about the business?
-    > **Answered 2026-10-06 ✓** (after correction) First read 2.6a as single-table inheritance.
-    > Corrected: the generic table has no per-kind columns, and a new kind is an *insert*.
-    > Salary goes in an `employment` subtype table sharing the relationship's PK, so the
-    > specific design is used only where a kind has attributes. Specific tables show the
-    > business in the *schema*; generic ones move that meaning into the *data* (type rows).
+    > **Answered 2026-10-06 ✓** See EXERCISES-log.md.
 27. **[2.5]** Employment is drawn *from* the internal organization *to* the employee. Would you
     have drawn it the other way? Does direction carry meaning, or is it just a convention to agree on?
-    > **Discussed 2026-10-06:** The user assumed direction is always us → them. The seed shows
-    > it isn't: CUSTOMER and SUPPLIER relationships point *to* INTERNAL_ORGANIZATION. A
-    > working rule is to read the type as a sentence, subject → object ("Acme *employs* Ana",
-    > "Contoso *buys from* Acme"). Still open: is that Silverston's rule, or just ours?
+    > **Discussed 2026-10-06:** See EXERCISES-log.md.
 28. **[2.6a]** The single data-quality query for 2.6a relies on the role hierarchy (the
     `role_type_ancestor` view). What happens to existing relationships if someone moves a role
     type to a different parent? Is the hierarchy data, or schema in disguise?
@@ -169,11 +180,7 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 38. **[2.8]** The address is a separate entity from the party, joined by dated PARTY POSTAL ADDRESS
     rows. What's the difference between "Ana moved" and "Ana's address had a typo"? How does each
     one change the rows?
-    > **Answered 2026-10-06 ✓** (with multiple-choice scaffolding) Move: insert a new mechanism
-    > and a new link, and end the old link, to keep history. Typo: update the mechanism in
-    > place, leaving the link untouched. A move changes a *fact about the party* (the link);
-    > a typo fixes a *fact about the place* (the mechanism). Needed help turning the principle
-    > into concrete row changes.
+    > **Answered 2026-10-06 ✓** See EXERCISES-log.md.
 39. **[2.8]** City, state and postal code are *not* columns on POSTAL ADDRESS; they're linked
     GEOGRAPHIC BOUNDARY rows. What does that buy you? What does it cost when you just want to
     print a mailing label?
@@ -188,16 +195,11 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 ### Contact mechanisms (Fig 2.9)
 43. **[2.9]** NON-SOLICITATION IND is on PARTY CONTACT MECHANISM, not on CONTACT MECHANISM or
     PARTY. Give a case where putting it on each of the other two gives the wrong answer.
-    > **Answered 2026-10-06 ✓** On the mechanism: one opt-out on a shared number (Northwind
-    > switchboard) blocks everyone linked to it. On the party: Ana opting out of one channel
-    > blocks all her channels. Only the party-mechanism link gets both cases right.
+    > **Answered 2026-10-06 ✓** See EXERCISES-log.md.
 44. **[2.9]** "Mobile" and "fax" are CONTACT MECHANISM TYPE rows, but TELECOMMUNICATIONS NUMBER is
     a subtype. What rule decides whether a kind of thing becomes a subtype or a type row?
     (Compare the Fig 2.1 decision on attribute-less organization subtypes.)
-    > **Answered 2026-10-06 ✓** "A subtype earns its own table once it has attributes the
-    > generic entity doesn't share." TELECOMMUNICATIONS NUMBER has country/area code, while FAX
-    > has nothing of its own, so it's a type row. Closes the warm-up "fax is a subtype" gap.
-    > (Review addition: its own *relationships* can also earn a subtype a table.)
+    > **Answered 2026-10-06 ✓** See EXERCISES-log.md.
 45. **[2.9 vs 2.8]** Phone numbers and e-mail addresses share one supertype, but postal address
     has its own separate model. What do a phone number, an e-mail and a street address have in
     common? Would you merge them, and what would you gain?
@@ -206,10 +208,7 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 46. **[2.10]** Ana's home address is her billing and shipping address, and it stops being her
     shipping address next year. Why does purpose need its own dated entity instead of a
     `purpose` column on PARTY CONTACT MECHANISM?
-    > **Answered 2026-10-06 ✓** A link can have several purposes, and each one can end sooner
-    > than the link but never outlive it, so purposes need their own rows and dates. With a
-    > single column, a second purpose means a duplicate link. At first thought the mechanism
-    > itself had dates; corrected: only the link and the purposes do.
+    > **Answered 2026-10-06 ✓** See EXERCISES-log.md.
 47. **[2.10]** EXTENSION is on PARTY CONTACT MECHANISM, not on TELECOMMUNICATIONS NUMBER. Why?
     (Think of the Northwind switchboard.)
 48. **[2.10 vs 2.8]** Folding POSTAL ADDRESS into CONTACT MECHANISM: what does it gain, and what
@@ -219,11 +218,7 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 49. **[2.11]** Give one facility with two postal addresses, and one postal address with several
     facilities. What question does FACILITY answer that POSTAL ADDRESS can't, and the other way
     round?
-    > **Answered 2026-10-06 ✓** (after scaffolding) Facilities are physical spaces that nest,
-    > have a size and have parties playing roles in them. Addresses are official "where to
-    > deliver" locations. First attempts gave party↔address queries, and read a corner
-    > warehouse's two addresses as a legal-boundary question. Corrected: nesting is by
-    > *containment*, not size.
+    > **Answered 2026-10-06 ✓** See EXERCISES-log.md.
 50. **[2.11 vs 2.8]** Facilities nest with a single "part of" link, while geographic boundaries
     needed a many-to-many association. Why is the simpler structure good enough here? What
     real case would break it?
@@ -232,10 +227,7 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
 51. **[2.12 vs 2.7]** In 2.7 every communication event belonged to one party relationship. Now
     the relationship is optional and parties join through COMMUNICATION EVENT ROLE. Give two
     events the 2.7 model couldn't store properly.
-    > **Answered 2026-10-06 ✓** (after a recap of 2.7) A cold call: no relationship exists yet
-    > to hang it on. A meeting with more than two people: one relationship has only two ends.
-    > 2.12 makes the relationship optional context and adds COMMUNICATION EVENT ROLE for
-    > any number of participants.
+    > **Answered 2026-10-06 ✓** See EXERCISES-log.md.
 52. **[2.12]** VALID CONTACT MECHANISM ROLE stores a rule as rows ("cc" only makes sense for
     e-mail). Compare that with writing the rule as a CHECK constraint or a data-quality query:
     who can change it, and when is each one the better choice?
@@ -361,103 +353,3 @@ are fixed, and some turn into maintenance jobs.
 
 Model it on paper, without the book: entities, keys, relationships and a few sample rows.
 Then compare with this chapter's models and note where you differ and why.
-
----
-
-## Gaps found
-Filled in during review: misunderstandings to revisit in warm-ups and later exercises.
-
-### Comprehension (0–4 scale, scored 2026-10-07)
-0 untested · 1 recognises (understood once explained, or picked from options) · 2 explains with
-help (right after hints or corrections) · 3 explains unprompted (right first time, own words) ·
-4 applies cold (new setting, later session, no hints). Target before moving on: 3+ on every
-main concept; 4 comes from the capstone.
-
-| Concept | Fig | Tables | Level | Evidence |
-|---|---|---|---|---|
-| Role vs classification | 2.3, 2.4 | party_type, party_classification (vs party_role) | 3 | Item 14: first answer right; "points to no one" in own words |
-| PARTY ROLE + ROLE TYPE | 2.4 | role_type, party_role | 3 | Item 20 unprompted (one slip: roles set at party creation) |
-| PARTY supertype | 2.3 | party, organization, person, party_display_name (view) | 2 | Item 1: "avoid duplication", needed a nudge to name the anomalies |
-| Non-solicitation on the link | 2.9 | party_contact_mechanism | 2 | Right table in warm-up; reasons came via the switchboard scenario |
-| Purpose (dated, within link) | 2.10 | contact_mechanism_purpose_type, party_contact_mechanism_purpose | 3 | 10-07: many purposes per link → own table; own dates because a purpose can end before its link but never outlive it (unprompted) |
-| Type / fact / rule layers | all | cross-cutting (every `*_type`; valid_contact_mechanism_role) | 2 | Spotted unprompted, but "type enforces a rule" needed correcting |
-| Subtype vs type row | 2.1, 2.9 | cross-cutting (organization_type, contact_mechanism_type) | 2 | Rule stated in item 44 after the employment/reseller hint; 10-07 reappeared: "each new type gets its own table"; later 10-07, table by table: "the type points to a subtype the mechanism should use" (after much help) |
-| PARTY RELATIONSHIP + TYPE | 2.6a | party_relationship_type, party_relationship, role_type_ancestor (view) | 2 | Item 20 strong; item 17 flipped direction, invented EMPLOYER |
-| Specific vs generic relationships | 2.5, 2.6a | employment, customer_relationship, organization_rollup | 2 | Item 26: misread as one wide table; salary subtype after questions |
-| Move vs typo; shared mechanism | 2.8, 2.10 | contact_mechanism, party_contact_mechanism | 3 | 10-07: Contoso/Fabrikam unprompted; in-place update "returns a false time frame" and loses the old number |
-| CONTACT MECHANISM + subtypes | 2.9, 2.10 | contact_mechanism_type, contact_mechanism, telecommunications_number, electronic_address, postal_address, contact_mechanism_link | 2 | Fax as subtype; telecom number needed the "tele…" hint; 10-07: pager inserts (kind → subtype table holds the value, PCM links the party) after three angles |
-| Facility vs postal address | 2.11 | facility_type, facility, facility_role_type, facility_role, facility_contact_mechanism | 1 | Needed the definition; "legal boundary", "nesting by size" |
-| Communication event + roles | 2.7, 2.12 | communication_event, communication_event_role_type, communication_event_role, communication_event_purpose_type, communication_event_purpose, valid_contact_mechanism_role | 1 | Item 51 with hints; then "cold call within a relationship" |
-| Effectivity (as-of, exclusive thru) | all | cross-cutting (every from_date / thru_date) | 2 | 10-07: Contoso rows right except inclusive thru (fixed after one guiding question); asked why exclusive |
-| Person details (name, marital status, physical characteristic, citizenship/passport) | 2.2 | person_flat, gender_type, person_name_type, person_name, marital_status_type, marital_status, physical_characteristic_type, physical_characteristic, citizenship, passport | 0 | |
-| Organization type | 2.1 | organization_type | 0 | Partly covered by the subtype rule |
-| Geographic boundary | 2.8 | geographic_boundary_type, geographic_boundary, geographic_boundary_association, geographic_boundary_ancestor (view), postal_address_boundary | 0 | |
-| Priority / status types | 2.7 | priority_type, status_type | 0 | |
-| Case and work effort | 2.13 | work_effort_type, work_effort, communication_event_work_effort, communication_case, communication_case_role_type, communication_case_role | 0 | |
-
-- **2026-10-06, warm-up: subtype vs type row.** Listed "fax" as a CONTACT MECHANISM subtype.
-  The subtypes are POSTAL ADDRESS, TELECOMMUNICATIONS NUMBER and ELECTRONIC ADDRESS. Fax, mobile
-  and e-mail are CONTACT MECHANISM TYPE rows. Revisit with section 0 item 44 and section 2.3.
-  *Item 44 (same day): stated the rule correctly. Still check it in section 2.3 and the capstone.*
-- **2026-10-06, warm-up: effectivity convention.** Couldn't recall the as-of condition or the
-  exclusive `thru_date` rule. Revisit in section 5 queries (every as-of query uses it).
-  Worked through a concrete timeline: got `<=` / `>` right, but at first missed that a null
-  `thru_date` makes `thru_date > d` null, which drops current rows. Check that the null case is
-  handled in every as-of query the user writes.
-- **2026-10-06, item 13: argues for the generic model without weighing its cost.** When asked
-  "when *not* to use PARTY", the user argued for PARTY ("they'll undoubtedly need it"). Revisit
-  in section 7 trade-offs: every answer should name what the generic design costs, not only
-  what it buys.
-- **2026-10-06, item 17: relationship ends.** Put the person at the "from" end of EMPLOYMENT
-  and invented an EMPLOYER role. Revisit: relationship types fix both direction and the role
-  type at each end, and "our side" is always INTERNAL_ORGANIZATION.
-- **2026-10-06, item 26: generic ≠ single-table inheritance.** Read 2.6a's generic PARTY
-  RELATIONSHIP as one wide table with a column group per relationship kind. In fact the
-  subtypes have no columns and are *rows* in PARTY RELATIONSHIP TYPE, so a new kind is an
-  insert, not a schema change. Revisit: "attribute-less subtype → type row" (same root as the
-  subtype vs type row gap).
-- **2026-10-07, reinforce: move vs typo (new setting).** Contoso's mistyped switchboard vs
-  Fabrikam's new number. Unprompted: typo → update `contact_mechanism`; "party contact
-  mechanism holds the lifecycle of a party's link to a mechanism"; new number → insert a
-  mechanism and a link (thru null), and end the old link with last valid day + 1. Then: an
-  in-place update gives March the new number (false time frame) and loses the old one. 1 → 3.
-  **Not closed:** the neighbourhood question (what connects to `contact_mechanism`, directly or
-  through `party_contact_mechanism`, and what each connection means) is parked for later.
-- **2026-10-07, purpose (not a gap).** Said "a contact mechanism can have multiple purposes";
-  on asking, meant `party_contact_mechanism` (shorthand). Unprompted: a party's link can have
-  many purposes, so purpose needs its own table; a single purpose would be one column.
-  Then, on dates: "a purpose cannot outlive the link; it can have a shorter lifespan", so
-  SHIPPING ends with its own thru date. Purpose 2 → 3. Neighbourhood folded into the parked
-  contact-mechanism one. Asked whether purpose type carries rules: it doesn't (plain list;
-  only the "purpose within its link's period" query). The rule question stays on section 6
-  exercise 4.
-- **2026-10-07, reinforce: contact mechanism subtypes (WhatsApp, pager, X handle, GPS).**
-  Applied the attribute rule unprompted: GPS gets a subtype table, the others become type rows.
-  Missed two things: a type row's value still lives in an existing subtype table, and the third
-  option ("not a contact mechanism at all", for GPS: what is a contact mechanism *for*?).
-  Follow-up questions asked. Answers: (1) "each would have its own table": **the subtype vs
-  type row gap reappeared**, contradicting the first answer. (2) "postal address is a kind of
-  contact mechanism": true but didn't decide GPS. Re-explained with the seed (7 types, 3
-  subtype tables; a subtype = a *shape* of value, a type = *what kind*), and asked again.
-  Second try: (1) "contact mechanism type": still mixes up *naming the kind* with *storing the
-  value* (the type table has only id + description). (2) "place": right (GPS → FACILITY, not a
-  contact mechanism). Next angle: list the inserts to store Ben's pager number. Got there after
-  seeing `contact_mechanism`'s columns (kind vs type): "for each kind a subtable holds the
-  specific attributes; the telecom table holds the number"; PCM links Ben. Didn't remember
-  where the number is stored. Asked how to query subtypes ("a union?"): a join on the shared
-  PK; a union only to list every kind at once; a view hides it. CONTACT MECHANISM 1 → 2.
-  Retest subtype vs type row cold next session.
-- **2026-10-07, subtype vs type row: TELEX / SOCIAL_MEDIA_PROFILE.** After asking how
-  `applies_to_kind` is built and how to know a kind has a subtype table (answer: every kind
-  *is* a subtype table; types are what didn't need one). SOCIAL_MEDIA: new kind + CHECK value
-  (table and query branch not named). TELEX: new type row, right, but `applies_to_kind`
-  null "like FACE_TO_FACE": **confuses "no attributes of its own" with "no value"**. A
-  type borrows an existing kind's shape (PAGER → TELECOMMUNICATIONS_NUMBER). Guiding question
-  asked. Then: TELEX → telecommunications_number, right, but "I still don't get it". Own
-  summary: mechanism = facts, type = "rules" (corrected: type = category; only
-  `applies_to_kind` is a rule), DQ queries check after the fact; new kind = table + CHECK value
-  + query branch (asked what the branch means: the union line that registers the table).
-  Then, table by table: mechanism = "a way to reach a party that can be shared"; type =
-  "categories, with a rule naming the domain (kind) they belong to, possibly none". Then the
-  click: "the type points to a subtype the mechanism should enforce; creating a mechanism =
-  pick a category, which fixes the subtype table". Subtype vs type row 1 → 2. Retest cold.

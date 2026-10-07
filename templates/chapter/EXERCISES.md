@@ -1,11 +1,31 @@
 # Vol N, Chapter NN — Exercises
 
-Do these after the chapter's last figure is implemented. Each exercise is small. Answers go
-in this file (or in the chapter's SQL files) and get reviewed; no answers are provided up front.
+Do these after the chapter's last figure is implemented. Each exercise is small. Answers and
+the gaps log go in `EXERCISES-log.md` (or the chapter's SQL files) and get reviewed; no
+answers are provided up front. Process: `docs/practice.md`.
 
 **Flow:** exam (about 12 questions to find gaps) → reinforce each gap with a fresh question →
 capstone. The sections below are a menu of formats, not a list to complete. Done when the
 capstone holds up and no gap reappears when tested cold.
+
+## Progress
+
+### Comprehension (0–4 scale)
+Built when the last figure is done: one row per concept (a pattern or a small group of tables),
+covering every figure, listing the `schema.sql` tables it covers (every table belongs to
+some row). "Understood" means: what it's **for**, how it **relates** to its neighbours, and
+**spotting a wrong implementation**. No attribute-level detail.
+0 untested · 1 recognises · 2 explains with help · 3 explains unprompted · 4 applies cold.
+Below 3 = gap: reinforce in a loop until the evidence reaches 3, the neighbourhood question
+(which entities it connects to, and what each connection means) is answered, and we agree
+it's understood.
+
+| Concept | Fig | Tables | Level | Evidence |
+|---|---|---|---|---|
+|  |  |  | 0 | |
+
+### Open threads
+-
 
 ## 0. To ponder (collected while reading)
 Questions and ideas raised while the chapter was being built, tagged with their figure.
@@ -59,22 +79,3 @@ A small real-world problem to model from scratch using this chapter's patterns, 
 book. Then compare with the book's model and note the differences.
 
 **Scenario:**
-
----
-
-## Gaps found
-Filled in during review: misunderstandings to revisit in warm-ups and later exercises.
-
-### Comprehension (0–4 scale)
-Built when the last figure is done: one row per concept (a pattern or a small group of tables),
-covering every figure, listing the `schema.sql` tables it covers (every table belongs to
-some row). "Understood" means: what it's **for**, how it **relates** to its neighbours, and
-**spotting a wrong implementation**. No attribute-level detail.
-0 untested · 1 recognises · 2 explains with help · 3 explains unprompted · 4 applies cold.
-Below 3 = gap: reinforce in a loop until the evidence reaches 3, the neighbourhood question
-(which entities it connects to, and what each connection means) is answered, and we agree
-it's understood.
-
-| Concept | Fig | Tables | Level | Evidence |
-|---|---|---|---|---|
-|  |  |  | 0 | |

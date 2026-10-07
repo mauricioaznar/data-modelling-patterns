@@ -19,6 +19,10 @@ and any decisions made.
 - Ch 2 reinforce loop: move vs typo 1 → 3 and purpose 2 → 3 (neighbourhood question parked);
   contact mechanism + subtypes 1 → 2; subtype vs type row back to 1 (the gap reappeared: a
   type with no attributes of its own was read as needing its own table, then as having no value).
+- Context trimming: the end-of-chapter process moved from CLAUDE.md to `docs/practice.md`
+  (CLAUDE.md 9.1 KB → 5.4 KB). Ch 2 `EXERCISES.md` split: tracker and open threads at the top,
+  answers and the gaps log in `EXERCISES-log.md`. Templates and README updated. Fixed a junk
+  first line in Ch 2 `EXERCISES.md` (a bad regex in b2727e2).
 
 **Decisions**
 - Concepts first, implementation later. No long exercise lists that won't get done.
