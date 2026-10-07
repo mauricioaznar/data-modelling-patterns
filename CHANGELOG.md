@@ -6,33 +6,19 @@ and any decisions made.
 ## 2026-10-07
 
 **Built**
-- Data explorer (`npm run explore`, http://localhost:4317). It loads every chapter into an
-  in-memory PGlite and lets you browse tables grouped by figure, follow foreign keys in both
-  directions ("referenced by"), read rows by label instead of id, and run SQL. Reload resets it.
-  `loadChapters` moved into `scripts/db.js`, so the rebuild and the explorer share it.
-- The end-of-chapter process became exam → reinforce gaps → capstone, scored on a 0–4 evidence
-  scale (CLAUDE.md, chapter template). The Ch 2 comprehension table has been re-scored.
-- Ch 2 reinforcement: effectivity moved from 1 to 2 (Contoso rows; stored inclusive thru at
-  first; discussed why exclusive).
-
-**Decisions**
-- Concepts first, implementation later. No long exercise lists that won't get done.
-
-**Next**
-- Reinforce Ch 2: level 1 concepts (next: contact mechanism subtypes, then move vs typo,
-  facility, communication event), then the level 2s, a quick exam on the level 0s, and the
-  capstone.
-
-## 2026-10-07
-
-**Built**
 - Exercise process in CLAUDE.md: exam → reinforce → capstone, scored on a 0–4 evidence scale.
 - Concept tracker: step 0 at the end of each chapter builds a comprehension table with one row
   per concept, each listing the `schema.sql` tables it covers. Added to the chapter template.
   Ch 2's table now maps all of its tables to 19 rows.
-- Ch 2 effectivity: 1 → 2 (Contoso rows right except the inclusive thru date).
+- Ch 2 effectivity: 1 → 2 (Contoso rows right except the inclusive thru date; discussed why
+  we store exclusive thru dates).
+- Data explorer (`npm run explore`, http://localhost:4317). It loads every chapter into an
+  in-memory PGlite and lets you browse tables grouped by figure, follow foreign keys in both
+  directions ("referenced by"), read rows by label instead of id, and run SQL. Reload resets it.
+  `loadChapters` moved into `scripts/db.js`, so the rebuild and the explorer share it.
 
 **Decisions**
+- Concepts first, implementation later. No long exercise lists that won't get done.
 - "Understood" means: what a table or pattern is for, how it relates to its neighbours, and
   spotting a wrong implementation. No attribute-level depth, to avoid overlearning; concepts
   can be revisited later.

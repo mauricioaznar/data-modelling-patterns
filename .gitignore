@@ -5,3 +5,6 @@ node_modules/
 # Photos/scans of the book are for personal study only - never commit them.
 book-refs/*
 !book-refs/README.md
+
+# IDE settings
+.idea/

@@ -1,5 +1,5 @@
 import { PGlite } from '@electric-sql/pglite';
-import { readdirSync, existsSync } from 'node:fs';
+import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -11,10 +11,11 @@ const DATE_OID = 1082;
 const TIMESTAMP_OID = 1114;
 const TIMESTAMPTZ_OID = 1184;
 
-export function openDb() {
+// Pass 'memory://' for a throwaway database that never touches .pgdata.
+export function openDb(dataDir = DATA_DIR) {
   // Keep date/time columns as the strings Postgres prints instead of JS Date objects.
   const asText = (value) => value;
-  return new PGlite(DATA_DIR, {
+  return new PGlite(dataDir, {
     parsers: { [DATE_OID]: asText, [TIMESTAMP_OID]: asText, [TIMESTAMPTZ_OID]: asText },
   });
 }
@@ -56,6 +57,33 @@ export function sessionSetupFor(volume) {
     .filter((s) => s <= volume.schema)
     .reverse();
   return `set search_path to ${schemas.join(', ')}, public; set time zone 'UTC';`;
+}
+
+// Replays every chapter's schema.sql then seed.sql, volume by volume. Each
+// volume loads into its own Postgres schema (v1, v2, v3). Stops after `stop`
+// ({ volume, chapter? }) when given; throws on the first failing file.
+export async function loadChapters(db, stop = null, log = console.log) {
+  for (const volume of listVolumes()) {
+    if (stop && volume.schema > stop.volume.schema) break;
+    await db.exec(`create schema ${volume.schema}; ${sessionSetupFor(volume)}`);
+
+    for (const chapter of listChapters(volume)) {
+      if (stop?.chapter && volume.schema === stop.volume.schema && chapter.number > stop.chapter.number) break;
+      for (const file of ['schema.sql', 'seed.sql']) {
+        const path = join(chapter.path, file);
+        if (!existsSync(path)) continue;
+        const sql = readFileSync(path, 'utf8');
+        if (!sql.replace(/--.*$/gm, '').trim()) continue;
+        const label = `${volume.dir}/${chapter.dir}/${file}`;
+        try {
+          await db.exec(sql);
+        } catch (err) {
+          throw new Error(`${label}\n  ${err.message}`);
+        }
+        log(`✓ ${label}`);
+      }
+    }
+  }
 }
 
 // Parse "v1", "v1/02" or "1/2" into { volume, chapter? }.

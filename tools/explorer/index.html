@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data Explorer</title>
+<style>
+  :root {
+    --bg: #fbfbfa; --panel: #ffffff; --ink: #1d1d1b; --muted: #6b6b66; --line: #e4e3df;
+    --accent: #2f5fd0; --accent-soft: #e8eefc; --pk: #9a6200; --fk: #2f5fd0; --null: #b4b3ad;
+    --bad: #b3261e; --bad-soft: #fdecea; --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161615; --panel: #1f1f1e; --ink: #e9e8e4; --muted: #9b9a94; --line: #34332f;
+      --accent: #8fb0ff; --accent-soft: #23304d; --pk: #e0b25a; --fk: #8fb0ff; --null: #5f5e59;
+      --bad: #ff8a80; --bad-soft: #3a1f1d;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 system-ui, sans-serif; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header { display: flex; gap: 16px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 2; }
+  header h1 { font-size: 15px; margin: 0; }
+  header nav { display: flex; gap: 4px; }
+  header nav a { padding: 4px 10px; border-radius: 6px; color: var(--muted); }
+  header nav a.on { background: var(--accent-soft); color: var(--accent); }
+  header .grow { flex: 1; }
+  header .hint { color: var(--muted); font-size: 12px; }
+  button { font: inherit; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  .layout { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 45px); }
+  aside { border-right: 1px solid var(--line); padding: 10px; overflow-y: auto; max-height: calc(100vh - 45px); position: sticky; top: 45px; }
+  aside input { width: 100%; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); font: inherit; }
+  aside h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 14px 4px 4px; }
+  aside a { display: flex; justify-content: space-between; padding: 2px 6px; border-radius: 4px; color: var(--ink); font-family: var(--mono); font-size: 12.5px; }
+  aside a.on { background: var(--accent-soft); color: var(--accent); }
+  aside a .n { color: var(--muted); }
+  aside a.view { font-style: italic; }
+  main { padding: 16px 20px; min-width: 0; }
+  h2 { font: 600 18px var(--mono); margin: 0 0 2px; }
+  .sub { color: var(--muted); margin-bottom: 14px; }
+  .cols { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .chip { font: 12px var(--mono); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; background: var(--panel); }
+  .chip .k { color: var(--pk); font-weight: 600; }
+  .chip .f { color: var(--fk); }
+  .chip .o { color: var(--null); }
+  .scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { text-align: left; padding: 5px 10px; border-bottom: 1px solid var(--line); vertical-align: top; white-space: nowrap; }
+  th { font: 600 12px var(--mono); color: var(--muted); background: var(--bg); position: sticky; top: 0; }
+  td.wrap { white-space: normal; min-width: 200px; }
+  tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: var(--accent-soft); }
+  .null { color: var(--null); font-style: italic; }
+  .id { color: var(--muted); font: 11px var(--mono); margin-left: 4px; }
+  .pkcell a { font-family: var(--mono); color: var(--pk); font-weight: 600; }
+  .grid2 { display: grid; grid-template-columns: minmax(280px, 1fr) minmax(280px, 1fr); gap: 20px; align-items: start; }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 0; padding: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+  dt { font: 12px var(--mono); color: var(--muted); padding-top: 1px; }
+  dd { margin: 0; overflow-wrap: anywhere; }
+  .refs h4 { font: 600 12.5px var(--mono); margin: 14px 0 4px; }
+  .refs h4:first-child { margin-top: 0; }
+  .refs h4 .n { color: var(--muted); font-weight: 400; }
+  .refs ul { margin: 0; padding-left: 18px; }
+  .empty { color: var(--muted); font-style: italic; }
+  textarea { width: 100%; min-height: 150px; font: 13px/1.5 var(--mono); padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); resize: vertical; }
+  .bar { display: flex; gap: 8px; align-items: center; margin: 8px 0 14px; }
+  .error { color: var(--bad); background: var(--bad-soft); border-radius: 8px; padding: 10px 12px; white-space: pre-wrap; font-family: var(--mono); font-size: 12.5px; }
+  .result { margin-bottom: 16px; }
+  .result .meta { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+  @media (max-width: 760px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { position: static; max-height: 40vh; border-right: 0; border-bottom: 1px solid var(--line); }
+    .grid2 { grid-template-columns: 1fr; }
+    header .hint { display: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Data explorer</h1>
+  <nav><a href="#/" id="nav-tables">Tables</a><a href="#/sql" id="nav-sql">SQL</a></nav>
+  <span class="grow"></span>
+  <span class="hint">In-memory copy · SQL changes are thrown away on Reload</span>
+  <button id="reload" title="Replay every schema.sql and seed.sql">Reload</button>
+</header>
+<div class="layout">
+  <aside><input id="filter" placeholder="Filter tables…" autocomplete="off"><div id="tables"></div></aside>
+  <main id="main"></main>
+</div>
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+let tables = {};
+let sqlDraft = 'select * from party_display_name;';
+
+async function get(path) {
+  const res = await fetch(path);
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error);
+  return body;
+}
+async function post(path, payload) {
+  const res = await fetch(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload ?? {}) });
+  return res.json();
+}
+
+async function loadMeta() {
+  const { tables: list } = await get('/api/meta');
+  tables = Object.fromEntries(list.map((t) => [t.key, t]));
+  renderSidebar();
+}
+
+// Sidebar: chapter → figure → tables, in schema.sql order of first appearance.
+function renderSidebar() {
+  const filter = $('#filter').value.trim().toLowerCase();
+  const current = decodeURIComponent(location.hash.split('/')[2] ?? '');
+  const groups = new Map();
+  for (const t of Object.values(tables)) {
+    if (filter && !t.name.includes(filter)) continue;
+    const g = `${t.chapter} · ${t.figure}`;
+    if (!groups.has(g)) groups.set(g, []);
+    groups.get(g).push(t);
+  }
+  const figKey = (g) => {
+    const m = /Fig\s+(\d+)\.(\d+)([a-z]?)/i.exec(g);
+    return m ? [g.split(' · ')[0], +m[1], +m[2], m[3]] : [g, 999, 0, ''];
+  };
+  const sorted = [...groups.keys()].sort((a, b) => {
+    const [ca, ma, na, sa] = figKey(a), [cb, mb, nb, sb] = figKey(b);
+    return ca.localeCompare(cb) || ma - mb || na - nb || sa.localeCompare(sb) || a.localeCompare(b);
+  });
+  $('#tables').innerHTML = sorted.map((g) => `
+    <h3>${esc(g.split(' · ').slice(1).join(' · '))}</h3>
+    ${groups.get(g).map((t) => `
+      <a href="#/t/${esc(t.key)}" class="${t.kind === 'view' ? 'view' : ''} ${t.key === current ? 'on' : ''}">
+        <span>${esc(t.name)}</span><span class="n">${t.kind === 'view' ? 'view' : t.count}</span>
+      </a>`).join('')}`).join('') || '<p class="empty">No match</p>';
+}
+
+function cell(value) {
+  if (value === null || value === undefined) return '<span class="null">null</span>';
+  if (typeof value === 'object') return esc(JSON.stringify(value));
+  return esc(value);
+}
+
+function fkCell(t, col, value, fkLabels) {
+  const fk = t.fks.find((f) => f.column === col);
+  if (!fk || value == null) return cell(value);
+  const text = fkLabels?.[col]?.[value] ?? value;
+  const showId = String(text) !== String(value);
+  return `<a href="#/r/${esc(fk.ref)}/${encodeURIComponent(value)}">${esc(text)}</a>${showId ? `<span class="id">${esc(value)}</span>` : ''}`;
+}
+
+function columnChips(t) {
+  return `<div class="cols">${t.columns.map((c) => {
+    const fk = t.fks.find((f) => f.column === c.name);
+    const mark = c.name === t.pk ? '<span class="k"># </span>' : fk ? '' : c.nullable ? '<span class="o">o </span>' : '* ';
+    const ref = fk ? ` <span class="f">→ <a href="#/t/${esc(fk.ref)}">${esc(fk.ref.split('.')[1])}</a></span>` : '';
+    return `<span class="chip" title="${esc(c.type)}${c.nullable ? ', optional' : ', required'}">${mark}${esc(c.name)}${ref}${fk && c.nullable ? ' <span class="o">(o)</span>' : ''}</span>`;
+  }).join('')}</div>`;
+}
+
+async function showTable(key) {
+  const t = tables[key];
+  if (!t) return showHome();
+  const { rows, fkLabels } = await get(`/api/rows?t=${encodeURIComponent(key)}`);
+  const refs = t.referencedBy.map((r) => `<a href="#/t/${esc(r.table)}">${esc(r.table.split('.')[1])}</a>.${esc(r.column)}`);
+  $('#main').innerHTML = `
+    <h2>${esc(t.name)}</h2>
+    <div class="sub">${esc(t.chapter)} · ${esc(t.figure)} · ${t.kind === 'view' ? 'view' : `${rows.length} rows`}
+      ${refs.length ? `<br>Referenced by ${refs.join(', ')}` : ''}</div>
+    ${columnChips(t)}
+    <div class="scroll"><table>
+      <thead><tr>${t.columns.map((c) => `<th>${esc(c.name)}</th>`).join('')}</tr></thead>
+      <tbody>${rows.map((r) => `<tr>${t.columns.map((c) => {
+        if (c.name === t.pk && t.kind === 'table') return `<td class="pkcell"><a href="#/r/${esc(key)}/${encodeURIComponent(r[c.name])}">${cell(r[c.name])}</a></td>`;
+        const wide = typeof r[c.name] === 'string' && r[c.name].length > 40;
+        return `<td class="${wide ? 'wrap' : ''}">${fkCell(t, c.name, r[c.name], fkLabels)}</td>`;
+      }).join('')}</tr>`).join('') || `<tr><td class="empty" colspan="${t.columns.length}">No rows</td></tr>`}</tbody>
+    </table></div>`;
+}
+
+async function showRow(key, id) {
+  const t = tables[key];
+  const { row, label, fkLabels, referencedBy } = await get(`/api/row?t=${encodeURIComponent(key)}&id=${encodeURIComponent(id)}`);
+  const groups = referencedBy.filter((g) => g.rows.length);
+  $('#main').innerHTML = `
+    <h2><a href="#/t/${esc(key)}">${esc(t.name)}</a> / ${esc(id)}</h2>
+    <div class="sub">${esc(label)} · ${esc(t.figure)}</div>
+    <div class="grid2">
+      <section><dl>${t.columns.map((c) => `<dt>${c.name === t.pk ? '# ' : ''}${esc(c.name)}</dt><dd>${fkCell(t, c.name, row[c.name], fkLabels)}</dd>`).join('')}</dl></section>
+      <section class="refs">
+        ${groups.length ? groups.map((g) => `
+          <h4><a href="#/t/${esc(g.table)}">${esc(g.table.split('.')[1])}</a>.${esc(g.column)} <span class="n">(${g.rows.length})</span></h4>
+          <ul>${g.rows.map((r) => `<li><a href="#/r/${esc(g.table)}/${encodeURIComponent(r.id)}">${esc(r.label)}</a><span class="id">${esc(r.id)}</span></li>`).join('')}</ul>`).join('')
+          : '<p class="empty">Nothing references this row.</p>'}
+      </section>
+    </div>`;
+}
+
+function showHome() {
+  const list = Object.values(tables);
+  const n = list.filter((t) => t.kind === 'table').length;
+  $('#main').innerHTML = `
+    <h2>Data explorer</h2>
+    <div class="sub">${n} tables, ${list.length - n} views, loaded fresh from every schema.sql and seed.sql.</div>
+    <p>Pick a table on the left. Blue values are foreign keys: click one to jump to the row it points at.
+       A row's page lists everything that <em>points at it</em> on the right, so you can walk the model in both directions.</p>
+    <p>Good starting points: <a href="#/r/v1.party/2">party 2</a>,
+       <a href="#/t/v1.party_relationship">party_relationship</a>,
+       <a href="#/t/v1.party_contact_mechanism">party_contact_mechanism</a>,
+       <a href="#/t/v1.communication_event">communication_event</a>.</p>
+    <p class="sub">Chips above each table: <b style="color:var(--pk)">#</b> key · * required · o optional · → foreign key. Hover a chip for its type.</p>`;
+}
+
+function showSql() {
+  $('#main').innerHTML = `
+    <h2>SQL</h2>
+    <div class="sub">Runs against the in-memory copy. Inserts and deletes are fine here: Reload puts everything back.</div>
+    <textarea id="sql" spellcheck="false">${esc(sqlDraft)}</textarea>
+    <div class="bar"><button id="run">Run (Ctrl+Enter)</button><span class="sub" id="took"></span></div>
+    <div id="out"></div>`;
+  const run = async () => {
+    sqlDraft = $('#sql').value;
+    const started = performance.now();
+    const res = await post('/api/sql', { sql: sqlDraft });
+    $('#took').textContent = `${Math.round(performance.now() - started)} ms`;
+    if (res.error) { $('#out').innerHTML = `<div class="error">${esc(res.error)}</div>`; }
+    else {
+      $('#out').innerHTML = res.results.map((r) => r.fields.length
+        ? `<div class="result"><div class="meta">${r.rows.length} rows</div><div class="scroll"><table>
+             <thead><tr>${r.fields.map((f) => `<th>${esc(f)}</th>`).join('')}</tr></thead>
+             <tbody>${r.rows.map((row) => `<tr>${r.fields.map((f) => `<td>${cell(row[f])}</td>`).join('')}</tr>`).join('')}</tbody>
+           </table></div></div>`
+        : `<div class="result meta">OK${r.affectedRows ? `, ${r.affectedRows} rows affected` : ''}</div>`).join('');
+    }
+    await loadMeta();
+  };
+  $('#run').onclick = run;
+  $('#sql').onkeydown = (e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); run(); } };
+}
+
+async function route() {
+  const [, kind, key, id] = location.hash.split('/').map(decodeURIComponent);
+  $('#nav-sql').classList.toggle('on', kind === 'sql');
+  $('#nav-tables').classList.toggle('on', kind !== 'sql');
+  renderSidebar();
+  try {
+    if (kind === 't') await showTable(key);
+    else if (kind === 'r') await showRow(key, id);
+    else if (kind === 'sql') showSql();
+    else showHome();
+  } catch (err) {
+    $('#main').innerHTML = `<div class="error">${esc(err.message)}</div>`;
+  }
+  window.scrollTo(0, 0);
+}
+
+$('#filter').oninput = renderSidebar;
+$('#reload').onclick = async () => {
+  $('#reload').disabled = true;
+  await post('/api/reload');
+  $('#reload').disabled = false;
+  await loadMeta();
+  route();
+};
+window.onhashchange = route;
+if (location.protocol === 'file:') {
+  $('#main').innerHTML = `<div class="error">This page needs its server. Run <b>npm run explore</b>, then open http://localhost:4317 (not the file itself).</div>`;
+} else {
+  loadMeta().then(route).catch((err) => { $('#main').innerHTML = `<div class="error">${esc(err.message)}</div>`; });
+}
+</script>
+</body>
+</html>

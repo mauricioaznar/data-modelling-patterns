@@ -6,7 +6,8 @@
   "scripts": {
     "db:rebuild": "node scripts/rebuild.js",
     "sql": "node scripts/sql.js",
-    "queries": "node scripts/queries.js"
+    "queries": "node scripts/queries.js",
+    "explore": "node tools/explorer/server.js"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8"
