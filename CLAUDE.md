@@ -29,22 +29,41 @@ holes in the user's understanding and help fill them.
 ### End of a chapter (the user practises)
 - The aim is **conceptual understanding at a high level**. Implementation depth comes later
   (mini apps). Don't build more exercises than will actually be done.
+- **What "understood" means**, for every concept: the user can (a) say what the table or
+  pattern is **for**, meaning the problem it solves and what the naive design gets wrong;
+  (b) say how it **relates** to its neighbours, conceptually rather than column by column; and
+  (c) **spot a wrong implementation** of it and say what data it would lose or corrupt.
+  Attribute lists, syntax and exact cardinalities are out of scope. Going deeper risks
+  overlearning; a concept can be revisited later (recall questions, mini apps, later chapters).
+- **0. Build the concept tracker** as soon as the chapter's last figure is built, before the
+  exam. In `EXERCISES.md` under *Gaps found*, add the comprehension table: one row per concept,
+  covering every figure. A concept is a pattern or a small group of tables that make sense
+  together (e.g. "PARTY RELATIONSHIP + TYPE"), not a single table. Each row lists the
+  `schema.sql` tables it covers, so every table belongs to some row and understanding stays
+  tied to how the schema was built. Aim for roughly 10–20 rows, all starting at 0. This table fixes the chapter's scope: don't test anything that isn't in
+  it, and add a row only when a real gap shows it's missing. Then pick the exam questions so
+  each main row gets at least one.
 - **1. Exam (find the gaps).** Ask about 12 questions in chat, one at a time, covering every
   figure's main idea: what problem it solves and what the naive design gets wrong. Record
   answers in `EXERCISES.md`.
-- **2. Reinforce (close the gaps).** For each gap, explain, then ask a fresh question in a new
-  setting with no hints. Use cheap formats: a quick sketch on paper, or Claude runs SQL and the
-  user predicts the result. Write SQL by hand only when the concept lives in the query (e.g.
-  as-of dates). No full schema rewrites; syntax errors don't teach modelling.
+- **2. Reinforce (close the gaps).** Any row below 3 is a gap. Work through it in a loop:
+  explain it **through the chapter's own schema** (open its tables and seed rows, and say why
+  each table exists and why it's shaped that way), then ask a fresh question in a new setting
+  with no hints. If the answer falls short, log it, explain again from a different angle, and
+  ask another fresh question. A row is closed only when the evidence reaches 3 **and** the user
+  agrees they understand it; either of us can reopen it. Use cheap formats: a quick sketch on
+  paper, or Claude runs SQL and the user predicts the result. Write SQL by hand only when the
+  concept lives in the query (e.g. as-of dates). No full schema rewrites; syntax errors don't
+  teach modelling.
 - **3. Capstone.** One small new-domain problem, modelled on paper and compared with the book.
 - **Done when:** every main concept scores 3+ on the scale below, the capstone holds up, and
   no logged gap reappears when tested cold. Only then tick the chapter in `TODO.md`.
 - **Don't include answers.** Review attempts like a pull request: say what's wrong, then ask a
   guiding question before giving the fix. Explain the book's reasoning before any pragmatic
   critique, and check the schema before claiming how the model works.
-- Record every misunderstanding under **Gaps found** in `EXERCISES.md`, with a comprehension
-  table scoring each concept on the **0–4 evidence scale**, citing the answer behind each
-  score: 0 untested · 1 recognises (understood once explained, or picked from options) ·
+- Record every misunderstanding under **Gaps found** in `EXERCISES.md`, and keep the
+  comprehension table current: score each concept on the **0–4 evidence scale**, citing the
+  answer behind each score: 0 untested · 1 recognises (understood once explained, or picked from options) ·
   2 explains with help · 3 explains unprompted · 4 applies cold (new setting, later session,
   no hints). Target before moving on: 3+ on every main concept, with 4 coming from the capstone.
   Score strictly from evidence, not impressions.

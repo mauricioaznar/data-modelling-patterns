@@ -64,3 +64,15 @@ book. Then compare with the book's model and note the differences.
 
 ## Gaps found
 Filled in during review: misunderstandings to revisit in warm-ups and later exercises.
+
+### Comprehension (0–4 scale)
+Built when the last figure is done: one row per concept (a pattern or a small group of tables),
+covering every figure, listing the `schema.sql` tables it covers (every table belongs to
+some row). "Understood" means: what it's **for**, how it **relates** to its neighbours, and
+**spotting a wrong implementation**. No attribute-level detail.
+0 untested · 1 recognises · 2 explains with help · 3 explains unprompted · 4 applies cold.
+Below 3 = gap: reinforce in a loop until the evidence reaches 3 and we agree it's understood.
+
+| Concept | Fig | Tables | Level | Evidence |
+|---|---|---|---|---|
+|  |  |  | 0 | |

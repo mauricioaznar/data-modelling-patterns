@@ -1,4 +1,4 @@
-# Vol 1, Chapter 2 — Exercises
+work_effort_type, work_effort, communication_event_work_effort, communication_case, communication_case_role_type, communication_case_role | priority_type, status_type | geographic_boundary_type, geographic_boundary, geographic_boundary_association, geographic_boundary_ancestor (view), postal_address_boundary | organization_type | person_flat, gender_type, person_name_type, person_name, marital_status_type, marital_status, physical_characteristic_type, physical_characteristic, citizenship, passport | cross-cutting (every from_date/thru_date) | communication_event, communication_event_role_type, communication_event_role, communication_event_purpose_type, communication_event_purpose, valid_contact_mechanism_role | facility_type, facility, facility_role_type, facility_role, facility_contact_mechanism | contact_mechanism_type, contact_mechanism, telecommunications_number, electronic_address, postal_address, contact_mechanism_link | contact_mechanism, party_contact_mechanism | employment, customer_relationship, organization_rollup | party_relationship_type, party_relationship, role_type_ancestor (view) | cross-cutting (organization_type, contact_mechanism_type) | cross-cutting (every *_type; valid_contact_mechanism_role) | contact_mechanism_purpose_type, party_contact_mechanism_purpose | party_contact_mechanism | party, organization, person, party_display_name (view) | role_type, party_role | party_type, party_classification (vs party_role) | # Vol 1, Chapter 2 — Exercises
 
 All figures (2.1–2.13) are built. Answers go in this file (or the chapter's SQL files) and get
 reviewed; no answers are provided up front.
@@ -370,27 +370,27 @@ help (right after hints or corrections) · 3 explains unprompted (right first ti
 4 applies cold (new setting, later session, no hints). Target before moving on: 3+ on every
 main concept; 4 comes from the capstone.
 
-| Concept | Fig | Level | Evidence |
-|---|---|---|---|
-| Role vs classification | 2.3, 2.4 | 3 | Item 14: first answer right; "points to no one" in own words |
-| PARTY ROLE + ROLE TYPE | 2.4 | 3 | Item 20 unprompted (one slip: roles set at party creation) |
-| PARTY supertype | 2.3 | 2 | Item 1: "avoid duplication", needed a nudge to name the anomalies |
-| Non-solicitation on the link | 2.9 | 2 | Right table in warm-up; reasons came via the switchboard scenario |
-| Purpose (dated, within link) | 2.10 | 2 | Item 46 sentence right after correcting "mechanism has dates" |
-| Type / fact / rule layers | all | 2 | Spotted unprompted, but "type enforces a rule" needed correcting |
-| Subtype vs type row | 2.1, 2.9 | 2 | Rule stated in item 44 after the employment/reseller hint |
-| PARTY RELATIONSHIP + TYPE | 2.6a | 2 | Item 20 strong; item 17 flipped direction, invented EMPLOYER |
-| Specific vs generic relationships | 2.5, 2.6a | 2 | Item 26: misread as one wide table; salary subtype after questions |
-| Move vs typo; shared mechanism | 2.8, 2.10 | 1 | Item 38 picked from multiple choice |
-| CONTACT MECHANISM + subtypes | 2.9, 2.10 | 1 | Fax as subtype; telecom number needed the "tele…" hint |
-| Facility vs postal address | 2.11 | 1 | Needed the definition; "legal boundary", "nesting by size" |
-| Communication event + roles | 2.7, 2.12 | 1 | Item 51 with hints; then "cold call within a relationship" |
-| Effectivity (as-of, exclusive thru) | all | 1 | Needed a worked timeline; missed the null case |
-| Person details (name, marital status, physical characteristic, citizenship/passport) | 2.2 | 0 | |
-| Organization type | 2.1 | 0 | Partly covered by the subtype rule |
-| Geographic boundary | 2.8 | 0 | |
-| Priority / status types | 2.7 | 0 | |
-| Case and work effort | 2.13 | 0 | |
+| Concept | Fig | Tables | Level | Evidence |
+|---|---|---|---|---|
+| Role vs classification | 2.3, 2.4 | party_type, party_classification (vs party_role) | 3 | Item 14: first answer right; "points to no one" in own words |
+| PARTY ROLE + ROLE TYPE | 2.4 | role_type, party_role | 3 | Item 20 unprompted (one slip: roles set at party creation) |
+| PARTY supertype | 2.3 | party, organization, person, party_display_name (view) | 2 | Item 1: "avoid duplication", needed a nudge to name the anomalies |
+| Non-solicitation on the link | 2.9 | party_contact_mechanism | 2 | Right table in warm-up; reasons came via the switchboard scenario |
+| Purpose (dated, within link) | 2.10 | contact_mechanism_purpose_type, party_contact_mechanism_purpose | 2 | Item 46 sentence right after correcting "mechanism has dates" |
+| Type / fact / rule layers | all | cross-cutting (every `*_type`; valid_contact_mechanism_role) | 2 | Spotted unprompted, but "type enforces a rule" needed correcting |
+| Subtype vs type row | 2.1, 2.9 | cross-cutting (organization_type, contact_mechanism_type) | 2 | Rule stated in item 44 after the employment/reseller hint |
+| PARTY RELATIONSHIP + TYPE | 2.6a | party_relationship_type, party_relationship, role_type_ancestor (view) | 2 | Item 20 strong; item 17 flipped direction, invented EMPLOYER |
+| Specific vs generic relationships | 2.5, 2.6a | employment, customer_relationship, organization_rollup | 2 | Item 26: misread as one wide table; salary subtype after questions |
+| Move vs typo; shared mechanism | 2.8, 2.10 | contact_mechanism, party_contact_mechanism | 1 | Item 38 picked from multiple choice |
+| CONTACT MECHANISM + subtypes | 2.9, 2.10 | contact_mechanism_type, contact_mechanism, telecommunications_number, electronic_address, postal_address, contact_mechanism_link | 1 | Fax as subtype; telecom number needed the "tele…" hint |
+| Facility vs postal address | 2.11 | facility_type, facility, facility_role_type, facility_role, facility_contact_mechanism | 1 | Needed the definition; "legal boundary", "nesting by size" |
+| Communication event + roles | 2.7, 2.12 | communication_event, communication_event_role_type, communication_event_role, communication_event_purpose_type, communication_event_purpose, valid_contact_mechanism_role | 1 | Item 51 with hints; then "cold call within a relationship" |
+| Effectivity (as-of, exclusive thru) | all | cross-cutting (every from_date / thru_date) | 2 | 10-07: Contoso rows right except inclusive thru (fixed after one guiding question); asked why exclusive |
+| Person details (name, marital status, physical characteristic, citizenship/passport) | 2.2 | person_flat, gender_type, person_name_type, person_name, marital_status_type, marital_status, physical_characteristic_type, physical_characteristic, citizenship, passport | 0 | |
+| Organization type | 2.1 | organization_type | 0 | Partly covered by the subtype rule |
+| Geographic boundary | 2.8 | geographic_boundary_type, geographic_boundary, geographic_boundary_association, geographic_boundary_ancestor (view), postal_address_boundary | 0 | |
+| Priority / status types | 2.7 | priority_type, status_type | 0 | |
+| Case and work effort | 2.13 | work_effort_type, work_effort, communication_event_work_effort, communication_case, communication_case_role_type, communication_case_role | 0 | |
 
 - **2026-10-06, warm-up: subtype vs type row.** Listed "fax" as a CONTACT MECHANISM subtype.
   The subtypes are POSTAL ADDRESS, TELECOMMUNICATIONS NUMBER and ELECTRONIC ADDRESS. Fax, mobile
