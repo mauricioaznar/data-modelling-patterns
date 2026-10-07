@@ -32,6 +32,8 @@
   button:hover { border-color: var(--accent); }
   .layout { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 45px); }
   aside { border-right: 1px solid var(--line); padding: 10px; overflow-y: auto; max-height: calc(100vh - 45px); position: sticky; top: 45px; }
+  aside select { width: 100%; margin-bottom: 6px; padding: 5px 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); font: inherit; }
+  aside h2 { font: 600 12px var(--mono); color: var(--accent); margin: 16px 4px 0; }
   aside input { width: 100%; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); font: inherit; }
   aside h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 14px 4px 4px; }
   aside a { display: flex; justify-content: space-between; padding: 2px 6px; border-radius: 4px; color: var(--ink); font-family: var(--mono); font-size: 12.5px; }
@@ -87,7 +89,7 @@
   <button id="reload" title="Replay every schema.sql and seed.sql">Reload</button>
 </header>
 <div class="layout">
-  <aside><input id="filter" placeholder="Filter tables…" autocomplete="off"><div id="tables"></div></aside>
+  <aside><select id="chapter" title="Show one chapter's tables"></select><input id="filter" placeholder="Filter tables…" autocomplete="off"><div id="tables"></div></aside>
   <main id="main"></main>
 </div>
 <script>
@@ -110,16 +112,24 @@ async function post(path, payload) {
 async function loadMeta() {
   const { tables: list } = await get('/api/meta');
   tables = Object.fromEntries(list.map((t) => [t.key, t]));
+  const chapters = [...new Set(list.map((t) => t.chapter))].sort();
+  let saved = "";
+  try { saved = localStorage.getItem("explorer.chapter") ?? ""; } catch {}
+  if (!chapters.includes(saved)) saved = "";
+  $("#chapter").innerHTML = `<option value="">All chapters</option>${chapters.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}`;
+  $("#chapter").value = saved;
   renderSidebar();
 }
 
 // Sidebar: chapter → figure → tables, in schema.sql order of first appearance.
 function renderSidebar() {
   const filter = $('#filter').value.trim().toLowerCase();
+  const chapter = $('#chapter').value;
   const current = decodeURIComponent(location.hash.split('/')[2] ?? '');
   const groups = new Map();
   for (const t of Object.values(tables)) {
     if (filter && !t.name.includes(filter)) continue;
+    if (chapter && t.chapter !== chapter) continue;
     const g = `${t.chapter} · ${t.figure}`;
     if (!groups.has(g)) groups.set(g, []);
     groups.get(g).push(t);
@@ -132,12 +142,18 @@ function renderSidebar() {
     const [ca, ma, na, sa] = figKey(a), [cb, mb, nb, sb] = figKey(b);
     return ca.localeCompare(cb) || ma - mb || na - nb || sa.localeCompare(sb) || a.localeCompare(b);
   });
-  $('#tables').innerHTML = sorted.map((g) => `
+  let lastChapter = null;
+  $('#tables').innerHTML = sorted.map((g) => {
+    const ch = g.split(' · ')[0];
+    const head = !chapter && ch !== lastChapter ? `<h2>${esc(ch)}</h2>` : '';
+    lastChapter = ch;
+    return `${head}
     <h3>${esc(g.split(' · ').slice(1).join(' · '))}</h3>
     ${groups.get(g).map((t) => `
       <a href="#/t/${esc(t.key)}" class="${t.kind === 'view' ? 'view' : ''} ${t.key === current ? 'on' : ''}">
         <span>${esc(t.name)}</span><span class="n">${t.kind === 'view' ? 'view' : t.count}</span>
-      </a>`).join('')}`).join('') || '<p class="empty">No match</p>';
+      </a>`).join('')}`;
+  }).join('') || '<p class="empty">No match</p>';
 }
 
 function cell(value) {
@@ -260,6 +276,10 @@ async function route() {
 }
 
 $('#filter').oninput = renderSidebar;
+$('#chapter').onchange = () => {
+  try { localStorage.setItem('explorer.chapter', $('#chapter').value); } catch {}
+  renderSidebar();
+};
 $('#reload').onclick = async () => {
   $('#reload').disabled = true;
   await post('/api/reload');
