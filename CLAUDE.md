@@ -27,15 +27,27 @@ holes in the user's understanding and help fill them.
   words. `book-refs/` is gitignored and must stay that way.
 
 ### End of a chapter (the user practises)
-- When the last figure is done, write the chapter's `EXERCISES.md` (see `templates/chapter/`).
-  Keep each exercise **small** and make the set **diverse**. Mix the kinds listed in the
-  template: redraw from memory, explain why, spot the flaw, extend for a new requirement, write
-  queries, break the model, trade-offs, own-words notes, and a capstone problem.
+- The aim is **conceptual understanding at a high level**. Implementation depth comes later
+  (mini apps). Don't build more exercises than will actually be done.
+- **1. Exam (find the gaps).** Ask about 12 questions in chat, one at a time, covering every
+  figure's main idea: what problem it solves and what the naive design gets wrong. Record
+  answers in `EXERCISES.md`.
+- **2. Reinforce (close the gaps).** For each gap, explain, then ask a fresh question in a new
+  setting with no hints. Use cheap formats: a quick sketch on paper, or Claude runs SQL and the
+  user predicts the result. Write SQL by hand only when the concept lives in the query (e.g.
+  as-of dates). No full schema rewrites; syntax errors don't teach modelling.
+- **3. Capstone.** One small new-domain problem, modelled on paper and compared with the book.
+- **Done when:** every main concept scores 3+ on the scale below, the capstone holds up, and
+  no logged gap reappears when tested cold. Only then tick the chapter in `TODO.md`.
 - **Don't include answers.** Review attempts like a pull request: say what's wrong, then ask a
-  guiding question before giving the fix.
-- Record every misunderstanding found under **Gaps found** in `EXERCISES.md`. Later warm-ups and
-  exercises should revisit those gaps.
-- A chapter is only ticked in `TODO.md` once its exercises are done.
+  guiding question before giving the fix. Explain the book's reasoning before any pragmatic
+  critique, and check the schema before claiming how the model works.
+- Record every misunderstanding under **Gaps found** in `EXERCISES.md`, with a comprehension
+  table scoring each concept on the **0–4 evidence scale**, citing the answer behind each
+  score: 0 untested · 1 recognises (understood once explained, or picked from options) ·
+  2 explains with help · 3 explains unprompted · 4 applies cold (new setting, later session,
+  no hints). Target before moving on: 3+ on every main concept, with 4 coming from the capstone.
+  Score strictly from evidence, not impressions.
 - **Next session start:** open with 3 quick recall questions on the most recently finished
   chapter, favouring its open gaps.
 

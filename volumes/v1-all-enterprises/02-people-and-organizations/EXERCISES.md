@@ -1,7 +1,12 @@
 # Vol 1, Chapter 2 — Exercises
 
-All figures (2.1–2.13) are built. Work through sections 1–9; each exercise is small. Answers go
-in this file (or the chapter's SQL files) and get reviewed; no answers are provided up front.
+All figures (2.1–2.13) are built. Answers go in this file (or the chapter's SQL files) and get
+reviewed; no answers are provided up front.
+
+**Plan (agreed 2026-10-07):** the section 0 core set served as the exam (done). Next: reinforce
+the gaps and untested figures in the comprehension table under *Gaps found*, then the capstone
+(section 9) on paper. Sections 1–8 are a menu of formats, not a checklist. Ch 2 is done when the
+capstone holds up and no gap reappears when tested cold.
 
 ## 0. To ponder (collected while reading)
 
@@ -28,6 +33,11 @@ Answer in a sentence or three under each item. Tags show which figure raised it.
    say about the real world, and what would be lost by linking the passport straight to the person?
 5. **[2.2b]** Some attributes moved into dated entities (name, marital status) and others stayed
    on PERSON (birth date, SSN, mother's maiden name). What's the test for which is which?
+
+54. **[general, raised by the user 2026-10-07]** Type tables, fact tables and rule tables
+    (knowledge level vs operational level). Ch 2 has 19 type tables, 4 role-pattern pairs
+    and 3 rules. In your own words: what does each layer say, and why are so few type tables
+    also rules? Predict where Ch 3 (Products) will use each layer.
 
 ### Challenge the book (and our implementation)
 6. **[2.2b]** The book draws PHYSICAL CHARACTERISTIC's `from_date` as `*` (not part of the
@@ -353,6 +363,34 @@ Then compare with this chapter's models and note where you differ and why.
 
 ## Gaps found
 Filled in during review: misunderstandings to revisit in warm-ups and later exercises.
+
+### Comprehension (0–4 scale, scored 2026-10-07)
+0 untested · 1 recognises (understood once explained, or picked from options) · 2 explains with
+help (right after hints or corrections) · 3 explains unprompted (right first time, own words) ·
+4 applies cold (new setting, later session, no hints). Target before moving on: 3+ on every
+main concept; 4 comes from the capstone.
+
+| Concept | Fig | Level | Evidence |
+|---|---|---|---|
+| Role vs classification | 2.3, 2.4 | 3 | Item 14: first answer right; "points to no one" in own words |
+| PARTY ROLE + ROLE TYPE | 2.4 | 3 | Item 20 unprompted (one slip: roles set at party creation) |
+| PARTY supertype | 2.3 | 2 | Item 1: "avoid duplication", needed a nudge to name the anomalies |
+| Non-solicitation on the link | 2.9 | 2 | Right table in warm-up; reasons came via the switchboard scenario |
+| Purpose (dated, within link) | 2.10 | 2 | Item 46 sentence right after correcting "mechanism has dates" |
+| Type / fact / rule layers | all | 2 | Spotted unprompted, but "type enforces a rule" needed correcting |
+| Subtype vs type row | 2.1, 2.9 | 2 | Rule stated in item 44 after the employment/reseller hint |
+| PARTY RELATIONSHIP + TYPE | 2.6a | 2 | Item 20 strong; item 17 flipped direction, invented EMPLOYER |
+| Specific vs generic relationships | 2.5, 2.6a | 2 | Item 26: misread as one wide table; salary subtype after questions |
+| Move vs typo; shared mechanism | 2.8, 2.10 | 1 | Item 38 picked from multiple choice |
+| CONTACT MECHANISM + subtypes | 2.9, 2.10 | 1 | Fax as subtype; telecom number needed the "tele…" hint |
+| Facility vs postal address | 2.11 | 1 | Needed the definition; "legal boundary", "nesting by size" |
+| Communication event + roles | 2.7, 2.12 | 1 | Item 51 with hints; then "cold call within a relationship" |
+| Effectivity (as-of, exclusive thru) | all | 1 | Needed a worked timeline; missed the null case |
+| Person details (name, marital status, physical characteristic, citizenship/passport) | 2.2 | 0 | |
+| Organization type | 2.1 | 0 | Partly covered by the subtype rule |
+| Geographic boundary | 2.8 | 0 | |
+| Priority / status types | 2.7 | 0 | |
+| Case and work effort | 2.13 | 0 | |
 
 - **2026-10-06, warm-up: subtype vs type row.** Listed "fax" as a CONTACT MECHANISM subtype.
   The subtypes are POSTAL ADDRESS, TELECOMMUNICATIONS NUMBER and ELECTRONIC ADDRESS. Fax, mobile

@@ -3,6 +3,10 @@
 Do these after the chapter's last figure is implemented. Each exercise is small. Answers go
 in this file (or in the chapter's SQL files) and get reviewed; no answers are provided up front.
 
+**Flow:** exam (about 12 questions to find gaps) → reinforce each gap with a fresh question →
+capstone. The sections below are a menu of formats, not a list to complete. Done when the
+capstone holds up and no gap reappears when tested cold.
+
 ## 0. To ponder (collected while reading)
 Questions and ideas raised while the chapter was being built, tagged with their figure.
 Answer in a sentence or three under each item.
