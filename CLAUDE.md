@@ -67,6 +67,9 @@ holes in the user's understanding and help fill them.
   2 explains with help · 3 explains unprompted · 4 applies cold (new setting, later session,
   no hints). Target before moving on: 3+ on every main concept, with 4 coming from the capstone.
   Score strictly from evidence, not impressions.
+- **Data explorer (`npm run explore`):** keep it closed for the exam and gap checks, and open
+  for learning and for checking an answer *after* giving it from memory. An answer found with
+  the explorer open scores 2 at most ("with help").
 - **Next session start:** open with 3 quick recall questions on the most recently finished
   chapter, favouring its open gaps.
 
