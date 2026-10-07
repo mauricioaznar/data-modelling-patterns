@@ -376,13 +376,13 @@ main concept; 4 comes from the capstone.
 | PARTY ROLE + ROLE TYPE | 2.4 | role_type, party_role | 3 | Item 20 unprompted (one slip: roles set at party creation) |
 | PARTY supertype | 2.3 | party, organization, person, party_display_name (view) | 2 | Item 1: "avoid duplication", needed a nudge to name the anomalies |
 | Non-solicitation on the link | 2.9 | party_contact_mechanism | 2 | Right table in warm-up; reasons came via the switchboard scenario |
-| Purpose (dated, within link) | 2.10 | contact_mechanism_purpose_type, party_contact_mechanism_purpose | 2 | Item 46 sentence right after correcting "mechanism has dates" |
+| Purpose (dated, within link) | 2.10 | contact_mechanism_purpose_type, party_contact_mechanism_purpose | 3 | 10-07: many purposes per link → own table; own dates because a purpose can end before its link but never outlive it (unprompted) |
 | Type / fact / rule layers | all | cross-cutting (every `*_type`; valid_contact_mechanism_role) | 2 | Spotted unprompted, but "type enforces a rule" needed correcting |
-| Subtype vs type row | 2.1, 2.9 | cross-cutting (organization_type, contact_mechanism_type) | 2 | Rule stated in item 44 after the employment/reseller hint |
+| Subtype vs type row | 2.1, 2.9 | cross-cutting (organization_type, contact_mechanism_type) | 1 | Rule stated in item 44 after the employment/reseller hint; 10-07 reappeared: "each new type gets its own table" |
 | PARTY RELATIONSHIP + TYPE | 2.6a | party_relationship_type, party_relationship, role_type_ancestor (view) | 2 | Item 20 strong; item 17 flipped direction, invented EMPLOYER |
 | Specific vs generic relationships | 2.5, 2.6a | employment, customer_relationship, organization_rollup | 2 | Item 26: misread as one wide table; salary subtype after questions |
-| Move vs typo; shared mechanism | 2.8, 2.10 | contact_mechanism, party_contact_mechanism | 1 | Item 38 picked from multiple choice |
-| CONTACT MECHANISM + subtypes | 2.9, 2.10 | contact_mechanism_type, contact_mechanism, telecommunications_number, electronic_address, postal_address, contact_mechanism_link | 1 | Fax as subtype; telecom number needed the "tele…" hint |
+| Move vs typo; shared mechanism | 2.8, 2.10 | contact_mechanism, party_contact_mechanism | 3 | 10-07: Contoso/Fabrikam unprompted; in-place update "returns a false time frame" and loses the old number |
+| CONTACT MECHANISM + subtypes | 2.9, 2.10 | contact_mechanism_type, contact_mechanism, telecommunications_number, electronic_address, postal_address, contact_mechanism_link | 2 | Fax as subtype; telecom number needed the "tele…" hint; 10-07: pager inserts (kind → subtype table holds the value, PCM links the party) after three angles |
 | Facility vs postal address | 2.11 | facility_type, facility, facility_role_type, facility_role, facility_contact_mechanism | 1 | Needed the definition; "legal boundary", "nesting by size" |
 | Communication event + roles | 2.7, 2.12 | communication_event, communication_event_role_type, communication_event_role, communication_event_purpose_type, communication_event_purpose, valid_contact_mechanism_role | 1 | Item 51 with hints; then "cold call within a relationship" |
 | Effectivity (as-of, exclusive thru) | all | cross-cutting (every from_date / thru_date) | 2 | 10-07: Contoso rows right except inclusive thru (fixed after one guiding question); asked why exclusive |
@@ -413,3 +413,46 @@ main concept; 4 comes from the capstone.
   subtypes have no columns and are *rows* in PARTY RELATIONSHIP TYPE, so a new kind is an
   insert, not a schema change. Revisit: "attribute-less subtype → type row" (same root as the
   subtype vs type row gap).
+- **2026-10-07, reinforce: move vs typo (new setting).** Contoso's mistyped switchboard vs
+  Fabrikam's new number. Unprompted: typo → update `contact_mechanism`; "party contact
+  mechanism holds the lifecycle of a party's link to a mechanism"; new number → insert a
+  mechanism and a link (thru null), and end the old link with last valid day + 1. Then: an
+  in-place update gives March the new number (false time frame) and loses the old one. 1 → 3.
+  **Not closed:** the neighbourhood question (what connects to `contact_mechanism`, directly or
+  through `party_contact_mechanism`, and what each connection means) is parked for later.
+- **2026-10-07, purpose (not a gap).** Said "a contact mechanism can have multiple purposes";
+  on asking, meant `party_contact_mechanism` (shorthand). Unprompted: a party's link can have
+  many purposes, so purpose needs its own table; a single purpose would be one column.
+  Then, on dates: "a purpose cannot outlive the link; it can have a shorter lifespan", so
+  SHIPPING ends with its own thru date. Purpose 2 → 3. Neighbourhood folded into the parked
+  contact-mechanism one. Asked whether purpose type carries rules: it doesn't (plain list;
+  only the "purpose within its link's period" query). The rule question stays on section 6
+  exercise 4.
+- **2026-10-07, reinforce: contact mechanism subtypes (WhatsApp, pager, X handle, GPS).**
+  Applied the attribute rule unprompted: GPS gets a subtype table, the others become type rows.
+  Missed two things: a type row's value still lives in an existing subtype table, and the third
+  option ("not a contact mechanism at all", for GPS: what is a contact mechanism *for*?).
+  Follow-up questions asked. Answers: (1) "each would have its own table": **the subtype vs
+  type row gap reappeared**, contradicting the first answer. (2) "postal address is a kind of
+  contact mechanism": true but didn't decide GPS. Re-explained with the seed (7 types, 3
+  subtype tables; a subtype = a *shape* of value, a type = *what kind*), and asked again.
+  Second try: (1) "contact mechanism type": still mixes up *naming the kind* with *storing the
+  value* (the type table has only id + description). (2) "place": right (GPS → FACILITY, not a
+  contact mechanism). Next angle: list the inserts to store Ben's pager number. Got there after
+  seeing `contact_mechanism`'s columns (kind vs type): "for each kind a subtable holds the
+  specific attributes; the telecom table holds the number"; PCM links Ben. Didn't remember
+  where the number is stored. Asked how to query subtypes ("a union?"): a join on the shared
+  PK; a union only to list every kind at once; a view hides it. CONTACT MECHANISM 1 → 2.
+  Retest subtype vs type row cold next session.
+- **2026-10-07, subtype vs type row: TELEX / SOCIAL_MEDIA_PROFILE.** After asking how
+  `applies_to_kind` is built and how to know a kind has a subtype table (answer: every kind
+  *is* a subtype table; types are what didn't need one). SOCIAL_MEDIA: new kind + CHECK value
+  (table and query branch not named). TELEX: new type row, right, but `applies_to_kind`
+  null "like FACE_TO_FACE": **confuses "no attributes of its own" with "no value"**. A
+  type borrows an existing kind's shape (PAGER → TELECOMMUNICATIONS_NUMBER). Guiding question
+  asked. Then: TELEX → telecommunications_number, right, but "I still don't get it". Own
+  summary: mechanism = facts, type = "rules" (corrected: type = category; only
+  `applies_to_kind` is a rule), DQ queries check after the fact; new kind = table + CHECK value
+  + query branch (asked what the branch means: the union line that registers the table).
+  **Open:** which part doesn't click (two lists, or one row using both). Start there next
+  session.

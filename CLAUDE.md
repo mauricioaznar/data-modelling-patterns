@@ -50,8 +50,12 @@ holes in the user's understanding and help fill them.
   explain it **through the chapter's own schema** (open its tables and seed rows, and say why
   each table exists and why it's shaped that way), then ask a fresh question in a new setting
   with no hints. If the answer falls short, log it, explain again from a different angle, and
-  ask another fresh question. A row is closed only when the evidence reaches 3 **and** the user
-  agrees they understand it; either of us can reopen it. Use cheap formats: a quick sketch on
+  ask another fresh question. Before closing a row, ask one short **neighbourhood question**:
+  which entities does this concept connect to, and what does each connection mean? Only its
+  sub-group of entities counts, not the whole chapter. A table rarely means anything on its own
+  (a contact mechanism matters through the parties linked to it). A row is closed only when
+  the evidence reaches 3, the neighbourhood is answered, **and** the user agrees they
+  understand it; either of us can reopen it. Use cheap formats: a quick sketch on
   paper, or Claude runs SQL and the user predicts the result. Write SQL by hand only when the
   concept lives in the query (e.g. as-of dates). No full schema rewrites; syntax errors don't
   teach modelling.

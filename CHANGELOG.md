@@ -16,6 +16,9 @@ and any decisions made.
   in-memory PGlite and lets you browse tables grouped by figure, follow foreign keys in both
   directions ("referenced by"), read rows by label instead of id, and run SQL. Reload resets it.
   `loadChapters` moved into `scripts/db.js`, so the rebuild and the explorer share it.
+- Ch 2 reinforce loop: move vs typo 1 → 3 and purpose 2 → 3 (neighbourhood question parked);
+  contact mechanism + subtypes 1 → 2; subtype vs type row back to 1 (the gap reappeared: a
+  type with no attributes of its own was read as needing its own table, then as having no value).
 
 **Decisions**
 - Concepts first, implementation later. No long exercise lists that won't get done.
@@ -24,11 +27,14 @@ and any decisions made.
   can be revisited later.
 - A row below 3 is a gap. Reinforce it in a loop, explaining through the chapter's own schema,
   until the evidence reaches 3 and the user agrees they understand it.
+- Before closing a row, ask a short neighbourhood question: which entities it connects to, and
+  what each connection means.
 
 **Next**
-- Ch 2 reinforce loop, starting with the level-1 rows. The open question is move vs typo
-  (Contoso's mistyped switchboard vs Fabrikam's new number). Then test the level-0 rows, then
-  the capstone.
+- Continue going table by table through the contact-mechanism group (next: `contact_mechanism_type`),
+  to close subtype vs type row (kind = subtype table, type = category row). Then the parked
+  neighbourhood question, the other level-1 rows (facility, communication event), the level-0
+  rows, and the capstone.
 
 ## 2026-10-06
 
