@@ -24,13 +24,13 @@ main concept; 4 comes from the capstone.
 | Non-solicitation on the link | 2.9 | party_contact_mechanism | 2 | Right table in warm-up; reasons came via the switchboard scenario |
 | Purpose (dated, within link) | 2.10 | contact_mechanism_purpose_type, party_contact_mechanism_purpose | 3 | 10-07: many purposes per link → own table; own dates because a purpose can end before its link but never outlive it (unprompted) |
 | Type / fact / rule layers | all | cross-cutting (every `*_type`; valid_contact_mechanism_role) | 2 | Spotted unprompted, but "type enforces a rule" needed correcting |
-| Subtype vs type row | 2.1, 2.9 | cross-cutting (organization_type, contact_mechanism_type) | 2 | Rule stated in item 44 after the employment/reseller hint; 10-07 reappeared: "each new type gets its own table"; later 10-07, table by table: "the type points to a subtype the mechanism should use" (after much help) |
+| Subtype vs type row | 2.1, 2.9 | cross-cutting (organization_type, contact_mechanism_type) | 3 | Rule stated in item 44 after the employment/reseller hint; 10-07 reappeared, closed to 2 after much help; 10-08 cold, new domain (payment methods): sorted all nine names into three shapes, test "a grouping of types that share the same shape" (first wording still called the kinds "types") |
 | PARTY RELATIONSHIP + TYPE | 2.6a | party_relationship_type, party_relationship, role_type_ancestor (view) | 2 | Item 20 strong; item 17 flipped direction, invented EMPLOYER |
 | Specific vs generic relationships | 2.5, 2.6a | employment, customer_relationship, organization_rollup | 2 | Item 26: misread as one wide table; salary subtype after questions |
 | Move vs typo; shared mechanism | 2.8, 2.10 | contact_mechanism, party_contact_mechanism | 3 | 10-07: Contoso/Fabrikam unprompted; in-place update "returns a false time frame" and loses the old number |
 | CONTACT MECHANISM + subtypes | 2.9, 2.10 | contact_mechanism_type, contact_mechanism, telecommunications_number, electronic_address, postal_address, contact_mechanism_link | 2 | Fax as subtype; telecom number needed the "tele…" hint; 10-07: pager inserts (kind → subtype table holds the value, PCM links the party) after three angles |
 | Facility vs postal address | 2.11 | facility_type, facility, facility_role_type, facility_role, facility_contact_mechanism | 1 | Needed the definition; "legal boundary", "nesting by size" |
-| Communication event + roles | 2.7, 2.12 | communication_event, communication_event_role_type, communication_event_role, communication_event_purpose_type, communication_event_purpose, valid_contact_mechanism_role | 1 | Item 51 with hints; then "cold call within a relationship" |
+| Communication event + roles | 2.7, 2.12 | communication_event, communication_event_role_type, communication_event_role, communication_event_purpose_type, communication_event_purpose, valid_contact_mechanism_role | 2 | Item 51 with hints; 10-08 dental call: role + purpose rows right after the role pattern was explained; first put participants in party relationship |
 | Effectivity (as-of, exclusive thru) | all | cross-cutting (every from_date / thru_date) | 2 | 10-07: Contoso rows right except inclusive thru (fixed after one guiding question); asked why exclusive |
 | Person details (name, marital status, physical characteristic, citizenship/passport) | 2.2 | person_flat, gender_type, person_name_type, person_name, marital_status_type, marital_status, physical_characteristic_type, physical_characteristic, citizenship, passport | 0 | |
 | Organization type | 2.1 | organization_type | 0 | Partly covered by the subtype rule |
@@ -39,8 +39,7 @@ main concept; 4 comes from the capstone.
 | Case and work effort | 2.13 | work_effort_type, work_effort, communication_event_work_effort, communication_case, communication_case_role_type, communication_case_role | 0 | |
 
 ### Open threads
-- **Subtype vs type row:** retest cold next session (kind = subtype table, type = category row).
-  Continue table by table through the contact-mechanism group; next: `telecommunications_number`.
+- **Subtype vs type row: closed 2026-10-08 (3).** Reopen if it slips in the capstone.
 - **Move vs typo and purpose (both 3):** neighbourhood question parked. What connects to
   `contact_mechanism`, directly or through `party_contact_mechanism`, and what each connection means.
 - **Item 27:** is "read the relationship type as a sentence, subject → object" Silverston's rule?

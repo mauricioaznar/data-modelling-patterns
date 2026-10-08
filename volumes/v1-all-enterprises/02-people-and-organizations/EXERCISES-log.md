@@ -159,3 +159,32 @@ Misunderstandings and reinforce attempts, oldest first.
   "categories, with a rule naming the domain (kind) they belong to, possibly none". Then the
   click: "the type points to a subtype the mechanism should enforce; creating a mechanism =
   pick a category, which fixes the subtype table". Subtype vs type row 1 → 2. Retest cold.
+- **2026-10-08, subtype vs type row: cold retest (payment methods).** New domain, explorer
+  closed. Mapped it onto CONTACT MECHANISM unprompted (facts / types / `applies_to` rule).
+  First wording: "the payment method *types* that need a subtype table are card, wallet, bank
+  account", so kinds were still called types (one guiding question: which column decides that
+  a `card` table exists?). Then sorted all nine names correctly (Visa, Mastercard, Amex, debit,
+  corporate → card; PayPal, Apple Pay → wallet; savings, checking → bank account) and gave the
+  test in their own words: "a subtype is a grouping of types that share the same shape". 
+  `visa_card` table: "duplicates the card logic". Right, but didn't name the cost (each new
+  brand becomes a schema change). 2 → 3. Not closed: neighbourhood question and agreement.
+  Follow-up, same day: Discover → `visa_card` "adds another kind" (schema change each brand)
+  vs one type row. Neighbourhood: type → payment method ("each method is of one type, a type
+  can be of many"); `applies_to_kind` → subtype tables "loosely, by text we must maintain, not
+  a FK"; the DQ query catches "a mismatch between a payment method's kind and its type's
+  applies_to_kind". Raised unprompted: changing or removing a used type rewrites history.
+  Settled: retire or add a type, never edit its meaning; the FK blocks deleting a used type.
+  User agreed. **Row closed at 3.**
+- **2026-10-08, communication event (dental clinic video call: Ana, Tom, Rita; reschedule +
+  billing).** Naive `call_log`: named both limits unprompted (one purpose, one receiver);
+  damage: "they look like two separate events" (right). Tables: said the participants live in
+  **party relationship** ("event → party relationship stores the recipients"), and invented a
+  "communication event type (video call)". **Gap: confuses the event's context (one
+  relationship, two ends) with its participants (COMMUNICATION EVENT ROLE rows).** Purposes not
+  placed. Guiding questions asked.
+  Asked how a role type relates to an event; explained COMMUNICATION EVENT ROLE as PARTY ROLE
+  scoped to one event (event, party, role type), separate from the relationship (context).
+  User noticed unprompted that participants aren't tied to the relationship's ends (right, and
+  deliberate: Rita, interpreters, cold calls). Then: one event row; Ana ORGANIZER, Tom and Rita
+  ATTENDEE (3 role rows); 2 purpose rows. Right. Called it a "phone call" (it was video);
+  channel still open. 1 → 2.

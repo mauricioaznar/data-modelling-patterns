@@ -3,6 +3,27 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-08
+
+**Built**
+- Ch 2 reinforce loop, questions only. Subtype vs type row: cold retest in a new domain
+  (payment methods), 2 → 3, neighbourhood answered, **closed**. Facility question asked, then
+  parked at the user's request.
+- Communication event (dental clinic video call): first put the participants in party
+  relationship; after the role pattern was explained, the role and purpose rows were right.
+  1 → 2.
+
+**Decisions**
+- No new "To ponder" items during practice. Questions raised in chat get settled in chat and
+  noted in the gaps log.
+- A used type is never edited or deleted: retire it or add a new one (the FK already blocks
+  deleting a type that rows still use).
+
+**Next**
+- Answer Q4: a new VIDEO channel and the `valid_contact_mechanism_role` check. Then the
+  communication event neighbourhood question, facility (parked), and the move vs typo
+  neighbourhood.
+
 ## 2026-10-07
 
 **Built**
