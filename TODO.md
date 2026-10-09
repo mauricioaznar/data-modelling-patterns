@@ -21,7 +21,10 @@ blockers, but each one unlocks something:
 Chapter titles are from memory; verify them against the book's table of contents.
 
 - [ ] Ch 01: Introduction (read only; key conventions go into README notation)
-- [ ] Ch 02: People and Organizations *(figures 2.1–2.13 built; exercises in progress: core set done; 9 required exercises left: 3a, 3c, 1.1, 5.2, 5.4, 6.3, 6.4, 7.1, capstone)*
+- [ ] Ch 02: People and Organizations *(figures 2.1–2.13 built; exam done; practice trimmed 2026-10-09 to three submodels, ~3 h each)*
+  - [ ] Submodel 1: parties, roles and relationships (reinforce 3 rows, recall 2, scenario, doc entry)
+  - [ ] Submodel 2: contact mechanisms, facilities and geography (reinforce 3 rows, recall 1, exercise 3a, scenario, doc entry)
+  - [ ] Submodel 3: communication events and case (reinforce 1 row, cold retest, scenario, doc entry)
   - [ ] Confirm PERSON NAME → PERSON NAME TYPE optionality against the book
   - [ ] Try enforcing non-overlapping from/thru periods (exclusion constraint with `btree_gist`; check PGlite support)
   - [ ] Refactor `role_type` into a ROLE TYPE supertype with a PARTY ROLE TYPE subtype once another role-type subtype appears (see NOTES, Fig 2.4)

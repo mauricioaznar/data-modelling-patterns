@@ -27,7 +27,7 @@ volumes. Vol 2's industry models can therefore extend Vol 1's `party` directly.
 
 | Vol | Ch | Chapter | Status |
 |-----|----|---------|--------|
-| 1 | 02 | [People and Organizations](volumes/v1-all-enterprises/02-people-and-organizations/NOTES.md) | exercises pending |
+| 1 | 02 | [People and Organizations](volumes/v1-all-enterprises/02-people-and-organizations/NOTES.md) | practice in progress (3 submodels) |
 
 Each chapter folder contains:
 
@@ -38,7 +38,7 @@ Each chapter folder contains:
 | `schema.sql` | DDL, grown one figure at a time |
 | `seed.sql` | Data that exercises the tricky cases |
 | `queries.sql` | The business questions the model can answer |
-| `EXERCISES.md` | Practice: concept tracker, open threads, then the exercise menu (recall, queries, break-it tasks, capstone) |
+| `EXERCISES.md` | Practice: submodels, concept tracker, open threads, practice scenarios, then an optional exercise menu |
 | `EXERCISES-log.md` | Practice history: answers and the dated gaps log behind the tracker |
 
 A new chapter starts as a copy of `templates/chapter/`.

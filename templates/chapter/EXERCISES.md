@@ -4,9 +4,13 @@ Do these after the chapter's last figure is implemented. Each exercise is small.
 the gaps log go in `EXERCISES-log.md` (or the chapter's SQL files) and get reviewed; no
 answers are provided up front. Process: `docs/practice.md`.
 
-**Flow:** exam (about 12 questions to find gaps) → reinforce each gap with a fresh question →
-capstone. The sections below are a menu of formats, not a list to complete. Done when the
-capstone holds up and no gap reappears when tested cold.
+**Flow, per submodel (about 3 hours each):** exam (about 6 questions, one at a time, climbing
+Bloom's levels) → reinforce each gap with a fresh question → practice scenario → doc entry.
+The sections below are a menu of formats, not a list to complete. A submodel is done when
+every row scores 3+ and its scenario holds up.
+
+**Submodels:**
+1.
 
 ## Progress
 
@@ -29,7 +33,7 @@ it's understood.
 
 ## 0. To ponder (collected while reading)
 Questions and ideas raised while the chapter was being built, tagged with their figure.
-Answer in a sentence or three under each item.
+At most 5 per submodel. Answer in a sentence or three under each item.
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

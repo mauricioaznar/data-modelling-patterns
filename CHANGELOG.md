@@ -3,6 +3,31 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-09
+
+**Built**
+- Practice process reworked around **submodels** with a **~3 hour budget each**
+  (`docs/practice.md`, CLAUDE.md, chapter template): exam of about 6 questions, one at a time,
+  climbing Bloom's levels (Remember → Create) → reinforce gaps → one practice scenario per
+  submodel → entry in the design reference doc.
+- Design reference doc on claude.ai (Universal Data Models — Design Reference): question index,
+  Core patterns, one seven-section entry per submodel, roadmap. Party/role/relationship and
+  contact mechanism entries drafted; communication event/case is a preview.
+- Ch 2 trimmed: tracker regrouped into three submodels with a "Next" column (reinforce / recall);
+  unanswered section 0 items and sections 1–9 made optional (only 3a kept); the section 9
+  capstone replaced by three per-submodel practice scenarios.
+
+**Decisions**
+- About 3 hours of practice per submodel; go over only to close a gap, and agree first.
+- At most 5 "To ponder" items per submodel while teaching.
+- The design reference doc is the single source of truth for what was learnt; repo files are
+  the working material.
+- Cover every Vol 1 chapter, including Shipments, Invoicing and Accounting.
+
+**Next**
+- Ch 2 submodel 3 (communication events and case): cold retest of communication event, then
+  reinforce case and work effort, then its scenario.
+
 ## 2026-10-08
 
 **Built**

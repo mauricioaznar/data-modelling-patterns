@@ -18,19 +18,39 @@ holes in the user's understanding and help fill them.
 - Teach the pattern: the problem it solves, what the naive model gets wrong, the alternatives,
   and when not to use it. Then implement the schema, seed (with deliberate edge cases and bad
   rows) and queries.
-- **Any question, challenge or idea for the user to think about** that comes up while teaching
-  goes into the chapter's `EXERCISES.md`, section 0 "To ponder", in the same change and tagged
-  with its figure. The user is reading and may not answer in chat; nothing should be lost. Create
+- **Questions for the user to think about** that come up while teaching go into the chapter's
+  `EXERCISES.md`, section 0 "To ponder", tagged with their figure, but **at most 5 per
+  submodel**: keep only the ones that test a main idea, and settle the rest in chat. Create
   `EXERCISES.md` from the template at the chapter's first figure if it doesn't exist.
 - One figure per commit. `schema.sql` grows in book order, with a section header per figure.
 - Never copy book prose or reproduce figures verbatim in committed files. Write notes in our own
   words. `book-refs/` is gitignored and must stay that way.
 
-### End of a chapter (the user practises)
-- Follow **`docs/practice.md`**: concept tracker → exam → reinforce loop → capstone, scored on a
-  0–4 evidence scale. Read it when a chapter's practice starts or resumes.
+### After the reading (the user practises, one submodel at a time)
+- Practice is **per submodel** (a group of figures that answer one set of business questions,
+  e.g. Ch 2: parties/roles/relationships, contact mechanisms, communication events/case), not
+  per chapter. Follow **`docs/practice.md`**: exam climbing Bloom's levels → reinforce gaps →
+  practice scenario, scored on the 0–4 evidence scale.
+- **Time budget: about 3 hours of practice per submodel.** Go over only when a gap still needs
+  reinforcing, and say so first. Don't write more exercises than fit the budget.
+- **Ask one question at a time** and wait for the answer.
 - **Next session start:** open with 3 quick recall questions on the most recently finished
-  chapter, favouring its open gaps.
+  submodel, favouring its open gaps.
+
+### Design reference (the distilled output)
+- The claude.ai doc **Universal Data Models — Design Reference**
+  (https://claude.ai/code/artifact/4fa81da7-e02f-4ef5-863c-119128b4b4c5) is the single source of
+  truth for what was learnt: a question index, the cross-chapter **Core patterns** table, one
+  entry per submodel and the roadmap. Chat is temporary; anything worth keeping goes there.
+- Repo files are the working material (figure transcriptions, SQL, exercises, logs). The doc
+  holds the distilled answer to "what do I reach for when I face this problem?"
+- When a submodel's practice ends, write its entry in seven sections: questions it answers
+  (Apply) · core entities (Remember) · optional add-ons, each with the question that justifies
+  it (Analyze) · design choices and why (Understand) · patterns used (Analyze) · pitfalls from
+  the user's own mistakes (Evaluate) · practice scenario (Create).
+- **Patterns first:** add a new pattern to Core patterns, or a new example to an existing row.
+  Then add the submodel's questions to the question index and mark it Done on the roadmap.
+- Cover every chapter, including Shipments, Invoicing and Accounting.
 
 ### Every 3 chapters (mini app)
 - A tiny app over the last 3 chapters' models, framed as a **problem to solve**. The user

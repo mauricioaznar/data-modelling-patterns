@@ -1,55 +1,74 @@
-# Practice: end of a chapter
+# Practice: one submodel at a time
 
-How the user practises once a chapter's last figure is built. Read this when a chapter's
-practice starts or resumes, not every session.
+How the user practises once the reading for a submodel is done. Read this when practice starts
+or resumes, not every session.
 
 ## Aim
 - **Conceptual understanding at a high level.** Implementation depth comes later (mini apps).
-  Don't build more exercises than will actually be done.
 - **What "understood" means**, for every concept: the user can (a) say what the table or
   pattern is **for**, meaning the problem it solves and what the naive design gets wrong;
   (b) say how it **relates** to its neighbours, conceptually rather than column by column; and
   (c) **spot a wrong implementation** of it and say what data it would lose or corrupt.
   Attribute lists, syntax and exact cardinalities are out of scope. Going deeper risks
   overlearning; a concept can be revisited later (recall questions, mini apps, later chapters).
+- **Patterns over tables.** Every submodel is practised through the patterns it uses (see Core
+  patterns in the design reference doc). At least one question per submodel asks which pattern
+  is at work, or which entity owns a fact.
+
+## Time budget
+- **About 3 hours per submodel**, split roughly: exam 45 min · reinforce 1 h 15 min · practice
+  scenario 45 min · writing the doc entry 15 min.
+- Go over only when a gap still needs reinforcing; say so and agree before continuing.
+- Don't build more exercises than fit the budget. Unused menu items are fine to leave undone.
+
+## Submodels
+A submodel is a group of figures that answer one set of business questions (e.g. Ch 2:
+parties/roles/relationships · contact mechanisms, facilities and geography · communication
+events and case). Agree the split at the start of a chapter's practice and list it at the top
+of the chapter's `EXERCISES.md`.
 
 ## Files
-- **`EXERCISES.md`**: the working file. At the top: the plan, the **comprehension tracker**
-  and **open threads**. Below: the exercise menu (section 0 "To ponder", sections 1–9).
-  Answered items keep their question and a one-line pointer to the log.
-- **`EXERCISES-log.md`**: the history. Answers to section 0 items (by item number) and the
-  dated **gaps log**. Append here; read it only when a row's evidence is needed.
+- **`EXERCISES.md`**: the working file. At the top: the submodel list, the **comprehension
+  tracker** (rows grouped by submodel) and **open threads**. Below: section 0 "To ponder"
+  (at most 5 per submodel) and the format menu (sections 1–9). Answered items keep their
+  question and a one-line pointer to the log.
+- **`EXERCISES-log.md`**: the history. Answers by item number and the dated **gaps log**.
+  Append here; read it only when a row's evidence is needed.
 - At session start, read the tracker and open threads only (grep for the headings), not the
   whole file.
 
-## Steps
-- **0. Build the concept tracker** as soon as the chapter's last figure is built, before the
-  exam: one row per concept, covering every figure. A concept is a pattern or a small group of
-  tables that make sense together (e.g. "PARTY RELATIONSHIP + TYPE"), not a single table. Each
-  row lists the `schema.sql` tables it covers, so every table belongs to some row and
-  understanding stays tied to how the schema was built. Aim for roughly 10–20 rows, all
-  starting at 0. This table fixes the chapter's scope: don't test anything that isn't in it,
-  and add a row only when a real gap shows it's missing. Then pick the exam questions so each
-  main row gets at least one.
-- **1. Exam (find the gaps).** Ask about 12 questions in chat, one at a time, covering every
-  figure's main idea: what problem it solves and what the naive design gets wrong. Record
-  answers in `EXERCISES-log.md`.
-- **2. Reinforce (close the gaps).** Any row below 3 is a gap. Work through it in a loop:
-  explain it **through the chapter's own schema** (open its tables and seed rows, and say why
-  each table exists and why it's shaped that way), then ask a fresh question in a new setting
-  with no hints. If the answer falls short, log it, explain again from a different angle, and
-  ask another fresh question. Before closing a row, ask one short **neighbourhood question**:
-  which entities does this concept connect to, and what does each connection mean? Only its
-  sub-group of entities counts, not the whole chapter. A table rarely means anything on its own
-  (a contact mechanism matters through the parties linked to it). A row is closed only when
-  the evidence reaches 3, the neighbourhood is answered, **and** the user agrees they
-  understand it; either of us can reopen it. Use cheap formats: a quick sketch on paper, or
-  Claude runs SQL and the user predicts the result. Write SQL by hand only when the concept
-  lives in the query (e.g. as-of dates). No full schema rewrites; syntax errors don't teach
-  modelling.
-- **3. Capstone.** One small new-domain problem, modelled on paper and compared with the book.
-- **Done when:** every main concept scores 3+, the capstone holds up, and no logged gap
-  reappears when tested cold. Only then tick the chapter in `TODO.md`.
+## Steps (per submodel)
+- **0. Tracker rows.** One row per concept (a pattern or a small group of tables that make
+  sense together), listing the `schema.sql` tables it covers so every table belongs to some row.
+  Aim for 3–6 rows per submodel, all starting at 0. Don't test anything that isn't in a row.
+- **1. Exam: one question at a time, climbing Bloom's levels.** About 6 questions, roughly one
+  per level, stopping to reinforce when a level is shaky:
+
+  | Level | Question type |
+  |---|---|
+  | Remember | Name the entities or subtypes involved |
+  | Understand | Why is it shaped this way? What does the naive design get wrong? |
+  | Apply | Model a concrete business scenario (rows, not a full schema) |
+  | Analyze | Which entity owns this fact? Which pattern is this? |
+  | Evaluate | Find and explain the flaw in a proposed model |
+  | Create | Sketch a minimal model for a new problem |
+
+  Record answers in `EXERCISES-log.md`.
+- **2. Reinforce (close the gaps).** Any row below 3 is a gap. Explain it **through the
+  chapter's own schema** (its tables and seed rows, and why each exists), then ask a fresh
+  question in a new setting with no hints. If it falls short, log it, explain from a different
+  angle, and ask again. Before closing a row, ask one short **neighbourhood question**: which
+  entities does it connect to, and what does each connection mean? A row is closed when the
+  evidence reaches 3, the neighbourhood is answered, **and** the user agrees. Use cheap formats:
+  a sketch on paper, or Claude runs SQL and the user predicts the result. No full schema
+  rewrites.
+- **3. Practice scenario (Create).** One small new-domain problem for this submodel, modelled
+  on paper: the minimal entities, what was borrowed from the book and what was left out on
+  purpose. This is where scores of 4 come from.
+- **4. Write the doc entry** (seven sections, see `CLAUDE.md`), update Core patterns, the
+  question index and the roadmap.
+- **Submodel done when:** every row scores 3+, the scenario holds up, and the doc entry is
+  written. **Chapter done when** all its submodels are done; then tick it in `TODO.md`.
 
 ## Reviewing and scoring
 - **Don't include answers.** Review attempts like a pull request: say what's wrong, then ask a
@@ -58,11 +77,10 @@ practice starts or resumes, not every session.
 - Log every misunderstanding in `EXERCISES-log.md` and keep the tracker current. Score each
   concept on the **0–4 evidence scale**, citing the answer behind each score: 0 untested ·
   1 recognises (understood once explained, or picked from options) · 2 explains with help ·
-  3 explains unprompted · 4 applies cold (new setting, later session, no hints). Target before
-  moving on: 3+ on every main concept, with 4 coming from the capstone. Score strictly from
-  evidence, not impressions. A gap that reappears lowers its row.
+  3 explains unprompted · 4 applies cold (new setting, later session, no hints). Score strictly
+  from evidence, not impressions. A gap that reappears lowers its row.
 - **Data explorer (`npm run explore`):** keep it closed for the exam and gap checks, and open
   for learning and for checking an answer *after* giving it from memory. An answer found with
   the explorer open scores 2 at most ("with help").
 - **Next session start:** open with 3 quick recall questions on the most recently finished
-  chapter, favouring its open gaps.
+  submodel, favouring its open gaps.
