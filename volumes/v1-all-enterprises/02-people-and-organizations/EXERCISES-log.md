@@ -216,3 +216,33 @@ Misunderstandings and reinforce attempts, oldest first.
   2.4's `role_type`); left out the optional relationship context and the status. 2 → 3, but
   given right after an explanation in the same session: **retest cold next session** before
   closing. Neighbourhood mostly covered by the definition.
+- **2026-10-09, communication event: cold retest (submodel 3), property management email.**
+  Maria emails Tom, cc Lucy, about a wrong heating charge. Right unprompted: the event is the
+  glue; participants through `communication_event_role` (not party relationship, last
+  session's gap closed); EMAIL as the event's `contact_mechanism_type`. Slips: gave all three
+  participants **the same role type**, reading `communication_event_role_type` as "the type of
+  event"; said a `valid_contact_mechanism_role` row is added per event; left out purpose and
+  status. After guiding questions: purpose right (own table, predefined type + description);
+  rule table = set up once, valid pairs of channel × participant role type (first said
+  "channel × type of event"); asked where the party's role for the event comes from →
+  explained `communication_event_role` is (event, party, role type), pointing at PARTY, a
+  per-event role vs 2.4's enterprise-wide `party_role`. Fresh question (Tom organizes a
+  face-to-face meeting): ORGANIZER for Tom, ATTENDEE for Maria and Lucy (first answer said
+  only "attendee", corrected straight away); "Maria is a tenant" → `party_role`, "attended" →
+  `communication_event_role`. Right. **The gap reappeared cold: 3 → 2.** Status not yet
+  answered. Retest event roles inside the submodel 3 practice scenario.
+- **2026-10-09, case and work effort: first questions (submodel 3).** Q3 (no CASE: what can't
+  you answer?): "which follow-up events belong to the problem, how are they related". Grouping
+  only; missed that the issue has facts of its own (status, responsible party). 0 → 1. User
+  asked event vs case and whether the case comes first → explained: event = one interaction,
+  case = the issue, with its own status and roles; `communication_case_id` is optional and
+  usually set after the first event. Q4 (insurance claim, sort four questions): a) adjuster
+  visit → event + event roles, face-to-face channel. Right. b) "is the claim settled?" → case,
+  but "with thru-date set" (wrong: the case has no thru date; it's the case's
+  `status_type`). c) who handles it → case, hedged between "issuer", a property or a role
+  (it's `communication_case_role`: party + case role type). d) every interaction with the
+  customer about anything → "event". Right entity, but not how to find them: through the
+  customer's `communication_event_role` rows (the party relationship is optional since 2.12,
+  so it can't be the grouping; first graded wrong on that basis, corrected the same day). **Right entity for b and c,
+  wrong mechanism, right after the explanation: case stays at 1.** Paused for a project
+  discussion at the user's request.
