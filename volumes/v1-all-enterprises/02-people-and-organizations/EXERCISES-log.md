@@ -188,3 +188,31 @@ Misunderstandings and reinforce attempts, oldest first.
   deliberate: Rita, interpreters, cold calls). Then: one event row; Ana ORGANIZER, Tom and Rita
   ATTENDEE (3 role rows); 2 purpose rows. Right. Called it a "phone call" (it was video);
   channel still open. 1 → 2.
+- **2026-10-08, communication event: Q4 (VIDEO channel, valid roles).** Reasoning for VIDEO
+  right unprompted: a Zoom/Teams call has a URL, so reuse the kind that holds a URL and add a
+  VIDEO type row; a new subtype table only if no kind fits the shape. Two slips, both guesses:
+  named the kind "website", then "link" (it's ELECTRONIC_ADDRESS; WEB_ADDRESS is a type row),
+  and said the event points to `contact_mechanism` (it's `contact_mechanism_type`, "occurs
+  via"). Shown the seed and the column. Then, own words: the type "establishes a medium
+  without pointing to a specific fact that is impossible to know in some cases"
+  (FACE_TO_FACE). Valid roles: the check flags the call's roles; insert (VIDEO, ORGANIZER) and
+  (VIDEO, ATTENDEE). Right. Rule as rows: con right (every new medium needs its pairs or valid
+  data gets flagged); pro said the rows "enforce pairings at creation time". **Same root as
+  the type / fact / rule gap: the rule rows enforce nothing on insert; only the data-quality
+  query catches a bad pair, after the fact.** Guiding question asked. Stays at 2: event → type
+  needed showing. Too many stacked questions confused the user; ask one at a time.
+  Restated the pro: "users are in control of their own ruling instead of a developer having
+  to hardcode rules". Right (a rule change is an insert, no deploy). The insert-time question
+  (does Rita's row fail without the pair?) is still unanswered.
+  Answered "fail" (wrong: no FK reads the medium; the insert succeeds and only the DQ query
+  flags it). Walked through the three FKs; user asked to stop questions and switch to
+  explanation. Explained the submodel as a whole instead. Row stays at 2.
+- **2026-10-08, communication event: own-words definition (end of session).** "Something
+  that happens in a timeframe"; participants (role) with a function (role type); multipurpose
+  (purpose rows, free description + type); happens through a channel, "not a particular fact
+  like a cellphone number"; the channel has rules for which roles apply; what → event,
+  who → participant, how → channel, why → purpose. Right and complete on the core. Slips:
+  called the rule's other side "party role types" (it's `communication_event_role_type`, not
+  2.4's `role_type`); left out the optional relationship context and the status. 2 → 3, but
+  given right after an explanation in the same session: **retest cold next session** before
+  closing. Neighbourhood mostly covered by the definition.

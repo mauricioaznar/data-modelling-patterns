@@ -12,16 +12,23 @@ and any decisions made.
 - Communication event (dental clinic video call): first put the participants in party
   relationship; after the role pattern was explained, the role and purpose rows were right.
   1 → 2.
+- Communication event, Q4 (VIDEO channel): reuse-a-kind reasoning and the valid-role inserts
+  right; kind name (ELECTRONIC_ADDRESS) and event → `contact_mechanism_type` needed showing.
+  Said rule rows enforce on insert (they only feed a DQ query). Then switched to explanation
+  at the user's request (the whole submodel: what / how / who / why / context / status). Own-words
+  definition at the end: 2 → 3, to retest cold.
 
 **Decisions**
 - No new "To ponder" items during practice. Questions raised in chat get settled in chat and
   noted in the gaps log.
 - A used type is never edited or deleted: retire it or add a new one (the FK already blocks
   deleting a type that rows still use).
+- Keep the book's name `valid_contact_mechanism_role` (both its columns are types, but no rename).
+- Ask one question at a time; stacked questions lost the user.
 
 **Next**
-- Answer Q4: a new VIDEO channel and the `valid_contact_mechanism_role` check. Then the
-  communication event neighbourhood question, facility (parked), and the move vs typo
+- Cold retest of communication event (new domain, no hints) to close it; include "does a
+  missing valid-role pair block the insert?". Then facility (parked) and the move vs typo
   neighbourhood.
 
 ## 2026-10-07
