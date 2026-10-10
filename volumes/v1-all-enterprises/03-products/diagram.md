@@ -24,4 +24,19 @@ erDiagram
   %% Fig 3.3 — Product identification
   PRODUCT                 ||--o{ GOOD_IDENTIFICATION             : "identified by"
   IDENTIFICATION_TYPE     ||--o{ GOOD_IDENTIFICATION             : "used to define"
+
+  %% Fig 3.4 — Product feature
+  PRODUCT_FEATURE_TYPE               ||--o{ PRODUCT_FEATURE               : "kind of"
+  PRODUCT_FEATURE_CATEGORY           |o--o{ PRODUCT_FEATURE               : "the category for"
+  UNIT_OF_MEASURE                    |o--o{ PRODUCT_FEATURE               : "used in"
+  UNIT_OF_MEASURE                    |o--o{ PRODUCT                       : "used in"
+  UNIT_OF_MEASURE                    ||--o{ UNIT_OF_MEASURE_CONVERSION    : "converted from"
+  UNIT_OF_MEASURE                    ||--o{ UNIT_OF_MEASURE_CONVERSION    : "converted into"
+  PRODUCT                            ||--o{ PRODUCT_FEATURE_APPLICABILITY : "available with"
+  PRODUCT_FEATURE                    ||--o{ PRODUCT_FEATURE_APPLICABILITY : "used to define"
+  PRODUCT_FEATURE_APPLICABILITY_TYPE ||--o{ PRODUCT_FEATURE_APPLICABILITY : "describes"
+  PRODUCT_FEATURE                    ||--o{ PRODUCT_FEATURE_INTERACTION   : "selected in (of)"
+  PRODUCT_FEATURE                    ||--o{ PRODUCT_FEATURE_INTERACTION   : "a factor in"
+  PRODUCT                            |o--o{ PRODUCT_FEATURE_INTERACTION   : "context for"
+  PRODUCT_FEATURE_INTERACTION_TYPE   ||--o{ PRODUCT_FEATURE_INTERACTION   : "describes"
 ```

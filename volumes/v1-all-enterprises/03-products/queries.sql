@@ -181,3 +181,139 @@ join identification_type t on t.identification_type_id = gi.identification_type_
 join product pr            on pr.product_id = gi.product_id
 where t.value_pattern is not null
   and gi.id_value !~ t.value_pattern;
+
+-- ============================================================
+-- Fig 3.4 — Product feature
+-- ============================================================
+
+-- name: 3.4 — The copier's features today, by applicability
+select a.product_feature_applicability_type_id as applicability,
+       f.product_feature_type_id as feature_type, f.description as feature,
+       c.description as feature_category
+from product_feature_applicability a
+join product_feature f               on f.product_feature_id = a.product_feature_id
+left join product_feature_category c on c.product_feature_category_id = f.product_feature_category_id
+where a.product_id = 6
+  and a.from_date <= current_date
+  and (a.thru_date is null or a.thru_date > current_date)
+order by applicability, feature_type, feature;
+
+-- name: 3.4 — Pen colours you could pick in 2019 vs today
+select d.as_of, string_agg(f.description, ', ' order by f.description) as colours
+from (values (date '2019-06-01'), (current_date)) as d(as_of)
+join product_feature_applicability a
+  on a.product_id = 2
+ and a.product_feature_applicability_type_id = 'SELECTABLE'
+ and a.from_date <= d.as_of
+ and (a.thru_date is null or a.thru_date > d.as_of)
+join product_feature f on f.product_feature_id = a.product_feature_id
+                      and f.product_feature_type_id = 'COLOR'
+group by d.as_of
+order by d.as_of;
+
+-- name: 3.4 — Dimensions with their unit, and in centimetres where a conversion exists
+select f.description, f.number_specified, f.uom_id,
+       round(f.number_specified * cv.conversion_factor, 2) as in_cm
+from product_feature f
+left join unit_of_measure_conversion cv on cv.from_uom_id = f.uom_id and cv.to_uom_id = 'CM'
+where f.product_feature_type_id = 'DIMENSION'
+order by f.product_feature_id;
+
+-- name: 3.4 — An order for 3 of each product: how many base units (EA) is that?
+select pr.name, 3 as quantity, pr.uom_id,
+       case when pr.uom_id = 'EA' then 3
+            else 3 * cv.conversion_factor end as quantity_in_each
+from product pr
+left join unit_of_measure_conversion cv on cv.from_uom_id = pr.uom_id and cv.to_uom_id = 'EA'
+where pr.product_kind = 'GOOD'
+order by pr.product_id;
+
+-- name: 3.4 — Feature interactions, readable
+select it.product_feature_interaction_type_id as kind,
+       f.description  as feature,
+       ff.description as factor,
+       coalesce(pr.name, '(any product)') as context
+from product_feature_interaction it
+join product_feature f  on f.product_feature_id  = it.product_feature_id
+join product_feature ff on ff.product_feature_id = it.factor_product_feature_id
+left join product pr    on pr.product_id = it.product_id
+order by context, kind;
+
+-- name: 3.4 — Is this copier configuration valid? (chosen: stapling finisher, big tray, desktop stand, scan-to-email)
+with chosen (product_feature_id) as (values (14), (15), (16), (18)),
+available as (
+  select a.product_feature_id, a.product_feature_applicability_type_id as applicability
+  from product_feature_applicability a
+  where a.product_id = 6
+    and a.from_date <= current_date
+    and (a.thru_date is null or a.thru_date > current_date)
+),
+-- what the customer gets: their choices plus everything required or standard
+effective as (
+  select product_feature_id from chosen
+  union
+  select product_feature_id from available where applicability in ('REQUIRED', 'STANDARD')
+),
+interaction as (
+  select * from product_feature_interaction
+  where product_id = 6 or product_id is null
+)
+select 'not available for this product' as problem, f.description as feature, null as other
+from chosen c
+join product_feature f on f.product_feature_id = c.product_feature_id
+where c.product_feature_id not in (select product_feature_id from available)
+union all
+select 'needs a feature that is not included', f.description, ff.description
+from interaction i
+join effective e        on e.product_feature_id = i.product_feature_id
+join product_feature f  on f.product_feature_id  = i.product_feature_id
+join product_feature ff on ff.product_feature_id = i.factor_product_feature_id
+where i.product_feature_interaction_type_id = 'DEPENDENCY'
+  and i.factor_product_feature_id not in (select product_feature_id from effective)
+union all
+select 'incompatible pair chosen', f.description, ff.description
+from interaction i
+join product_feature f  on f.product_feature_id  = i.product_feature_id
+join product_feature ff on ff.product_feature_id = i.factor_product_feature_id
+where i.product_feature_interaction_type_id = 'INCOMPATIBILITY'
+  and i.product_feature_id        in (select product_feature_id from effective)
+  and i.factor_product_feature_id in (select product_feature_id from effective)
+order by problem, feature;
+
+-- name: 3.4 — Data-quality check: DIMENSION features without a number or unit, or other features with a number (should be empty)
+select product_feature_id, product_feature_type_id, description, number_specified, uom_id
+from product_feature
+where (product_feature_type_id = 'DIMENSION' and (number_specified is null or uom_id is null))
+   or (product_feature_type_id <> 'DIMENSION' and number_specified is not null);
+
+-- name: 3.4 — Data-quality check: unit conversions that disagree with their reverse (should be empty)
+select a.from_uom_id, a.to_uom_id, a.conversion_factor, b.conversion_factor as reverse_factor,
+       round(a.conversion_factor * b.conversion_factor, 4) as product_should_be_1
+from unit_of_measure_conversion a
+join unit_of_measure_conversion b on b.from_uom_id = a.to_uom_id and b.to_uom_id = a.from_uom_id
+where a.from_uom_id < a.to_uom_id
+  and abs(a.conversion_factor * b.conversion_factor - 1) > 0.001;
+
+-- name: 3.4 — Data-quality check: interactions naming a feature the context product doesn't offer (should be empty)
+select it.product_feature_interaction_id, pr.name as product, f.description as feature
+from product_feature_interaction it
+join product pr on pr.product_id = it.product_id
+join product_feature f
+  on f.product_feature_id in (it.product_feature_id, it.factor_product_feature_id)
+where not exists (
+  select 1 from product_feature_applicability a
+  where a.product_id = it.product_id
+    and a.product_feature_id = f.product_feature_id);
+
+-- name: 3.4 — Data-quality check: feature pairs that are both dependent and incompatible (should be empty)
+select f.description as feature, ff.description as factor, pr.name as product
+from product_feature_interaction d
+join product_feature_interaction x
+  on x.product_feature_interaction_type_id = 'INCOMPATIBILITY'
+ and ((x.product_feature_id = d.product_feature_id and x.factor_product_feature_id = d.factor_product_feature_id)
+   or (x.product_feature_id = d.factor_product_feature_id and x.factor_product_feature_id = d.product_feature_id))
+ and (x.product_id is not distinct from d.product_id or x.product_id is null or d.product_id is null)
+join product_feature f  on f.product_feature_id  = d.product_feature_id
+join product_feature ff on ff.product_feature_id = d.factor_product_feature_id
+left join product pr    on pr.product_id = d.product_id
+where d.product_feature_interaction_type_id = 'DEPENDENCY';

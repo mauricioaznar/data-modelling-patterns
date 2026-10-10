@@ -126,3 +126,130 @@ insert into good_identification (product_id, identification_type_id, id_value) v
   (9,  'UPCA',            '07325200016'),     -- DATA ERROR: 11 digits (caught by a query)
   (10, 'SKU',             'TNR100'),
   (10, 'SKU',             'TNR-100');         -- DATA ERROR: a second SKU for one product (caught by a query)
+
+-- ============================================================
+-- Fig 3.4 — Product features and units of measure
+-- ============================================================
+insert into unit_of_measure (uom_id, abbreviation, description) values
+  ('EA',   'ea',  'Each'),
+  ('BOX',  'bx',  'Box'),
+  ('REAM', 'rm',  'Ream'),
+  ('IN',   'in',  'Inch'),
+  ('CM',   'cm',  'Centimetre'),
+  ('LB',   'lb',  'Pound'),
+  ('KG',   'kg',  'Kilogram'),
+  ('HR',   'hr',  'Hour'),
+  ('MB',   'MB',  'Megabyte'),
+  ('PPM',  'ppm', 'Pages per minute');
+
+insert into unit_of_measure_conversion (from_uom_id, to_uom_id, conversion_factor) values
+  ('REAM', 'EA', 500),     -- a ream is 500 sheets
+  ('BOX',  'EA', 10),      -- a box of diskettes holds 10
+  ('IN',   'CM', 2.54),
+  ('CM',   'IN', 0.3937),
+  ('LB',   'KG', 0.4536),
+  ('KG',   'LB', 2.0);     -- DATA ERROR: disagrees with LB -> KG (caught by a query)
+
+update product set uom_id = case product_id
+  when 1  then 'REAM'
+  when 2  then 'EA'
+  when 3  then 'BOX'
+  when 4  then 'BOX'
+  when 5  then 'HR'
+  when 6  then 'EA'
+  when 7  then 'EA'
+  when 9  then 'EA'
+  when 10 then 'EA'
+end;   -- product 8 (maintenance plan) has no unit: the link is optional
+
+insert into product_feature_category (product_feature_category_id, description) values
+  (1, 'Paper specifications'),
+  (2, 'Copier options'),
+  (3, 'Billing options'),
+  (4, 'General appearance');
+
+select setval(pg_get_serial_sequence('product_feature_category', 'product_feature_category_id'), (select max(product_feature_category_id) from product_feature_category));
+
+insert into product_feature_type (product_feature_type_id, description) values
+  ('PRODUCT_QUALITY', 'Product quality'),
+  ('COLOR',           'Color'),
+  ('DIMENSION',       'Dimension (a number in a unit)'),
+  ('SIZE',            'Size (a label: S/M/L, Letter, 3½-inch)'),
+  ('BRAND',           'Brand'),
+  ('SOFTWARE',        'Software feature'),
+  ('HARDWARE',        'Hardware feature'),
+  ('BILLING',         'Billing feature'),
+  ('OTHER',           'Other feature');
+
+insert into product_feature (product_feature_id, product_feature_type_id, product_feature_category_id, description, number_specified, uom_id) values
+  (1,  'PRODUCT_QUALITY', 1,    'Fine grade',                null, null),
+  (2,  'COLOR',           4,    'White',                     null, null),
+  (3,  'COLOR',           4,    'Blue',                      null, null),
+  (4,  'COLOR',           4,    'Black',                     null, null),
+  (5,  'COLOR',           4,    'Red',                       null, null),
+  (6,  'DIMENSION',       1,    'Width',                     8.5,  'IN'),
+  (7,  'DIMENSION',       1,    'Length',                    11,   'IN'),
+  (8,  'DIMENSION',       1,    'Basis weight',              20,   'LB'),
+  (9,  'BRAND',           4,    'Johnson',                   null, null),
+  (10, 'BRAND',           4,    'Goldstein',                 null, null),
+  (11, 'SIZE',            null, '3½-inch',                   null, null),
+  (12, 'DIMENSION',       null, 'Capacity',                  1.44, 'MB'),
+  (13, 'HARDWARE',        2,    'Duplex unit',               null, null),
+  (14, 'HARDWARE',        2,    'Stapling finisher',         null, null),
+  (15, 'HARDWARE',        2,    'Large-capacity paper tray', null, null),
+  (16, 'HARDWARE',        2,    'Desktop stand',             null, null),
+  (17, 'HARDWARE',        2,    'Network card',              null, null),
+  (18, 'SOFTWARE',        2,    'Scan-to-email',             null, null),
+  (19, 'DIMENSION',       2,    'Print speed',               35,   'PPM'),
+  (20, 'BILLING',         3,    'Hourly billing',            null, 'HR'),
+  (21, 'BILLING',         3,    'Fixed-fee billing',         null, null),
+  (22, 'DIMENSION',       null, 'Height',                    null, 'IN'),   -- DATA ERROR: a dimension with no number (caught by a query)
+  (23, 'COLOR',           4,    'Grey',                      30,   null);   -- DATA ERROR: a number on a colour (caught by a query)
+
+select setval(pg_get_serial_sequence('product_feature', 'product_feature_id'), (select max(product_feature_id) from product_feature));
+
+insert into product_feature_applicability_type (product_feature_applicability_type_id, description) values
+  ('REQUIRED',   'Always part of the product; cannot be removed'),
+  ('STANDARD',   'Included by default'),
+  ('OPTIONAL',   'Not included; may be added'),
+  ('SELECTABLE', 'One must be chosen from the selectable features of the same type');
+
+insert into product_feature_applicability (product_id, product_feature_id, product_feature_applicability_type_id, from_date, thru_date) values
+  -- bond paper
+  (1, 1,  'REQUIRED',   '1995-01-01', null),
+  (1, 2,  'STANDARD',   '1995-01-01', null),
+  (1, 6,  'REQUIRED',   '1995-01-01', null),
+  (1, 7,  'REQUIRED',   '1995-01-01', null),
+  (1, 8,  'REQUIRED',   '1995-01-01', null),
+  (1, 9,  'REQUIRED',   '1995-01-01', null),
+  -- pen: pick a colour; red was dropped in 2020
+  (2, 3,  'SELECTABLE', '1998-06-01', null),
+  (2, 4,  'SELECTABLE', '1998-06-01', null),
+  (2, 5,  'SELECTABLE', '1998-06-01', '2020-01-01'),
+  (2, 10, 'REQUIRED',   '1998-06-01', null),
+  -- diskettes
+  (3, 11, 'REQUIRED',   '1990-01-01', null),
+  (3, 12, 'REQUIRED',   '1990-01-01', null),
+  -- consulting: choose how it's billed
+  (5, 20, 'SELECTABLE', '2003-01-01', null),
+  (5, 21, 'SELECTABLE', '2010-01-01', null),
+  -- copier
+  (6, 19, 'STANDARD',   '2019-01-01', null),
+  (6, 17, 'STANDARD',   '2019-01-01', null),
+  (6, 23, 'STANDARD',   '2019-01-01', null),
+  (6, 13, 'OPTIONAL',   '2019-01-01', null),
+  (6, 14, 'OPTIONAL',   '2019-01-01', null),
+  (6, 15, 'OPTIONAL',   '2019-01-01', null),
+  (6, 16, 'OPTIONAL',   '2019-01-01', null),
+  (6, 18, 'OPTIONAL',   '2019-01-01', null);
+
+insert into product_feature_interaction_type (product_feature_interaction_type_id, description) values
+  ('DEPENDENCY',      'Choosing the feature requires the factor feature'),
+  ('INCOMPATIBILITY', 'The two features cannot be chosen together');
+
+insert into product_feature_interaction (product_feature_interaction_type_id, product_feature_id, factor_product_feature_id, product_id) values
+  ('DEPENDENCY',      14, 13, 6),     -- the stapling finisher needs the duplex unit (on the copier)
+  ('INCOMPATIBILITY', 15, 16, 6),     -- the big paper tray doesn't fit on the desktop stand
+  ('DEPENDENCY',      18, 17, null),  -- scan-to-email needs a network card, on any product
+  ('DEPENDENCY',      16, 15, 6),     -- DATA ERROR: contradicts the incompatibility above (caught by a query)
+  ('INCOMPATIBILITY', 5,  1,  2);     -- DATA ERROR: "fine grade" is not a pen feature (caught by a query)

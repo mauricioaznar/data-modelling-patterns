@@ -1,7 +1,14 @@
 # Vol 1, Chapter 3 — Products
 
 ## The problem this pattern solves
-<!-- Filled in as the figures are built. -->
+A naive catalogue is one `item` table with columns for everything: category, SKU, UPC,
+colour, size, price, supplier, quantity on hand. It breaks as soon as a product sits in two
+categories, carries several codes, comes in three colours, or has two suppliers. Ch 3 splits
+that table apart. PRODUCT is only *what we offer*. Everything that is many-valued, dated, or
+reused across products (categories, codes, features, units, later suppliers, stock and
+prices) becomes its own entity linked back to it. The recurring moves are the ones from Ch 2:
+a dated classification link, a many-to-many rollup, type + value rows instead of columns, and
+rules stored as data.
 
 ## Submodels (proposed, pending the rest of the chapter's figures)
 1. **Product definition, categories and identification** (Figs 3.1–3.3): what is the thing
@@ -214,9 +221,33 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
 - Is PRODUCT FEATURE INTERACTION → PRODUCT optional (an interaction that holds for every
   product) or mandatory?
 - Does PRODUCT FEATURE INTERACTION really have no from/thru dates?
+- The applicability subtypes' meanings below are our reading; check the book's text.
 
 **Discussion**
-- *(to write once confirmed)*
+- **The naive model** gives PRODUCT columns like `color`, `size`, `brand`, or splits each
+  combination into its own product (blue pen, black pen, red pen). Columns can't hold "comes in
+  blue *or* black", and one product per combination explodes (5 options on a copier is 32
+  products) and loses the fact that they're the same product.
+- **Features are defined once and reused.** "Blue" is one PRODUCT FEATURE row used by the pen,
+  a binder and a folder. PRODUCT FEATURE APPLICABILITY is the many-to-many that says which
+  products offer which features, how (required, standard, optional, selectable), and when.
+- **Applicability (our reading):** *required* is always part of the product; *standard* is
+  included by default; *optional* can be added; *selectable* means pick one from a set (pen
+  colour, billing method). The same feature can be standard on one product and optional on
+  another, which is why the type sits on the link and not on the feature.
+- **Feature subtypes vs feature category:** the subtypes say what *kind* of feature it is
+  (colour, dimension, billing). The category is a business grouping for display ("Copier
+  options", "Paper specifications"). They're independent axes, like product category dimensions
+  in 3.2.
+- **PRODUCT FEATURE INTERACTION is a rule stored as data,** like Ch 2's VALID CONTACT MECHANISM
+  ROLE: "the stapler needs the duplex unit", "the big tray doesn't fit the desktop stand". The
+  optional product context makes a rule local to one product or global to all.
+- **DIMENSION is the only subtype with an attribute** (number_specified) because it's the only
+  one that's a quantity. It needs a unit, hence UNIT OF MEASURE.
+- **UNIT OF MEASURE does double duty:** the unit a product is counted in (a ream, a box, an
+  hour) and the unit of a dimension (inches, pounds). UNIT OF MEASURE CONVERSION relates two
+  units by a factor. Its limit: conversions are per *unit pair*, not per product. "1 box = 10
+  each" is true for diskettes and false for forms, and the model can't tell them apart.
 
 ## Design decisions (book → SQL)
 
@@ -269,8 +300,56 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
 - **The book's Table 3.1 codes (PAP192…) are stored as SKUs**, which removes them from
   `product.comment`'s job.
 
+### Fig 3.4
+- **`product.uom_id` is added with `alter table` in the 3.4 section**, so the schema still
+  reads in book order. Nullable until we confirm the cardinality (the maintenance plan has none).
+- **Feature subtypes become `product_feature_type` rows.** DIMENSION's `number_specified` is a
+  nullable column on `product_feature`. A data-quality query checks that dimensions have a number
+  and a unit and other kinds don't (seed: a Height with no number, a Grey with a number). Same
+  approach as `federal_tax_id_num` in Ch 2.
+- **Applicability subtypes → `product_feature_applicability_type`; interaction subtypes →
+  `product_feature_interaction_type`.** Exclusive and attribute-less, so rows.
+- **`product_feature.product_feature_category_id` is nullable** (unclear in the photo).
+- **Interaction columns:** `product_feature_id` ("of", the feature being chosen) and
+  `factor_product_feature_id` ("a factor in"). For DEPENDENCY the direction matters (choosing
+  the first needs the second); INCOMPATIBILITY is read in both directions. `product_id` null
+  means "any product". A check stops a feature interacting with itself.
+- **Conversion row meaning:** 1 `from_uom_id` = `conversion_factor` × `to_uom_id`. Both
+  directions are stored, and a data-quality query checks that they multiply to 1 (seed: KG→LB
+  says 2.0). Surrogate key instead of the (from, to) pair.
+- **Rules as data-quality queries:** interactions naming a feature the context product doesn't
+  offer (seed: "fine grade" on the pen); pairs that are both dependent and incompatible (seed:
+  the desktop stand). Plus a **configuration check** query: given chosen features, list the
+  unmet dependencies and incompatible pairs, counting required and standard features as
+  included.
+- **Not enforced:** a SELECTABLE set needs exactly one choice. The configuration check doesn't
+  test it yet.
+
 ## When NOT to use this
-<!-- Costs of the generality; what a simpler app would do instead. -->
+
+**Category classification with a rollup network (3.2):**
+- "Products in category X" becomes a recursive query, and sales by category double-count
+  unless everyone respects the primary flag.
+- A small shop with one flat list of categories needs a `category_id` column on product. Use a
+  single `parent_id` tree when every category has exactly one parent. Reach for the full model
+  when there are several independent groupings (usage, industry, materials) or the catalogue
+  is reorganised and history matters.
+
+**Codes as rows (3.3):**
+- Columns are simpler and type-checked when there are one or two fixed codes (an internal SKU
+  and a UPC). Rows win when the set of code standards is open-ended or most codes are sparse.
+
+**Feature applicability and interactions (3.4):**
+- This is a product configurator in miniature. It's worth it for configurable goods (cars,
+  computers, copiers, insurance plans). For a shop where each variant has its own stock and
+  price (T-shirts in S/M/L), separate variant products, or a product + variant table, are
+  simpler. Interactions are rules in data: easy to add, hard to test, and only the
+  application (or a query like ours) enforces them.
+
+**Units of measure (3.4):**
+- If everything is sold "each", a UOM table is noise. Once quantities cross units (buy in
+  boxes, sell in eaches, ship in kilograms), it's essential. Product-specific pack sizes then
+  need more than a unit-pair conversion.
 
 ## Open questions
 - **Figs 3.2–3.4 were built before they were confirmed** (at the user's request, 2026-10-10).
@@ -279,3 +358,8 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
 - **Fig 3.2:** is the primary flag one per product, or one per product per purpose or
   dimension (one primary for catalogues, another for sales analysis)? The book's text after
   the figure seems to discuss this; check it.
+- **Fig 3.4:** conversions are per unit pair, so a product-specific pack size ("a box of forms
+  holds 50") has nowhere to live. Does a later figure (inventory, supplier products) solve
+  this?
+- **Fig 3.4:** "exactly one choice from a SELECTABLE set": is the set all selectable features
+  of the same feature type on that product? Not checked yet.
