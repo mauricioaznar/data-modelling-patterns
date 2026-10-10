@@ -3,6 +3,31 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-10
+
+**Built**
+- Vol 1 Ch 3 (Products) started: Figs 3.1–3.4 transcribed, then schema, seed (office-supply
+  company with deliberate bad rows), queries, diagram and notes, one commit per figure.
+  - 3.1 product (good/service as `product_kind`), life-cycle dates.
+  - 3.2 category classification (dated, primary flag), many-to-many rollup with a
+    cycle-safe ancestor view, market interest linking Ch 2 party types to categories.
+  - 3.3 identification codes as rows, with a regex per identification type (addition).
+  - 3.4 features, applicability, interactions (with a configuration check query), units of
+    measure and conversions.
+- Ch 3 `EXERCISES.md`: two submodels, comprehension tracker, 9 "to ponder" items as the exam
+  pool, reinforce menu, and a practice scenario per submodel (bookshop-café, bicycle shop).
+
+**Decisions**
+- Figs 3.2–3.4 were built before they were confirmed, at the user's request. The questions for
+  the book are listed under each figure and in NOTES "Open questions".
+- Surrogate `product_id`; the book's readable product codes are stored as SKU identifications.
+- `product.uom_id` added by `alter table` in the 3.4 section so the schema keeps book order.
+
+**Next**
+- Check Figs 3.2–3.4 against the book; adjust the SQL if any reading was wrong.
+- Share the rest of Ch 3's figures (they may add a third submodel).
+- Ch 2 reinforce and scenarios still open; then Ch 3 submodel 1 exam.
+
 ## 2026-10-09
 
 **Built**
