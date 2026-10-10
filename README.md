@@ -28,6 +28,7 @@ volumes. Vol 2's industry models can therefore extend Vol 1's `party` directly.
 | Vol | Ch | Chapter | Status |
 |-----|----|---------|--------|
 | 1 | 02 | [People and Organizations](volumes/v1-all-enterprises/02-people-and-organizations/NOTES.md) | practice in progress (3 submodels) |
+| 1 | 03 | [Products](volumes/v1-all-enterprises/03-products/NOTES.md) | figures 3.1–3.4 transcribed |
 
 Each chapter folder contains:
 

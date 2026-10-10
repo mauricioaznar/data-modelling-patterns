@@ -29,7 +29,10 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [ ] Confirm PERSON NAME → PERSON NAME TYPE optionality against the book
   - [ ] Try enforcing non-overlapping from/thru periods (exclusion constraint with `btree_gist`; check PGlite support)
   - [ ] Refactor `role_type` into a ROLE TYPE supertype with a PARTY ROLE TYPE subtype once another role-type subtype appears (see NOTES, Fig 2.4)
-- [ ] Ch 03: Products
+- [ ] Ch 03: Products *(started 2026-10-10: Figs 3.1–3.4 transcribed, awaiting confirmation)*
+  - [ ] Submodel 1: product definition, categories, identification (Figs 3.1–3.3)
+  - [ ] Submodel 2: product features (Fig 3.4)
+  - [ ] Share the remaining Ch 3 figures (suppliers, inventory, pricing, costs, associations…)
 - [ ] Ch 04: Ordering Products
 - [ ] Ch 05: Shipments
 - [ ] Ch 06: Work Effort
