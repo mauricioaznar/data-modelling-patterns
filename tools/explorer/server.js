@@ -1,6 +1,7 @@
 // Disposable data explorer. Loads every chapter's schema.sql + seed.sql into an
 // in-memory PGlite (never touches .pgdata) and serves a small UI to browse rows,
-// follow foreign keys in both directions and run SQL. "Reload" replays the files,
+// follow foreign keys in both directions, run each chapter's saved queries
+// (queries.sql) and run SQL. "Reload" replays the files,
 // so experiments in the SQL box are thrown away.
 // Usage: npm run explore   (then open http://localhost:4317)
 import { createServer } from 'node:http';
@@ -126,6 +127,46 @@ async function readMeta() {
   return tables;
 }
 
+// ---- saved queries ---------------------------------------------------------
+// Each chapter's queries.sql: "-- name: <question>" starts a query, and the
+// same "=" section headers as schema.sql name its figure. Re-read on every
+// request, so edits show up without restarting the explorer.
+
+function readQueries() {
+  const out = [];
+  const rule = /^-- =+\s*$/;
+  for (const volume of listVolumes()) {
+    for (const chapter of listChapters(volume)) {
+      const path = join(chapter.path, 'queries.sql');
+      if (!existsSync(path)) continue;
+      const lines = readFileSync(path, 'utf8').split(/\r?\n/);
+      let figure = 'Other';
+      let current = null;
+      const finish = () => {
+        if (!current) return;
+        current.sql = current.body.join('\n').trim();
+        delete current.body;
+        if (current.sql) out.push(current);
+        current = null;
+      };
+      lines.forEach((line, i) => {
+        if (rule.test(line)) { finish(); return; }
+        if (rule.test(lines[i - 1] ?? '') && rule.test(lines[i + 1] ?? '') && line.startsWith('-- ')) {
+          figure = line.slice(3).trim();
+          return;
+        }
+        const m = /^-- name:\s*(.*)$/.exec(line);
+        if (m) {
+          finish();
+          current = { chapter: `${volume.schema}/${chapter.dir}`, figure, title: m[1].trim(), body: [] };
+        } else if (current) current.body.push(line);
+      });
+      finish();
+    }
+  }
+  return out.map((q, id) => ({ id, ...q, check: /data-quality check/i.test(q.title) }));
+}
+
 // ---- labels ----------------------------------------------------------------
 // A human-readable name for a row: the display-name view if there is one, else
 // a name/description/note column, else the text of its subtype row (a contact
@@ -212,9 +253,12 @@ const api = {
     } catch (err) {
       return { error: err.message };
     } finally {
-      await refresh();
+      // Saved queries are read-only, so they skip the (slower) re-read of every table.
+      if (body.refresh !== false) await refresh();
     }
   },
+
+  'GET /api/queries': () => ({ queries: readQueries() }),
 
   'POST /api/reload': async () => {
     await load();

@@ -14,7 +14,8 @@ blockers, but each one unlocks something:
 - [ ] **A DB GUI** (DBeaver or pgAdmin): browse tables and relationships visually
 - [ ] **VS Code Mermaid preview extension**: render `diagram.md` files locally
 - [x] **Data explorer** (`npm run explore`, `tools/explorer/`): a disposable browser UI over an
-  in-memory copy of every chapter. Browse rows, follow foreign keys both ways, run SQL.
+  in-memory copy of every chapter. Browse rows, follow foreign keys both ways, run SQL, and
+  run each chapter's saved queries (Queries tab; data-quality checks get a red/green badge).
 
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 

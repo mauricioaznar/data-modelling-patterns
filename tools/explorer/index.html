@@ -8,13 +8,13 @@
   :root {
     --bg: #fbfbfa; --panel: #ffffff; --ink: #1d1d1b; --muted: #6b6b66; --line: #e4e3df;
     --accent: #2f5fd0; --accent-soft: #e8eefc; --pk: #9a6200; --fk: #2f5fd0; --null: #b4b3ad;
-    --bad: #b3261e; --bad-soft: #fdecea; --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+    --bad: #b3261e; --bad-soft: #fdecea; --ok: #1e7a3c; --ok-soft: #e6f4ea; --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #161615; --panel: #1f1f1e; --ink: #e9e8e4; --muted: #9b9a94; --line: #34332f;
       --accent: #8fb0ff; --accent-soft: #23304d; --pk: #e0b25a; --fk: #8fb0ff; --null: #5f5e59;
-      --bad: #ff8a80; --bad-soft: #3a1f1d;
+      --bad: #ff8a80; --bad-soft: #3a1f1d; --ok: #7fd49a; --ok-soft: #1c3324;
     }
   }
   * { box-sizing: border-box; }
@@ -72,7 +72,22 @@
   .error { color: var(--bad); background: var(--bad-soft); border-radius: 8px; padding: 10px 12px; white-space: pre-wrap; font-family: var(--mono); font-size: 12.5px; }
   .result { margin-bottom: 16px; }
   .result .meta { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+  .qfig { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 18px 0 6px; }
+  .qch { font: 600 13px var(--mono); color: var(--accent); margin: 22px 0 0; }
+  .query { border: 1px solid var(--line); border-radius: 8px; background: var(--panel); margin-bottom: 8px; }
+  .query > .qhead { display: flex; gap: 8px; align-items: center; padding: 8px 10px; }
+  .query > .qhead .title { flex: 1; min-width: 0; }
+  .query details summary { cursor: pointer; color: var(--muted); font-size: 12px; padding: 0 10px 6px; }
+  .query pre { margin: 0 10px 10px; padding: 8px 10px; background: var(--bg); border-radius: 6px; font: 12px/1.5 var(--mono); overflow-x: auto; }
+  .query .qout { padding: 0 10px 10px; }
+  .query .qout:empty { display: none; }
+  .badge { font: 600 11px var(--mono); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+  .badge.bad { color: var(--bad); background: var(--bad-soft); }
+  .badge.ok { color: var(--ok); background: var(--ok-soft); }
+  .badge.info { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+  .badge.dq { color: var(--muted); border: 1px dashed var(--line); }
   @media (max-width: 760px) {
+    .query > .qhead { flex-wrap: wrap; }
     .layout { grid-template-columns: 1fr; }
     aside { position: static; max-height: 40vh; border-right: 0; border-bottom: 1px solid var(--line); }
     .grid2 { grid-template-columns: 1fr; }
@@ -83,7 +98,7 @@
 <body>
 <header>
   <h1>Data explorer</h1>
-  <nav><a href="#/" id="nav-tables">Tables</a><a href="#/sql" id="nav-sql">SQL</a></nav>
+  <nav><a href="#/" id="nav-tables">Tables</a><a href="#/q" id="nav-q">Queries</a><a href="#/sql" id="nav-sql">SQL</a></nav>
   <span class="grow"></span>
   <span class="hint">In-memory copy · SQL changes are thrown away on Reload</span>
   <button id="reload" title="Replay every schema.sql and seed.sql">Reload</button>
@@ -228,7 +243,8 @@ function showHome() {
     <p>Good starting points: <a href="#/r/v1.party/2">party 2</a>,
        <a href="#/t/v1.party_relationship">party_relationship</a>,
        <a href="#/t/v1.party_contact_mechanism">party_contact_mechanism</a>,
-       <a href="#/t/v1.communication_event">communication_event</a>.</p>
+       <a href="#/t/v1.communication_event">communication_event</a>.
+       Each chapter's saved business questions and data-quality checks are under <a href="#/q">Queries</a>.</p>
     <p class="sub">Chips above each table: <b style="color:var(--pk)">#</b> key · * required · o optional · → foreign key. Hover a chip for its type.</p>`;
 }
 
@@ -259,15 +275,99 @@ function showSql() {
   $('#sql').onkeydown = (e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); run(); } };
 }
 
+function resultTable(r) {
+  return `<div class="scroll"><table>
+    <thead><tr>${r.fields.map((f) => `<th>${esc(f)}</th>`).join('')}</tr></thead>
+    <tbody>${r.rows.map((row) => `<tr>${r.fields.map((f) => `<td>${cell(row[f])}</td>`).join('')}</tr>`).join('')
+      || `<tr><td class="empty" colspan="${r.fields.length}">No rows</td></tr>`}</tbody>
+  </table></div>`;
+}
+
+// Saved queries: every chapter's queries.sql, grouped by chapter and figure,
+// filtered by the sidebar's chapter picker. Data-quality checks should return
+// no rows, so they get a red/green badge once run.
+let queries = [];
+
+async function showQueries() {
+  ({ queries } = await get('/api/queries'));
+  const chapter = $('#chapter').value;
+  const list = queries.filter((q) => !chapter || q.chapter === chapter);
+  let lastChapter = null, lastFigure = null;
+  const html = list.map((q) => {
+    let head = '';
+    if (q.chapter !== lastChapter) { head += chapter ? '' : `<div class="qch">${esc(q.chapter)}</div>`; lastChapter = q.chapter; lastFigure = null; }
+    if (q.figure !== lastFigure) { head += `<div class="qfig">${esc(q.figure)}</div>`; lastFigure = q.figure; }
+    return `${head}
+      <div class="query" id="q${q.id}">
+        <div class="qhead">
+          <span class="title">${esc(q.title)}</span>
+          <span class="badge ${q.check ? 'dq' : 'info'}" data-badge>${q.check ? 'check' : 'not run'}</span>
+          <button data-run="${q.id}">Run</button>
+          <button data-edit="${q.id}" title="Copy into the SQL tab to change it">Edit in SQL</button>
+        </div>
+        <details><summary>SQL</summary><pre>${esc(q.sql)}</pre></details>
+        <div class="qout"></div>
+      </div>`;
+  }).join('');
+  const checks = list.filter((q) => q.check).length;
+  $('#main').innerHTML = `
+    <h2>Saved queries</h2>
+    <div class="sub">${list.length} queries from queries.sql${chapter ? ` in ${esc(chapter)}` : ''}, ${checks} of them data-quality checks (they should return no rows).
+      Pick a chapter on the left to narrow the list.</div>
+    <div class="bar"><button id="runall">Run all${chapter ? '' : ' (every chapter)'}</button><span class="sub" id="summary"></span></div>
+    ${html || '<p class="empty">No saved queries for this chapter yet.</p>'}`;
+  $('#main').onclick = (e) => {
+    const run = e.target.closest('[data-run]');
+    const edit = e.target.closest('[data-edit]');
+    if (run) runQuery(queries[run.dataset.run], true);
+    if (edit) { sqlDraft = queries[edit.dataset.edit].sql; location.hash = '#/sql'; }
+  };
+  $('#runall').onclick = async () => {
+    $('#runall').disabled = true;
+    let bad = 0, failed = 0;
+    for (const q of list) {
+      const outcome = await runQuery(q, false);
+      if (outcome === 'bad') bad++;
+      if (outcome === 'error') failed++;
+    }
+    $('#runall').disabled = false;
+    $('#summary').textContent = `${list.length} run · ${bad} check${bad === 1 ? '' : 's'} with findings · ${failed} error${failed === 1 ? '' : 's'}`;
+  };
+}
+
+// Runs one saved query; shows its result when `open` (or when it errors or a
+// check finds rows). Returns 'ok' | 'bad' | 'error' for the Run-all summary.
+async function runQuery(q, open) {
+  const box = $(`#q${q.id}`);
+  if (!box) return;
+  const badge = box.querySelector('[data-badge]');
+  const out = box.querySelector('.qout');
+  const res = await post('/api/sql', { sql: q.sql, refresh: false });
+  if (res.error) {
+    badge.className = 'badge bad'; badge.textContent = 'error';
+    out.innerHTML = `<div class="error">${esc(res.error)}</div>`;
+    return 'error';
+  }
+  const last = res.results.filter((r) => r.fields.length).at(-1) ?? { fields: [], rows: [] };
+  const n = last.rows.length;
+  const bad = q.check && n > 0;
+  badge.className = `badge ${q.check ? (bad ? 'bad' : 'ok') : 'info'}`;
+  badge.textContent = q.check ? (bad ? `${n} finding${n === 1 ? '' : 's'}` : 'clean') : `${n} row${n === 1 ? '' : 's'}`;
+  out.innerHTML = open || bad ? resultTable(last) : '';
+  return bad ? 'bad' : 'ok';
+}
+
 async function route() {
   const [, kind, key, id] = location.hash.split('/').map(decodeURIComponent);
   $('#nav-sql').classList.toggle('on', kind === 'sql');
-  $('#nav-tables').classList.toggle('on', kind !== 'sql');
+  $('#nav-q').classList.toggle('on', kind === 'q');
+  $('#nav-tables').classList.toggle('on', kind !== 'sql' && kind !== 'q');
   renderSidebar();
   try {
     if (kind === 't') await showTable(key);
     else if (kind === 'r') await showRow(key, id);
     else if (kind === 'sql') showSql();
+    else if (kind === 'q') await showQueries();
     else showHome();
   } catch (err) {
     $('#main').innerHTML = `<div class="error">${esc(err.message)}</div>`;
@@ -279,6 +379,7 @@ $('#filter').oninput = renderSidebar;
 $('#chapter').onchange = () => {
   try { localStorage.setItem('explorer.chapter', $('#chapter').value); } catch {}
   renderSidebar();
+  if (location.hash.startsWith('#/q')) showQueries();
 };
 $('#reload').onclick = async () => {
   $('#reload').disabled = true;
