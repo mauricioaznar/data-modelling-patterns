@@ -32,7 +32,13 @@ Chapter titles are from memory; verify them against the book's table of contents
 - [ ] Ch 03: Products *(Figs 3.1–3.4 built 2026-10-10; exercises ready; 3.2–3.4 still to check against the book)*
   - [ ] Submodel 1: product definition, categories, identification (Figs 3.1–3.3): exam, reinforce, scenario, doc entry
   - [ ] Submodel 2: product features (Fig 3.4): exam, reinforce, scenario, doc entry
-  - [ ] Confirm Figs 3.2–3.4 against the book (open items in NOTES "Open questions")
+  - [ ] **Next session:** confirm Figs 3.2–3.4 against the book, then fix the SQL if a reading was wrong:
+    - [ ] 3.2: does PRODUCT CATEGORY ROLLUP really have no from/thru dates? Which side is parent ("made up of") and which child ("part of")?
+    - [ ] 3.2: is the primary flag one per product, or one per product per purpose/dimension (catalogue vs sales analysis)?
+    - [ ] 3.3: does GOOD IDENTIFICATION link to PRODUCT (not GOOD)? Are product + identification type its whole identifier?
+    - [ ] 3.4: is PRODUCT → UNIT OF MEASURE mandatory or optional? PRODUCT FEATURE → UNIT OF MEASURE? PRODUCT FEATURE → PRODUCT FEATURE CATEGORY?
+    - [ ] 3.4: is PRODUCT FEATURE INTERACTION → PRODUCT optional, and does the interaction really have no dates?
+    - [ ] 3.4: check our reading of required / standard / optional / selectable against the book's text
   - [ ] Share the remaining Ch 3 figures (suppliers, inventory, pricing, costs, associations…)
 - [ ] Ch 04: Ordering Products
 - [ ] Ch 05: Shipments
