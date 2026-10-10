@@ -90,7 +90,23 @@ PARTY TYPE              (from Ch 2, Fig 2.3)
   parent side and "part of" as the child side)?
 
 **Discussion**
-- *(to write once confirmed)*
+- **The naive model** puts a `category_id` column on PRODUCT. That breaks as soon as a
+  product belongs to two groupings (the forms are "business forms" *and* "for the insurance
+  industry" *and* "paper-based"), or moves to another category and you still need last
+  year's sales by the old one.
+- **PRODUCT CATEGORY CLASSIFICATION is PARTY CLASSIFICATION again** (Ch 2, Fig 2.3): a dated
+  many-to-many between the thing and a classification value. Same shape, different subject.
+- **The primary flag** answers "if I can show this product in only one place (a catalogue
+  page, a sales report line), which one?" Without it, a product in three categories is
+  counted three times in a sales-by-category report.
+- **Rollup is many-to-many,** so the categories form a network, not a strict tree: Business
+  forms can be under both Paper and Printed materials. A single `parent_id` column would force
+  one parent. This is ORGANIZATION ROLLUP (Fig 2.5) applied to categories.
+- **The subtypes (usage, industry, materials) are dimensions:** independent ways of slicing
+  the catalogue. A product usually has one category per dimension.
+- **MARKET INTEREST links two knowledge-level tables:** party types (Ch 2) and product
+  categories. It says "logistics companies tend to buy office equipment", not "Contoso buys
+  copiers". Joined with a party's current classifications, it produces a prospect list.
 
 ### Fig 3.3 — Product identification
 **Transcription** (confirmed against the book: ☐)
@@ -203,7 +219,34 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
 - **Date order is a data-quality query**, not a check constraint (the seed's typewriter ribbon
   stops support before sales).
 
+### Fig 3.2
+- **Category subtypes become `product_category_type` rows** (USAGE, INDUSTRY, MATERIALS),
+  with an FK from `product_category`. Same move as Ch 2's attribute-less subtypes.
+- **Surrogate integer `product_category_id`**, not a text code: categories are business data
+  that users add and rename, unlike the fixed `*_type` lookups.
+- **Rollup has no dates,** following the figure (flagged for checking). If the catalogue is
+  reorganised, the old structure is lost; add from/thru if category history matters.
+- **Parent/child columns:** `parent_product_category_id` ("made up of") and
+  `child_product_category_id` ("part of"). A check stops a category being its own parent;
+  longer cycles are a data-quality query (seed: Recycled ↔ Recycled paper).
+- **Addition: `product_category_ancestor` view** (like Ch 2's `role_type_ancestor`), using
+  `union` so a cycle ends the walk instead of hanging the query. "Products in category X"
+  means X itself plus every category whose ancestor is X.
+- **Surrogate `product_category_classification_id`** instead of (product, category, from_date).
+- **One current primary per product is a data-quality query** (seed: the pen is primary in both
+  Writing instruments and Plastic). We read "primary" as one per product. It could be one per
+  product *per dimension*; see Open questions.
+- **`market_interest.party_type_id` references Ch 2's `party_type`.** Nothing stops an interest
+  pointing at a grouping type (INDUSTRY) rather than a value (IND_LOGISTICS); the query only
+  matches exact types.
+
 ## When NOT to use this
 <!-- Costs of the generality; what a simpler app would do instead. -->
 
 ## Open questions
+- **Figs 3.2–3.4 were built before they were confirmed** (at the user's request, 2026-10-10).
+  The "Check against the book" items under each figure are still open; the SQL follows our
+  reading.
+- **Fig 3.2:** is the primary flag one per product, or one per product per purpose or
+  dimension (one primary for catalogues, another for sales analysis)? The book's text after
+  the figure seems to discuss this; check it.
