@@ -92,3 +92,37 @@ insert into market_interest (product_category_id, party_type_id, from_date, thru
   (11, 'SIZE_LARGE',       '2010-01-01', null),
   (11, 'SIZE_MEDIUM',      '2020-01-01', null),
   (9,  'INCOME_HIGH',      '2018-01-01', null);
+
+-- ============================================================
+-- Fig 3.3 — Product identification
+-- ============================================================
+insert into identification_type (identification_type_id, description, value_pattern) values
+  ('MANUFACTURER_ID', 'Manufacturer''s id number',                 null),
+  ('SKU',             'Stock-keeping unit (our own product code)', null),
+  ('UPCA',            'Universal Product Code, 12 digits',         '^[0-9]{12}$'),
+  ('UPCE',            'Universal Product Code, compressed 8 digits', '^[0-9]{8}$'),
+  ('ISBN',            'International Standard Book Number (10 or 13, no hyphens)', '^([0-9]{9}[0-9X]|97[89][0-9]{10})$'),
+  ('OTHER',           'Other identifier',                          null);
+
+insert into good_identification (product_id, identification_type_id, id_value) values
+  -- the book's Table 3.1 codes are really our SKUs
+  (1,  'SKU',             'PAP192'),
+  (1,  'UPCA',            '036000291452'),
+  (1,  'MANUFACTURER_ID', 'JFG-8511-20'),
+  (2,  'SKU',             'PEN202'),
+  (2,  'UPCA',            '012345678905'),
+  (2,  'MANUFACTURER_ID', 'GE-ELITE'),
+  (3,  'SKU',             'DSK401'),
+  (3,  'UPCE',            '01234565'),
+  (4,  'SKU',             'FRMCHFA1500'),
+  (5,  'SKU',             'CNS109'),          -- a service with a code: fine, since the link is to PRODUCT
+  (6,  'SKU',             'CPY900'),
+  (6,  'MANUFACTURER_ID', 'OJ-900'),
+  (6,  'UPCA',            '012345678905'),    -- DATA ERROR: same UPC as the pen (caught by a query)
+  (7,  'SKU',             'BKS001'),
+  (7,  'ISBN',            '9780471380238'),
+  (8,  'SKU',             'SVC-CPY-MNT'),
+  (9,  'SKU',             'TYP001'),
+  (9,  'UPCA',            '07325200016'),     -- DATA ERROR: 11 digits (caught by a query)
+  (10, 'SKU',             'TNR100'),
+  (10, 'SKU',             'TNR-100');         -- DATA ERROR: a second SKU for one product (caught by a query)

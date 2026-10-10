@@ -135,7 +135,21 @@ IDENTIFICATION TYPE
 - Are both relationships part of GOOD IDENTIFICATION's identifier (bar across the line)?
 
 **Discussion**
-- *(to write once confirmed)*
+- **The naive model** adds a column per code: `sku`, `upc`, `isbn`, `mfr_part_no`. Each new
+  standard (EAN-13, GTIN-14, a retailer's own code) means a migration, most columns are empty
+  for most products, and "look up whatever was scanned" means OR-ing across every column.
+- **Codes as rows (type + value)** is the PERSON NAME / PHYSICAL CHARACTERISTIC move from
+  Ch 2 (Fig 2.2b). A new code type is a new row in IDENTIFICATION TYPE, and a scan lookup is
+  one `where id_value = ?`.
+- **No from/thru dates:** codes are treated as permanent facts about the product. If a UPC
+  is reassigned, the model can't tell you which product it meant last year.
+- **Identifier = product + type** (no `#` of its own): one value per code type per product.
+  The more important real-world rule runs the other way: one code must not identify two
+  products, or a scanner can't decide. Neither rule is a plain FK, so both are data-quality
+  queries here.
+- **Why "good" identification on PRODUCT?** Most standard codes (UPC, ISBN) are for physical
+  goods, which explains the name. But a service can still have our own SKU (CNS109 is one), so
+  linking to PRODUCT is more flexible than the name suggests.
 
 ### Fig 3.4 — Product feature
 **Transcription** (confirmed against the book: ☐)
@@ -239,6 +253,21 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
 - **`market_interest.party_type_id` references Ch 2's `party_type`.** Nothing stops an interest
   pointing at a grouping type (INDUSTRY) rather than a value (IND_LOGISTICS); the query only
   matches exact types.
+
+### Fig 3.3
+- **Identification subtypes become `identification_type` rows** (MANUFACTURER_ID, SKU, UPCA,
+  UPCE, ISBN, OTHER), in the book's own IDENTIFICATION TYPE table.
+- **Table name kept as `good_identification`, FK to `product`**, following the figure (flagged
+  for checking). Services may carry codes; a query lists them (CNS109).
+- **Surrogate `good_identification_id`** instead of the book's (product, type) identifier.
+  "One value per type per product" is a data-quality query (seed: toner has two SKUs).
+- **Addition: "one code, one product" data-quality query** (seed: the pen and the copier share a
+  UPC). This is the rule a barcode scanner relies on.
+- **Addition: `identification_type.value_pattern`**, a regex each code of that type must
+  match (UPC-A 12 digits, UPC-E 8, ISBN 10 or 13). A rule stored as data, checked by a
+  data-quality query (seed: an 11-digit UPC). Check digits aren't verified.
+- **The book's Table 3.1 codes (PAP192…) are stored as SKUs**, which removes them from
+  `product.comment`'s job.
 
 ## When NOT to use this
 <!-- Costs of the generality; what a simpler app would do instead. -->

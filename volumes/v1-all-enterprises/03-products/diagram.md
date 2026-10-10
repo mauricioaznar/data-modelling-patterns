@@ -20,4 +20,8 @@ erDiagram
   PRODUCT_CATEGORY        ||--o{ PRODUCT_CATEGORY_ROLLUP         : "part of (child)"
   PRODUCT_CATEGORY        ||--o{ MARKET_INTEREST                 : "of interest to"
   PARTY_TYPE              ||--o{ MARKET_INTEREST                 : "interested in (Ch 2)"
+
+  %% Fig 3.3 — Product identification
+  PRODUCT                 ||--o{ GOOD_IDENTIFICATION             : "identified by"
+  IDENTIFICATION_TYPE     ||--o{ GOOD_IDENTIFICATION             : "used to define"
 ```

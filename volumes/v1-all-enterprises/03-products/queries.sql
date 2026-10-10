@@ -131,3 +131,53 @@ select c.product_category_id, c.description
 from product_category_ancestor a
 join product_category c on c.product_category_id = a.product_category_id
 where a.ancestor_id = a.product_category_id;
+
+-- ============================================================
+-- Fig 3.3 — Product identification
+-- ============================================================
+
+-- name: 3.3 — Scan a code: which product is 9780471380238, whatever kind of code it is?
+select gi.id_value, gi.identification_type_id, pr.product_id, pr.name
+from good_identification gi
+join product pr on pr.product_id = gi.product_id
+where gi.id_value = '9780471380238';
+
+-- name: 3.3 — Every product with its codes, one column per type
+select pr.product_id, pr.name,
+       string_agg(gi.id_value, ', ') filter (where gi.identification_type_id = 'SKU')             as sku,
+       string_agg(gi.id_value, ', ') filter (where gi.identification_type_id in ('UPCA', 'UPCE')) as upc,
+       string_agg(gi.id_value, ', ') filter (where gi.identification_type_id = 'ISBN')            as isbn,
+       string_agg(gi.id_value, ', ') filter (where gi.identification_type_id = 'MANUFACTURER_ID') as manufacturer_id
+from product pr
+left join good_identification gi on gi.product_id = pr.product_id
+group by pr.product_id
+order by pr.product_id;
+
+-- name: 3.3 — Services carrying a "good" identification (the figure allows it: see NOTES)
+select pr.product_id, pr.name, gi.identification_type_id, gi.id_value
+from good_identification gi
+join product pr on pr.product_id = gi.product_id
+where pr.product_kind = 'SERVICE'
+order by pr.product_id;
+
+-- name: 3.3 — Data-quality check: one code identifying two products (should be empty)
+select gi.identification_type_id, gi.id_value, string_agg(pr.name, ' / ' order by pr.product_id) as products
+from good_identification gi
+join product pr on pr.product_id = gi.product_id
+group by gi.identification_type_id, gi.id_value
+having count(distinct gi.product_id) > 1;
+
+-- name: 3.3 — Data-quality check: a product with two codes of the same type (should be empty)
+select pr.product_id, pr.name, gi.identification_type_id, string_agg(gi.id_value, ', ') as values
+from good_identification gi
+join product pr on pr.product_id = gi.product_id
+group by pr.product_id, pr.name, gi.identification_type_id
+having count(*) > 1;
+
+-- name: 3.3 — Data-quality check: codes that don't match their type's format (should be empty)
+select pr.name, gi.identification_type_id, gi.id_value, t.value_pattern
+from good_identification gi
+join identification_type t on t.identification_type_id = gi.identification_type_id
+join product pr            on pr.product_id = gi.product_id
+where t.value_pattern is not null
+  and gi.id_value !~ t.value_pattern;
