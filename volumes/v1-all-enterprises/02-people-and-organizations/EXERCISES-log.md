@@ -246,3 +246,30 @@ Misunderstandings and reinforce attempts, oldest first.
   so it can't be the grouping; first graded wrong on that basis, corrected the same day). **Right entity for b and c,
   wrong mechanism, right after the explanation: case stays at 1.** Paused for a project
   discussion at the user's request.
+- **2026-10-09, mixed recall across submodels 1–3 (vet clinic "Huellitas Vet", 9 questions).**
+  From now on, each question names its submodel only, with no concept or table hints (the
+  user's request). Q1 (event, cold): three role types (caller, callee, attendee) right; said
+  the call adds a row to `valid_contact_mechanism_role` (it's a rule table, set up once); the
+  medium is `communication_event.contact_mechanism_type_id` (the kind, not the number). Q2
+  (Tom as ATTENDEE, PHONE allows only caller/callee): insert succeeds, the DQ query reports
+  it. Right. **Event roles 2 → 3, type/fact/rule 2 → 3.** Q3 (Ruiz employed since 2024-03-01):
+  direction right; called EMPLOYMENT a role and the clinic EMPLOYER (book: INTERNAL_ORGANIZATION,
+  a reusable "us" role); dates off by a month. Discussed: the relationship type row is lookup
+  + rule (one from, one to), so no separate rule table, unlike contact mechanisms (many roles
+  per medium); a new pair of roles is a new type; specialised roles use the role type
+  hierarchy. **Relationship 2 → 3.** Q4 (Ana's mobile, no promotional calls from 2026-06-01):
+  mechanism + subtype right unprompted (**subtypes 2 → 3**); gave a PROMOTIONAL purpose she
+  never asked for and opted out by ending it, not with `non_solicitation_ind` (her instruction
+  vs our usage); thru date "minus a day" (exclusive convention missed again). **Non-solicitation
+  stays 2, effectivity stays 2.** Q5 (what a case solves): grouping + stakeholders separate
+  from participants right; "a case allows follow-ups" wrong (work efforts hang off events).
+  Q6 (medication issue, three events, Tom in charge): events, case link and case roles right;
+  missed the two work efforts Ruiz decided on; role types left out; email logged as "mailing
+  address"; case given a thru date. Q7 (closing the issue): role types back, two purposes on
+  one event, case closed by status; didn't link the event to the case or treat the check-up
+  exam as a work effort. **Case 1 → 2.** Q8/8b (naive client/employee/supplier tables): fix
+  right; diagnosis first vague, then two concrete anomalies. **Party supertype 2 → 3.** Q9
+  (salary, payment terms) not answered: the user asked to study the relationship subtype
+  pattern instead (shared key on `party_relationship`; salary needs a dated child; payment
+  terms belong to an agreement later), then the considerations for supertypes and subtypes
+  in general.

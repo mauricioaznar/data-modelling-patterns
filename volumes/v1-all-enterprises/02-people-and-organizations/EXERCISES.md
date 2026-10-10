@@ -12,8 +12,9 @@ section 1). Ch 2 is done when all three submodels are done.
 
 **Submodels and remaining work**
 1. **Parties, roles and relationships** (Figs 2.1–2.6a): reinforce 3 rows, recall 2, scenario. ~1.5 h
-2. **Contact mechanisms, facilities and geography** (Figs 2.8–2.11): reinforce 3 rows, recall 1,
-   spot-the-flaw 3a, scenario. ~2 h
+2. **Contact mechanisms** (Figs 2.9–2.10): reinforce 1 row, spot-the-flaw 3a, scenario. ~1.5 h
+   Postal addresses, facilities and geography (Figs 2.8, 2.11) parked on 2026-10-09 by the user's
+   choice; revisit them with Shipments.
 3. **Communication events and case** (Figs 2.7, 2.12, 2.13): reinforce 1 row, recall 1, scenario. ~1.5 h
 
 ## Progress
@@ -30,38 +31,38 @@ main concept; 4 comes from the practice scenario.
 |---|---|---|---|---|---|
 | Role vs classification | 2.3, 2.4 | party_type, party_classification (vs party_role) | 3 | — | Item 14: first answer right; "points to no one" in own words |
 | PARTY ROLE + ROLE TYPE | 2.4 | role_type, party_role | 3 | — | Item 20 unprompted (one slip: roles set at party creation) |
-| PARTY supertype | 2.3 | party, organization, person, party_display_name (view) | 2 | reinforce | Item 1: "avoid duplication", needed a nudge to name the anomalies |
-| PARTY RELATIONSHIP + TYPE | 2.6a | party_relationship_type, party_relationship, role_type_ancestor (view) | 2 | reinforce | Item 20 strong; item 17 flipped direction, invented EMPLOYER |
-| Specific vs generic relationships | 2.5, 2.6a | employment, customer_relationship, organization_rollup | 2 | reinforce | Item 26: misread as one wide table; salary subtype after questions |
+| PARTY supertype | 2.3 | party, organization, person, party_display_name (view) | 3 | — | Item 1: "avoid duplication", needed a nudge to name the anomalies; 10-09 Q8 (vet clinic, naive client/employee/supplier tables): fix right, first diagnosis vague ("unreliable"), then two concrete anomalies unprompted (new role = new table; two answers for Ruiz's phone) |
+| PARTY RELATIONSHIP + TYPE | 2.6a | party_relationship_type, party_relationship, role_type_ancestor (view) | 3 | recall | Item 20 strong; item 17 flipped direction, invented EMPLOYER; 10-09 Q3 cold: direction right (Huellitas → Ruiz), but called EMPLOYMENT a role and the clinic's side EMPLOYER again (should be INTERNAL_ORGANIZATION); relationship type as type + rule in one row understood |
+| Specific vs generic relationships | 2.5, 2.6a | employment, customer_relationship, organization_rollup | 2 | reinforce | Item 26: misread as one wide table; salary subtype after questions; 10-09 Q9 not answered: user asked to study the pattern instead (shared-key subtype of party_relationship, salary needs a dated child) |
 | Person details (name, marital status, physical characteristic, citizenship/passport) | 2.2 | person_flat, gender_type, person_name_type, person_name, marital_status_type, marital_status, physical_characteristic_type, physical_characteristic, citizenship, passport | 0 | recall | |
 | Organization type | 2.1 | organization_type | 0 | recall | Partly covered by the subtype rule |
 | Priority / status types | 2.7 | priority_type, status_type | 0 | — | Covered by a scenario question, no own loop |
 
-#### 2. Contact mechanisms, facilities and geography
+#### 2. Contact mechanisms (facilities and geography parked for Shipments)
 
 | Concept | Fig | Tables | Level | Next | Evidence |
 |---|---|---|---|---|---|
-| Non-solicitation on the link | 2.9 | party_contact_mechanism | 2 | reinforce | Right table in warm-up; reasons came via the switchboard scenario |
+| Non-solicitation on the link | 2.9 | party_contact_mechanism | 2 | reinforce | Right table in warm-up; reasons came via the switchboard scenario; 10-09 Q4 (Ana's mobile): opted out by ending a PROMOTIONAL purpose instead of the flag, and gave a purpose she never asked for |
 | Purpose (dated, within link) | 2.10 | contact_mechanism_purpose_type, party_contact_mechanism_purpose | 3 | — | 10-07: many purposes per link → own table; own dates because a purpose can end before its link but never outlive it (unprompted) |
 | Move vs typo; shared mechanism | 2.8, 2.10 | contact_mechanism, party_contact_mechanism | 3 | — | 10-07: Contoso/Fabrikam unprompted; in-place update "returns a false time frame" and loses the old number |
-| CONTACT MECHANISM + subtypes | 2.9, 2.10 | contact_mechanism_type, contact_mechanism, telecommunications_number, electronic_address, postal_address, contact_mechanism_link | 2 | reinforce | Fax as subtype; telecom number needed the "tele…" hint; 10-07: pager inserts (kind → subtype table holds the value, PCM links the party) after three angles |
-| Facility vs postal address | 2.11 | facility_type, facility, facility_role_type, facility_role, facility_contact_mechanism | 1 | reinforce | Needed the definition; "legal boundary", "nesting by size" |
-| Geographic boundary | 2.8 | geographic_boundary_type, geographic_boundary, geographic_boundary_association, geographic_boundary_ancestor (view), postal_address_boundary | 0 | recall | |
+| CONTACT MECHANISM + subtypes | 2.9, 2.10 | contact_mechanism_type, contact_mechanism, telecommunications_number, electronic_address, postal_address, contact_mechanism_link | 3 | — | 10-09 Q4: contact_mechanism of kind PHONE with the value in the subtype row, unprompted. Earlier: Fax as subtype; telecom number needed the "tele…" hint; 10-07: pager inserts (kind → subtype table holds the value, PCM links the party) after three angles |
+| Facility vs postal address | 2.11 | facility_type, facility, facility_role_type, facility_role, facility_contact_mechanism | 1 | parked (Shipments) | Needed the definition; "legal boundary", "nesting by size" |
+| Geographic boundary | 2.8 | geographic_boundary_type, geographic_boundary, geographic_boundary_association, geographic_boundary_ancestor (view), postal_address_boundary | 0 | parked (Shipments) | |
 
 #### 3. Communication events and case
 
 | Concept | Fig | Tables | Level | Next | Evidence |
 |---|---|---|---|---|---|
-| Communication event + roles | 2.7, 2.12 | communication_event, communication_event_role_type, communication_event_role, communication_event_purpose_type, communication_event_purpose, valid_contact_mechanism_role | 2 | retest in scenario | 10-09 cold: all participants given one role type (read event role type as "type of event"); fixed after explanation, Tom/Maria/Lucy meeting right. Earlier: Item 51 with hints; 10-08 dental call: role + purpose rows right after the role pattern was explained; first put participants in party relationship; 10-08 Q4 (VIDEO): reuse-a-kind reasoning and valid-role inserts right, but kind name and event → type (not mechanism) needed showing; 10-08 own-words definition: what/who/how/why with role, role type, purpose, medium and the role rule (said "party role types" for the rule; context and status left out) |
-| Case and work effort | 2.13 | work_effort_type, work_effort, communication_event_work_effort, communication_case, communication_case_role_type, communication_case_role | 0 | reinforce | |
+| Communication event + roles | 2.7, 2.12 | communication_event, communication_event_role_type, communication_event_role, communication_event_purpose_type, communication_event_purpose, valid_contact_mechanism_role | 3 | in scenario | 10-09 Q1 cold (vet call): caller/callee/attendee right; put a per-event row in valid_contact_mechanism_role, then fixed (Q2 right). Q7: role types right again (missed in Q6). Earlier 10-09 cold: all participants given one role type (read event role type as "type of event"); fixed after explanation, Tom/Maria/Lucy meeting right. Earlier: Item 51 with hints; 10-08 dental call: role + purpose rows right after the role pattern was explained; first put participants in party relationship; 10-08 Q4 (VIDEO): reuse-a-kind reasoning and valid-role inserts right, but kind name and event → type (not mechanism) needed showing; 10-08 own-words definition: what/who/how/why with role, role type, purpose, medium and the role rule (said "party role types" for the rule; context and status left out) |
+| Case and work effort | 2.13 | work_effort_type, work_effort, communication_event_work_effort, communication_case, communication_case_role_type, communication_case_role | 2 | reinforce | 10-09 Q5–Q7 (vet clinic, medication issue): grouping and case roles (stakeholders differ from event participants) right; said a case "allows follow-ups" (that's work effort, from events); Q6 left out the work efforts Ruiz decided on, Q7 the check-up exam; case end as status right in Q7 (Q6 still said thru date). Earlier 10-09: case 0 → 1 (claim scenario) |
 
 #### Cross-cutting (tested inside the submodels, no own loop)
 
 | Concept | Fig | Tables | Level | Next | Evidence |
 |---|---|---|---|---|---|
-| Type / fact / rule layers | all | cross-cutting (every `*_type`; valid_contact_mechanism_role) | 2 | in scenarios | Spotted unprompted, but "type enforces a rule" needed correcting; 10-08: said rule rows "enforce at creation time" (they only feed a DQ query) |
+| Type / fact / rule layers | all | cross-cutting (every `*_type`; valid_contact_mechanism_role) | 3 | in scenarios | 10-09 Q2: rule table set up once, the DQ query joins event medium + role type (Tom as ATTENDEE on PHONE). Earlier: Spotted unprompted, but "type enforces a rule" needed correcting; 10-08: said rule rows "enforce at creation time" (they only feed a DQ query) |
 | Subtype vs type row | 2.1, 2.9 | cross-cutting (organization_type, contact_mechanism_type) | 3 | — | Rule stated in item 44 after the employment/reseller hint; 10-07 reappeared, closed to 2 after much help; 10-08 cold, new domain (payment methods): sorted all nine names into three shapes, test "a grouping of types that share the same shape" (first wording still called the kinds "types") |
-| Effectivity (as-of, exclusive thru) | all | cross-cutting (every from_date / thru_date) | 2 | in scenarios | 10-07: Contoso rows right except inclusive thru (fixed after one guiding question); asked why exclusive |
+| Effectivity (as-of, exclusive thru) | all | cross-cutting (every from_date / thru_date) | 2 | in scenarios | 10-07: Contoso rows right except inclusive thru (fixed after one guiding question); asked why exclusive; 10-09 Q4: "thru = 2026-06-01 minus a day" again |
 
 ### Open threads
 - **Subtype vs type row: closed 2026-10-08 (3).** Reopen if it slips in the capstone.

@@ -23,10 +23,18 @@ and any decisions made.
 - The design reference doc is the single source of truth for what was learnt; repo files are
   the working material.
 - Cover every Vol 1 chapter, including Shipments, Invoicing and Accounting.
+- Postal addresses, facilities and geography (Figs 2.8, 2.11) parked until Shipments, by the
+  user's choice; Ch 2 submodel 2 is now contact mechanisms only.
+- Practice questions name the submodel only, with no concept or table hints.
+
+- Ch 2 mixed recall session (9 questions, vet clinic): event roles, type/fact/rule layers,
+  party supertype, relationship direction and contact mechanism subtypes 2 → 3; case 1 → 2.
+  Tracker and log updated.
 
 **Next**
-- Ch 2 submodel 3 (communication events and case): cold retest of communication event, then
-  reinforce case and work effort, then its scenario.
+- Ch 2 reinforce: specific vs generic relationships (shared-key relationship subtypes, dated
+  pay history), non-solicitation on the link, case + work effort (follow-up work decided in an
+  event), exclusive thru dates. Then the three practice scenarios.
 
 ## 2026-10-08
 
