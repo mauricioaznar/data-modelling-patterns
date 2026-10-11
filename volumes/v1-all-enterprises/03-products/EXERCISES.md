@@ -28,10 +28,10 @@ it's understood.
 | Concept | Fig | Tables | Level | Next | Evidence |
 |---|---|---|---|---|---|
 | PRODUCT (what we offer) + good/service | 3.1 | product | 2 | reinforce | Q1: put GOOD under category; fixed after a prompt |
-| Category classification (dated, primary) | 3.2 | product_category_type, product_category, product_category_classification | 2 | reinforce | Q1: with prompt; Q2: primary unprompted; Q3: primary on the temporary category, missed a row |
-| Category rollup (network, not tree) | 3.2 | product_category_rollup, product_category_ancestor (view) | 3 | neighbourhood | Q2: many-to-many + multi-parent double count unprompted |
-| Market interest | 3.2 | market_interest (→ Ch 2 party_type) | 2 | reinforce | Q1 + Q3: named it and its link, no columns |
-| Identification codes as rows | 3.3 | identification_type, good_identification | 2 | reinforce | Q1: shape unprompted; Q3: invented dates, forgot names |
+| Category classification (dated, primary) | 3.2 | product_category_type, product_category, product_category_classification | 2 | reinforce | Q4: primary unprompted; Q5: missed dates + primary on the link even with a hint |
+| Category rollup (network, not tree) | 3.2 | product_category_rollup, product_category_ancestor (view) | 2 | reinforce | Q2: unprompted; Q5: read a single parent column as "no multiple descendants" |
+| Market interest | 3.2 | market_interest (→ Ch 2 party_type) | 3 | neighbourhood | Q4: type-level vs a real sale, unprompted |
+| Identification codes as rows | 3.3 | identification_type, good_identification | 2 | reinforce | Q1: shape unprompted; Q3: invented dates; Q4: put the format rule on the code, not the type; names forgotten |
 
 #### 2. Product features
 

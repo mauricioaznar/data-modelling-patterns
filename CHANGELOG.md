@@ -17,6 +17,11 @@ and any decisions made.
   (bad rows for roles, overlaps, serials, lots, variances), queries, notes and diagram.
 - Ch 3 `EXERCISES.md`: submodel 3 (suppliers and inventory) tracker rows, 5 "to ponder" items,
   practice scenario (bike-parts distributor).
+- Ch 3 submodel 1 exam Q4 (Analyze) and Q5 (Evaluate): classification and market interest
+  reached 3 in Q4; in Q5 classification and rollup fell back to 2 (missed dates + primary on the
+  link, read a single parent column backwards). Identification 2 (table names, type vs code).
+- Overview of Figs 3.5–3.6 in chat; discussed stored vs computed stock and where stock
+  movements come in (Shipments, Work Effort).
 
 **Decisions**
 - Primary category stays "one per product": the book doesn't say one per what.
@@ -27,7 +32,9 @@ and any decisions made.
   arc is a check constraint.
 
 **Next**
-- Ch 3 submodel 1: exam Q4–Q6, then reinforce the 2s.
+- Ch 3 submodel 1: exam Q6 (Create), then reinforce the 2s: classification (dates + primary
+  on the link), rollup (one parent vs many children), identification (cold recall of
+  product → good → good_identification ← identification_type), product (good/service).
 - Share the rest of Ch 3's figures.
 
 ## 2026-10-10

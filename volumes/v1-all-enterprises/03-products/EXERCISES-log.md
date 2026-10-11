@@ -51,3 +51,33 @@ gift wrapping (SKU, no category), market interest "Parents" → "Back to school"
   (it was in the scenario) and put the primary flag on "Back to school": a temporary,
   promotional category, so the pen would have no primary after 2026-09-15.
 Scores: product 2, classification 3 → 2 (gap reappeared), market interest 2, identification 2.
+
+### 2026-10-11: Submodel 1 exam, Q4 (Analyze: which entity owns the fact)
+- Pen in "Writing instruments" since 2019, reported under it → classification with primary ✓
+  (primary on the lasting category, unprompted: Q3 gap closed).
+- Logistics companies buy copiers → market interest (party type + category) ✓.
+- Contoso bought three copiers → not this submodel, orders/invoices ✓ (kept type vs fact apart).
+- UPC-A is 12 digits → said "product identification"; it's IDENTIFICATION TYPE (our
+  value_pattern). Still forgets the table names.
+- Business forms inside Paper → rollup, parent/child right ✓.
+- Ribbon stopped selling 2004-01-01 → product.sales_discontinuation_date ✓.
+- Paper's ISBN → "relationship table between product and identification" ✓ shape; it links to
+  GOOD now (confirmed 2026-10-11), names not recalled.
+Scores: classification 2 → 3, market interest 2 → 3, identification stays 2.
+
+### 2026-10-11: Submodel 1 exam, Q5 (Evaluate: flawed schema)
+Proposal: product(category_id, sku, upc, discontinued bool), category(parent_category_id),
+product_category(product_id, category_id), good_identification(product_id → product, from_date).
+- First pass, unprompted: sku/upc columns duplicate good_identification and drift ✓;
+  noticed the single category_id on product (reasoning unclear).
+- Missed on first pass: single parent, no dates/primary on product_category, two places for
+  category, discontinued boolean, FK to product instead of good. Follow-up asked.
+- Follow-up (with table-by-table prompts):
+  1. parent_category_id: said "can't have multiple descendants" (wrong direction: children are
+     fine, it's one *parent* only); asked for rollup dates (the book's rollup has none).
+  2. product_category: said "name" missing; missed from/thru (history) and primary (double
+     counting), with the report as a hint. **Gap reappeared.**
+  3. discontinued boolean: needs the dates, sales vs support ✓.
+  4. FK to product: didn't see it; expected product_id. Column name is right, the target is
+     `good` (services carry no codes).
+Scores: classification 3 → 2, rollup 3 → 2, product 2 (lifecycle dates ✓), identification 2.
