@@ -1,6 +1,6 @@
 # Vol 1, Chapter 3 — Exercises
 
-Figures 3.1–3.4 are built (the rest of Ch 3 isn't shared yet). Answers and the gaps log go in
+Figures 3.1–3.6 are built (the rest of Ch 3 isn't shared yet). Answers and the gaps log go in
 `EXERCISES-log.md` (or the chapter's SQL files) and get reviewed; no answers are provided up
 front. Process: `docs/practice.md`.
 
@@ -12,7 +12,8 @@ complete. A submodel is done when every row scores 3+ and its scenario holds up.
 **Submodels**
 1. **Product definition, categories and identification** (Figs 3.1–3.3). ~3 h
 2. **Product features** (Fig 3.4). ~3 h
-3. *(to come: the rest of Ch 3, e.g. suppliers, inventory, pricing, costs, associations.)*
+3. **Suppliers and inventory** (Figs 3.5–3.6). ~3 h
+4. *(to come: the rest of Ch 3, e.g. pricing, costs, associations.)*
 
 ## Progress
 
@@ -39,6 +40,16 @@ it's understood.
 | Feature + applicability | 3.4 | product_feature_type, product_feature_category, product_feature, product_feature_applicability_type, product_feature_applicability | 0 | exam | |
 | Feature interaction (rule as data) | 3.4 | product_feature_interaction_type, product_feature_interaction | 0 | exam | |
 | Unit of measure + conversion | 3.4 | unit_of_measure, unit_of_measure_conversion, product.uom_id | 0 | exam | |
+
+#### 3. Suppliers and inventory
+
+| Concept | Fig | Tables | Level | Next | Evidence |
+|---|---|---|---|---|---|
+| Manufacturer vs supplier (supplier product) | 3.5 | product.manufacturer_party_id, supplier_product, preference_type, rating_type | 0 | exam | |
+| Reorder guideline (scoped rule) | 3.5 | reorder_guideline | 0 | exam | |
+| Inventory item (good vs physical stock, subtypes, status) | 3.6 | inventory_item, inventory_item_status_type | 0 | exam | |
+| Where stock is (facility XOR container) + lot | 3.6 | container, container_type, lot | 0 | exam | |
+| Variance (count adjustments) | 3.6 | inventory_item_variance, reason | 0 | exam | |
 
 #### Cross-cutting (carried over from Ch 2, tested inside the submodels)
 
@@ -80,6 +91,19 @@ At most 5 per submodel. Answer in a sentence or three under each item.
    and what do you gain and lose compared with a rule in code or a check constraint?
 9. **[3.4]** "1 box = 10 each." Where does UNIT OF MEASURE CONVERSION break down, and how
    would you change the model to fix it?
+
+### Submodel 3: suppliers and inventory
+10. **[3.5]** Johnson Paper Mills makes the paper *and* sells it to us. Which two places in the
+    model record that, and why isn't one enough?
+11. **[3.5]** SUPPLIER PRODUCT links to PRODUCT but REORDER GUIDELINE links to GOOD. Why the
+    difference?
+12. **[3.5]** A reorder guideline for paper at the Chatham warehouse and another for paper
+    across Illinois are both current, and Chatham is in Illinois. Which one applies, and does the
+    model say?
+13. **[3.6]** Why is `quantity_on_hand` on NON SERIALIZED INVENTORY ITEM and not on PRODUCT
+    (or GOOD)? What can't you answer if it lives on the product?
+14. **[3.6]** A count finds 3 reams missing. Record it two ways: update `quantity_on_hand`, or
+    add a variance. What does each lose?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out one submodel in the transcription notation
@@ -162,3 +186,10 @@ owner still wants last year's sales report by the old grouping. Schools tend to 
 colours (pick one). Lights are standard, a basket and a child seat are optional, and the child
 seat needs the rear rack. The basket can't go on the carbon handlebar upgrade. Frame size is
 in centimetres, but US customers ask in inches. Tyres are sold singly, inner tubes in packs of 5.
+
+**Submodel 3: a bike-parts distributor.** It buys brake pads from the manufacturer and from two
+wholesalers, preferring the manufacturer, and rates each one. It also resells a repair service
+that a local workshop performs. It keeps stock in two warehouses; in one, small parts sit in
+labelled bins. E-bike batteries are tracked by serial number, brake pads by quantity, and
+tyres by production batch because rubber ages. The big warehouse reorders pads at 200, the
+small one at 20. Last month's count found 12 pads missing and one battery damaged.

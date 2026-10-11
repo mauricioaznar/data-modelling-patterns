@@ -12,11 +12,19 @@ and any decisions made.
     `product_kind` against it (bad row: the maintenance plan).
   - 3.4: the unit of measure is on DIMENSION only and optional; the data-quality query now
     flags units on non-dimensions (bad row: hourly billing).
+- Figs 3.5 (suppliers, manufacturers, reorder guidelines) and 3.6 (inventory items, lots,
+  containers, variances) transcribed from photos, confirmed, then built with schema, seed
+  (bad rows for roles, overlaps, serials, lots, variances), queries, notes and diagram.
+- Ch 3 `EXERCISES.md`: submodel 3 (suppliers and inventory) tracker rows, 5 "to ponder" items,
+  practice scenario (bike-parts distributor).
 
 **Decisions**
 - Primary category stays "one per product": the book doesn't say one per what.
 - SELECTABLE set read as "the product's selectable features of one feature type" (the book
   doesn't define it).
+- Fig 3.5: FKs go to `organization`; supplier and internal-organization roles are data-quality
+  queries. Fig 3.6: inventory subtypes as a kind column + nullable columns; the facility/container
+  arc is a check constraint.
 
 **Next**
 - Ch 3 submodel 1: exam Q4–Q6, then reinforce the 2s.
