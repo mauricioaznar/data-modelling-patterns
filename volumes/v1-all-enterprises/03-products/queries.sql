@@ -408,3 +408,78 @@ join reorder_guideline b
  and a.from_date < coalesce(b.thru_date, 'infinity')
  and b.from_date < coalesce(a.thru_date, 'infinity')
 join product pr on pr.product_id = a.product_id;
+
+-- ============================================================
+-- Fig 3.6 — Inventory items
+-- ============================================================
+
+-- name: 3.6 — Stock on hand per good and facility (items in a container count at the container's facility)
+select pr.name as good, f.description as facility, i.inventory_item_status_type_id as status,
+       sum(case i.inventory_item_kind when 'SERIALIZED' then 1 else i.quantity_on_hand end) as on_hand
+from inventory_item i
+left join container c on c.container_id = i.container_id
+join facility f       on f.facility_id = coalesce(i.facility_id, c.facility_id)
+join product pr       on pr.product_id = i.product_id
+group by pr.name, f.description, i.inventory_item_status_type_id
+order by pr.name, f.description, status;
+
+-- name: 3.6 — What should we reorder? (sellable stock at a facility vs that facility's current guideline)
+with stock as (
+  select i.product_id, coalesce(i.facility_id, c.facility_id) as facility_id,
+         sum(case i.inventory_item_kind when 'SERIALIZED' then 1 else i.quantity_on_hand end) as on_hand
+  from inventory_item i
+  left join container c on c.container_id = i.container_id
+  where i.inventory_item_status_type_id = 'GOOD'
+  group by i.product_id, coalesce(i.facility_id, c.facility_id)
+)
+select pr.name as good, f.description as facility, coalesce(s.on_hand, 0) as on_hand,
+       rg.reorder_level, rg.reorder_quantity,
+       coalesce(s.on_hand, 0) <= rg.reorder_level as reorder_now
+from reorder_guideline rg
+join product pr     on pr.product_id = rg.product_id
+join facility f     on f.facility_id = rg.facility_id
+left join stock s   on s.product_id = rg.product_id and s.facility_id = rg.facility_id
+where rg.from_date <= current_date
+  and (rg.thru_date is null or rg.thru_date > current_date)
+order by reorder_now desc, pr.name;
+
+-- name: 3.6 — Stock from expired lots
+select pr.name as good, l.lot_id, l.expiration_date, i.quantity_on_hand
+from inventory_item i
+join lot l      on l.lot_id = i.lot_id
+join product pr on pr.product_id = i.product_id
+where l.expiration_date <= current_date;
+
+-- name: 3.6 — Variances from the last physical count, net per item
+select pr.name as good, v.physical_inventory_date, sum(v.quantity) as net_adjustment,
+       string_agg(v.reason_id, ', ' order by v.reason_id) as reasons
+from inventory_item_variance v
+join inventory_item i on i.inventory_item_id = v.inventory_item_id
+join product pr       on pr.product_id = i.product_id
+group by pr.name, v.inventory_item_id, v.physical_inventory_date
+order by v.physical_inventory_date, pr.name;
+
+-- name: 3.6 — Data-quality check: kind vs serial_num / quantity_on_hand (should be empty)
+select inventory_item_id, inventory_item_kind, serial_num, quantity_on_hand
+from inventory_item
+where (inventory_item_kind = 'SERIALIZED'     and (serial_num is null or quantity_on_hand is not null))
+   or (inventory_item_kind = 'NON_SERIALIZED' and (quantity_on_hand is null or serial_num is not null));
+
+-- name: 3.6 — Data-quality check: one serial number on two items of the same good (should be empty)
+select pr.name as good, i.serial_num, string_agg(i.inventory_item_id::text, ', ') as items
+from inventory_item i
+join product pr on pr.product_id = i.product_id
+where i.serial_num is not null
+group by pr.name, i.product_id, i.serial_num
+having count(*) > 1;
+
+-- name: 3.6 — Data-quality check: lots that expire before they were created (should be empty)
+select lot_id, creation_date, expiration_date
+from lot
+where expiration_date < creation_date;
+
+-- name: 3.6 — Data-quality check: two variances for one item on the same count date (should be empty)
+select inventory_item_id, physical_inventory_date, count(*) as variances
+from inventory_item_variance
+group by inventory_item_id, physical_inventory_date
+having count(*) > 1;

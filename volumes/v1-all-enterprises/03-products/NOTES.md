@@ -323,7 +323,7 @@ ORGANIZATION                       (from Ch 2)
   playing roles; the figure links straight to ORGANIZATION, so the role is a data-quality check.
 
 ### Fig 3.6 — Inventory item storage
-**Transcription** (confirmed against the book: ☐)
+**Transcription** (confirmed against the book: ☑ 2026-10-11)
 
 ```
 INVENTORY ITEM
@@ -375,10 +375,28 @@ FACILITY                         (from Ch 2)
   subtypes shown: WAREHOUSE, PLANT
 ```
 
-**Check against the book (unclear in the photos):**
-- ✓ Exclusive arc across "located at" (FACILITY) and "located within" (CONTAINER).
-- Which lines are dashed (optional)? Especially → LOT, → INVENTORY ITEM STATUS TYPE, → REASON.
-- ✓ Status type has no subtypes; FACILITY shows only WAREHOUSE and PLANT here.
+**Checked against the book (2026-10-11):**
+- Exclusive arc across "located at" (FACILITY) and "located within" (CONTAINER).
+- INVENTORY ITEM → LOT is optional; → status type and VARIANCE → REASON are mandatory on the
+  many side.
+- Status type has no subtypes; FACILITY shows only WAREHOUSE and PLANT here.
+
+**Discussion**
+- **Product vs inventory item** is the type/instance split again: GOOD is the catalogue
+  description, INVENTORY ITEM is physical stock of it. The naive model keeps
+  `quantity_on_hand` on PRODUCT, which can't say *where* the stock is, what *state* it's in,
+  or *which* lot it came from.
+- **Serialized vs non-serialized:** a copier is tracked one unit at a time (a serial number,
+  quantity implicitly 1); reams of paper are tracked as a quantity in a place. Same supertype,
+  different way of counting.
+- **The exclusive arc** says an item sits either directly in a facility or in a container, and
+  a container is itself in a facility. So "stock at Chatham" must look through containers.
+- **Status** splits stock you can sell from stock you can't (damaged, being repaired, scrap):
+  the same good in the same place can be several inventory items.
+- **LOT** groups items made or received together, for expiry and recalls ("which shelves hold
+  lot 2?").
+- **INVENTORY ITEM VARIANCE** records what a physical count found, with a reason. It's the audit
+  trail behind a change in quantity on hand.
 
 ## Design decisions (book → SQL)
 
@@ -481,6 +499,21 @@ FACILITY                         (from Ch 2)
 - **Seed organizations start at party 40** to stay clear of Ch 2's ids. Preference and rating
   values are ours; the book only shows the entities.
 
+### Fig 3.6
+- **Inventory item subtypes become `inventory_item_kind`** (SERIALIZED / NON_SERIALIZED) plus
+  nullable `serial_num` and `quantity_on_hand`, as with DIMENSION's number in Fig 3.4. A
+  data-quality query checks the combination (seed: scrap diskettes with a serial number).
+- **The arc is a check constraint** (`num_nonnulls(facility_id, container_id) = 1`): a single-row
+  rule, like `thru_date > from_date`, so no bad seed row is possible.
+- **`inventory_item.product_id` references `good`**: services can't be stocked.
+- **Serial numbers unique per good** is a data-quality query (seed: copier OJ900-0001 twice).
+- **Addition: `container.description`** ("Bin A-12"); the book shows only the id.
+- **Variance:** `quantity` is the signed adjustment. Surrogate key instead of (item, count
+  date); duplicates are a data-quality query. Whether `quantity_on_hand` already includes the
+  variances is left to the application (see Open questions).
+- **The reorder query compares only facility-based guidelines** with stock at that facility.
+  Region- or organization-based guidelines would need stock rolled up by geography or owner.
+
 ## When NOT to use this
 
 **Category classification with a rollup network (3.2):**
@@ -512,7 +545,13 @@ FACILITY                         (from Ch 2)
   columns on product are fine. Reach for SUPPLIER PRODUCT when purchasing compares sources or
   switches suppliers, and for scoped guidelines once stock sits in more than one place.
 
+**Inventory items (3.6):**
+- A shop with one stockroom can keep a quantity per product. Inventory items pay off with
+  several locations, stock in different states, serial-number tracking or lot recalls.
+
 ## Open questions
+- **Fig 3.6:** is `quantity_on_hand` updated when a variance is recorded, or is the true
+  quantity "on hand + variances"? The figure doesn't say.
 - **Figs 3.2–3.4 were built before they were confirmed** (at the user's request, 2026-10-10).
   The "Check against the book" items under each figure are still open; the SQL follows our
   reading.

@@ -320,3 +320,58 @@ insert into reorder_guideline (product_id, geographic_boundary_id, facility_id, 
   (6, null, 5,    null, '2019-01-01', null,         1,    1),     -- keep at least one copier in stock
   (1, null, 5,    null, '2024-01-01', null,         300,  80),    -- DATA ERROR: overlaps the first Chatham paper rule (caught by a query)
   (2, null, null, 16,   '2022-01-01', null,         10,   5);     -- DATA ERROR: ACME is a customer, not an internal organization (caught by a query)
+
+-- ============================================================
+-- Fig 3.6 — Inventory items
+-- ============================================================
+-- Ch 2 facilities: 5 Chatham warehouse, 8 Old Springfield warehouse.
+insert into inventory_item_status_type (inventory_item_status_type_id, description) values
+  ('GOOD',             'Good, sellable'),
+  ('BEING_REPAIRED',   'Being repaired'),
+  ('SLIGHTLY_DAMAGED', 'Slightly damaged: sell at a discount'),
+  ('DEFECTIVE',        'Defective'),
+  ('SCRAP',            'Scrap');
+
+insert into lot (lot_id, creation_date, quantity, expiration_date) values
+  (1, '2026-06-01', 300, null),           -- a paper run from the mill
+  (2, '2025-01-15', 50,  '2026-03-01'),   -- pens: the ink expires (lot already expired)
+  (3, '2026-09-01', 20,  '2026-08-01');   -- DATA ERROR: expires before it was created (caught by a query)
+
+select setval(pg_get_serial_sequence('lot', 'lot_id'), (select max(lot_id) from lot));
+
+insert into container_type (container_type_id, description) values
+  ('BIN',   'Bin'),
+  ('SHELF', 'Shelf'),
+  ('CAGE',  'Locked cage');
+
+insert into container (container_id, container_type_id, facility_id, description) values
+  (1, 'BIN',   5, 'Bin A-12'),
+  (2, 'SHELF', 5, 'Shelf B-3'),
+  (3, 'CAGE',  8, 'High-value cage');
+
+select setval(pg_get_serial_sequence('container', 'container_id'), (select max(container_id) from container));
+
+insert into inventory_item (inventory_item_id, inventory_item_kind, product_id, inventory_item_status_type_id, lot_id, facility_id, container_id, serial_num, quantity_on_hand) values
+  (1,  'NON_SERIALIZED', 1, 'GOOD',             1,    5,    null, null,         30),   -- paper loose on the Chatham floor
+  (2,  'NON_SERIALIZED', 1, 'GOOD',             1,    null, 1,    null,         10),   -- more of the same lot in Bin A-12 (still Chatham)
+  (3,  'NON_SERIALIZED', 1, 'SLIGHTLY_DAMAGED', null, 8,    null, null,         5),    -- damaged reams at Old Springfield
+  (4,  'NON_SERIALIZED', 2, 'GOOD',             2,    null, 2,    null,         15),   -- pens from the expired lot
+  (5,  'SERIALIZED',     6, 'GOOD',             null, 5,    null, 'OJ900-0001', null),
+  (6,  'SERIALIZED',     6, 'BEING_REPAIRED',   null, null, 3,    'OJ900-0002', null),
+  (7,  'NON_SERIALIZED', 7, 'GOOD',             null, 8,    null, null,         3),
+  (8,  'SERIALIZED',     6, 'GOOD',             null, 8,    null, 'OJ900-0001', null), -- DATA ERROR: serial already used by item 5 (caught by a query)
+  (9,  'NON_SERIALIZED', 3, 'SCRAP',            null, 8,    null, 'DSK-77',     40);   -- DATA ERROR: a serial number on non-serialized stock (caught by a query)
+
+select setval(pg_get_serial_sequence('inventory_item', 'inventory_item_id'), (select max(inventory_item_id) from inventory_item));
+
+insert into reason (reason_id, description) values
+  ('THEFT',    'Theft'),
+  ('DAMAGE',   'Damaged in storage'),
+  ('MISCOUNT', 'Earlier count was wrong'),
+  ('FOUND',    'Found stock not on record');
+
+insert into inventory_item_variance (inventory_item_id, physical_inventory_date, quantity, reason_id, comment) values
+  (1, '2026-09-30', -3, 'DAMAGE',   'Water leak'),
+  (2, '2026-09-30',  2, 'FOUND',    'Two reams behind the bin'),
+  (7, '2026-09-30', -1, 'THEFT',    null),
+  (1, '2026-09-30', -1, 'MISCOUNT', 'DATA ERROR: a second variance for item 1 on the same count date (caught by a query)');

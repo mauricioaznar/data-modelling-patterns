@@ -52,4 +52,15 @@ erDiagram
   GEOGRAPHIC_BOUNDARY |o--o{ REORDER_GUIDELINE : "the basis for (Ch 2)"
   FACILITY            |o--o{ REORDER_GUIDELINE : "the basis for (Ch 2)"
   ORGANIZATION        |o--o{ REORDER_GUIDELINE : "the basis for (internal org)"
+
+  %% Fig 3.6 — Inventory items (facility XOR container: check constraint)
+  GOOD                       ||--o{ INVENTORY_ITEM          : "the generic description for"
+  INVENTORY_ITEM_STATUS_TYPE ||--o{ INVENTORY_ITEM          : "the state for"
+  LOT                        |o--o{ INVENTORY_ITEM          : "made up of"
+  FACILITY                   |o--o{ INVENTORY_ITEM          : "the location for"
+  CONTAINER                  |o--o{ INVENTORY_ITEM          : "the storage container for"
+  CONTAINER_TYPE             ||--o{ CONTAINER               : "the description of"
+  FACILITY                   ||--o{ CONTAINER               : "the location of"
+  INVENTORY_ITEM             ||--o{ INVENTORY_ITEM_VARIANCE : "adjusted thru"
+  REASON                     ||--o{ INVENTORY_ITEM_VARIANCE : "the explanation for"
 ```
