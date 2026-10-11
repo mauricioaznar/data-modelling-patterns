@@ -16,17 +16,28 @@ and any decisions made.
     measure and conversions.
 - Ch 3 `EXERCISES.md`: two submodels, comprehension tracker, 9 "to ponder" items as the exam
   pool, reinforce menu, and a practice scenario per submodel (bookshop-café, bicycle shop).
+- Ch 3 submodel 1 exam, Q1–Q3 (Remember, Understand, Apply): rollup 3; product,
+  classification, market interest, identification 2. Logged in `EXERCISES-log.md`.
+- Discussed in chat: a classification owned per department (owner party on the link, or
+  per-department category types); the user's production category → type → product tree vs
+  Silverston's link + rollup; feature applicability vs interaction, global interaction rules and
+  how to check them against the catalogue.
 
 **Decisions**
 - Figs 3.2–3.4 were built before they were confirmed, at the user's request. The questions for
   the book are listed under each figure and in NOTES "Open questions".
 - Surrogate `product_id`; the book's readable product codes are stored as SKU identifications.
 - `product.uom_id` added by `alter table` in the 3.4 section so the schema keeps book order.
+- No department-owned classification and no primary flag on the rollup for now (the book only
+  mentions the first in passing; the second would be our addition).
 
 **Next**
 - Check Figs 3.2–3.4 against the book; adjust the SQL if any reading was wrong.
 - Share the rest of Ch 3's figures (they may add a third submodel).
-- Ch 2 reinforce and scenarios still open; then Ch 3 submodel 1 exam.
+- Ch 2 reinforce and scenarios still open.
+- The user adds the missing Ch 3 pieces (figure checks, remaining figures) to complete the schema.
+- Ch 3 submodel 1: exam Q4–Q6 (Analyze, Evaluate, Create), then reinforce the 2s; the primary
+  flag on a temporary category came back in Q3.
 
 ## 2026-10-09
 
