@@ -317,3 +317,94 @@ join product_feature f  on f.product_feature_id  = d.product_feature_id
 join product_feature ff on ff.product_feature_id = d.factor_product_feature_id
 left join product pr    on pr.product_id = d.product_id
 where d.product_feature_interaction_type_id = 'DEPENDENCY';
+
+-- ============================================================
+-- Fig 3.5 — Suppliers and manufacturers
+-- ============================================================
+
+-- name: 3.5 — Where can we buy the bond paper today? (best preference first)
+select o.name as supplier, sp.preference_type_id as preference, sp.rating_type_id as rating,
+       sp.standard_lead_time as lead_days, sp.comment
+from supplier_product sp
+join organization o on o.party_id = sp.supplier_party_id
+where sp.product_id = 1
+  and sp.available_from_date <= current_date
+  and (sp.available_thru_date is null or sp.available_thru_date > current_date)
+order by case sp.preference_type_id when 'FIRST_CHOICE' then 1 when 'SECOND_CHOICE' then 2 when 'LAST_RESORT' then 3 else 4 end,
+         sp.standard_lead_time;
+
+-- name: 3.5 — Who makes each product, and how many current suppliers it has
+select pr.name as product, m.name as manufacturer,
+       count(sp.supplier_product_id) as current_suppliers
+from product pr
+left join organization m on m.party_id = pr.manufacturer_party_id
+left join supplier_product sp
+  on sp.product_id = pr.product_id
+ and sp.available_from_date <= current_date
+ and (sp.available_thru_date is null or sp.available_thru_date > current_date)
+group by pr.product_id, pr.name, m.name
+order by pr.product_id;
+
+-- name: 3.5 — Current reorder guidelines, with what each is based on
+select pr.name as good, f.description as facility, gb.name as geographic_boundary,
+       io.name as internal_organization, rg.reorder_level, rg.reorder_quantity, rg.from_date
+from reorder_guideline rg
+join product pr                   on pr.product_id = rg.product_id
+left join facility f              on f.facility_id = rg.facility_id
+left join geographic_boundary gb  on gb.geographic_boundary_id = rg.geographic_boundary_id
+left join organization io         on io.party_id = rg.internal_organization_party_id
+where rg.from_date <= current_date
+  and (rg.thru_date is null or rg.thru_date > current_date)
+order by pr.name, rg.from_date;
+
+-- name: 3.5 — Data-quality check: supplying a product without a current SUPPLIER role (should be empty)
+select o.name as organization, pr.name as product, sp.available_from_date
+from supplier_product sp
+join organization o on o.party_id = sp.supplier_party_id
+join product pr     on pr.product_id = sp.product_id
+where not exists (
+  select 1 from party_role r
+  where r.party_id = sp.supplier_party_id
+    and r.role_type_id = 'SUPPLIER'
+    and r.from_date <= current_date
+    and (r.thru_date is null or r.thru_date > current_date));
+
+-- name: 3.5 — Data-quality check: overlapping periods for the same product and supplier (should be empty)
+select pr.name as product, o.name as supplier,
+       a.available_from_date as a_from, a.available_thru_date as a_thru,
+       b.available_from_date as b_from, b.available_thru_date as b_thru
+from supplier_product a
+join supplier_product b
+  on b.product_id = a.product_id
+ and b.supplier_party_id = a.supplier_party_id
+ and b.supplier_product_id > a.supplier_product_id
+ and a.available_from_date < coalesce(b.available_thru_date, 'infinity')
+ and b.available_from_date < coalesce(a.available_thru_date, 'infinity')
+join product pr     on pr.product_id = a.product_id
+join organization o on o.party_id = a.supplier_party_id;
+
+-- name: 3.5 — Data-quality check: reorder guideline "internal organization" without that role (should be empty)
+select pr.name as good, o.name as organization
+from reorder_guideline rg
+join product pr     on pr.product_id = rg.product_id
+join organization o on o.party_id = rg.internal_organization_party_id
+where not exists (
+  select 1 from party_role r
+  where r.party_id = rg.internal_organization_party_id
+    and r.role_type_id = 'INTERNAL_ORGANIZATION'
+    and r.from_date <= current_date
+    and (r.thru_date is null or r.thru_date > current_date));
+
+-- name: 3.5 — Data-quality check: overlapping guidelines for the same good and basis (should be empty)
+select pr.name as good, a.facility_id, a.geographic_boundary_id, a.internal_organization_party_id,
+       a.from_date as a_from, b.from_date as b_from
+from reorder_guideline a
+join reorder_guideline b
+  on b.product_id = a.product_id
+ and b.reorder_guideline_id > a.reorder_guideline_id
+ and b.facility_id                    is not distinct from a.facility_id
+ and b.geographic_boundary_id         is not distinct from a.geographic_boundary_id
+ and b.internal_organization_party_id is not distinct from a.internal_organization_party_id
+ and a.from_date < coalesce(b.thru_date, 'infinity')
+ and b.from_date < coalesce(a.thru_date, 'infinity')
+join product pr on pr.product_id = a.product_id;

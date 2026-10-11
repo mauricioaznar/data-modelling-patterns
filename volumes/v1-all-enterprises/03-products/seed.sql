@@ -256,3 +256,67 @@ insert into product_feature_interaction (product_feature_interaction_type_id, pr
   ('DEPENDENCY',      18, 17, null),  -- scan-to-email needs a network card, on any product
   ('DEPENDENCY',      16, 15, 6),     -- DATA ERROR: contradicts the incompatibility above (caught by a query)
   ('INCOMPATIBILITY', 5,  1,  2);     -- DATA ERROR: "fine grade" is not a pen feature (caught by a query)
+
+-- ============================================================
+-- Fig 3.5 — Suppliers and manufacturers
+-- ============================================================
+-- New organizations for this chapter (ids from 40, clear of Ch 2's).
+-- Fantastic Supplies (18, SUPPLIER since 2001) and Northwind (4, internal)
+-- come from Ch 2.
+insert into party (party_id, party_kind) values
+  (40, 'ORGANIZATION'),   -- Johnson Paper Mills: makes the paper, and sells it to us directly
+  (41, 'ORGANIZATION'),   -- Goldstein Pen Co.: makes the pen
+  (42, 'ORGANIZATION');   -- Paperline Distributors: a wholesaler
+
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into organization (party_id, organization_type_id, name) values
+  (40, 'CORPORATION', 'Johnson Paper Mills'),
+  (41, 'CORPORATION', 'Goldstein Pen Co.'),
+  (42, 'CORPORATION', 'Paperline Distributors');
+
+-- Goldstein gets no SUPPLIER role on purpose (see the supplier_product rows).
+insert into party_role (party_id, role_type_id, from_date, thru_date) values
+  (40, 'SUPPLIER', '1995-01-01', null),
+  (42, 'SUPPLIER', '2010-01-01', null);
+
+update product set manufacturer_party_id = case product_id
+  when 1 then 40   -- Johnson paper
+  when 2 then 41   -- Goldstein pen
+  when 6 then 16   -- ACME Company makes the copier
+  end
+where product_id in (1, 2, 6);
+
+insert into preference_type (preference_type_id, description) values
+  ('FIRST_CHOICE',  'Order from this supplier first'),
+  ('SECOND_CHOICE', 'Use when the first choice can''t deliver'),
+  ('LAST_RESORT',   'Only in an emergency');
+
+insert into rating_type (rating_type_id, description) values
+  ('OUTSTANDING', 'Outstanding'),
+  ('GOOD',        'Good'),
+  ('FAIR',        'Fair'),
+  ('POOR',        'Poor');
+
+insert into supplier_product (product_id, supplier_party_id, available_from_date, available_thru_date, standard_lead_time, preference_type_id, rating_type_id, comment) values
+  -- the paper has three sources: the mill itself, a wholesaler, and one we dropped
+  (1, 40, '1995-01-01', null,         5,    'FIRST_CHOICE',  'OUTSTANDING', 'Straight from the mill'),
+  (1, 42, '2010-01-01', null,         2,    'SECOND_CHOICE', 'GOOD',        'Faster but dearer'),
+  (1, 18, '2001-04-05', '2020-01-01', 10,   'LAST_RESORT',   'POOR',        'Dropped after late deliveries'),
+  (2, 18, '2001-04-05', null,         7,    'FIRST_CHOICE',  'FAIR',        null),
+  (7, 42, '2015-01-01', null,         null, null,            null,          'Books: no preference or rating recorded'),
+  (8, 5,  '2019-01-01', null,         1,    'FIRST_CHOICE',  'GOOD',        'A service can have a supplier: Contoso subcontracts the maintenance'),
+  (2, 41, '2020-01-01', null,         14,   'SECOND_CHOICE', 'GOOD',        'DATA ERROR: Goldstein has no SUPPLIER role (caught by a query)'),
+  (1, 42, '2024-06-01', null,         3,    'SECOND_CHOICE', 'GOOD',        'DATA ERROR: overlaps the Paperline row above (caught by a query)');
+
+-- Reorder guidelines (goods only). Chatham warehouse is Ch 2 facility 5,
+-- Illinois is geographic boundary 10, Northwind is party 4.
+insert into reorder_guideline (product_id, geographic_boundary_id, facility_id, internal_organization_party_id, from_date, thru_date, reorder_quantity, reorder_level) values
+  (1, null, 5,    null, '2020-01-01', null,         200,  50),    -- paper at the Chatham warehouse
+  (1, 10,   null, null, '2020-01-01', null,         2000, 500),   -- paper across Illinois
+  (2, null, 5,    null, '2018-01-01', '2025-01-01', 50,   10),    -- pen at Chatham, old rule ...
+  (2, null, 5,    null, '2025-01-01', null,         100,  20),    -- ... replaced by a bigger one
+  (2, null, null, 4,    '2020-01-01', null,         500,  100),   -- pens for Northwind as a whole
+  (6, null, 5,    null, '2019-01-01', null,         1,    1),     -- keep at least one copier in stock
+  (1, null, 5,    null, '2024-01-01', null,         300,  80),    -- DATA ERROR: overlaps the first Chatham paper rule (caught by a query)
+  (2, null, null, 16,   '2022-01-01', null,         10,   5);     -- DATA ERROR: ACME is a customer, not an internal organization (caught by a query)

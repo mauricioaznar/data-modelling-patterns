@@ -41,4 +41,15 @@ erDiagram
   PRODUCT_FEATURE                    ||--o{ PRODUCT_FEATURE_INTERACTION   : "a factor in"
   PRODUCT                            |o--o{ PRODUCT_FEATURE_INTERACTION   : "context for"
   PRODUCT_FEATURE_INTERACTION_TYPE   ||--o{ PRODUCT_FEATURE_INTERACTION   : "describes"
+
+  %% Fig 3.5 — Suppliers and manufacturers
+  ORGANIZATION        |o--o{ PRODUCT           : "the producer of (Ch 2)"
+  PRODUCT             ||--o{ SUPPLIER_PRODUCT  : "supplied thru"
+  ORGANIZATION        ||--o{ SUPPLIER_PRODUCT  : "the supplier of"
+  PREFERENCE_TYPE     |o--o{ SUPPLIER_PRODUCT  : "used to describe"
+  RATING_TYPE         |o--o{ SUPPLIER_PRODUCT  : "the rating for"
+  GOOD                ||--o{ REORDER_GUIDELINE : "subject to"
+  GEOGRAPHIC_BOUNDARY |o--o{ REORDER_GUIDELINE : "the basis for (Ch 2)"
+  FACILITY            |o--o{ REORDER_GUIDELINE : "the basis for (Ch 2)"
+  ORGANIZATION        |o--o{ REORDER_GUIDELINE : "the basis for (internal org)"
 ```

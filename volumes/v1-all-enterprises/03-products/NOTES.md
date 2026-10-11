@@ -256,6 +256,130 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
   units by a factor. Its limit: conversions are per *unit pair*, not per product. "1 box = 10
   each" is true for diskettes and false for forms, and the model can't tell them apart.
 
+### Fig 3.5 — Suppliers and manufacturers of products
+**Transcription** (confirmed against the book: ☑ 2026-10-11)
+
+```
+REORDER GUIDELINE
+  # reorder_guideline_id
+  * from_date
+  o thru_date
+  o reorder_quantity
+  o reorder_level
+  -> GOOD                   (many "for" 1 good; good "subject to" many)
+  -> GEOGRAPHIC BOUNDARY    (many "based on" 1 boundary; boundary "the basis for" many)
+  -> FACILITY               (many "based on" 1 facility; facility "the basis for" many)
+  -> INTERNAL ORGANIZATION  (many "based on" 1 org; org "the basis for" many)
+
+SUPPLIER PRODUCT
+  # available_from_date
+  o available_thru_date
+  o standard_lead_time
+  o comment
+  -> PRODUCT          (many "a valid supplier for" 1 product; product "supplied thru" many;
+                       part of identifier)
+  -> ORGANIZATION     (many "supplied by" 1 org; org "the supplier of" many; part of identifier)
+  -> PREFERENCE TYPE  (many "further described by" 1 type; type "used to describe" many)
+  -> RATING TYPE      (many "rated by" 1 type; type "the rating for" many)
+
+PREFERENCE TYPE
+  # preference_type_id
+  * description
+
+RATING TYPE
+  # rating_type_id
+  * description
+
+PRODUCT
+  -> ORGANIZATION     (many products "manufactured by" 1 org; org "the producer of" many)
+
+GEOGRAPHIC BOUNDARY, FACILITY      (from Ch 2, Figs 2.8 and 2.11)
+INTERNAL ORGANIZATION              (a Ch 2 party role)
+ORGANIZATION                       (from Ch 2)
+```
+
+**Checked against the book (2026-10-11):**
+- REORDER GUIDELINE links to **GOOD**; no identifier mark on that line.
+- SUPPLIER PRODUCT and "manufactured by" both link to **PRODUCT**.
+- Optional on the many side: the three "based on" lines and SUPPLIER PRODUCT → PREFERENCE TYPE /
+  RATING TYPE. The rest are mandatory on the many side; the "one" side is optional throughout.
+
+**Discussion**
+- **The naive model** puts `supplier_id`, `lead_time` and `reorder_level` on PRODUCT. That
+  allows one supplier per product, no history of who supplied it when, and one reorder level
+  for the whole company, when the main warehouse and a small branch need very different ones.
+- **Manufacturer vs supplier.** Who *makes* a product is a single fact about the product (a
+  column). Who can *sell it to us* is a many-to-many with dates and terms (SUPPLIER PRODUCT).
+  The same organization can be both (Johnson makes the paper and sells it directly).
+- **SUPPLIER PRODUCT is the supplier's catalogue entry for our product:** lead time, our
+  preference (first choice, backup) and our rating of them. Preference and rating are lookups
+  so purchasing can rank sources without free text. Price isn't here; pricing comes later.
+- **A service can have a supplier** (subcontracted maintenance), which is why SUPPLIER PRODUCT
+  links to PRODUCT, while REORDER GUIDELINE links to GOOD: only things you stock get reordered.
+- **REORDER GUIDELINE is a rule stored as data,** scoped by where it applies: a facility, a
+  geographic boundary, an internal organization, any mix, or none (everywhere). It is dated, so
+  a guideline can be replaced without losing the old one.
+- **Parties come from Ch 2.** Supplier, manufacturer and internal organization are organizations
+  playing roles; the figure links straight to ORGANIZATION, so the role is a data-quality check.
+
+### Fig 3.6 — Inventory item storage
+**Transcription** (confirmed against the book: ☐)
+
+```
+INVENTORY ITEM
+  # inventory_item_id
+  -> GOOD                        (many "the physical occurrence of" 1 good;
+                                  good "the generic description for" many)
+  -> INVENTORY ITEM STATUS TYPE  (many "in the state of" 1 status; status "the state for" many)
+  -> LOT                         (many "part of" 1 lot; lot "made up of" many)
+  -> FACILITY                    (many "located at" 1 facility; facility "the location for" many)
+  -> CONTAINER                   (many "located within" 1 container;
+                                  container "the storage container for" many)
+  (exclusive arc across FACILITY and CONTAINER: one or the other)
+  subtypes:
+    SERIALIZED INVENTORY ITEM
+      * serial_num
+    NON SERIALIZED INVENTORY ITEM
+      * quantity_on_hand
+
+INVENTORY ITEM VARIANCE
+  # physical_inventory_date
+  * quantity
+  o comment
+  -> INVENTORY ITEM  (many "an adjustment for" 1 item; item "adjusted thru" many; part of identifier)
+  -> REASON          (many "explained with" 1 reason; reason "the explanation for" many)
+
+REASON
+  # reason_id
+  * description
+
+INVENTORY ITEM STATUS TYPE
+  (# id, * description; e.g. good, being repaired, slightly damaged, defective, scrap)
+
+LOT
+  # lot_id
+  * creation_date
+  * quantity
+  o expiration_date
+
+CONTAINER
+  # container_id
+  -> CONTAINER TYPE  (many "described by" 1 type; type "the description of" many)
+  -> FACILITY        (many "located at" 1 facility; facility "the location of" many)
+
+CONTAINER TYPE
+  # container_type_id
+  * description
+
+FACILITY                         (from Ch 2)
+  subtypes shown: WAREHOUSE, PLANT
+```
+
+**Check against the book (unclear in the photos):**
+- ✓ Exclusive arc across "located at" (FACILITY) and "located within" (CONTAINER).
+- Which lines are dashed (optional)? Especially → LOT, → INVENTORY ITEM STATUS TYPE, → REASON.
+- ✓ Status type has no subtypes; FACILITY shows only WAREHOUSE and PLANT here.
+
 ## Design decisions (book → SQL)
 
 ### Fig 3.1
@@ -339,6 +463,24 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
   choose from; our reading is "one of the product's selectable features of the same feature
   type" (one colour). The configuration check doesn't test it yet.
 
+### Fig 3.5
+- **`product.manufacturer_party_id`** (FK to `organization`), nullable, added by `alter table` in
+  the 3.5 section to keep book order.
+- **Surrogate `supplier_product_id`** instead of the book's (product, supplier, available from)
+  identifier. Overlapping periods for the same pair are a data-quality query (seed: Paperline
+  paper twice).
+- **`standard_lead_time` is whole days**; the book gives no unit.
+- **The figure links to ORGANIZATION, not to a role,** so FKs go to `organization`. Two
+  data-quality queries check the roles: a supplier needs a current SUPPLIER role (seed:
+  Goldstein), and a guideline's internal organization needs INTERNAL_ORGANIZATION (seed: ACME, a
+  customer).
+- **`reorder_guideline.product_id` references `good`** (the Fig 3.3 subtype table), so a service
+  can't get a guideline. The three bases are nullable and independent (no arc in the figure).
+  Overlapping guidelines for the same good and basis are a data-quality query (seed: two current
+  Chatham paper rules).
+- **Seed organizations start at party 40** to stay clear of Ch 2's ids. Preference and rating
+  values are ours; the book only shows the entities.
+
 ## When NOT to use this
 
 **Category classification with a rollup network (3.2):**
@@ -364,6 +506,11 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
 - If everything is sold "each", a UOM table is noise. Once quantities cross units (buy in
   boxes, sell in eaches, ship in kilograms), it's essential. Product-specific pack sizes then
   need more than a unit-pair conversion.
+
+**Supplier products and reorder guidelines (3.5):**
+- With a single supplier per product and one warehouse, `supplier_id` and `reorder_level`
+  columns on product are fine. Reach for SUPPLIER PRODUCT when purchasing compares sources or
+  switches suppliers, and for scoped guidelines once stock sits in more than one place.
 
 ## Open questions
 - **Figs 3.2–3.4 were built before they were confirmed** (at the user's request, 2026-10-10).
