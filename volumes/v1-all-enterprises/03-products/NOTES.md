@@ -54,7 +54,7 @@ service (a service). The sample ids are readable codes such as `PAP192` and `CNS
   feature, so each gets its own entity later in the chapter.
 
 ### Fig 3.2 — Product category
-**Transcription** (confirmed against the book: ☐)
+**Transcription** (confirmed against the book: ☑ 2026-10-11)
 
 ```
 PRODUCT CATEGORY CLASSIFICATION
@@ -90,11 +90,11 @@ PARTY TYPE              (from Ch 2, Fig 2.3)
   * description
 ```
 
-**Check against the book (unclear in the photo):**
-- PRODUCT CATEGORY ROLLUP shows **no from/thru dates**, unlike the other associative
-  entities in this figure. Is that right?
-- Which rollup relationship is the parent and which the child (I read "made up of" as the
-  parent side and "part of" as the child side)?
+**Checked against the book (2026-10-11):**
+- PRODUCT CATEGORY ROLLUP has **no from/thru dates**: confirmed.
+- "Made up of" is the parent side and "part of" the child side: confirmed.
+- The primary flag is an attribute of PRODUCT CATEGORY CLASSIFICATION; the book doesn't say
+  whether it means one per product or one per product per dimension.
 
 **Discussion**
 - **The naive model** puts a `category_id` column on PRODUCT. That breaks as soon as a
@@ -269,7 +269,7 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
   with an FK from `product_category`. Same move as Ch 2's attribute-less subtypes.
 - **Surrogate integer `product_category_id`**, not a text code: categories are business data
   that users add and rename, unlike the fixed `*_type` lookups.
-- **Rollup has no dates,** following the figure (flagged for checking). If the catalogue is
+- **Rollup has no dates,** following the figure (confirmed). If the catalogue is
   reorganised, the old structure is lost; add from/thru if category history matters.
 - **Parent/child columns:** `parent_product_category_id` ("made up of") and
   `child_product_category_id` ("part of"). A check stops a category being its own parent;
@@ -279,8 +279,9 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
   means X itself plus every category whose ancestor is X.
 - **Surrogate `product_category_classification_id`** instead of (product, category, from_date).
 - **One current primary per product is a data-quality query** (seed: the pen is primary in both
-  Writing instruments and Plastic). We read "primary" as one per product. It could be one per
-  product *per dimension*; see Open questions.
+  Writing instruments and Plastic). The book doesn't say one per what, so "one per product" is
+  our choice. One per product *per dimension* (or per owning department) is a valid
+  alternative; we discussed it on 2026-10-10 and kept the simpler rule.
 - **`market_interest.party_type_id` references Ch 2's `party_type`.** Nothing stops an interest
   pointing at a grouping type (INDUSTRY) rather than a value (IND_LOGISTICS); the query only
   matches exact types.
@@ -355,9 +356,6 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
 - **Figs 3.2–3.4 were built before they were confirmed** (at the user's request, 2026-10-10).
   The "Check against the book" items under each figure are still open; the SQL follows our
   reading.
-- **Fig 3.2:** is the primary flag one per product, or one per product per purpose or
-  dimension (one primary for catalogues, another for sales analysis)? The book's text after
-  the figure seems to discuss this; check it.
 - **Fig 3.4:** conversions are per unit pair, so a product-specific pack size ("a box of forms
   holds 50") has nowhere to live. Does a later figure (inventory, supplier products) solve
   this?
