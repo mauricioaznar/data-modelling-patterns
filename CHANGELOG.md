@@ -3,6 +3,25 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-11
+
+**Built**
+- Figs 3.2–3.4 confirmed against the book by the user.
+  - 3.3: GOOD IDENTIFICATION links to GOOD, so a `good` subtype table (sharing `product_id`)
+    now sits under `good_identification`; service codes removed; a data-quality query checks
+    `product_kind` against it (bad row: the maintenance plan).
+  - 3.4: the unit of measure is on DIMENSION only and optional; the data-quality query now
+    flags units on non-dimensions (bad row: hourly billing).
+
+**Decisions**
+- Primary category stays "one per product": the book doesn't say one per what.
+- SELECTABLE set read as "the product's selectable features of one feature type" (the book
+  doesn't define it).
+
+**Next**
+- Ch 3 submodel 1: exam Q4–Q6, then reinforce the 2s.
+- Share the rest of Ch 3's figures.
+
 ## 2026-10-10
 
 **Built**

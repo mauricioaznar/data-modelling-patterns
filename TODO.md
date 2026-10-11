@@ -8,11 +8,12 @@ Session-by-session history lives in [CHANGELOG.md](CHANGELOG.md).
 The machine currently has Node only; everything runs through PGlite. These tools are not
 blockers, but each one unlocks something:
 
-- [ ] **Python 3**: handy for scripted file edits and data generation, and needed by some tools
+- [x] **Python 3** (3.9.6 found 2026-10-11): handy for scripted file edits and data generation, and needed by some tools
 - [ ] **PostgreSQL 16+** (native, including `psql`): inspect the DB interactively and compare behaviour against PGlite
 - [ ] **Docker Desktop**: throwaway Postgres containers, and later the per-chapter app/deploy experiments
 - [ ] **A DB GUI** (DBeaver or pgAdmin): browse tables and relationships visually
 - [ ] **VS Code Mermaid preview extension**: render `diagram.md` files locally
+- [ ] **Node 18+ as the default**: the shell's nvm default is Node 16, which fails PGlite (`Blob is not defined`). Run with Node 20 (`nvm use 20`) or add an `.nvmrc`
 - [x] **Data explorer** (`npm run explore`, `tools/explorer/`): a disposable browser UI over an
   in-memory copy of every chapter. Browse rows, follow foreign keys both ways, run SQL, and
   run each chapter's saved queries (Queries tab; data-quality checks get a red/green badge).
@@ -30,16 +31,10 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [ ] Confirm PERSON NAME → PERSON NAME TYPE optionality against the book
   - [ ] Try enforcing non-overlapping from/thru periods (exclusion constraint with `btree_gist`; check PGlite support)
   - [ ] Refactor `role_type` into a ROLE TYPE supertype with a PARTY ROLE TYPE subtype once another role-type subtype appears (see NOTES, Fig 2.4)
-- [ ] Ch 03: Products *(Figs 3.1–3.4 built 2026-10-10; exercises ready; 3.2–3.4 still to check against the book)*
+- [ ] Ch 03: Products *(Figs 3.1–3.4 built 2026-10-10 and confirmed 2026-10-11; submodel 1 exam in progress)*
   - [ ] Submodel 1: product definition, categories, identification (Figs 3.1–3.3): exam (Q1–Q3 done 2026-10-10; Q4–Q6 next), reinforce, scenario, doc entry
   - [ ] Submodel 2: product features (Fig 3.4): exam, reinforce, scenario, doc entry
-  - [ ] **Next session:** confirm Figs 3.2–3.4 against the book, then fix the SQL if a reading was wrong:
-    - [ ] 3.2: does PRODUCT CATEGORY ROLLUP really have no from/thru dates? Which side is parent ("made up of") and which child ("part of")?
-    - [ ] 3.2: is the primary flag one per product, or one per product per purpose/dimension (catalogue vs sales analysis)?
-    - [ ] 3.3: does GOOD IDENTIFICATION link to PRODUCT (not GOOD)? Are product + identification type its whole identifier?
-    - [ ] 3.4: is PRODUCT → UNIT OF MEASURE mandatory or optional? PRODUCT FEATURE → UNIT OF MEASURE? PRODUCT FEATURE → PRODUCT FEATURE CATEGORY?
-    - [ ] 3.4: is PRODUCT FEATURE INTERACTION → PRODUCT optional, and does the interaction really have no dates?
-    - [ ] 3.4: check our reading of required / standard / optional / selectable against the book's text
+  - [x] Confirm Figs 3.2–3.4 against the book (2026-10-11): 3.3 now links to a `good` subtype table; 3.4's unit of measure is on DIMENSION only
   - [ ] Share the remaining Ch 3 figures (suppliers, inventory, pricing, costs, associations…)
 - [ ] Ch 04: Ordering Products
 - [ ] Ch 05: Shipments

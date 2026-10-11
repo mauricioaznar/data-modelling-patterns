@@ -204,7 +204,7 @@ insert into product_feature (product_feature_id, product_feature_type_id, produc
   (17, 'HARDWARE',        2,    'Network card',              null, null),
   (18, 'SOFTWARE',        2,    'Scan-to-email',             null, null),
   (19, 'DIMENSION',       2,    'Print speed',               35,   'PPM'),
-  (20, 'BILLING',         3,    'Hourly billing',            null, 'HR'),
+  (20, 'BILLING',         3,    'Hourly billing',            null, 'HR'),   -- DATA ERROR: only dimensions take a unit (caught by a query)
   (21, 'BILLING',         3,    'Fixed-fee billing',         null, null),
   (22, 'DIMENSION',       null, 'Height',                    null, 'IN'),   -- DATA ERROR: a dimension with no number (caught by a query)
   (23, 'COLOR',           4,    'Grey',                      30,   null);   -- DATA ERROR: a number on a colour (caught by a query)

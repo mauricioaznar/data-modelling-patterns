@@ -169,7 +169,7 @@ create table unit_of_measure_conversion (
 
 -- PRODUCT "measured using" UNIT OF MEASURE: the unit a product is sold and
 -- counted in (a ream, a box, an hour). Added to the 3.1 table here, where the
--- book introduces it. Optional (to check against the book).
+-- book introduces it. Optional, as in the book.
 alter table product
   add column uom_id text references unit_of_measure;
 
@@ -179,8 +179,9 @@ create table product_feature_category (
 );
 
 -- The PRODUCT FEATURE subtypes become rows. Only DIMENSION has an attribute
--- (number_specified); it lives on product_feature as a nullable column, as
--- federal_tax_id_num did on organization in Ch 2, with a data-quality query.
+-- (number_specified) and a unit of measure (optional); both live on
+-- product_feature as nullable columns, as federal_tax_id_num did on
+-- organization in Ch 2, with a data-quality query.
 create table product_feature_type (
   product_feature_type_id text primary key,
   description             text not null
@@ -192,7 +193,7 @@ create table product_feature (
   product_feature_category_id integer references product_feature_category,   -- "categorized by"
   description                 text    not null,
   number_specified            numeric,                                        -- DIMENSION only
-  uom_id                      text    references unit_of_measure              -- "measured using"
+  uom_id                      text    references unit_of_measure              -- DIMENSION only: "measured using"
 );
 
 -- REQUIRED / STANDARD / OPTIONAL / SELECTABLE: exclusive, no attributes,

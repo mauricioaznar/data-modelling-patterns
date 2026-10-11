@@ -162,19 +162,19 @@ IDENTIFICATION TYPE
   reasonable deviation; we follow the book.
 
 ### Fig 3.4 — Product feature
-**Transcription** (confirmed against the book: ☐)
+**Transcription** (confirmed against the book: ☑ 2026-10-11)
 
 ```
 PRODUCT FEATURE
   # product_feature_id
   * description
-  -> PRODUCT FEATURE CATEGORY  (many "categorized by" 1 category; category "the category for" many)
-  -> UNIT OF MEASURE           (optional: many "measured using" 1 UOM; UOM "used in" many)
+  -> PRODUCT FEATURE CATEGORY  (optional: many "categorized by" 1 category; category "the category for" many)
   subtypes:
     PRODUCT QUALITY
     COLOR
     DIMENSION
       * number_specified
+      -> UNIT OF MEASURE       (optional on both sides: many "measured using" 1 UOM; UOM "used in" many)
     SIZE
     BRAND
     SOFTWARE FEATURE
@@ -200,13 +200,13 @@ PRODUCT FEATURE APPLICABILITY
 PRODUCT FEATURE INTERACTION        (no attributes shown)
   -> PRODUCT FEATURE  ("of": the feature selected in the interaction)
   -> PRODUCT FEATURE  ("a factor in": the feature it is dependent on / incompatible with)
-  -> PRODUCT          ("applicable within the context of"; product "used to define" many)
+  -> PRODUCT          (optional: "applicable within the context of"; product "used to define" many)
   subtypes:
     FEATURE INTERACTION INCOMPATIBILITY
     FEATURE INTERACTION DEPENDENCY
 
 PRODUCT
-  -> UNIT OF MEASURE  (many products "measured using" 1 UOM; UOM "used in" many)
+  -> UNIT OF MEASURE  (optional: many products "measured using" 1 UOM; UOM "used in" many)
 
 UNIT OF MEASURE
   # uom_id
@@ -219,12 +219,15 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
   -> UNIT OF MEASURE  ("in" / "converted into")
 ```
 
-**Check against the book:**
-- Is PRODUCT → UNIT OF MEASURE mandatory or optional? And PRODUCT FEATURE → UNIT OF MEASURE?
-- Is PRODUCT FEATURE INTERACTION → PRODUCT optional (an interaction that holds for every
-  product) or mandatory?
-- Does PRODUCT FEATURE INTERACTION really have no from/thru dates?
-- The applicability subtypes' meanings below are our reading; check the book's text.
+**Checked against the book (2026-10-11):**
+- PRODUCT → UNIT OF MEASURE is optional.
+- The unit of measure hangs off the **DIMENSION** subtype, not PRODUCT FEATURE (our first
+  reading), and is optional on both sides.
+- PRODUCT FEATURE → PRODUCT FEATURE CATEGORY is optional.
+- PRODUCT FEATURE INTERACTION → PRODUCT is optional (null = a rule for every product), and the
+  interaction has no from/thru dates.
+- Our reading of required / standard / optional / selectable matches the text. For
+  selectable, the book only says the feature must be selected; it doesn't define the set.
 
 **Discussion**
 - **The naive model** gives PRODUCT columns like `color`, `size`, `brand`, or splits each
@@ -245,8 +248,9 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
 - **PRODUCT FEATURE INTERACTION is a rule stored as data,** like Ch 2's VALID CONTACT MECHANISM
   ROLE: "the stapler needs the duplex unit", "the big tray doesn't fit the desktop stand". The
   optional product context makes a rule local to one product or global to all.
-- **DIMENSION is the only subtype with an attribute** (number_specified) because it's the only
-  one that's a quantity. It needs a unit, hence UNIT OF MEASURE.
+- **DIMENSION is the only subtype with an attribute** (number_specified) and the only one
+  linked to UNIT OF MEASURE, because it's the only one that's a quantity. The unit is optional
+  in the figure.
 - **UNIT OF MEASURE does double duty:** the unit a product is counted in (a ream, a box, an
   hour) and the unit of a dimension (inches, pounds). UNIT OF MEASURE CONVERSION relates two
   units by a factor. Its limit: conversions are per *unit pair*, not per product. "1 box = 10
@@ -309,14 +313,16 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
 
 ### Fig 3.4
 - **`product.uom_id` is added with `alter table` in the 3.4 section**, so the schema still
-  reads in book order. Nullable until we confirm the cardinality (the maintenance plan has none).
+  reads in book order. Nullable, as in the book.
 - **Feature subtypes become `product_feature_type` rows.** DIMENSION's `number_specified` is a
-  nullable column on `product_feature`. A data-quality query checks that dimensions have a number
-  and a unit and other kinds don't (seed: a Height with no number, a Grey with a number). Same
+  nullable column on `product_feature`, and so is `uom_id` (the book links the unit to DIMENSION
+  only). A data-quality query checks that dimensions have a number and other kinds have neither
+  a number nor a unit; a dimension's unit is optional, as in the book (seed: a Height with no
+  number, a Grey with a number, hourly billing with a unit). Same
   approach as `federal_tax_id_num` in Ch 2.
 - **Applicability subtypes → `product_feature_applicability_type`; interaction subtypes →
   `product_feature_interaction_type`.** Exclusive and attribute-less, so rows.
-- **`product_feature.product_feature_category_id` is nullable** (unclear in the photo).
+- **`product_feature.product_feature_category_id` is nullable**, as in the book.
 - **Interaction columns:** `product_feature_id` ("of", the feature being chosen) and
   `factor_product_feature_id` ("a factor in"). For DEPENDENCY the direction matters (choosing
   the first needs the second); INCOMPATIBILITY is read in both directions. `product_id` null
@@ -329,8 +335,9 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
   the desktop stand). Plus a **configuration check** query: given chosen features, list the
   unmet dependencies and incompatible pairs, counting required and standard features as
   included.
-- **Not enforced:** a SELECTABLE set needs exactly one choice. The configuration check doesn't
-  test it yet.
+- **Not enforced:** a SELECTABLE feature must be chosen. The book doesn't define the set to
+  choose from; our reading is "one of the product's selectable features of the same feature
+  type" (one colour). The configuration check doesn't test it yet.
 
 ## When NOT to use this
 
@@ -365,5 +372,3 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
 - **Fig 3.4:** conversions are per unit pair, so a product-specific pack size ("a box of forms
   holds 50") has nowhere to live. Does a later figure (inventory, supplier products) solve
   this?
-- **Fig 3.4:** "exactly one choice from a SELECTABLE set": is the set all selectable features
-  of the same feature type on that product? Not checked yet.

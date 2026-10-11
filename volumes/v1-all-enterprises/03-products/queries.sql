@@ -280,11 +280,11 @@ where i.product_feature_interaction_type_id = 'INCOMPATIBILITY'
   and i.factor_product_feature_id in (select product_feature_id from effective)
 order by problem, feature;
 
--- name: 3.4 — Data-quality check: DIMENSION features without a number or unit, or other features with a number (should be empty)
+-- name: 3.4 — Data-quality check: DIMENSION features without a number, or other features with a number or unit (should be empty)
 select product_feature_id, product_feature_type_id, description, number_specified, uom_id
 from product_feature
-where (product_feature_type_id = 'DIMENSION' and (number_specified is null or uom_id is null))
-   or (product_feature_type_id <> 'DIMENSION' and number_specified is not null);
+where (product_feature_type_id = 'DIMENSION' and number_specified is null)
+   or (product_feature_type_id <> 'DIMENSION' and (number_specified is not null or uom_id is not null));
 
 -- name: 3.4 — Data-quality check: unit conversions that disagree with their reverse (should be empty)
 select a.from_uom_id, a.to_uom_id, a.conversion_factor, b.conversion_factor as reverse_factor,

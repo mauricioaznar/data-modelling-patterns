@@ -49,7 +49,8 @@ it's understood.
 | Effectivity (as-of, exclusive thru) | all | every from/thru; product discontinuation dates | 2 (Ch 2) | in scenarios | |
 
 ### Open threads
-- Figs 3.2–3.4 still need checking against the book (see NOTES, "Open questions").
+- Figs 3.2–3.4 checked against the book 2026-10-11: GOOD IDENTIFICATION links to GOOD (new
+  `good` table, services carry no codes), and the unit of measure hangs off DIMENSION only.
 
 ## 0. To ponder (collected while reading)
 Questions and ideas raised while the chapter was being built, tagged with their figure.

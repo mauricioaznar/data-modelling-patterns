@@ -30,7 +30,7 @@ erDiagram
   %% Fig 3.4 — Product feature
   PRODUCT_FEATURE_TYPE               ||--o{ PRODUCT_FEATURE               : "kind of"
   PRODUCT_FEATURE_CATEGORY           |o--o{ PRODUCT_FEATURE               : "the category for"
-  UNIT_OF_MEASURE                    |o--o{ PRODUCT_FEATURE               : "used in"
+  UNIT_OF_MEASURE                    |o--o{ PRODUCT_FEATURE               : "used in (DIMENSION only)"
   UNIT_OF_MEASURE                    |o--o{ PRODUCT                       : "used in"
   UNIT_OF_MEASURE                    ||--o{ UNIT_OF_MEASURE_CONVERSION    : "converted from"
   UNIT_OF_MEASURE                    ||--o{ UNIT_OF_MEASURE_CONVERSION    : "converted into"
