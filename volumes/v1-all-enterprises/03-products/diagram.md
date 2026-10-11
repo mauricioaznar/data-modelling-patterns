@@ -1,7 +1,8 @@
 # Vol 1, Chapter 3 — ER diagram
 
 The diagram shows what `schema.sql` implements, not the book's figures.
-GOOD and SERVICE are values of `product.product_kind`, not tables.
+GOOD and SERVICE are values of `product.product_kind`; GOOD also has a subtype table (`good`),
+added in Fig 3.3 because only goods carry identification codes.
 Every table has a single-column key and plain foreign keys.
 
 ```mermaid
@@ -22,7 +23,8 @@ erDiagram
   PARTY_TYPE              ||--o{ MARKET_INTEREST                 : "interested in (Ch 2)"
 
   %% Fig 3.3 — Product identification
-  PRODUCT                 ||--o{ GOOD_IDENTIFICATION             : "identified by"
+  PRODUCT                 ||--o| GOOD                            : "subtype (kind GOOD)"
+  GOOD                    ||--o{ GOOD_IDENTIFICATION             : "identified by"
   IDENTIFICATION_TYPE     ||--o{ GOOD_IDENTIFICATION             : "used to define"
 
   %% Fig 3.4 — Product feature

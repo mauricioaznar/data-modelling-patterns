@@ -116,13 +116,15 @@ PARTY TYPE              (from Ch 2, Fig 2.3)
   copiers". Joined with a party's current classifications, it produces a prospect list.
 
 ### Fig 3.3 — Product identification
-**Transcription** (confirmed against the book: ☐)
+**Transcription** (confirmed against the book: ☑ 2026-10-11)
 
 ```
 GOOD IDENTIFICATION                (no # attribute: identified by its relationships)
   * id_value
-  -> PRODUCT              (many "an identifier for" 1 product; product "identified by" many)
-  -> IDENTIFICATION TYPE  (many "defined as" 1 type; type "used to define" many)
+  -> GOOD                 (many "an identifier for" 1 good; good "identified by" many;
+                           part of identifier)
+  -> IDENTIFICATION TYPE  (many "defined as" 1 type; type "used to define" many;
+                           part of identifier)
   subtypes:
     MANUFACTURER ID NO
     SKU
@@ -136,10 +138,10 @@ IDENTIFICATION TYPE
   * description
 ```
 
-**Check against the book:**
-- The entity is called GOOD identification but the line goes to **PRODUCT**, not to GOOD
-  (and the text says a code can identify goods or services). Is that what the figure shows?
-- Are both relationships part of GOOD IDENTIFICATION's identifier (bar across the line)?
+**Checked against the book (2026-10-11):**
+- The line goes to **GOOD**, not PRODUCT (our first reading said PRODUCT): services carry no
+  codes in this model.
+- Good + identification type are the whole identifier: confirmed.
 
 **Discussion**
 - **The naive model** adds a column per code: `sku`, `upc`, `isbn`, `mfr_part_no`. Each new
@@ -154,9 +156,10 @@ IDENTIFICATION TYPE
   The more important real-world rule runs the other way: one code must not identify two
   products, or a scanner can't decide. Neither rule is a plain FK, so both are data-quality
   queries here.
-- **Why "good" identification on PRODUCT?** Most standard codes (UPC, ISBN) are for physical
-  goods, which explains the name. But a service can still have our own SKU (CNS109 is one), so
-  linking to PRODUCT is more flexible than the name suggests.
+- **Why only goods?** Standard codes (UPC, ISBN, manufacturer part numbers) exist for physical
+  things you scan, stock and ship. A service has none of those. If a business does give its
+  services catalogue codes (CNS109 in the book's table), linking to PRODUCT instead is a small,
+  reasonable deviation; we follow the book.
 
 ### Fig 3.4 — Product feature
 **Transcription** (confirmed against the book: ☐)
@@ -254,7 +257,8 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
 ### Fig 3.1
 - **GOOD / SERVICE become a `product_kind` discriminator** (check constraint), not subtype
   tables: exclusive, and no attributes of their own yet. If later figures give GOOD its own
-  attributes or relationships, add a `good` table sharing `product_id`, as with `person`.
+  attributes or relationships, add a `good` table sharing `product_id`, as with `person`
+  (done in Fig 3.3).
 - **Surrogate `product_id`.** The book's readable codes (PAP192…) are identifiers that can
   change or come in several flavours (SKU, UPC, ISBN), so they move to Fig 3.3's
   identification table. Until then they sit in `comment`.
@@ -289,8 +293,11 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
 ### Fig 3.3
 - **Identification subtypes become `identification_type` rows** (MANUFACTURER_ID, SKU, UPCA,
   UPCE, ISBN, OTHER), in the book's own IDENTIFICATION TYPE table.
-- **Table name kept as `good_identification`, FK to `product`**, following the figure (flagged
-  for checking). Services may carry codes; a query lists them (CNS109).
+- **New `good` subtype table** (`product_id` PK and FK to `product`), because GOOD now has a
+  relationship of its own; this is the escape hatch noted under Fig 3.1. `product_kind` stays
+  as the discriminator, and a data-quality query checks the two agree (seed: the maintenance
+  plan, a SERVICE, has a `good` row). `good_identification.product_id` references `good`, so
+  a service can't get a code at all. CNS109 stays in `product.comment`.
 - **Surrogate `good_identification_id`** instead of the book's (product, type) identifier.
   "One value per type per product" is a data-quality query (seed: toner has two SKUs).
 - **Addition: "one code, one product" data-quality query** (seed: the pen and the copier share a
@@ -298,8 +305,7 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
 - **Addition: `identification_type.value_pattern`**, a regex each code of that type must
   match (UPC-A 12 digits, UPC-E 8, ISBN 10 or 13). A rule stored as data, checked by a
   data-quality query (seed: an 11-digit UPC). Check digits aren't verified.
-- **The book's Table 3.1 codes (PAP192…) are stored as SKUs**, which removes them from
-  `product.comment`'s job.
+- **The book's Table 3.1 codes (PAP192…) are stored as SKUs** for the goods.
 
 ### Fig 3.4
 - **`product.uom_id` is added with `alter table` in the 3.4 section**, so the schema still

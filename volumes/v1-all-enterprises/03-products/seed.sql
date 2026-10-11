@@ -104,6 +104,11 @@ insert into identification_type (identification_type_id, description, value_patt
   ('ISBN',            'International Standard Book Number (10 or 13, no hyphens)', '^([0-9]{9}[0-9X]|97[89][0-9]{10})$'),
   ('OTHER',           'Other identifier',                          null);
 
+-- every GOOD product, plus one service by mistake
+insert into good (product_id) values
+  (1), (2), (3), (4), (6), (7), (9), (10),
+  (8);                                        -- DATA ERROR: the maintenance plan is a SERVICE (caught by a query)
+
 insert into good_identification (product_id, identification_type_id, id_value) values
   -- the book's Table 3.1 codes are really our SKUs
   (1,  'SKU',             'PAP192'),
@@ -115,13 +120,11 @@ insert into good_identification (product_id, identification_type_id, id_value) v
   (3,  'SKU',             'DSK401'),
   (3,  'UPCE',            '01234565'),
   (4,  'SKU',             'FRMCHFA1500'),
-  (5,  'SKU',             'CNS109'),          -- a service with a code: fine, since the link is to PRODUCT
   (6,  'SKU',             'CPY900'),
   (6,  'MANUFACTURER_ID', 'OJ-900'),
   (6,  'UPCA',            '012345678905'),    -- DATA ERROR: same UPC as the pen (caught by a query)
   (7,  'SKU',             'BKS001'),
   (7,  'ISBN',            '9780471380238'),
-  (8,  'SKU',             'SVC-CPY-MNT'),
   (9,  'SKU',             'TYP001'),
   (9,  'UPCA',            '07325200016'),     -- DATA ERROR: 11 digits (caught by a query)
   (10, 'SKU',             'TNR100'),

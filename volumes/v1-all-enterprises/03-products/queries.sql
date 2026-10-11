@@ -153,12 +153,12 @@ left join good_identification gi on gi.product_id = pr.product_id
 group by pr.product_id
 order by pr.product_id;
 
--- name: 3.3 — Services carrying a "good" identification (the figure allows it: see NOTES)
-select pr.product_id, pr.name, gi.identification_type_id, gi.id_value
-from good_identification gi
-join product pr on pr.product_id = gi.product_id
-where pr.product_kind = 'SERVICE'
-order by pr.product_id;
+-- name: 3.3 — Data-quality check: product_kind and the good subtype table disagree (should be empty)
+select pr.product_id, pr.product_kind, pr.name, (g.product_id is not null) as has_good_row
+from product pr
+left join good g on g.product_id = pr.product_id
+where (pr.product_kind = 'GOOD'    and g.product_id is null)
+   or (pr.product_kind = 'SERVICE' and g.product_id is not null);
 
 -- name: 3.3 — Data-quality check: one code identifying two products (should be empty)
 select gi.identification_type_id, gi.id_value, string_agg(pr.name, ' / ' order by pr.product_id) as products
