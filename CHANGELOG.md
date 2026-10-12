@@ -3,6 +3,24 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-12
+
+**Built**
+- Ch 2 submodel 3 (communication events and case) reinforce loop for case and work effort,
+  explained through the seed, then a fresh scenario (Lucía's leak). Logged in
+  `EXERCISES-log.md`; tracker evidence updated. Case stays at 2.
+- Ponder item 56 (the user's question): case status has no date; when to keep a status history.
+
+**Decisions**
+- Test for whether an event triggers a work effort: after it, does someone have work to
+  schedule and track (date, hours, budget)? The medium doesn't matter.
+- Ordering a part can be left out as a work effort (the order itself is Ch 4).
+
+**Next**
+- Finish the Lucía round: four-event sweep (which event triggers which work effort; 6 Mar
+  triggers two), case roles for Omar and Propiedades Sol. Then one fresh no-hint question for
+  case → 3, then the submodel 3 practice scenario.
+
 ## 2026-10-11
 
 **Built**

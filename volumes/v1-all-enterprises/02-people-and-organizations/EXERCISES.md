@@ -54,7 +54,7 @@ main concept; 4 comes from the practice scenario.
 | Concept | Fig | Tables | Level | Next | Evidence |
 |---|---|---|---|---|---|
 | Communication event + roles | 2.7, 2.12 | communication_event, communication_event_role_type, communication_event_role, communication_event_purpose_type, communication_event_purpose, valid_contact_mechanism_role | 3 | in scenario | 10-09 Q1 cold (vet call): caller/callee/attendee right; put a per-event row in valid_contact_mechanism_role, then fixed (Q2 right). Q7: role types right again (missed in Q6). Earlier 10-09 cold: all participants given one role type (read event role type as "type of event"); fixed after explanation, Tom/Maria/Lucy meeting right. Earlier: Item 51 with hints; 10-08 dental call: role + purpose rows right after the role pattern was explained; first put participants in party relationship; 10-08 Q4 (VIDEO): reuse-a-kind reasoning and valid-role inserts right, but kind name and event → type (not mechanism) needed showing; 10-08 own-words definition: what/who/how/why with role, role type, purpose, medium and the role rule (said "party role types" for the rule; context and status left out) |
-| Case and work effort | 2.13 | work_effort_type, work_effort, communication_event_work_effort, communication_case, communication_case_role_type, communication_case_role | 2 | reinforce | 10-09 Q5–Q7 (vet clinic, medication issue): grouping and case roles (stakeholders differ from event participants) right; said a case "allows follow-ups" (that's work effort, from events); Q6 left out the work efforts Ruiz decided on, Q7 the check-up exam; case end as status right in Q7 (Q6 still said thru date). Earlier 10-09: case 0 → 1 (claim scenario) |
+| Case and work effort | 2.13 | work_effort_type, work_effort, communication_event_work_effort, communication_case, communication_case_role_type, communication_case_role | 2 | reinforce | 10-12 Lucía leak: work efforts on events, not the case (fixed); missed a work effort and Omar as OWNER again; medium mistaken for trigger, then right. 10-09 Q5–Q7 (vet clinic, medication issue): grouping and case roles (stakeholders differ from event participants) right; said a case "allows follow-ups" (that's work effort, from events); Q6 left out the work efforts Ruiz decided on, Q7 the check-up exam; case end as status right in Q7 (Q6 still said thru date). Earlier 10-09: case 0 → 1 (claim scenario) |
 
 #### Cross-cutting (tested inside the submodels, no own loop)
 
@@ -262,6 +262,9 @@ plan. Pick one only if it catches your interest and the submodel's time budget a
 53. **[2.13]** CASE groups related events. Why not just link events to each other ("this e-mail
     follows up that call") instead of adding a CASE entity? What can a case hold that a chain
     of events can't?
+56. **[2.13, raised by the user 2026-10-12]** CASE has a status but no status date. Is "the date
+    of the last event" a safe stand-in for when the case closed? When would you add a dated
+    status history instead, and what would that table look like?
 
 ## Practice scenarios (one per submodel, on paper)
 Model the minimal entities and a few sample rows, without the book. Note what you borrowed from

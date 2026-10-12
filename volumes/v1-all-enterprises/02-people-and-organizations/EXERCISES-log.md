@@ -273,3 +273,23 @@ Misunderstandings and reinforce attempts, oldest first.
   pattern instead (shared key on `party_relationship`; salary needs a dated child; payment
   terms belong to an agreement later), then the considerations for supertypes and subtypes
   in general.
+- **2026-10-12, submodel 3 reinforce: case and work effort (Lucía's leak, building manager
+  Omar, FixFast Plumbing, owner Propiedades Sol).** Explained first through the seed (case 2
+  groups events 2, 3, 7; work effort 1 triggered by events 2 and 3). First attempt: four
+  events right; work efforts linked to the 6 Mar event, not the case (**the 10-09 "case allows
+  follow-ups" slip did not come back**); missed "check Pedro's flat" again; case status
+  "unresolved" though the story closes it; only Propiedades Sol as a case role; skipped the
+  visit question. Revision: found the inspection work effort; status completed; asked why
+  status has no date (ponder 56); Lucía as REPORTER ("issuer"); stated unprompted that a case
+  role type is the party's function for the case, not the kind of party; event → case FK on
+  `communication_event`, one case per event, right. Still missing: Omar as OWNER; Propiedades
+  Sol given "stakeholder" (every case role is one; WATCHER fits). Visit question: "both", but
+  reasoned from what the visit *triggered* rather than what it *is*; missed that the 4 Mar
+  call triggered the visit as work. Ordering the part: argued it isn't work (defensible; the
+  order document itself is Ch 4). **Case stays at 2** (right after review).
+  Follow-up: pushed back that the 4 Mar call was "only a call" (medium mistaken for the
+  trigger); after the "does someone now have work to schedule and track?" test, linked the
+  inspection to 4 Mar and placed the check of Pedro's flat on 6 Mar because Omar decided it
+  there (right). Summed up as "one work effort for 4 Mar, one for 6 Mar", dropping "fit part",
+  which 6 Mar also triggered. Open for next session: the four-event sweep, and (a) case role
+  types for Omar (OWNER) and Propiedades Sol (WATCHER).
