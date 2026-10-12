@@ -18,7 +18,7 @@ and any decisions made.
 
 **Next**
 - Finish the Lucía round: four-event sweep (which event triggers which work effort; 6 Mar
-  triggers two), case roles for Omar and Propiedades Sol. Then one fresh no-hint question for
+  triggers two), case roles (given on request: OWNER, WATCHER). Then one fresh no-hint question for
   case → 3, then the submodel 3 practice scenario.
 
 ## 2026-10-11

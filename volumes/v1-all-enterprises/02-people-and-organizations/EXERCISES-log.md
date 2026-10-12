@@ -292,4 +292,4 @@ Misunderstandings and reinforce attempts, oldest first.
   inspection to 4 Mar and placed the check of Pedro's flat on 6 Mar because Omar decided it
   there (right). Summed up as "one work effort for 4 Mar, one for 6 Mar", dropping "fit part",
   which 6 Mar also triggered. Open for next session: the four-event sweep, and (a) case role
-  types for Omar (OWNER) and Propiedades Sol (WATCHER).
+  types for Omar (OWNER) and Propiedades Sol (WATCHER): answer given on request, no score credit.
