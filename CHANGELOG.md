@@ -17,9 +17,8 @@ and any decisions made.
 - Ordering a part can be left out as a work effort (the order itself is Ch 4).
 
 **Next**
-- Finish the Lucía round: four-event sweep (which event triggers which work effort; 6 Mar
-  triggers two), case roles (given on request: OWNER, WATCHER). Then one fresh no-hint question for
-  case → 3, then the submodel 3 practice scenario.
+- Lucía round finished (four-event sweep and case roles given on request, no score credit).
+  Next: one fresh no-hint question for case → 3, then the submodel 3 practice scenario.
 
 ## 2026-10-11
 
