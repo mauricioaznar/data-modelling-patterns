@@ -27,11 +27,11 @@ it's understood.
 
 | Concept | Fig | Tables | Level | Next | Evidence |
 |---|---|---|---|---|---|
-| PRODUCT (what we offer) + good/service | 3.1 | product | 2 | reinforce | Q1: put GOOD under category; fixed after a prompt |
-| Category classification (dated, primary) | 3.2 | product_category_type, product_category, product_category_classification | 2 | reinforce | Q4: primary unprompted; Q5: missed dates + primary on the link even with a hint |
-| Category rollup (network, not tree) | 3.2 | product_category_rollup, product_category_ancestor (view) | 2 | reinforce | Q2: unprompted; Q5: read a single parent column as "no multiple descendants" |
+| PRODUCT (what we offer) + good/service | 3.1 | product | 2 | reinforce | Q1: put GOOD under category; fixed after a prompt. 10-12 soft ball: kinds right, invented a `service` table; why `good` exists (identification FK) after a hint |
+| Category classification (dated, primary) | 3.2 | product_category_type, product_category, product_category_classification | 2 | reinforce | 10-12 Q6: exclusive thru right; primary missed again, then put "on coffee" (it's the classification row). Q4: primary unprompted; Q5: missed dates + primary on the link even with a hint |
+| Category rollup (network, not tree) | 3.2 | product_category_rollup, product_category_ancestor (view) | 2 | reinforce | 10-12 Q6: classified under parents, rollup rows right after prompt; made a service a child category. Q2: unprompted; Q5: read a single parent column as "no multiple descendants" |
 | Market interest | 3.2 | market_interest (→ Ch 2 party_type) | 3 | neighbourhood | Q4: type-level vs a real sale, unprompted |
-| Identification codes as rows | 3.3 | identification_type, good_identification | 2 | reinforce | Q1: shape unprompted; Q3: invented dates; Q4: put the format rule on the code, not the type; names forgotten |
+| Identification codes as rows | 3.3 | identification_type, good_identification | 3 | neighbourhood | 10-12 Q6: EAN-13 + SKU rows typed by identification_type, names right, no dates, unprompted. Q1: shape unprompted; Q3: invented dates; Q4: put the format rule on the code, not the type; names forgotten |
 
 #### 2. Product features
 

@@ -293,3 +293,19 @@ Misunderstandings and reinforce attempts, oldest first.
   there (right). Summed up as "one work effort for 4 Mar, one for 6 Mar", dropping "fit part",
   which 6 Mar also triggered. Four-event sweep: answer given on request (no score credit). Open for next session: none from this round; (a) case role
   types for Omar (OWNER) and Propiedades Sol (WATCHER): answer given on request, no score credit.
+- **2026-10-12, contact mechanisms reinforce: Q1 (gym, Diego and Carla share an inbox; Diego
+  opts out of offers from 2026-11-01).** Explained first through seed rows 9/10, 1/3, 6, and
+  "purpose = usage, flag = the party's instruction". Answer: one EMAIL mechanism with its
+  `electronic_address` row, two links (Diego 2024-02-10, Carla 2025-05-01), one BILLING
+  purpose each, flag set true on Diego's link only, Carla untouched. Right unprompted
+  (**non-solicitation 2 → 3**, neighbourhood pending). Purpose from dates left out. Asked
+  whether a PROMOTIONAL purpose equals flag = false: no, marketing is never a purpose.
+  Follow-up (prove which newsletter broke the request): saw that an in-place update loses the
+  date, and split the link unprompted. Slips fixed after one guiding question each: new
+  row's flag first written false; new from = old thru + 1 day (gap on 11-01; exclusive
+  convention missed again); old BILLING purpose not ended (ended on 2026-11-01, new one on
+  the new link). **Effectivity stays 2.**
+  Q2 (neighbourhood of `party_contact_mechanism`): party, mechanism, purpose right; one step
+  away: mechanism type, subtypes, purpose type. Missed the optional `role_type_id` (guessed
+  "subtypes", then party_type); `contact_mechanism_link` and `facility_contact_mechanism`
+  named for them. **Non-solicitation closed at 3** (user agreed).

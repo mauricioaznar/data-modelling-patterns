@@ -81,3 +81,25 @@ product_category(product_id, category_id), good_identification(product_id → pr
   4. FK to product: didn't see it; expected product_id. Column name is right, the target is
      `good` (services carry no codes).
 Scores: classification 3 → 2, rollup 3 → 2, product 2 (lifecycle dates ✓), identification 2.
+
+### 2026-10-12: Submodel 1, soft ball (print shop: A4 ream + spiral binding)
+- Both in `product`, ream GOOD, binding SERVICE; UPC through `good_identification` with a
+  UPCA `identification_type` row ✓. Said binding lives in a `services` table (there is none:
+  SERVICE is only `product_kind`).
+- Why GOOD gets a table: first business reason only ("can't stamp a code on a service" ✓),
+  then "goods carry properties" (`good` has no columns). After the hint (what points to
+  `good`?): attributes **or relationships** earn a table; GOOD has the identification FK ✓.
+Score: product + good/service stays 2 (rule reached with a hint).
+
+### 2026-10-12: Submodel 1 exam, Q6 (Create: bookshop sells coffee beans + tasting workshop)
+- First pass: bag as product GOOD + `good` row ✓; EAN-13 and SKU as `good_identification`
+  rows typed by `identification_type` ✓ (names right, no dates); Gifts classification closed
+  with thru 2026-12-01 (exclusive, not deleted) ✓.
+- Missed: primary flag (reports would double count; **gap reappeared**); classified under
+  Coffee/Gifts instead of the leaves; workshop made a child category in
+  "party-classification-rollup"; added market_interest unasked ("sales" read as marketing).
+- Follow-up: "primary flag on coffee" (it's on the bag's Single origin classification row);
+  rollups Coffee → Single origin, Gifts → Under $20 ✓; workshop = SERVICE product classified
+  under Coffee ✓; market interest defined right (party type ↔ category) and dropped ✓.
+Scores: identification 2 → 3; classification, rollup, product stay 2; market interest 3.
+Exam (Q1–Q6) done; next: reinforce loop on the rows at 2.

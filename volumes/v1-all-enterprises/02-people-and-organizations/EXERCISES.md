@@ -42,7 +42,7 @@ main concept; 4 comes from the practice scenario.
 
 | Concept | Fig | Tables | Level | Next | Evidence |
 |---|---|---|---|---|---|
-| Non-solicitation on the link | 2.9 | party_contact_mechanism | 2 | reinforce | Right table in warm-up; reasons came via the switchboard scenario; 10-09 Q4 (Ana's mobile): opted out by ending a PROMOTIONAL purpose instead of the flag, and gave a purpose she never asked for |
+| Non-solicitation on the link | 2.9 | party_contact_mechanism | 3 | — | 10-12 Q1 (gym, shared inbox, Diego opts out): flag on Diego's link only, purpose kept separate, unprompted; neighbourhood answered with help (missed `role_type` on the link; guessed party_type). Earlier: right table in warm-up; reasons came via the switchboard scenario; 10-09 Q4 (Ana's mobile): opted out by ending a PROMOTIONAL purpose instead of the flag, and gave a purpose she never asked for |
 | Purpose (dated, within link) | 2.10 | contact_mechanism_purpose_type, party_contact_mechanism_purpose | 3 | — | 10-07: many purposes per link → own table; own dates because a purpose can end before its link but never outlive it (unprompted) |
 | Move vs typo; shared mechanism | 2.8, 2.10 | contact_mechanism, party_contact_mechanism | 3 | — | 10-07: Contoso/Fabrikam unprompted; in-place update "returns a false time frame" and loses the old number |
 | CONTACT MECHANISM + subtypes | 2.9, 2.10 | contact_mechanism_type, contact_mechanism, telecommunications_number, electronic_address, postal_address, contact_mechanism_link | 3 | — | 10-09 Q4: contact_mechanism of kind PHONE with the value in the subtype row, unprompted. Earlier: Fax as subtype; telecom number needed the "tele…" hint; 10-07: pager inserts (kind → subtype table holds the value, PCM links the party) after three angles |
@@ -62,12 +62,13 @@ main concept; 4 comes from the practice scenario.
 |---|---|---|---|---|---|
 | Type / fact / rule layers | all | cross-cutting (every `*_type`; valid_contact_mechanism_role) | 3 | in scenarios | 10-09 Q2: rule table set up once, the DQ query joins event medium + role type (Tom as ATTENDEE on PHONE). Earlier: Spotted unprompted, but "type enforces a rule" needed correcting; 10-08: said rule rows "enforce at creation time" (they only feed a DQ query) |
 | Subtype vs type row | 2.1, 2.9 | cross-cutting (organization_type, contact_mechanism_type) | 3 | — | Rule stated in item 44 after the employment/reseller hint; 10-07 reappeared, closed to 2 after much help; 10-08 cold, new domain (payment methods): sorted all nine names into three shapes, test "a grouping of types that share the same shape" (first wording still called the kinds "types") |
-| Effectivity (as-of, exclusive thru) | all | cross-cutting (every from_date / thru_date) | 2 | in scenarios | 10-07: Contoso rows right except inclusive thru (fixed after one guiding question); asked why exclusive; 10-09 Q4: "thru = 2026-06-01 minus a day" again |
+| Effectivity (as-of, exclusive thru) | all | cross-cutting (every from_date / thru_date) | 2 | in scenarios | 10-12 Q1: split the link to date the opt-out (unprompted), but new from = old thru + 1 and the old purpose left open, fixed after one question each; 10-07: Contoso rows right except inclusive thru (fixed after one guiding question); asked why exclusive; 10-09 Q4: "thru = 2026-06-01 minus a day" again |
 
 ### Open threads
 - **Subtype vs type row: closed 2026-10-08 (3).** Reopen if it slips in the capstone.
-- **Move vs typo and purpose (both 3):** neighbourhood question parked. What connects to
-  `contact_mechanism`, directly or through `party_contact_mechanism`, and what each connection means.
+- **Move vs typo and purpose (both 3):** neighbourhood answered 2026-10-12 with help (party,
+  mechanism, purpose unprompted; `role_type` on the link, `contact_mechanism_link` and
+  `facility_contact_mechanism` given). Closed.
 - **Item 27:** is "read the relationship type as a sentence, subject → object" Silverston's rule?
 - **Section 6 exercise 4:** where the rule "SHIPPING needs a postal address" should live.
 

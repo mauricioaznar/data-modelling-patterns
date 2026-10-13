@@ -25,14 +25,14 @@ Chapter titles are from memory; verify them against the book's table of contents
 - [ ] Ch 01: Introduction (read only; key conventions go into README notation)
 - [ ] Ch 02: People and Organizations *(figures 2.1–2.13 built; exam done; practice trimmed 2026-10-09 to three submodels, ~3 h each)*
   - [ ] Submodel 1: parties, roles and relationships (reinforce specific vs generic relationships, recall relationship naming + 2 rows, scenario, doc entry)
-  - [ ] Submodel 2: contact mechanisms (reinforce non-solicitation, exercise 3a, scenario, doc entry)
+  - [ ] Submodel 2: contact mechanisms (non-solicitation closed at 3 on 2026-10-12; next: exercise 3a (Q3 asked, unanswered), scenario, doc entry)
   - [ ] Postal addresses, facilities and geography (Figs 2.8, 2.11): parked 2026-10-09 by the user's choice; practise them with Shipments
   - [ ] Submodel 3: communication events and case (reinforce case + work effort, scenario, doc entry)
   - [ ] Confirm PERSON NAME → PERSON NAME TYPE optionality against the book
   - [ ] Try enforcing non-overlapping from/thru periods (exclusion constraint with `btree_gist`; check PGlite support)
   - [ ] Refactor `role_type` into a ROLE TYPE supertype with a PARTY ROLE TYPE subtype once another role-type subtype appears (see NOTES, Fig 2.4)
-- [ ] Ch 03: Products *(Figs 3.1–3.6 built and confirmed by 2026-10-11; submodel 1 exam in progress)*
-  - [ ] Submodel 1: product definition, categories, identification (Figs 3.1–3.3): exam (Q1–Q5 done by 2026-10-11; Q6 next), reinforce, scenario, doc entry
+- [ ] Ch 03: Products *(Figs 3.1–3.6 built and confirmed by 2026-10-11; submodel 1 exam done 2026-10-12)*
+  - [ ] Submodel 1: product definition, categories, identification (Figs 3.1–3.3): exam done 2026-10-12; next: reinforce (classification primary flag, rollup, good/service), scenario, doc entry
   - [ ] Submodel 2: product features (Fig 3.4): exam, reinforce, scenario, doc entry
   - [x] Confirm Figs 3.2–3.4 against the book (2026-10-11): 3.3 now links to a `good` subtype table; 3.4's unit of measure is on DIMENSION only
   - [ ] Submodel 3: suppliers and inventory (Figs 3.5–3.6, built 2026-10-11): exam, reinforce, scenario, doc entry

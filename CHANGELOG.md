@@ -10,13 +10,24 @@ and any decisions made.
   explained through the seed, then a fresh scenario (Lucía's leak). Logged in
   `EXERCISES-log.md`; tracker evidence updated. Case stays at 2.
 - Ponder item 56 (the user's question): case status has no date; when to keep a status history.
+- Ch 2 submodel 2 (contact mechanisms) reinforce: non-solicitation explained through the seed,
+  then a gym scenario (shared inbox, one member opts out); neighbourhood of
+  `party_contact_mechanism`. Non-solicitation 2 → 3; effectivity stays 2 (thru + 1 day again).
+  The parked neighbourhood thread for move vs typo and purpose is closed.
+- Ch 3 submodel 1: soft ball (good vs service) and exam Q6 (bookshop coffee). Identification
+  2 → 3; classification (primary flag missed a third time), rollup and good/service stay 2.
 
 **Decisions**
+- Dating a change to an undated attribute on a link (non-solicitation): end the link and open a
+  new one on the same day, carrying its purposes over. Marketing is never a purpose.
 - Test for whether an event triggers a work effort: after it, does someone have work to
   schedule and track (date, hours, budget)? The medium doesn't matter.
 - Ordering a part can be left out as a work effort (the order itself is Ch 4).
 
 **Next**
+- Ch 3 submodel 1 reinforce loop, starting with the primary flag on the classification row.
+- Ch 2 contact mechanisms: exercise 3a (asked, unanswered), then the scenario and doc entry;
+  then submodel 1 (specific vs generic relationships).
 - Lucía round finished (four-event sweep and case roles given on request, no score credit).
   Next: one fresh no-hint question for case → 3, then the submodel 3 practice scenario.
 
