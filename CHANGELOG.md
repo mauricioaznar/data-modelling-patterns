@@ -25,7 +25,8 @@ and any decisions made.
   the conversion (the same local/global trick as interaction).
 
 **Next**
-- Submodel 3 (suppliers and inventory): walk-through through the seed, then questions.
+- Submodel 3: Fig 3.5 walked through and asked (manufacturer vs supplier 2, reorder 1).
+  Next: Fig 3.6 (inventory) walk-through, then a fresh reorder question (scoped rows).
 - Submodel 2: the neighbourhood question for product_feature (asked, unanswered), OK to close.
 - Submodel 1: OK to close classification and market interest; reinforce rollup and good/service.
 

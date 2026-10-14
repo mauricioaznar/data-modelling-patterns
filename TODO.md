@@ -35,7 +35,7 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [ ] Submodel 1: product definition, categories, identification (Figs 3.1–3.3): exam done 2026-10-12; reinforce 2026-10-14: classification 2 → 3 and market interest neighbourhood done (both await the user's OK to close); paused by the user's choice to build mental models for submodels 2–3 first; still to do: rollup, good/service, identification neighbourhood, scenario, doc entry
   - [ ] Submodel 2: product features (Fig 3.4): walk-through and questions 2026-10-14, all three rows at 3; parked before the neighbourhood question (asked, unanswered); still to do: neighbourhood + OK to close, scenario, doc entry
   - [x] Confirm Figs 3.2–3.4 against the book (2026-10-11): 3.3 now links to a `good` subtype table; 3.4's unit of measure is on DIMENSION only
-  - [ ] Submodel 3: suppliers and inventory (Figs 3.5–3.6, built 2026-10-11): exam, reinforce, scenario, doc entry
+  - [ ] Submodel 3: suppliers and inventory (Figs 3.5–3.6, built 2026-10-11): Fig 3.5 walked through 2026-10-14; next: Fig 3.6 walk-through, fresh reorder question, exam, reinforce, scenario, doc entry
   - [ ] Share the remaining Ch 3 figures (pricing, costs, associations…)
 - [ ] Ch 04: Ordering Products
 - [ ] Ch 05: Shipments
