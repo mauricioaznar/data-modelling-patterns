@@ -120,3 +120,66 @@ Score: classification 2 → 3. Neighbourhood question next.
   to category ("a category is part of another") ✓; market interest links category to party
   type ✓ (verb loose: "taken into account by"; "is of interest to"). Left out dates in the
   sentences and the explicit contrast with classification.
+
+### 2026-10-14: Submodel 2, mental model walk-through + warm-up (red pen row)
+- Taught the three layers through the seed (feature catalogue, applicability, interaction;
+  UOM on the side), explorer allowed. The user asked to build mental models for submodels 2–3
+  before finishing submodel 1's reinforce.
+- Row as sentence: product, feature and dates ✓; thru read as inclusive ("to 2020-01-01");
+  left SELECTABLE out of the sentence.
+- After a concrete prompt (an order with no colour): SELECTABLE means we must ask, and exactly
+  one is picked ✓; with OPTIONAL the order goes through without a colour, which the user called
+  wrong for a pen, unprompted (a good Evaluate point: the type on the link carries business meaning).
+Score: feature + applicability 0 → 2 (needed the concrete prompt).
+
+### 2026-10-14: Submodel 2, feature interaction (stapler/duplex, scan-to-email)
+- Both rules read as sentences, direction and null product right ✓.
+- Why a row, not code: rules added without a developer ✓ (unprompted). Knew our version only
+  checks after the fact (data-quality query), and what the context-product check flags ✓.
+- Why the product context: first said only "it applies whenever selected". After a second
+  copier (BigOffice, duplex built into its finisher): an unscoped rule would wrongly flag a
+  valid BigOffice order; the dependency belongs to this copier model ✓.
+- Unprompted, challenged the global scan-to-email rule (a product may have the card built in)
+  and proposed a separate feature, "stapling finisher with duplex": a valid alternative (split
+  the feature when it's a different thing; scope the rule when it's the same feature).
+Score: feature interaction 0 → 3.
+
+### 2026-10-14: Submodel 2, built-in network card (LaserNet printer + global scan-to-email rule)
+- The user asked first: how to group two stapler features (feature category; one FK only, no
+  feature hierarchy) and whether "built in" is a feature (no: it's how the product has it;
+  feature vs product test; ponder 9a).
+- First pass: built-in card typed "standalone" (not a type); no applicability row for
+  scan-to-email; re-added a product interaction although the global rule covers it. Saw the
+  dependency's direction unprompted ✓.
+- Follow-up: REQUIRED over STANDARD, a guess ✓. Put the optional scan-to-email feature in
+  *interaction* instead of applicability, and thought interaction rules are checked against
+  applicability. **Gap:** mixed up the layers. Applicability is the menu (what the product
+  offers, and how); interaction constrains the *chosen* features of a configuration; the check
+  counts required and standard features as chosen. ("Included in applicability" was close: it
+  passes because the card is REQUIRED.)
+Scores: applicability stays 2; interaction 3 → 2 (the layer mix-up undercuts it).
+- Asked whether applicability and interaction "never talk": explained the order of the check
+  (applicability completes the chosen set, then rules run) and the context-product sanity query.
+- Fresh question (Commuter bike: fitted lights, M/L frame, mudguards, rear rack, "rack needs
+  mudguards on any bike"): all applicability rows and types right, layers kept apart ✓;
+  chosen set (lights + L + rack) and the report (mudguards missing) right ✓. Lights justified
+  as "come by default" (STANDARD's wording). Interaction written backwards (mudguards depend
+  on rack), fixed when asked to reread it; product context needed the two seed rules as a
+  reminder, then null ✓.
+Scores: applicability 2 → 3; interaction stays 2 (direction slip, scope after a reminder).
+
+### 2026-10-14: Submodel 2, units of measure (garden hose by the metre, 15 mm diameter)
+- Rows: product.uom → metre; a DIMENSION feature, number 15, uom → mm ✓ (unprompted).
+- Why two places: "product uom describes the measurement the business is interested in"
+  (close: it's the unit you count, sell and stock in) and an unsure idea that the metre hangs in
+  both places. Said they're not confident about UOM. Taught: product uom = "how many?" (changes
+  per order); a dimension = "what is it like?" (the same for every unit).
+Score: unit of measure 0 → 2.
+- Asked: do hose and cable have length and width dimensions; are 50 m and 100 m hoses two
+  products? Answered: width yes; length only if fixed per unit sold; two products vs a selectable
+  length (ponder 7), decided by the barcode (identification hangs on the good).
+- Reels ("1 reel = 25 m" and "1 reel = 100 m" in the conversion table): unit is how it's sold ✓;
+  a reel depends on the product, so only one conversion can be true; separate "hose reel" /
+  "cable reel" units would work ✓. Didn't say where else a reel's length could go. Called
+  dimensions "presentational only" (they also feed configuration and rules).
+Score: unit of measure 2 → 3.

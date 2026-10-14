@@ -37,9 +37,9 @@ it's understood.
 
 | Concept | Fig | Tables | Level | Next | Evidence |
 |---|---|---|---|---|---|
-| Feature + applicability | 3.4 | product_feature_type, product_feature_category, product_feature, product_feature_applicability_type, product_feature_applicability | 0 | exam | |
-| Feature interaction (rule as data) | 3.4 | product_feature_interaction_type, product_feature_interaction | 0 | exam | |
-| Unit of measure + conversion | 3.4 | unit_of_measure, unit_of_measure_conversion, product.uom_id | 0 | exam | |
+| Feature + applicability | 3.4 | product_feature_type, product_feature_category, product_feature, product_feature_applicability_type, product_feature_applicability | 3 | neighbourhood | 10-14 Commuter bike: all types and layers right, unprompted. Warm-up: red pen row as a sentence; SELECTABLE vs OPTIONAL after a concrete prompt (order with no colour), saw OPTIONAL is wrong for a pen |
+| Feature interaction (rule as data) | 3.4 | product_feature_interaction_type, product_feature_interaction | 2 | reinforce | 10-14 Commuter: layers right; rule backwards, fixed on reread; null product after a reminder. LaserNet: thought rules check against applicability, put an optional feature in interaction (layers mixed). Earlier 10-14: why a row ✓; product context after the BigOffice prompt; unprompted, challenged the global rule and proposed splitting the feature (valid trade-off) |
+| Unit of measure + conversion | 3.4 | unit_of_measure, unit_of_measure_conversion, product.uom_id | 3 | neighbourhood | 10-14 reels: conversion is per unit pair, not product, unprompted. Hose: both rows right; why two places only half there, unsure |
 
 #### 3. Suppliers and inventory
 
@@ -91,6 +91,8 @@ At most 5 per submodel. Answer in a sentence or three under each item.
    and what do you gain and lose compared with a rule in code or a check constraint?
 9. **[3.4]** "1 box = 10 each." Where does UNIT OF MEASURE CONVERSION break down, and how
    would you change the model to fix it?
+9a. **[3.4]** (the user's question) A duplex unit built into one copier and sold as an add-on
+    for another: when is it a feature, when a product of its own, and when both?
 
 ### Submodel 3: suppliers and inventory
 10. **[3.5]** Johnson Paper Mills makes the paper *and* sells it to us. Which two places in the
