@@ -206,3 +206,6 @@ Score: interaction 2 → 3.
   quantity 10), twice, even after level vs quantity were defined. **Gap:** didn't see two scoped
   rows (facility vs the chain) with the same column. Answer given on the third pass.
 Scores: manufacturer vs supplier 0 → 2; reorder guideline 0 → 1.
+- After the example rows, the user saw the cause themself: the quantity was never stated, both
+  numbers were levels; a misread. Score stays 1 until a fresh question. Pending (asked,
+  unanswered): helmets across Spain at 30 / buy 100, Madrid warehouse at 80.
