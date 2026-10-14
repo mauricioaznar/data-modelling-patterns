@@ -103,3 +103,20 @@ Score: product + good/service stays 2 (rule reached with a hint).
   under Coffee ✓; market interest defined right (party type ↔ category) and dropped ✓.
 Scores: identification 2 → 3; classification, rollup, product stay 2; market interest 3.
 Exam (Q1–Q6) done; next: reinforce loop on the rows at 2.
+
+### 2026-10-14: Submodel 1 reinforce, classification primary flag (garden centre: climbing rose)
+- Explained through the diskettes' three classification rows (primary moved in 2000, Plastic
+  never primary) and the pen's double-primary bad row.
+- Fresh question: rose in Shrubs + Pet-safe since 2024-04-01, reported under Shrubs; from
+  2027-03-01 reported under Flowering climbers. Rows: Shrubs closed thru 2027-03-01 (exclusive)
+  and still primary, Pet-safe open and not primary, new Flowering climbers row primary from
+  2027-03-01 ✓, all unprompted. Left out the "why" on the first pass.
+- Follow-up: no primary means the product falls out of the report; two primaries double count ✓.
+  The closed row keeps true so history isn't lost, and it no longer counts because it has ended ✓.
+Score: classification 2 → 3. Neighbourhood question next.
+- Neighbourhood: named product and category but couldn't say what a row means ("hard to
+  remember the verbs"). Taught the row-to-sentence habit (FK, verb, FK, a clause per column);
+  the rose sentence was given on request, no credit. Then, unprompted: rollup links category
+  to category ("a category is part of another") ✓; market interest links category to party
+  type ✓ (verb loose: "taken into account by"; "is of interest to"). Left out dates in the
+  sentences and the explicit contrast with classification.
