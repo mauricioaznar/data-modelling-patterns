@@ -183,3 +183,13 @@ Score: unit of measure 0 → 2.
   "cable reel" units would work ✓. Didn't say where else a reel's length could go. Called
   dimensions "presentational only" (they also feed configuration and rules).
 Score: unit of measure 2 → 3.
+- Asked for fixes 2 and 3 with rows: reel as a product with a Length dimension (no conversion
+  row needed), and an optional product on conversion (same local/global trick as interaction;
+  a deviation from the book).
+
+### 2026-10-14: Submodel 2, interaction again (laptops: Model X/Y, chargers, memory, graphics)
+- Products separate, chargers SELECTABLE on both; incompatibility 16 GB / Basic board scoped to
+  Model X; dependency graphics card → 90 W with no product ✓, all unprompted. Noted unprompted
+  that incompatibility is symmetric, so feature vs factor doesn't matter there ✓.
+- Report: flagged the Model X rule only; on "is that all?", found the global dependency too ✓.
+Score: interaction 2 → 3.

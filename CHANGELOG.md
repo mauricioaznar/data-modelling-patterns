@@ -3,6 +3,32 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-14
+
+**Built**
+- Ch 3 submodel 1 reinforce: classification primary flag through the diskettes' rows, then a
+  garden-centre rose (2 → 3). Neighbourhood answered; classification and market interest await
+  the user's OK to close. Taught the row-to-sentence habit for link tables.
+- Ch 3 submodel 2 (product features): mental-model walk-through through the seed, then
+  questions (red pen, stapler/duplex, LaserNet, Commuter bike, hose, reels, laptops).
+  Applicability 0 → 3, interaction 0 → 3 (dipped to 2 when applicability and interaction were
+  mixed up), units of measure 0 → 3. Ponder 9a (the user's question): built-in part as feature
+  or product.
+
+**Decisions**
+- Every tracker row of the three chapters reaches 4 before their mini app starts.
+- The user chose to build mental models for submodels 2–3 before finishing submodel 1's reinforce.
+- Configuration check order: applicability completes the chosen set (required + standard),
+  then interaction rules run on it. Rules are not checked against applicability.
+- Two products vs one with a selectable feature: separate barcodes mean separate goods.
+- Conversion per product: reel as a product with a Length dimension, or an optional product on
+  the conversion (the same local/global trick as interaction).
+
+**Next**
+- Submodel 3 (suppliers and inventory): walk-through through the seed, then questions.
+- Submodel 2: the neighbourhood question for product_feature (asked, unanswered), OK to close.
+- Submodel 1: OK to close classification and market interest; reinforce rollup and good/service.
+
 ## 2026-10-12
 
 **Built**

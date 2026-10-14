@@ -33,7 +33,7 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [ ] Refactor `role_type` into a ROLE TYPE supertype with a PARTY ROLE TYPE subtype once another role-type subtype appears (see NOTES, Fig 2.4)
 - [ ] Ch 03: Products *(Figs 3.1–3.6 built and confirmed by 2026-10-11; submodel 1 exam done 2026-10-12)*
   - [ ] Submodel 1: product definition, categories, identification (Figs 3.1–3.3): exam done 2026-10-12; reinforce 2026-10-14: classification 2 → 3 and market interest neighbourhood done (both await the user's OK to close); paused by the user's choice to build mental models for submodels 2–3 first; still to do: rollup, good/service, identification neighbourhood, scenario, doc entry
-  - [ ] Submodel 2: product features (Fig 3.4): exam, reinforce, scenario, doc entry
+  - [ ] Submodel 2: product features (Fig 3.4): walk-through and questions 2026-10-14, all three rows at 3; parked before the neighbourhood question (asked, unanswered); still to do: neighbourhood + OK to close, scenario, doc entry
   - [x] Confirm Figs 3.2–3.4 against the book (2026-10-11): 3.3 now links to a `good` subtype table; 3.4's unit of measure is on DIMENSION only
   - [ ] Submodel 3: suppliers and inventory (Figs 3.5–3.6, built 2026-10-11): exam, reinforce, scenario, doc entry
   - [ ] Share the remaining Ch 3 figures (pricing, costs, associations…)
@@ -53,6 +53,7 @@ Chapter titles are from memory; verify them against the book's table of contents
 Each uses a different JS stack and a different ops/testing practice. The suggestions below
 aren't final; agree on each one before starting.
 
+- **Gate (the user's decision, 2026-10-14):** before a mini app starts, every tracker row of its three chapters reaches 4 (applies cold, later session, no hints).
 - [ ] App 1: Vol 1 Ch 02–04 (Party, Product, Order): order entry. Suggested: Express + Knex, deploy to a DigitalOcean droplet
 - [ ] App 2: Vol 1 Ch 05–07 (Shipment, Work Effort, Invoice): fulfilment and billing. Suggested: Fastify + Drizzle, k6 stress testing
 - [ ] App 3: Vol 1 Ch 08–10 (Accounting, HR, DW): reporting. Suggested: Next.js + Prisma, Playwright E2E
