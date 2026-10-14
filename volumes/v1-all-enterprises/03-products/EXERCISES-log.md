@@ -193,3 +193,16 @@ Score: unit of measure 2 → 3.
   that incompatibility is symmetric, so feature vs factor doesn't matter there ✓.
 - Report: flagged the Model X rule only; on "is that all?", found the global dependency too ✓.
 Score: interaction 2 → 3.
+
+### 2026-10-14: Submodel 3, Fig 3.5 walk-through + bike shop (Velo, CycleTrade, Ana's Garage, reorder)
+- Taught Fig 3.5 through the seed (manufacturer column; paper's three supplier_product rows;
+  reorder guidelines scoped by facility / boundary / internal org). The user's explorer had run
+  since 10-10 and lacked Figs 3.5–3.6; a fresh one was opened.
+- Suppliers: two supplier_product rows with lead times and dates ✓; left out preference and
+  Velo as manufacturer, both placed right when asked ✓.
+- Tune-up: made Ana's Garage the *manufacturer*. After the Johnson maker/supplier prompt: a
+  supplier_product row for the service ✓.
+- Reorder: read "city centre reorders at 2, the rest of the chain at 10" as one row (level 2,
+  quantity 10), twice, even after level vs quantity were defined. **Gap:** didn't see two scoped
+  rows (facility vs the chain) with the same column. Answer given on the third pass.
+Scores: manufacturer vs supplier 0 → 2; reorder guideline 0 → 1.
