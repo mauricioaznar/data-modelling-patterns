@@ -209,3 +209,17 @@ Scores: manufacturer vs supplier 0 → 2; reorder guideline 0 → 1.
 - After the example rows, the user saw the cause themself: the quantity was never stated, both
   numbers were levels; a misread. Score stays 1 until a fresh question. Pending (asked,
   unanswered): helmets across Spain at 30 / buy 100, Madrid warehouse at 80.
+- Helmets (Spain at 30 / buy 100; Madrid warehouse at 80): two rows, boundary vs facility
+  scope, unprompted ✓; Spain's numbers ✓. Madrid given level 30 / quantity 80 (the "reorders
+  at" misread again); fixed to level 80 after the prompt, quantity 100 taken from Spain (the
+  model doesn't inherit between rows: an assumption to confirm, or leave it empty).
+Score: reorder guideline 1 → 2 (scoped rows unprompted; numbers needed a prompt).
+- Overlap (Madrid at 50; Spain and Madrid rows both current), ponder 12: found unprompted
+  that a boundary row can mean per-warehouse or the total for the area; argued per-warehouse
+  with the most specific row winning ✓ (good business reasoning). Asked three times whether
+  the *model* records that choice; answered with a precedence order (internal org → geo →
+  facility) and "it would behave globally", never "no, it lives in the purchasing code".
+  Given: nothing in the table says it; it's a convention in application code or docs. If both
+  rows apply, Madrid places two orders (over-ordering). Org and geography are different axes,
+  so even the precedence order is a design choice.
+Score: reorder guideline stays 2.

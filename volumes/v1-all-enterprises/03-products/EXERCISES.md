@@ -46,7 +46,7 @@ it's understood.
 | Concept | Fig | Tables | Level | Next | Evidence |
 |---|---|---|---|---|---|
 | Manufacturer vs supplier (supplier product) | 3.5 | product.manufacturer_party_id, supplier_product, preference_type, rating_type | 2 | exam | 10-14 bike shop: supplier rows ✓; Ana's Garage as manufacturer, fixed after the Johnson prompt |
-| Reorder guideline (scoped rule) | 3.5 | reorder_guideline | 1 | reinforce | 10-14 bike shop: read two scoped levels as one row (level + quantity) twice; given |
+| Reorder guideline (scoped rule) | 3.5 | reorder_guideline | 2 | reinforce | 10-14 helmets: two scoped rows unprompted; Madrid level misread, fixed on prompt. Bike shop: read two scoped levels as one row (level + quantity) twice; given |
 | Inventory item (good vs physical stock, subtypes, status) | 3.6 | inventory_item, inventory_item_status_type | 0 | exam | |
 | Where stock is (facility XOR container) + lot | 3.6 | container, container_type, lot | 0 | exam | |
 | Variance (count adjustments) | 3.6 | inventory_item_variance, reason | 0 | exam | |
@@ -102,6 +102,7 @@ At most 5 per submodel. Answer in a sentence or three under each item.
 12. **[3.5]** A reorder guideline for paper at the Chatham warehouse and another for paper
     across Illinois are both current, and Chatham is in Illinois. Which one applies, and does the
     model say?
+    *Answered 2026-10-14 (log: Submodel 3, helmets overlap).*
 13. **[3.6]** Why is `quantity_on_hand` on NON SERIALIZED INVENTORY ITEM and not on PRODUCT
     (or GOOD)? What can't you answer if it lives on the product?
 14. **[3.6]** A count finds 3 reams missing. Record it two ways: update `quantity_on_hand`, or
