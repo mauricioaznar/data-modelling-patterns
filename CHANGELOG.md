@@ -3,6 +3,23 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-15
+
+**Built**
+- Ch 3 submodel 3: a concept session on inventory balances instead of the recall questions
+  (the user's choice). Fig 3.6 NOTES now hold our working vocabulary (qoh, balance,
+  movements, variance), the two consistency checks, and two discussed alternatives (leave qoh
+  alone; two qoh columns).
+
+**Decisions**
+- Keep the book's variance convention: quantity_on_hand is updated, and the variance explains why.
+- The repo stays the book's: simplify only when first building tables from a figure; after
+  that, alternatives are discussed and noted, not adopted.
+
+**Next**
+- Recall 1 (K-17 lot recall) when the user says so, then recalls 2–3.
+- Ch 5: check receipt / issuance against inventory item; add the qoh = balance check.
+
 ## 2026-10-14
 
 **Built**

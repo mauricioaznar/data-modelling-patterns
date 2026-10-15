@@ -241,3 +241,19 @@ Score: reorder guideline stays 2.
   to 38 and the variance explains why. Mixing the two subtracts twice (61). Ponder 14 answered.
 Scores: inventory item 0 → 3; facility XOR container + lot 0 → 2 (lot not yet applied);
 variance 0 → 3.
+
+### 2026-10-15: Submodel 3, concept discussion (qoh, balance, variance)
+- Session-start recall 1 (K-17 recall, lot) asked; the user gave a model tour instead and
+  parked the question to discuss concepts first.
+- Tour gaps: claimed "our convention" leaves quantity_on_hand alone ✗ (notes update it; the
+  ledger version was only called valid); left out the serialized / non-serialized subtypes ✗;
+  lot now a batch ✓; reason as a lookup ✓.
+- Chose the book's convention (the repo stays the book's; simplify only when first building
+  tables). Proposed two qoh columns (reported + after variance); taught denormalization and
+  why it gains nothing here.
+- Ledger walk-through: daily carry-over framing ✗ (no daily figure; order matters; theft is
+  found at a count, not recorded when it happens); missing starting point ✓ (good catch);
+  "ledger = sum" ✗ twice (ledger = the rows, balance = their sum); qoh as "counted snapshot" ✗
+  (the system's belief); variance as "the count" ✗ (the gap the count finds). Final summary in
+  the user's words ✓. Vocabulary now in NOTES.
+No scores changed (concept discussion, not assessment). Recall 1 still open.

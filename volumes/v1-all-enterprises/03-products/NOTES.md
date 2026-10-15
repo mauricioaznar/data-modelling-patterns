@@ -398,6 +398,31 @@ FACILITY                         (from Ch 2)
 - **INVENTORY ITEM VARIANCE** records what a physical count found, with a reason. It's the audit
   trail behind a change in quantity on hand.
 
+**Working vocabulary (ours, not the book's; settled 2026-10-15)**
+- **qoh**: the stored `quantity_on_hand` (non-serialized items only). The system's current
+  belief, a cached running total: each movement applies its delta when it is written.
+  Not a count and not a snapshot. Old values are overwritten.
+- **balance**: the sum of every movement row since a known starting point (zero, or an
+  opening balance / checkpoint). Computed by a query, never stored.
+- **movements**: receipts (+), issuances (−) and variances (±). Only variances exist in Ch 3;
+  the book records receipts and issuances in Ch 5 (SHIPMENT RECEIPT, ITEM ISSUANCE; recalled,
+  to check there). Until then the balance can't be computed.
+- **variance**: the gap a physical count finds, `counted − qoh` at that moment, with a date and
+  a reason. The count itself isn't stored; a count that matches leaves no gap to record.
+- Two checks: **qoh = balance** must always hold (a mismatch is a bug: a row written without the
+  column update, or the other way round). **qoh vs counted** may differ; that difference is the
+  variance, and recording it brings them back in line.
+
+**Discussed alternatives (not adopted; the schema stays the book's)**
+- *Leave qoh alone and add variances on read* (the user's 2026-10-14 idea): the audit trail is
+  the same either way; every reader must add the variances, and mixing conventions subtracts
+  twice. A true ledger would drop the stored qoh and sum all movements. The book does both: the
+  movement rows are the ledger, and qoh is their cached balance.
+- *Two columns on the item, reported qoh and qoh after variance*: one is derivable from the other
+  plus the variances, so the two must be kept in agreement (update anomaly) for no gain. If
+  "expected vs counted at the count" matters, it belongs on the variance row (the count event),
+  not as a running column on the item.
+
 ## Design decisions (book → SQL)
 
 ### Fig 3.1
