@@ -223,3 +223,21 @@ Score: reorder guideline 1 → 2 (scoped rows unprompted; numbers needed a promp
   rows apply, Madrid places two orders (over-ordering). Org and geography are different axes,
   so even the precedence order is a design choice.
 Score: reorder guideline stays 2.
+
+### 2026-10-14: Submodel 3, Fig 3.6 walk-through + Valencia phone shop
+- Taught Fig 3.6 through the seed. The user's own summary: item + status + facility/container
+  ✓, serialized vs counted ✓; variance "adds or subtracts" (it records the difference and why);
+  lot as "where the product comes from" ✗ (a batch made or received together; cuts across
+  places). Corrected.
+- Phones: one serialized row per phone ✓, but only two phones (read the returned one as one of
+  the cabinet pair; question wording partly ambiguous). Cracked phone: "damaged", then proposed
+  a new "requires repair" status since it won't be sold ✓ (status is a lookup row; DEFECTIVE /
+  BEING_REPAIRED exist).
+- Cases: 25 at the facility, 40 in container R-2, variance −2 THEFT ✓. Sellable = 63, looking
+  through the container to the facility, unprompted ✓.
+- Asked whether R-2 should read 40 or 38: chose 40 (reported) + variance (correction) =
+  derived total, and noticed unprompted that the table doesn't say which convention holds, like
+  the overlapping scopes. Valid design (a ledger); our notes assume quantity_on_hand is updated
+  to 38 and the variance explains why. Mixing the two subtracts twice (61). Ponder 14 answered.
+Scores: inventory item 0 → 3; facility XOR container + lot 0 → 2 (lot not yet applied);
+variance 0 → 3.

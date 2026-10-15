@@ -47,9 +47,9 @@ it's understood.
 |---|---|---|---|---|---|
 | Manufacturer vs supplier (supplier product) | 3.5 | product.manufacturer_party_id, supplier_product, preference_type, rating_type | 2 | exam | 10-14 bike shop: supplier rows ✓; Ana's Garage as manufacturer, fixed after the Johnson prompt |
 | Reorder guideline (scoped rule) | 3.5 | reorder_guideline | 2 | reinforce | 10-14 helmets: two scoped rows unprompted; Madrid level misread, fixed on prompt. Bike shop: read two scoped levels as one row (level + quantity) twice; given |
-| Inventory item (good vs physical stock, subtypes, status) | 3.6 | inventory_item, inventory_item_status_type | 0 | exam | |
-| Where stock is (facility XOR container) + lot | 3.6 | container, container_type, lot | 0 | exam | |
-| Variance (count adjustments) | 3.6 | inventory_item_variance, reason | 0 | exam | |
+| Inventory item (good vs physical stock, subtypes, status) | 3.6 | inventory_item, inventory_item_status_type | 3 | neighbourhood | 10-14 Valencia: serialized vs counted, status choice with a new status, unprompted; phone count misread |
+| Where stock is (facility XOR container) + lot | 3.6 | container, container_type, lot | 2 | exam | 10-14 Valencia: looked through the container to the facility unprompted; lot first read as origin, not yet applied |
+| Variance (count adjustments) | 3.6 | inventory_item_variance, reason | 3 | neighbourhood | 10-14 Valencia: −2 THEFT row ✓; argued reported + correction = derived and saw the convention isn't in the table |
 
 #### Cross-cutting (carried over from Ch 2, tested inside the submodels)
 
@@ -107,6 +107,7 @@ At most 5 per submodel. Answer in a sentence or three under each item.
     (or GOOD)? What can't you answer if it lives on the product?
 14. **[3.6]** A count finds 3 reams missing. Record it two ways: update `quantity_on_hand`, or
     add a variance. What does each lose?
+    *Answered 2026-10-14 (log: Submodel 3, Valencia phone shop).*
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out one submodel in the transcription notation
