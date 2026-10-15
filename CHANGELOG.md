@@ -16,6 +16,9 @@ and any decisions made.
   or product.
 
 **Decisions**
+- CLAUDE.md: honesty over flattery, in a light mood (the user's request).
+- Overlapping scopes and quantity_on_hand vs variance: the table doesn't record the convention;
+  it has to be decided and written down.
 - Every tracker row of the three chapters reaches 4 before their mini app starts.
 - The user chose to build mental models for submodels 2–3 before finishing submodel 1's reinforce.
 - Configuration check order: applicability completes the chosen set (required + standard),
@@ -25,9 +28,9 @@ and any decisions made.
   the conversion (the same local/global trick as interaction).
 
 **Next**
-- Submodel 3: Fig 3.5 walked through and asked (manufacturer vs supplier 2, reorder 1).
-  Next: helmet reorder question (asked, unanswered), Fig 3.6 (inventory) walk-through, then a
-  fresh reorder question in a new setting.
+- Submodel 3: both figures walked through. Scores: manufacturer vs supplier 2, reorder 2,
+  inventory item 3, location + lot 2, variance 3. Next: the lot question (batch K-17 recall in
+  Valencia, asked, unanswered), then reorder and supplier to 3, then neighbourhoods.
 - Submodel 2: the neighbourhood question for product_feature (asked, unanswered), OK to close.
 - Submodel 1: OK to close classification and market interest; reinforce rollup and good/service.
 
