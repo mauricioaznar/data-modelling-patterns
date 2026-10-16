@@ -1,7 +1,8 @@
 // Turns docs/recall.md into an Anki import file (docs/recall-anki.txt).
 // docs/recall.md stays the source of truth: edit it, rerun, re-import.
-// Anki updates existing notes whose first field (the front) is unchanged,
-// so keep card titles and cues stable to keep review history.
+// Each note gets a stable id (Anki's GUID) from its volume, chapter and figures,
+// or its pattern number, so renumbering or rewording a card updates the note
+// and keeps its review history instead of adding a duplicate.
 import { readFileSync, writeFileSync } from 'node:fs';
 
 // Windows checkouts (core.autocrlf) have CRLF; the regexes below expect LF.
@@ -40,11 +41,15 @@ for (const block of src.split(/\n(?=### Card )/).slice(1)) {
     .split(/\n(?=- )/)
     .map((item) => html(item.replace(/^- /, '').replace(/\s*\n\s*/g, ' ')))
     .join('<br><br>');
-  const chapter = title.match(/Ch (\d+)/)[1].padStart(2, '0');
+  const [, volume, ch] = title.match(/V(\d+) Ch (\d+)/);
+  const chapter = ch.padStart(2, '0');
+  const figs = title.match(/\(Figs? ([^)]+)\)/)[1].replace(/–/g, '-').replace(/,\s*/g, '_');
   rows.push([
     `${html(title)}<br><br>${html(cue)}`,
     `<b>Hook:</b> ${html(hook)}<br><b>Mantra:</b> ${html(mantra)}<hr>${keyHtml}`,
-    `submodel ch${chapter}`,
+    `v${volume}::ch${chapter}`,
+    'Data Models::Submodels',
+    `dm-v${volume}-ch${chapter}-${figs}`,
   ]);
 }
 
@@ -54,6 +59,8 @@ for (const m of src.matchAll(/^- \*\*(P\d+) · (.+?)\*\* Cue: "(.+)"$/gm)) {
     `Pattern ${id}<br><br>${html(cue)}`,
     `<b>${html(name)}</b><br><br>Now: two examples from different chapters, and when not to use it.`,
     'pattern',
+    'Data Models::Patterns',
+    `dm-pattern-${id.toLowerCase()}`,
   ]);
 }
 
@@ -61,8 +68,9 @@ const header = [
   '#separator:tab',
   '#html:true',
   '#notetype:Basic',
-  '#deck:Data Models::Recall',
   '#tags column:3',
+  '#deck column:4',
+  '#guid column:5',
 ];
 writeFileSync('docs/recall-anki.txt', [...header, ...rows.map((r) => r.join('\t'))].join('\n') + '\n');
 console.log(`docs/recall-anki.txt: ${rows.length} cards`);

@@ -4,9 +4,12 @@ A solo routine for every morning, separate from the deep-dive sessions. The deep
 understanding; this keeps it from fading. No Claude needed, about 30 minutes, pen and paper.
 
 **Anki:** `npm run recall:anki` writes `docs/recall-anki.txt`; import it with File → Import.
-This file stays the source of truth: edit here, rerun, re-import (Anki updates notes whose
-front is unchanged, so keep card titles and cues stable). Anki's scheduling replaces the boxes
-below; still write S · W · T · D on paper before you flip.
+It fills two subdecks, *Data Models::Submodels* and *Data Models::Patterns*. This file stays
+the source of truth: edit here, rerun, re-import. Each note's id comes from the volume, chapter
+and figures in its heading (or the pattern number), so renumbering or rewording a card updates
+its note; keep those three stable. A re-import updates a note's text but never moves its card
+to another deck: after changing a deck in the script, move the cards with Browse → Change Deck.
+Anki's scheduling replaces the boxes below; still write S · W · T · D on paper before you flip.
 
 ## The idea: compress, then decompress
 
@@ -87,7 +90,7 @@ Cue · your hook · your mantra · the key (click to open, **after** you've reca
 hook and mantra yourself. Cards 1–7 are Claude's, at the user's request: rewrite any that
 don't explode, in your own words.
 
-### Card 1 · Ch 2 · Parties, roles and relationships (Figs 2.1–2.7)
+### Card 1 · V1 Ch 2 · Parties, roles and relationships (Figs 2.1–2.7)
 - **Cue:** "Who is this, what are they to us, and how are they tied to each other?"
 - **Hook:** people wearing hats *(Claude's, at the user's request)*
 - **Mantra:** A party is who; a role is the hat it wears; a relationship joins two hats, and a
@@ -110,7 +113,7 @@ don't explode, in your own words.
   party_relationship → party_relationship_type → role_type twice.
 </details>
 
-### Card 2 · Ch 2 · Contact mechanisms (Figs 2.9–2.10)
+### Card 2 · V1 Ch 2 · Contact mechanisms (Figs 2.9–2.10)
 - **Cue:** "How do we reach this party, for what, and since when?"
 - **Hook:** the switchboard *(Claude's, at the user's request)*
 - **Mantra:** Postal, phone and e-mail are one mechanism; the party's link to it owns the dates, the
@@ -133,7 +136,7 @@ don't explode, in your own words.
   twice.
 </details>
 
-### Card 3 · Ch 2 · Postal addresses, facilities and geography (Figs 2.8, 2.11)
+### Card 3 · V1 Ch 2 · Postal addresses, facilities and geography (Figs 2.8, 2.11)
 - **Cue:** "Which areas is this address inside, and which physical places do parties use?"
 - **Hook:** the map and the floor plan *(Claude's, at the user's request)*
 - **Mantra:** An address lies in many boundaries, boundaries in many boundaries; a facility nests
@@ -168,7 +171,7 @@ don't explode, in your own words.
   a facility.
 </details>
 
-### Card 4 · Ch 2 · Communication events and case (Figs 2.7, 2.12–2.13)
+### Card 4 · V1 Ch 2 · Communication events and case (Figs 2.7, 2.12–2.13)
 - **Cue:** "Who talked to whom, how, about what, and what happened next?"
 - **Hook:** the meeting minutes *(Claude's, at the user's request)*
 - **Mantra:** An event happens via a medium, with many parties in roles, for purposes; a case groups past
@@ -191,7 +194,7 @@ don't explode, in your own words.
   work_effort; event → party_relationship (optional).
 </details>
 
-### Card 5 · Ch 3 · Product definition, categories, identification (Figs 3.1–3.3)
+### Card 5 · V1 Ch 3 · Product definition, categories, identification (Figs 3.1–3.3)
 - **Cue:** "What do we sell, how do we group it, and what codes is it known by?"
 - **Hook:** one product, many shelves, many barcodes *(Claude's, at the user's request)*
 - **Mantra:** A product sits on many dated shelves, one primary; shelves stack on shelves;
@@ -214,7 +217,7 @@ don't explode, in your own words.
   identification_type.
 </details>
 
-### Card 6 · Ch 3 · Product features (Fig 3.4)
+### Card 6 · V1 Ch 3 · Product features (Fig 3.4)
 - **Cue:** "What options does a product come in, which are standard, and which clash?"
 - **Hook:** build-your-own bike *(Claude's, at the user's request)*
 - **Mantra:** Features attach to products as required, standard, optional or selectable; features constrain
@@ -236,7 +239,7 @@ don't explode, in your own words.
   product (optional); feature → uom.
 </details>
 
-### Card 7 · Ch 3 · Suppliers and inventory (Figs 3.5–3.6)
+### Card 7 · V1 Ch 3 · Suppliers and inventory (Figs 3.5–3.6)
 - **Cue:** "Who can supply it, when do we reorder, and where is the physical stock?"
 - **Hook:** the warehouse floor *(Claude's, at the user's request)*
 - **Mantra:** Suppliers offer products, dated; guidelines say when to reorder a good, and where; items are the

@@ -25,8 +25,10 @@ blockers, but each one unlocks something:
 - [ ] Rewrite any mantra that fails to explode twice, in your own words
 - [x] Anki export: `npm run recall:anki` → `docs/recall-anki.txt` (2026-10-16)
 - [x] Card 3: postal addresses, facilities and geography, hook and mantra Claude's at the user's request; cards renumbered in chapter order, old 3–6 now 4–7 (2026-10-16)
-- [ ] Anki: if the deck was already imported, delete the four old notes whose front changed (old Card 3–6), then re-import
-- [ ] Add a card per new submodel after its walk-through
+- [x] Export: subdecks Data Models::Submodels and Data Models::Patterns, stable note ids, `v1::ch02` tags (2026-10-16)
+- [ ] Anki, once: delete *Data Models::Recall* and its two empty subdecks (the old notes, without stable ids); keep *Data Models::Submodels* (7) and *Patterns* (7)
+- [ ] Add a card per new submodel after its walk-through; card pass at each chapter's end (CLAUDE.md)
+- [ ] Pick the next deck to add (shortlist 2026-10-16: Traps from the gaps logs, Scenarios as business → model, SQL idioms)
 
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 

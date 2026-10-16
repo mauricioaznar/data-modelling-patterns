@@ -47,6 +47,10 @@ the user, tease with nicknames, so the sessions stay fun.
   added after the submodel's walk-through; the user writes the hook and mantra, Claude writes the
   hidden key and checks the mantra explodes into it. Circled cards from the user's log come to
   the next session.
+- **Card pass at the end of each chapter:** every submodel has its card, each pattern new to
+  Core patterns gets a pattern card, `npm run recall:anki` regenerates the export, and the
+  user re-imports it. Card headings keep the `Card N · VN Ch N · name (Figs …)` shape: the
+  Anki note id comes from the volume, chapter and figures.
 
 ### Design reference (the distilled output)
 - The claude.ai doc **Universal Data Models — Design Reference**
