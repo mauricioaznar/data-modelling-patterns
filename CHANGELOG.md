@@ -6,8 +6,9 @@ and any decisions made.
 ## 2026-10-16
 
 **Built**
-- Mantras for recall cards 1 (parties) and 4 (product categories), written by Claude at the
-  user's request; the user writes card 3 (case and work effort), and 2, 5 and 6 stay open.
+- Hooks and mantras for all six recall cards, written by Claude at the user's request (the
+  user first kept card 3, then asked for all). Card 1's mantra doesn't yet unpack into
+  party_classification; patching it is the user's call.
 - `npm run recall:anki`: exports `docs/recall.md` to an Anki import file (tab-separated, HTML,
   13 cards: 6 submodels and 7 patterns).
 
@@ -15,7 +16,8 @@ and any decisions made.
 - `docs/recall.md` stays the source of truth; Anki is a generated copy, re-imported on change.
 
 **Next**
-- The user writes the remaining mantras and imports the deck.
+- The user imports the deck; mantras that fail twice get rewritten in the user's words.
+- Card 1 shower question: Laura at the climbing gym, employment or generic relationship?
 
 ## 2026-10-15
 

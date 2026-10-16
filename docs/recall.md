@@ -84,8 +84,8 @@ understand the submodel), not after its practice ends, so nothing waits weeks to
 ## Deck: submodels
 
 Cue · your hook · your mantra · the key (click to open, **after** you've recalled). Fill the
-hook and mantra yourself. Cards 1 and 4 are Claude's, at the user's request: rewrite them if
-they don't explode.
+hook and mantra yourself. Cards 1–6 are Claude's, at the user's request: rewrite any that
+don't explode, in your own words.
 
 ### Card 1 · Ch 2 · Parties, roles and relationships (Figs 2.1–2.7)
 - **Cue:** "Who is this, what are they to us, and how are they tied to each other?"
@@ -112,8 +112,9 @@ they don't explode.
 
 ### Card 2 · Ch 2 · Contact mechanisms (Figs 2.9–2.10)
 - **Cue:** "How do we reach this party, for what, and since when?"
-- **Hook:** *(yours)*
-- **Mantra:** *(yours)*
+- **Hook:** the switchboard *(Claude's, at the user's request)*
+- **Mantra:** Postal, phone and e-mail are one mechanism; the party's link to it owns the dates, the
+  purposes and the "don't call"; mechanisms forward to mechanisms.
 
 <details><summary>Key</summary>
 
@@ -134,8 +135,9 @@ they don't explode.
 
 ### Card 3 · Ch 2 · Communication events and case (Figs 2.7, 2.12–2.13)
 - **Cue:** "Who talked to whom, how, about what, and what happened next?"
-- **Hook:** *(yours)*
-- **Mantra:** *(yours)*
+- **Hook:** the meeting minutes *(Claude's, at the user's request)*
+- **Mantra:** An event happens via a medium, with many parties in roles, for purposes; a case groups past
+  events, a work effort is the work they trigger.
 
 <details><summary>Key</summary>
 
@@ -179,8 +181,9 @@ they don't explode.
 
 ### Card 5 · Ch 3 · Product features (Fig 3.4)
 - **Cue:** "What options does a product come in, which are standard, and which clash?"
-- **Hook:** *(yours)*
-- **Mantra:** *(yours)*
+- **Hook:** build-your-own bike *(Claude's, at the user's request)*
+- **Mantra:** Features attach to products as required, standard, optional or selectable; features constrain
+  features, needing or clashing, sometimes only inside one product.
 
 <details><summary>Key</summary>
 
@@ -200,8 +203,9 @@ they don't explode.
 
 ### Card 6 · Ch 3 · Suppliers and inventory (Figs 3.5–3.6)
 - **Cue:** "Who can supply it, when do we reorder, and where is the physical stock?"
-- **Hook:** *(yours)*
-- **Mantra:** *(yours)*
+- **Hook:** the warehouse floor *(Claude's, at the user's request)*
+- **Mantra:** Suppliers offer products, dated; guidelines say when to reorder a good, and where; items are the
+  physical stock in one place; variances explain the count.
 
 <details><summary>Key</summary>
 
