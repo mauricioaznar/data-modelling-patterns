@@ -43,6 +43,10 @@ the user, tease with nicknames, so the sessions stay fun.
 - **Ask one question at a time** and wait for the answer.
 - **Next session start:** open with 3 quick recall questions on the most recently finished
   submodel, favouring its open gaps.
+- **Morning recall (solo):** `docs/recall.md` holds one mantra card per submodel. A card is
+  added after the submodel's walk-through; the user writes the hook and mantra, Claude writes the
+  hidden key and checks the mantra explodes into it. Circled cards from the user's log come to
+  the next session.
 
 ### Design reference (the distilled output)
 - The claude.ai doc **Universal Data Models — Design Reference**

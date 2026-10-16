@@ -18,6 +18,11 @@ blockers, but each one unlocks something:
   in-memory copy of every chapter. Browse rows, follow foreign keys both ways, run SQL, and
   run each chapter's saved queries (Queries tab; data-quality checks get a red/green badge).
 
+## Morning recall
+
+- [ ] Write your hook and mantra for cards 1–6 in `docs/recall.md`, then bring them for a check (does each explode into its key?)
+- [ ] Add a card per new submodel after its walk-through; add the parked facilities/geography card with Shipments
+
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 
 Chapter titles are from memory; verify them against the book's table of contents.
