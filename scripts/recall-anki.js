@@ -4,7 +4,8 @@
 // so keep card titles and cues stable to keep review history.
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const src = readFileSync('docs/recall.md', 'utf8');
+// Windows checkouts (core.autocrlf) have CRLF; the regexes below expect LF.
+const src = readFileSync('docs/recall.md', 'utf8').replace(/\r\n/g, '\n');
 
 // Minimal markdown → HTML for one field.
 const html = (md) =>

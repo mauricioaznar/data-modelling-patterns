@@ -24,7 +24,9 @@ blockers, but each one unlocks something:
 - [x] Card 1: mantra patched to unpack into party_classification (2026-10-16)
 - [ ] Rewrite any mantra that fails to explode twice, in your own words
 - [x] Anki export: `npm run recall:anki` → `docs/recall-anki.txt` (2026-10-16)
-- [ ] Add a card per new submodel after its walk-through; add the parked facilities/geography card with Shipments
+- [x] Card 3: postal addresses, facilities and geography, hook and mantra Claude's at the user's request; cards renumbered in chapter order, old 3–6 now 4–7 (2026-10-16)
+- [ ] Anki: if the deck was already imported, delete the four old notes whose front changed (old Card 3–6), then re-import
+- [ ] Add a card per new submodel after its walk-through
 
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 

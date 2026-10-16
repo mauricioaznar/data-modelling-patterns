@@ -11,9 +11,14 @@ and any decisions made.
   unpack into party_classification.
 - `npm run recall:anki`: exports `docs/recall.md` to an Anki import file (tab-separated, HTML,
   13 cards: 6 submodels and 7 patterns).
+- Recall card for the parked postal addresses, facilities and geography submodel (Figs 2.8,
+  2.11), hook and mantra by Claude at the user's request. It slots in as Card 3, so the cards
+  are renumbered in chapter order (old 3–6 are now 4–7; mentions above use the old numbers).
+  The Anki export now reads CRLF checkouts too (14 cards).
 
 **Decisions**
 - `docs/recall.md` stays the source of truth; Anki is a generated copy, re-imported on change.
+- Cards follow chapter order, even though renumbering changes the Anki fronts of later cards.
 
 **Next**
 - The user imports the deck; mantras that fail twice get rewritten in the user's words.

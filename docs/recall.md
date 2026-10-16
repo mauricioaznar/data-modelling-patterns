@@ -53,7 +53,7 @@ deep-dive session.
 
 | Min | Block | What you do |
 |---|---|---|
-| 0–5 | **Map** | On a blank page, draw the chain of every submodel so far as boxes (Party → Contact → Comms → Product → Features → Inventory…) and write each one's hook. No peeking. |
+| 0–5 | **Map** | On a blank page, draw the chain of every submodel so far as boxes (Party → Contact → Places → Comms → Product → Features → Inventory…) and write each one's hook. No peeking. |
 | 5–20 | **Deck** | The cards due today (see Schedule). For each: read the cue, say the mantra out loud, write S · W · T · D, then open the key and grade yourself. |
 | 20–27 | **Twist** | Pick one due card and apply it to a random business (a dentist, a bike shop, a school, a festival). Two or three example rows, in your head or on paper. This is the step that stops it being parroting. |
 | 27–30 | **Log** | One line per card in the log below: date, card, grade, box. Circle anything to bring to the next session. |
@@ -84,7 +84,7 @@ understand the submodel), not after its practice ends, so nothing waits weeks to
 ## Deck: submodels
 
 Cue · your hook · your mantra · the key (click to open, **after** you've recalled). Fill the
-hook and mantra yourself. Cards 1–6 are Claude's, at the user's request: rewrite any that
+hook and mantra yourself. Cards 1–7 are Claude's, at the user's request: rewrite any that
 don't explode, in your own words.
 
 ### Card 1 · Ch 2 · Parties, roles and relationships (Figs 2.1–2.7)
@@ -133,7 +133,42 @@ don't explode, in your own words.
   twice.
 </details>
 
-### Card 3 · Ch 2 · Communication events and case (Figs 2.7, 2.12–2.13)
+### Card 3 · Ch 2 · Postal addresses, facilities and geography (Figs 2.8, 2.11)
+- **Cue:** "Which areas is this address inside, and which physical places do parties use?"
+- **Hook:** the map and the floor plan *(Claude's, at the user's request)*
+- **Mantra:** An address lies in many boundaries, boundaries in many boundaries; a facility nests
+  in one, hosts roles, has mechanisms: a place isn't an address.
+
+<details><summary>Key</summary>
+
+- **S:** `postal_address` (only the street part: address lines and directions; a
+  contact-mechanism subtype since Fig 2.10, so parties reach it through
+  `party_contact_mechanism`) · `geographic_boundary` (city, state, postal code, country, sales
+  territory… as `geographic_boundary_type` rows; country lives here, so citizenship points at
+  it) linked to addresses by `postal_address_boundary` · `geographic_boundary_association` (a
+  boundary within another, many-to-many) · `facility` (a physical place: warehouse, building,
+  floor, room as `facility_type` rows, with square footage and one `part_of_facility_id` parent) ·
+  `facility_role` (a party owns, rents, uses or manages it) and `facility_contact_mechanism` (its
+  own address, phone…), both dated by us.
+- **W:** `city`, `state`, `zip`, `country` columns on the address: no place for a sales
+  territory, no "everything inside the Midwest" query, and a second country list for
+  citizenship. And a warehouse modelled as its address: a campus has several buildings at one
+  address, a warehouse can have a mailing and a dock address, a room has a phone and no address,
+  and there's nowhere to put square footage or who leases it.
+- **T:** facilities nest by **containment** (room in floor in building), not by size; a
+  warehouse's two addresses is a facility ↔ mechanism question, not a legal boundary (your
+  first answers to item 49). Don't swap the two nestings: boundaries are many-to-many (a postal
+  code crosses city lines), facilities have one parent. Geography is still unpractised; expect
+  this card to be shaky.
+- **D:** contact_mechanism ← postal_address (shared key); postal_address ←
+  postal_address_boundary → geographic_boundary → type; geographic_boundary_association →
+  geographic_boundary twice (from within, to in); facility → facility (part of), → type; party ←
+  facility_role → facility, → role type; facility ← facility_contact_mechanism →
+  contact_mechanism. Ch 3 reuses both: reorder guidelines per facility or boundary, inventory in
+  a facility.
+</details>
+
+### Card 4 · Ch 2 · Communication events and case (Figs 2.7, 2.12–2.13)
 - **Cue:** "Who talked to whom, how, about what, and what happened next?"
 - **Hook:** the meeting minutes *(Claude's, at the user's request)*
 - **Mantra:** An event happens via a medium, with many parties in roles, for purposes; a case groups past
@@ -156,7 +191,7 @@ don't explode, in your own words.
   work_effort; event → party_relationship (optional).
 </details>
 
-### Card 4 · Ch 3 · Product definition, categories, identification (Figs 3.1–3.3)
+### Card 5 · Ch 3 · Product definition, categories, identification (Figs 3.1–3.3)
 - **Cue:** "What do we sell, how do we group it, and what codes is it known by?"
 - **Hook:** one product, many shelves, many barcodes *(Claude's, at the user's request)*
 - **Mantra:** A product sits on many dated shelves, one primary; shelves stack on shelves;
@@ -179,7 +214,7 @@ don't explode, in your own words.
   identification_type.
 </details>
 
-### Card 5 · Ch 3 · Product features (Fig 3.4)
+### Card 6 · Ch 3 · Product features (Fig 3.4)
 - **Cue:** "What options does a product come in, which are standard, and which clash?"
 - **Hook:** build-your-own bike *(Claude's, at the user's request)*
 - **Mantra:** Features attach to products as required, standard, optional or selectable; features constrain
@@ -201,7 +236,7 @@ don't explode, in your own words.
   product (optional); feature → uom.
 </details>
 
-### Card 6 · Ch 3 · Suppliers and inventory (Figs 3.5–3.6)
+### Card 7 · Ch 3 · Suppliers and inventory (Figs 3.5–3.6)
 - **Cue:** "Who can supply it, when do we reorder, and where is the physical stock?"
 - **Hook:** the warehouse floor *(Claude's, at the user's request)*
 - **Mantra:** Suppliers offer products, dated; guidelines say when to reorder a good, and where; items are the
@@ -224,9 +259,6 @@ don't explode, in your own words.
   boundary / organization; good ← inventory_item → facility | container, → lot, → status;
   inventory_item ← variance → reason.
 </details>
-
-### Parked: postal addresses, facilities and geography (Figs 2.8, 2.11)
-Add its card when you practise it with Shipments.
 
 ---
 
