@@ -3,6 +3,11 @@
 A solo routine for every morning, separate from the deep-dive sessions. The deep dives build
 understanding; this keeps it from fading. No Claude needed, about 30 minutes, pen and paper.
 
+**Anki:** `npm run recall:anki` writes `docs/recall-anki.txt`; import it with File → Import.
+This file stays the source of truth: edit here, rerun, re-import (Anki updates notes whose
+front is unchanged, so keep card titles and cues stable). Anki's scheduling replaces the boxes
+below; still write S · W · T · D on paper before you flip.
+
 ## The idea: compress, then decompress
 
 Each submodel gets a **card** with three layers, from smallest to biggest:
@@ -79,13 +84,14 @@ understand the submodel), not after its practice ends, so nothing waits weeks to
 ## Deck: submodels
 
 Cue · your hook · your mantra · the key (click to open, **after** you've recalled). Fill the
-hook and mantra yourself; Claude's example on the first card shows the format only. Replace it.
+hook and mantra yourself. Cards 1 and 4 are Claude's, at the user's request: rewrite them if
+they don't explode.
 
 ### Card 1 · Ch 2 · Parties, roles and relationships (Figs 2.1–2.7)
 - **Cue:** "Who is this, what are they to us, and how are they tied to each other?"
-- **Hook:** *(yours; Claude's example: "people wearing hats")*
-- **Mantra:** *(yours; Claude's example: "A party is who; a role is the hat it wears; a
-  relationship joins two hats, and a type names each hat.")*
+- **Hook:** people wearing hats *(Claude's, at the user's request)*
+- **Mantra:** A party is who; a role is the hat it wears; a relationship joins two hats, and a
+  type names each hat.
 
 <details><summary>Key</summary>
 
@@ -150,8 +156,9 @@ hook and mantra yourself; Claude's example on the first card shows the format on
 
 ### Card 4 · Ch 3 · Product definition, categories, identification (Figs 3.1–3.3)
 - **Cue:** "What do we sell, how do we group it, and what codes is it known by?"
-- **Hook:** *(yours)*
-- **Mantra:** *(yours)*
+- **Hook:** one product, many shelves, many barcodes *(Claude's, at the user's request)*
+- **Mantra:** A product sits on many dated shelves, one primary; shelves stack on shelves;
+  party types browse shelves; codes are rows, not columns.
 
 <details><summary>Key</summary>
 

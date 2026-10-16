@@ -7,7 +7,8 @@
     "db:rebuild": "node scripts/rebuild.js",
     "sql": "node scripts/sql.js",
     "queries": "node scripts/queries.js",
-    "explore": "node tools/explorer/server.js"
+    "explore": "node tools/explorer/server.js",
+    "recall:anki": "node scripts/recall-anki.js"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8"

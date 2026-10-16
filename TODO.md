@@ -20,7 +20,8 @@ blockers, but each one unlocks something:
 
 ## Morning recall
 
-- [ ] Write your hook and mantra for cards 1–6 in `docs/recall.md`, then bring them for a check (does each explode into its key?)
+- [ ] Write your hook and mantra for cards 2, 3, 5 and 6 in `docs/recall.md` (1 and 4 are Claude's, at your request), then bring them for a check (does each explode into its key?)
+- [x] Anki export: `npm run recall:anki` → `docs/recall-anki.txt` (2026-10-16)
 - [ ] Add a card per new submodel after its walk-through; add the parked facilities/geography card with Shipments
 
 ## Vol 1: A Library of Universal Data Models for All Enterprises

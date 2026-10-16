@@ -3,6 +3,20 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-16
+
+**Built**
+- Mantras for recall cards 1 (parties) and 4 (product categories), written by Claude at the
+  user's request; the user writes card 3 (case and work effort), and 2, 5 and 6 stay open.
+- `npm run recall:anki`: exports `docs/recall.md` to an Anki import file (tab-separated, HTML,
+  13 cards: 6 submodels and 7 patterns).
+
+**Decisions**
+- `docs/recall.md` stays the source of truth; Anki is a generated copy, re-imported on change.
+
+**Next**
+- The user writes the remaining mantras and imports the deck.
+
 ## 2026-10-15
 
 **Built**
