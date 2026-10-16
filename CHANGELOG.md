@@ -7,8 +7,8 @@ and any decisions made.
 
 **Built**
 - Hooks and mantras for all six recall cards, written by Claude at the user's request (the
-  user first kept card 3, then asked for all). Card 1's mantra doesn't yet unpack into
-  party_classification; patching it is the user's call.
+  user first kept card 3, then asked for all). Card 1's mantra patched (the user's call) to
+  unpack into party_classification.
 - `npm run recall:anki`: exports `docs/recall.md` to an Anki import file (tab-separated, HTML,
   13 cards: 6 submodels and 7 patterns).
 

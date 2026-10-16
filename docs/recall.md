@@ -91,7 +91,7 @@ don't explode, in your own words.
 - **Cue:** "Who is this, what are they to us, and how are they tied to each other?"
 - **Hook:** people wearing hats *(Claude's, at the user's request)*
 - **Mantra:** A party is who; a role is the hat it wears; a relationship joins two hats, and a
-  type names each hat.
+  type names each hat; a class says what it is underneath.
 
 <details><summary>Key</summary>
 
