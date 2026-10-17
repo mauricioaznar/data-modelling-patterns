@@ -22,6 +22,11 @@ the user, tease with nicknames, so the sessions stay fun.
   the chapter's `NOTES.md` and have the user confirm it **before** writing SQL. The book is the
   source of truth; recall of exact attributes may be wrong, so flag any disagreement instead of
   silently "correcting" it. Keep every model the user shares; later chapters build on them.
+- **Always aim for Silverston's intention** (the user's rule). When a figure is unclear, looks
+  like a misprint or disagrees with another figure, build what he meant (judged from the text,
+  the other figures and the overall model), not the literal drawing, and record the reading in
+  NOTES.md. Doubtful readings the user accepts go to a "Points to discuss after the overview"
+  list under the chapter's last figure; any refactor waits until that discussion.
 - Teach the pattern: the problem it solves, what the naive model gets wrong, the alternatives,
   and when not to use it. Then implement the schema, seed (with deliberate edge cases and bad
   rows) and queries.

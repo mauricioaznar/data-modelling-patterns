@@ -433,7 +433,7 @@ FACILITY                         (from Ch 2)
   not as a running column on the item.
 
 ### Fig 3.7 — Standard product pricing
-**Transcription** (confirmed against the book: ☐; two photos, the figure spans a page break)
+**Transcription** (accepted 2026-10-16; open points under "Points to discuss after the overview"; two photos, the figure spans a page break)
 
 ```
 PRICE COMPONENT
@@ -492,19 +492,8 @@ GEOGRAPHIC BOUNDARY, PARTY TYPE, ORGANIZATION   (from Ch 2)
 PRODUCT (3.1), PRODUCT CATEGORY (3.2), PRODUCT FEATURE (3.4)
 ```
 
-**To check against the book:**
-- The subtypes sit in **two separate boxes**. I read that as two independent subtype sets: a
-  component is one of base / discount / surcharge / suggested *and* one of one-time /
-  recurring / utilization.
-- RECURRING CHARGE's "per" line runs along the top edge of the UNIT OF MEASURE box. I read it
-  as ending at TIME FREQUENCY MEASURE, but it may stop at UNIT OF MEASURE itself.
-  UTILIZATION CHARGE's line clearly stops at UNIT OF MEASURE.
-- Every line looks dashed (optional) at both ends, including PRODUCT, PRODUCT FEATURE and
-  ORGANIZATION. Is any of them solid at the PRICE COMPONENT end?
-- Naming only: BASE PRICE here, BASE PRODUCT PRICE in Fig 3.10b.
-
 ### Fig 3.8 — Estimated product cost
-**Transcription** (confirmed against the book: ☐)
+**Transcription** (accepted 2026-10-16; open points under "Points to discuss after the overview")
 
 ```
 ESTIMATED PRODUCT COST
@@ -529,14 +518,8 @@ COST COMPONENT TYPE
   * description
 ```
 
-**To check against the book:**
-- The arc spans the two "calculated for" lines, and both are solid at the cost end: every
-  estimate is for exactly one product or one feature.
-- COST COMPONENT TYPE is solid at the cost end (mandatory); geography and organization are
-  dashed (optional).
-
 ### Fig 3.9a — Product to product associations
-**Transcription** (confirmed against the book: ☐)
+**Transcription** (accepted 2026-10-16; open points under "Points to discuss after the overview")
 
 ```
 PRODUCT COMPONENT
@@ -585,15 +568,8 @@ PRODUCT   (drawn without support_discontinuation_date, which Fig 3.1 has)
 
 The book spells two labels "superceded" and "complimented"; corrected here.
 
-**To check against the book:**
-- PRODUCT SUBSTITUTE's thru_date is printed `*` (mandatory), while every other thru date in
-  the figure is `o`. Fig 3.10a prints PRODUCT COMPONENT's thru_date as `*` too. I take both as
-  slips and would keep thru dates nullable (our effectivity convention).
-- from_date is `*`, not `#`, on all five, while Fig 3.9b marks it `#`.
-- The bar is on all ten lines.
-
 ### Fig 3.9b — Product to product associations, alternate model
-**Transcription** (confirmed against the book: ☐)
+**Transcription** (accepted 2026-10-16; open points under "Points to discuss after the overview")
 
 ```
 PRODUCT ASSOCIATION
@@ -623,12 +599,8 @@ PRODUCT ASSOCIATION TYPE
 Compared with 3.9a: PRODUCT COMPONENT becomes MARKETING PACKAGE; obsolescence drops its
 supercession date (from_date does the job); the comments go; reason moves to the supertype.
 
-**To check against the book:**
-- The type line is solid at the association end (every association has a type) and carries
-  no bar, so the identifier is from product + to product + from_date.
-
 ### Fig 3.10a — Products and parts
-**Transcription** (confirmed against the book: ☐)
+**Transcription** (accepted 2026-10-16; open points under "Points to discuss after the overview")
 
 ```
 PRODUCT COMPONENT          (3.9a's, redrawn)
@@ -655,7 +627,7 @@ PRODUCT
 Here the subtypes hang straight off PRODUCT; Fig 3.11 puts the same three under GOOD.
 
 ### Fig 3.10b — Product and parts, alternate model
-**Transcription** (confirmed against the book: ☐)
+**Transcription** (accepted 2026-10-16; open points under "Points to discuss after the overview")
 
 ```
 PART
@@ -709,15 +681,8 @@ SUPPLIER OFFERING          (Fig 3.5's SUPPLIER PRODUCT, renamed, now pointing at
   -> PART  (many "a valid supplier of" 1 part; part "supplied thru" many)
 ```
 
-**To check against the book:**
-- GOOD ↔ FINISHED GOOD: I read the crow's foot at GOOD (one finished good backs many goods)
-  and the line dashed (optional).
-- PART BOM's two lines carry the bar.
-- The organization links (supplier, manufacturer) and PRICE COMPONENT's other links aren't
-  drawn. I take that as "unchanged, not shown".
-
 ### Fig 3.11 — Overall product model
-**Transcription** (confirmed against the book: ☐; identifiers only, no attributes)
+**Transcription** (accepted 2026-10-16; open points under "Points to discuss after the overview"; identifiers only, no attributes)
 
 ```
 Shown, all from Figs 3.1–3.10:
@@ -747,9 +712,31 @@ What it adds or settles:
   identification type, sale type, cost component type, association type), QUANTITY BREAK,
   ORDER VALUE and GEOGRAPHIC BOUNDARY. I take that as abbreviation, not removal.
 
-**To check against the book:**
-- REORDER GUIDELINE's line runs down the right edge of the PRODUCT box. I read it as ending at
-  GOOD, as in 3.5.
+### Points to discuss after the overview (Figs 3.7–3.11)
+The readings below stand, and the SQL follows them (the user's call, 2026-10-16). We look at
+each once the chapter overview is done. Any refactor waits until then and aims at what
+Silverston intended, not at the literal drawing.
+
+1. **3.7, two subtype boxes:** read as two independent subtype sets (base / discount /
+   surcharge / suggested, and one-time / recurring / utilization).
+2. **3.7, RECURRING CHARGE "per":** read as ending at TIME FREQUENCY MEASURE; the line may stop
+   at UNIT OF MEASURE itself. UTILIZATION CHARGE's ends at UNIT OF MEASURE.
+3. **3.7, optionality:** every line read as dashed (optional) at both ends, including PRODUCT,
+   PRODUCT FEATURE and ORGANIZATION.
+4. **3.7 vs 3.10b, naming:** BASE PRICE vs BASE PRODUCT PRICE.
+5. **3.8:** the arc spans the two "calculated for" lines, both solid at the cost end (each
+   estimate is for exactly one product or feature). COST COMPONENT TYPE is mandatory;
+   geography and organization are optional.
+6. **3.9a and 3.10a, thru dates printed `*`** on PRODUCT SUBSTITUTE and PRODUCT COMPONENT:
+   read as slips, so thru dates stay nullable.
+7. **3.9a identifiers:** from_date is `*`, not `#`, on all five entities (3.9b marks it `#`);
+   the bar is on all ten product lines.
+8. **3.9b:** the type line read as solid at the association end and without a bar, so the
+   identifier is from product + to product + from_date.
+9. **3.10b:** one finished good backs many goods (crow's foot at GOOD, dashed line); PART BOM's
+   two lines carry the bar; the organization links and PRICE COMPONENT's other links are
+   unchanged, just not drawn.
+10. **3.11:** REORDER GUIDELINE's line read as ending at GOOD, as in 3.5.
 
 ## Design decisions (book → SQL)
 
