@@ -838,7 +838,9 @@ Silverston intended, not at the literal drawing.
    frequency for RECURRING.
 3. **3.7, optionality:** every line read as dashed (optional) at both ends, including PRODUCT,
    PRODUCT FEATURE and ORGANIZATION.
-   → *Book check pending:* the photo blurs the three vertical lines.
+   → **Kept** (the user checked the book, 2026-10-17): the three lines read as dashed at the
+   PRICE COMPONENT end too. The SQL matches: `product_id`, `product_feature_id` and
+   `pricer_party_id` are nullable, so a component can price a category or a party type alone.
 4. **3.7 vs 3.10b, naming:** BASE PRICE vs BASE PRODUCT PRICE.
    → **Kept BASE PRICE** (2026-10-17): 3.7 is the figure that defines pricing; 3.10b redraws
    PRICE COMPONENT only as context (it leaves out the second subtype box too).
