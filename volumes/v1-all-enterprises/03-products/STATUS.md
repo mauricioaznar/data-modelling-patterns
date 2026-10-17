@@ -44,7 +44,7 @@ Architecture figure: 3.11
 | 2 | Product features | ✓ | Card 6 | 4 |
 | 3 | Suppliers and inventory | ✓ | Card 7 | 5 |
 | 4 | Pricing and costing | ✓ | Card 8 | 5 |
-| 5 | Product associations and parts | ✓ | Card 9 | 4 |
+| 5 | Product associations and parts | ✓ | Card 9 | 5 |
 | A | Architecture | – | Architecture | – |
 
 Last check: 0 ✗ · 0 !

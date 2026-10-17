@@ -902,6 +902,15 @@ Silverston intended, not at the literal drawing.
     COMPONENT row, seeded with 3.9b. The starter kit and the copier's BOM share it, the
     component check no longer insists on goods (3.10a links product to product), and the BOM
     explosion keeps a service component in view. Card 9 and the doc entry follow.
+    → **Discussed 2026-10-17** (the user's question in the associations walk-through: do a
+    kit's parts' prices stack?):
+    - *No:* a kit is a product priced by its own price components (3.7). The association
+      carries no price; `quantity_used` serves picking and stock, not pricing. Deriving the
+      kit's price from its parts (each part's price × quantity used, less a discount) is
+      application code, and every part's price is conditional. Storing both and keeping them
+      equal stores one fact twice.
+    - *Gap found, seed:* the starter kit (product 11) has no price component, so it can't be
+      priced. Refactor candidate: give it a base price (no change until the user agrees).
 
 ## Design decisions (book → SQL)
 

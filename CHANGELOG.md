@@ -31,8 +31,17 @@ and any decisions made.
   AND). New progress rows for submodel 4 (four at 2, charge kind at 1); parked at the column
   review. Refactor candidates noted in NOTES (point 1), none applied: the user asked for no
   model changes yet.
+- Associations walk-through (submodel 5, Fig 3.9b) from the user's own model, one fact at a
+  time after a five-fact opener proved too much: the replacement link, the typed table (like
+  party relationship), the kit's rows and where its quantity lives. The user's question on kit
+  pricing (the parts' prices don't stack; a kit has its own price components) found that the
+  seeded starter kit has no price: a refactor candidate in NOTES (point 11), not applied. New
+  progress rows for submodel 5 (two at 2, two at 1) and ponder 24. Paused by the user at the
+  substitute's direction.
 
 **Next**
+- Resume associations at the paper question (substitute direction, a/b/c); then the typed
+  table's cost (ponder 20) and the BOM explosion (3.10a). Retest the feature vs product line.
 - Resume the pricing column review at the value columns (price, percent); retest base
   competition and activation cold.
 - Ch 3 overview, discussion: charge kind on discounts and surcharges (parked), and Fig 2.14's

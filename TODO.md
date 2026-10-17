@@ -63,7 +63,8 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [x] 3.9a vs 3.9b: build 3.9b, the one Fig 3.11 keeps (the user's choice, 2026-10-16)
   - [x] 3.10: built as 3.11 keeps it (GOOD's subtypes + a COMPONENT association type), on assumptions (2026-10-16); 3.10b's PART discussed, not built. Point 11 settled 2026-10-17: COMPONENT is the one row for packages and assemblies
   - [ ] Submodel 4: pricing and costing (Figs 3.7–3.8): built 2026-10-16 (ponders 15–19); doc draft and card 8 done; walk-through of 3.7 from the user's own model 2026-10-17, parked at the column review (next: the value columns, price and percent); still to do: finish 3.7, 3.8, exercises
-  - [ ] Submodel 5: product associations and parts (Figs 3.9–3.10): built 2026-10-16 (ponders 20–23); doc draft and card 9 done; still to do: walk-through, exercises
+  - [ ] Submodel 5: product associations and parts (Figs 3.9–3.10): built 2026-10-16 (ponders 20–23); doc draft and card 9 done; walk-through of 3.9b from the user's own model 2026-10-17, paused at the substitute's direction (a/b/c); still to do: finish 3.9b, 3.10a (BOM), exercises
+  - [ ] Refactor candidate from the associations walk-through (NOTES, point 11; no change until the user agrees): give the seeded starter kit a base price
   - [x] New workflow catch-up (2026-10-16): cards 8–9; doc drafts for Ch 3 submodels 1–5; architecture entries for Ch 2 and Ch 3; Core patterns gains a Ch 3 column and three patterns (rules as rows, exclusive arc, catalogue vs physical instance); question index and roadmap updated
   - [x] Doc drafts for Ch 2 postal addresses, facilities and geography (with its two pitfalls from item 49, roadmap row added) and communication events (the "learnt so far" notes regrouped into the seven sections; "To verify" kept) (2026-10-16)
   - [x] The other session told about the new rules (2026-10-16); it acknowledged with commit f361f95

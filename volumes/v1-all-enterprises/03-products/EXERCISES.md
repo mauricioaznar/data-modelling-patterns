@@ -27,7 +27,7 @@ it's understood.
 
 | Concept | Fig | Tables | Level | Next | Evidence |
 |---|---|---|---|---|---|
-| PRODUCT (what we offer) + good/service | 3.1 | product | 2 | reinforce | Q1: put GOOD under category; fixed after a prompt. 10-12 soft ball: kinds right, invented a `service` table; why `good` exists (identification FK) after a hint |
+| PRODUCT (what we offer) + good/service | 3.1 | product | 2 | reinforce | 10-17 associations: modelled a kit's contents, a substitute and a replacement as features ✗ (each is a product: its own stock, price and code). Q1: put GOOD under category; fixed after a prompt. 10-12 soft ball: kinds right, invented a `service` table; why `good` exists (identification FK) after a hint |
 | Category classification (dated, primary) | 3.2 | product_category_type, product_category, product_category_classification | 3 | agree to close | 10-14 neighbourhood (product, category; rollup and market interest beside it) ✓. 10-14 reinforce (rose): primary, dates and why (double count / dropped; history), unprompted. 10-12 Q6: exclusive thru right; primary missed again, then put "on coffee" (it's the classification row). Q4: primary unprompted; Q5: missed dates + primary on the link even with a hint |
 | Category rollup (network, not tree) | 3.2 | product_category_rollup, product_category_ancestor (view) | 2 | reinforce | 10-12 Q6: classified under parents, rollup rows right after prompt; made a service a child category. Q2: unprompted; Q5: read a single parent column as "no multiple descendants" |
 | Market interest | 3.2 | market_interest (→ Ch 2 party_type) | 3 | agree to close | 10-14 neighbourhood: links category to party type, dated ✓ (verb loose). Q4: type-level vs a real sale, unprompted |
@@ -61,6 +61,17 @@ it's understood.
 | Feature prices add on top of the base | 3.7 | price_component.product_feature_id | 2 | column review | 10-17: "not additive, must agree" ✗; then "just components, combined" ✓ |
 | Charge kind (one-time, recurring, utilization) | 3.7 | price_component.charge_kind, per_uom_id, quantity | 1 | parked | 10-17: discriminator + own attributes ✓; mandatory on base prices (agreed); discounts parked by the user |
 | Estimated cost (product or feature arc) | 3.8 | estimated_product_cost, cost_component_type | 0 | walk-through | |
+
+#### 5. Product associations and parts
+
+| Concept | Fig | Tables | Level | Next | Evidence |
+|---|---|---|---|---|---|
+| Product-to-product link (recursive, from/to, dated) | 3.9b | product_association | 2 | reinforce | 10-17 office shop: all five facts first as features ✗. Replacement as a from → to row ✓ unprompted (no column on product), the date only when asked. Kit: wired product → type ✗; read from/to as a chain needing a root ✗; "a product linked to a product?" settled by the recursive pattern (party relationship, category rollup); kit as `from` ✓, but three rows for two products |
+| One typed table vs one entity per kind | 3.9a, 3.9b | product_association_type | 2 | its cost (ponder 20) | 10-17: chose the typed table, "like party relationship", unprompted ✓. Its cost (from/to mean something different per type) hit as confusion; explained by Claude |
+| Type-only attributes on the link | 3.9b | product_association.quantity_used, quantity | 1 | reinforce | 10-17 kit: the 2 reams lost three times. "A rule about the subtype": the column sits on the package subtype ✓, the 2 is this row's value ✗; rows given |
+| Direction per type (substitute one way, incompatibility both) | 3.9b | product_association | 0 | resume here | 10-17: paper question (a/b/c) asked, not answered yet |
+| A kit is priced as its own product (the link carries no price) | 3.9b × 3.7 | price_component, product_association | 1 | ponder 24 | 10-17, the user's question: do the parts' prices stack? Then "kit and parts prices ideally match" ✗ (one fact stored twice; the parts' prices are conditional). Claude laid out own / derived / both |
+| Components explode level by level (BOM, good_kind) | 3.10a | product_association (COMPONENT), good.good_kind | 0 | walk-through | |
 
 #### Cross-cutting (carried over from Ch 2, tested inside the submodels)
 
@@ -141,6 +152,9 @@ At most 5 per submodel. Answer in a sentence or three under each item.
 23. **[3.10a vs 3.10b]** Our resin and toner powder now show "on sale" in the 3.1 catalogue
     query. What is 3.10a getting wrong there, how does 3.10b's PART fix it, and what does PART
     cost you?
+24. **[3.9b × 3.7]** The starter kit has price components, and so do the products inside it.
+    Should the kit's price be its own or derived from its parts? What goes wrong if you store
+    both and expect them to match?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out one submodel in the transcription notation

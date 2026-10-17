@@ -279,3 +279,29 @@ No scores changed (concept discussion, not assessment). Recall 1 still open.
 Scores (new rows): components 0 → 2, base competition 0 → 2, conditions 0 → 2, feature
 prices 0 → 2, charge kind 0 → 1. Parked at the column review; next: the value columns
 (price, percent).
+
+### 2026-10-17: Submodel 5, associations walk-through from the user's own model (Fig 3.9b)
+- Office shop, five facts at once (kit contents, one-way paper substitute, X100 → X200, toner
+  with copiers, gel pen vs carbon forms). First answer, all features ✗: the kit as one product
+  with features, the papers as selectable features, the replacement as applicability dates;
+  asked whether associations hold product-to-feature rules ✗ (that's applicability, 3.4). "Too
+  complex": blame mostly Claude's (five facts at once), so one fact at a time from here.
+  Bridge given: an association is 3.4's feature interaction one level up.
+- Replacement: from X100 → to X200 as a link row ✓ unprompted (dodged `replaced_by_product_id`;
+  same direction as the schema); the date only after a prompt.
+- Table or type: chose one typed table, "like party relationship" ✓ unprompted.
+- Kit: linked each product to the type ✗. "Not a chained relationship, nor a root": read
+  from/to as a sequence ✗; explained as one row per pair, a star with the kit at the root,
+  and as option b's cost (generic from/to). "A product linked to a product?" settled by the
+  recursive pattern. Then `b1 → (p1..p3)`: kit as from ✓, three rows for two products ✗, the
+  quantity missing for the third time. "A rule about the subtype": the column is the package
+  subtype's ✓ (3.9b), the 2 is the row's value ✗. Rows given.
+- Substitute: "subtype relationship" (the type, not the rows); a/b/c offered, not answered.
+- The user's own question: do a kit's parts' prices stack? No: the kit has its own price
+  components; the association is a contents list for picking and stock. The user then proposed
+  kit and parts prices "ideally match" ✗ (one fact stored twice; parts' prices are
+  conditional). Claude's table: own price (the book), derived in code, both (never). Found:
+  the seeded starter kit has no price (NOTES point 11). Ponder 24 added.
+- Questions paused by the user to reflect; the session ended with a commit.
+Scores (new rows): link 0 → 2, typed table 0 → 2, type-only attributes 0 → 1, kit pricing
+0 → 1; direction and BOM untested. Next: the paper question (a/b/c).
