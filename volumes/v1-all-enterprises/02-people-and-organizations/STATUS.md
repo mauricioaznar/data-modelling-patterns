@@ -46,6 +46,7 @@ overview step existed (2026-10-16); Fig 2.14's two points to discuss still need 
 | 2 | Contact mechanisms | ✓ | Card 2 | – |
 | 3 | Communication events and case | ✓ | Card 4 | – |
 | 4 | Postal addresses, facilities and geography (parked: practise with Ch 5) | ✓ | Card 3 | – |
+| A | Architecture | – | Architecture | – |
 
 Last check: 0 ✗ · 0 !
 <!-- check:end -->

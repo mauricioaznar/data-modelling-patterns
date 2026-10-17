@@ -11,7 +11,7 @@ import { execSync } from 'node:child_process';
 import {
   ROOT, openDb, loadChapters, listVolumes, listChapters, resolveTarget, sessionSetupFor, parseQueries,
 } from './db.js';
-import { readCards, parseCardHeadings, buildAnki, CARDS_ANKI } from './cards.js';
+import { readCards, parseCardHeadings, parseArchHeadings, buildAnki, CARDS_ANKI } from './cards.js';
 
 const BEGIN = '<!-- check:begin -->';
 const END = '<!-- check:end -->';
@@ -184,12 +184,24 @@ async function checkChapter({ volume, chapter }, ctx) {
   for (const c of cards) {
     if (!submodels.some((r) => sameFigs(r.figs, c.figs))) warn(`Card ${c.number} (${c.name}) matches no submodel row in STATUS.md`);
   }
+  // Architecture: a card and a ticked doc entry once its "How it flows" is written.
+  const archFigs = status.architecture.join(', ');
+  const archCards = ctx.archCards.filter((c) => `v${c.volume}` === volume.schema && c.chapter === Number(chapter.number));
+  const archCard = archCards.find((c) => sameFigs(c.figs, archFigs));
   if (status.architecture.length) {
     const flows = figures.some((f) => isArch(f.id) && f.body.includes('**How it flows**'));
     if (!archRow) fail('STATUS.md names an architecture figure but has no "A" row');
     else if (flows && !isDone(archRow['doc draft'])) fail('Architecture: doc entry not ticked in STATUS.md');
+    if (flows && !archCard) {
+      fail(`Architecture: no card headed "### Architecture · ${volume.schema.toUpperCase()} Ch ${Number(chapter.number)} · … (Fig ${archFigs})" in docs/cards.md`);
+    }
+    submodelRows.push(['A', 'Architecture', '–', archCard ? 'Architecture' : flows ? '✗' : '–', '–']);
+  }
+  for (const c of archCards) {
+    if (c !== archCard) warn(`Architecture card (Fig ${c.figs}) doesn't match STATUS.md's architecture figure (${archFigs || 'none named'})`);
   }
   if (submodels.length) ok(`${submodels.length} submodels checked for cards, doc drafts and ponders`);
+  if (archCard) ok(`architecture card for Fig ${archFigs}`);
 
   // Queries: every one runs; every data-quality check catches a deliberate bad row.
   if (ctx.loadError) {
@@ -268,7 +280,7 @@ try {
 }
 
 const db = openDb('memory://');
-const ctx = { db, cards: parseCardHeadings(readCards()), loadError: null };
+const ctx = { db, cards: parseCardHeadings(readCards()), archCards: parseArchHeadings(readCards()), loadError: null };
 try {
   await loadChapters(db, null, () => {});
 } catch (err) {

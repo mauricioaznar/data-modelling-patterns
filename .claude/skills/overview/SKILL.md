@@ -18,8 +18,8 @@ argument-hint: vN/NN
 - Record each outcome under its point: kept or changed, and why.
 
 ## 2. Drafts and cards
-- Per submodel, ask for feedback on its doc draft and its card: does the mantra explode, does
-  the hook stick? When the user rewrites a mantra, check it still unpacks into the key.
+- Per submodel, and then for the architecture entry, ask for feedback on its doc draft and its
+  card: does the mantra explode, does the hook stick? When the user rewrites a mantra, check it still unpacks into the key.
 
 ## 3. Refactor
 - Apply what changed: NOTES, SQL (one commit per figure touched, after
@@ -27,7 +27,8 @@ argument-hint: vN/NN
   Silverston's intention, not the literal drawing.
 
 ## 4. Card pass
-- Every submodel has its card. Every pattern new to Core patterns gets a pattern card in
+- Every submodel has its card, and the chapter has its architecture card (rewritten if the
+  refactor changed "How it flows"). Every pattern new to Core patterns gets a pattern card in
   `docs/cards.md` (P-numbers continue). `npm run cards:anki`, then remind the user to
   re-import.
 

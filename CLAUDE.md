@@ -53,6 +53,8 @@ the user, tease with nicknames, so the sessions stay fun.
   under it in NOTES.md and the chapter's architecture entry in the design reference doc. Keep
   only what's needed (about ten lines): the hub entities, how each submodel hands over to the
   next, what plugs in from earlier chapters, and which alternates the overall model keeps.
+  It also gets an **architecture card** in `docs/cards.md` (the user's call, 2026-10-16): the
+  Map warm-up chains the chapters, the card tests the inside of one.
 - **Questions for the user to think about** that come up while teaching go into the chapter's
   `EXERCISES.md`, section 0 "To ponder", tagged with their figure, but **at most 5 per
   submodel**: keep only the ones that test a main idea, and settle the rest in chat. Create
@@ -65,10 +67,11 @@ the user, tease with nicknames, so the sessions stay fun.
 - One pass over the whole chapter, before practice: the user gives feedback on the
   transcriptions, the "Points to discuss" list, the doc entry drafts and the cards. Claude then
   refactors NOTES, SQL, doc and cards from that feedback, still aiming at Silverston's intention.
-- **Card pass:** every submodel has its card, each pattern new to Core patterns gets a pattern
-  card, `npm run cards:anki` regenerates the export, and the user re-imports it. Card headings
-  keep the `Card N · VN Ch N · name (Figs …)` shape: the Anki note id comes from the volume,
-  chapter and figures.
+- **Card pass:** every submodel has its card, the chapter has its architecture card, each
+  pattern new to Core patterns gets a pattern card, `npm run cards:anki` regenerates the
+  export, and the user re-imports it. Card headings keep the `Card N · VN Ch N · name (Figs …)`
+  and `Architecture · VN Ch N · name (Fig N.M)` shapes: the Anki note id comes from the volume,
+  chapter and figures (an architecture card's from its volume and chapter).
 
 ### After the overview (the user practises, one submodel at a time)
 - Practice is **per submodel** (a group of figures that answer one set of business questions,

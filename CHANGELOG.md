@@ -51,6 +51,14 @@ and any decisions made.
   `scripts/cards.js`, `scripts/cards-anki.js`, `npm run cards:anki`, and every mention in
   CLAUDE.md, the skills, the checker, TODO, README and practice.md. Anki note ids are
   unchanged, so importing the new file updates the notes. Entries above keep the old names.
+- Pattern card P8 (catalogue vs physical instance), the Core patterns row from Ch 3 that had
+  no card.
+- **Architecture cards** for Ch 2 (Fig 2.14) and Ch 3 (Fig 3.11) under a new *Deck:
+  architecture* in `docs/cards.md`, with S · W · T · D read as hubs, hand-overs, the naive
+  mistake and the drawing with lines in from earlier chapters. The Anki export gains a
+  *Data Models::Architecture* subdeck (note ids `dm-vN-chNN-arch`; 19 cards), and
+  `npm run check` fails a chapter whose "How it flows" has no architecture card and shows it
+  on the `A` row. The /figures and /overview skills, CLAUDE.md and the STATUS template say so.
 
 **Decisions**
 - `docs/recall.md` stays the source of truth; Anki is a generated copy, re-imported on change.
@@ -71,6 +79,9 @@ and any decisions made.
 - New category, **architecture figures** (the user's call): a chapter's last, overall figure
   gets no SQL, just a short "How it flows" in NOTES and an architecture entry in the doc.
   Ch 3's is written under Fig 3.11.
+- Architecture figures get a card too (the user's call, after asking where they were): the
+  Map warm-up only chains the chapters, so nothing scheduled the hubs, the plug-ins from
+  earlier chapters or the alternates kept.
 - 3.10 built on assumptions under the new rule (point 11): no separate PRODUCT COMPONENT table,
   since 3.11 has none. Ponder 21's renaming passage may turn it into MARKETING PACKAGE reuse.
 - The design reference doc's drafts answer some ponders, so it stays closed during exams,
@@ -80,8 +91,8 @@ and any decisions made.
   The Stop hook is held back until skipping proves to still happen.
 
 **Next**
-- The user imports the deck (16 cards); mantras that fail twice get rewritten in the user's
-  words.
+- The user re-imports the deck (19 cards, now with the architecture subdeck); mantras that
+  fail twice get rewritten in the user's words.
 - Card 1 shower question: Laura at the climbing gym, employment or generic relationship?
 - Ch 3 overview: the 11 points to discuss (plus Fig 2.14's two), the doc drafts and cards 8–9;
   refactor from the feedback, then practice resumes (walk-throughs for submodels 4 and 5).

@@ -1,8 +1,9 @@
-// Reads docs/cards.md: the submodel cards and the pattern cue lines.
+// Reads docs/cards.md: the submodel cards, the architecture cards and the pattern cue lines.
 // Shared by cards-anki.js (writes the Anki file) and check.js (checks it's current).
 // Each note gets a stable id (Anki's GUID) from its volume, chapter and figures,
-// or its pattern number, so renumbering or rewording a card updates the note
-// and keeps its review history instead of adding a duplicate.
+// its volume and chapter (architecture), or its pattern number, so renumbering or
+// rewording a card updates the note and keeps its review history instead of adding
+// a duplicate.
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,6 +23,16 @@ export function parseCardHeadings(src) {
     chapter: Number(m[3]),
     name: m[4],
     figs: m[5],
+  }));
+}
+
+// "### Architecture · V1 Ch 3 · Products (Fig 3.11)": one per chapter, from its architecture figure.
+export function parseArchHeadings(src) {
+  return [...src.matchAll(/^### Architecture · V(\d+) Ch (\d+) · (.+?) \(Figs? ([^)]+)\)[ \t]*$/gm)].map((m) => ({
+    volume: Number(m[1]),
+    chapter: Number(m[2]),
+    name: m[3],
+    figs: m[4],
   }));
 }
 
@@ -49,7 +60,9 @@ const field = (block, label) => {
 export function buildAnki(src) {
   const rows = [];
 
-  for (const block of src.split(/\n(?=### Card )/).slice(1)) {
+  // Submodel and architecture cards share a shape; each block runs to the next heading.
+  for (const block of src.split(/\n(?=#{1,3} )/).filter((b) => /^### (Card|Architecture) /.test(b))) {
+    const arch = block.startsWith('### Architecture ');
     const title = block.match(/^### (.+)/)[1].trim();
     const cue = field(block, 'Cue');
     const hook = field(block, 'Hook') || '(not written yet)';
@@ -66,9 +79,9 @@ export function buildAnki(src) {
     rows.push([
       `${html(title)}<br><br>${html(cue)}`,
       `<b>Hook:</b> ${html(hook)}<br><b>Mantra:</b> ${html(mantra)}<hr>${keyHtml}`,
-      `v${volume}::ch${chapter}`,
-      'Data Models::Submodels',
-      `dm-v${volume}-ch${chapter}-${figs}`,
+      arch ? `v${volume}::ch${chapter} architecture` : `v${volume}::ch${chapter}`,
+      arch ? 'Data Models::Architecture' : 'Data Models::Submodels',
+      arch ? `dm-v${volume}-ch${chapter}-arch` : `dm-v${volume}-ch${chapter}-${figs}`,
     ]);
   }
 

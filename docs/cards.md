@@ -4,10 +4,11 @@ A solo routine for every morning, separate from the deep-dive sessions. The deep
 understanding; this keeps it from fading. No Claude needed, about 30 minutes, pen and paper.
 
 **Anki:** `npm run cards:anki` writes `docs/cards-anki.txt`; import it with File → Import.
-It fills two subdecks, *Data Models::Submodels* and *Data Models::Patterns*. This file stays
-the source of truth: edit here, rerun, re-import. Each note's id comes from the volume, chapter
-and figures in its heading (or the pattern number), so renumbering or rewording a card updates
-its note; keep those three stable. A re-import updates a note's text but never moves its card
+It fills three subdecks, *Data Models::Submodels*, *Data Models::Architecture* and
+*Data Models::Patterns*. This file stays the source of truth: edit here, rerun, re-import. Each
+note's id comes from the volume, chapter and figures in its heading (an architecture card's
+from its volume and chapter, a pattern's from its number), so renumbering or rewording a card
+updates its note; keep those stable. A re-import updates a note's text but never moves its card
 to another deck: after changing a deck in the script, move the cards with Browse → Change Deck.
 Anki's scheduling replaces the boxes below; still write S · W · T · D on paper before you flip.
 
@@ -310,6 +311,81 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   quantities down the levels and needs a cycle guard.
 - **D:** product ← association (from), association (to) → product; association → type; good
   (= product) carries good_kind. Not built: 3.10b's PART, the physical side of a product.
+</details>
+
+---
+
+## Deck: architecture
+
+One card per chapter, from its architecture figure (the last, overall one): how the chapter's
+submodels hang together. The Map warm-up chains the chapters; these test the inside of one.
+Same drill, with the letters read as: **S** the hub entities · **W** how each submodel hands
+over to the next · **T** the naive mistake · **D** the submodels as boxes, with the lines in
+from earlier chapters marked. Five minutes, not three: a chapter is bigger than a submodel.
+
+### Architecture · V1 Ch 2 · People and organizations (Fig 2.14)
+- **Cue:** "Everything we know about whoever we deal with, in one picture."
+- **Hook:** the bicycle wheel *(Claude's, at the user's request)*
+- **Mantra:** One hub, the party: reached through mechanisms, found at facilities, heard in
+  events that cases gather; it wears roles, and a relationship pairs two roles, never two
+  parties.
+
+<details><summary>Key</summary>
+
+- **S:** `party` (the one hub: a person or an organization) · `party_role` (what it is to us:
+  customer, supplier, employee; typed, dated) · `party_relationship` (joins two roles, from
+  and to, dated) · `party_contact_mechanism` (a party's dated use of a shared address, phone
+  or e-mail, with purposes) · `facility` (a physical place, nested; parties tie in through
+  `facility_role`) · `communication_event` (what was said, with roles and purposes), gathered
+  into a `communication_case`.
+- **W:** every submodel answers one question about the same party. Who are they to us: a
+  role. How are they related: a relationship between two roles. How do we reach them: a
+  contact mechanism, through the dated link (facilities get mechanisms the same way). What did
+  we say: an event, optionally within a relationship, gathered into a case and followed up
+  with a work effort (Ch 6).
+- **T:** *(the naive-model trap until practice gives yours)* a table per kind of party
+  (customer, supplier, employee), each with its own address columns: a company that is both a
+  customer and a supplier becomes two rows that drift apart.
+- **D:** party → party_role ← party_relationship (from, to); party ← party_contact_mechanism →
+  contact_mechanism (postal address ← postal_address_boundary → geographic_boundary); party ←
+  facility_role → facility (part of) ← facility_contact_mechanism → contact_mechanism;
+  communication_event → party_relationship and communication_case (both optional), ←
+  communication_event_role → party. First chapter, so nothing comes in; Ch 3 borrows
+  organization, party_type, facility and geographic_boundary.
+</details>
+
+### Architecture · V1 Ch 3 · Products (Fig 3.11)
+- **Cue:** "Everything about what we sell, from the catalogue to the shelf to the price tag."
+- **Hook:** the catalogue and the warehouse *(Claude's, at the user's request)*
+- **Mantra:** Categories and features describe a product, suppliers offer it, associations
+  link it to other products; a good is stocked as items at a facility; a price is built from
+  components, never stored.
+
+<details><summary>Key</summary>
+
+- **S:** `product` (the catalogue entry: what we sell) · `good` (the tangible kind of product,
+  split by `good_kind` into raw material, subassembly, finished good) · `inventory_item` (the
+  physical stock of a good) · `product_category` and `product_feature` (describe the product)
+  · `price_component` and `estimated_product_cost` (build its numbers).
+- **W:** define → describe → source → stock → price → relate. A product sits in categories
+  (rollup, classification) that party types show market interest in; features attach through
+  applicability, and interaction says which go together or clash. Supplier product says which
+  organization sells it to us. Only goods get identification codes, reorder guidelines and
+  inventory items. Price components (for a product and/or a feature) and estimated costs (a
+  product or a feature, never both) build the numbers. Product association links product to
+  product, the bill of materials included.
+- **T:** *(the naive-model trap until practice gives yours)* one product table with price,
+  cost, quantity on hand and supplier columns: one price, one supplier, no history, and no
+  way to tell the catalogue entry from the units on the shelf.
+- **D:** product → good (subtype); product ← product_category_classification →
+  product_category (rollup) ← market_interest → **party_type**; product ←
+  product_feature_applicability → product_feature (interaction); product ← supplier_product →
+  **organization**; good ← good_identification, reorder_guideline (→ **facility** or
+  **geographic_boundary**), inventory_item (→ **facility** | container); product and/or
+  feature ← price_component (→ **geographic_boundary**, **party_type**, **organization**,
+  quantity break, order value); product | feature ← estimated_product_cost; product ←
+  product_association → product. Bold = from Ch 2. Kept: 3.10a's good subtypes, not 3.10b's
+  PART.
 </details>
 
 ---

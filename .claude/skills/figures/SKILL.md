@@ -54,7 +54,11 @@ report instead of skipping it silently.
    Trap is the naive-model trap until practice). Keep cards in chapter order. Then
    `npm run cards:anki`.
 3. Tick `Doc draft` in STATUS.md with today's date.
-4. The architecture figure: its "Ch N architecture" entry in the doc, then tick the `A` row.
+4. The architecture figure: its "Ch N architecture" entry in the doc, and its card in
+   `docs/cards.md` under *Deck: architecture*, headed `### Architecture · VN Ch N · name
+   (Fig N.M)` with STATUS.md's `Architecture figure`: hook, mantra, key in S · W · T · D read
+   as hubs, hand-overs, the naive mistake, and the drawing with the lines in from earlier
+   chapters marked. `npm run cards:anki`, then tick the `A` row.
 
 ## 6. Bookkeeping
 - TODO.md (tick, add), the README progress table, CHANGELOG.md (today's entry: Built,
