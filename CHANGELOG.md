@@ -18,6 +18,9 @@ and any decisions made.
 - Anki export ready to scale: subdecks *Data Models::Submodels* and *Data Models::Patterns*,
   a stable note id per card (volume, chapter and figures, or pattern number) so renumbering
   no longer duplicates notes, and `v1::ch02` tags. Card headings now carry the volume.
+- Ch 3: the last figures shared (3.7 pricing, 3.8 estimated cost, 3.9a/b associations,
+  3.10a/b parts, 3.11 overall) and transcribed into NOTES, each with its "To check against
+  the book" list. Two more submodels proposed: pricing and costing, associations and parts.
 
 **Decisions**
 - `docs/recall.md` stays the source of truth; Anki is a generated copy, re-imported on change.
@@ -28,6 +31,8 @@ and any decisions made.
 **Next**
 - The user imports the deck; mantras that fail twice get rewritten in the user's words.
 - Card 1 shower question: Laura at the climbing gym, employment or generic relationship?
+- The user confirms Figs 3.7–3.11 and picks the alternates to build (3.9a or b, 3.10a or b);
+  then build one figure per commit.
 
 ## 2026-10-15
 

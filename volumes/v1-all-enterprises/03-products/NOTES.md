@@ -10,11 +10,20 @@ prices) becomes its own entity linked back to it. The recurring moves are the on
 a dated classification link, a many-to-many rollup, type + value rows instead of columns, and
 rules stored as data.
 
-## Submodels (proposed, pending the rest of the chapter's figures)
+## Submodels (4–5 proposed 2026-10-16, once every figure was shared)
 1. **Product definition, categories and identification** (Figs 3.1–3.3): what is the thing
    we sell, how do we group it, and which codes identify it?
 2. **Product features** (Fig 3.4): what options and characteristics can a product have,
    which ones go together, and in what units are they measured?
+3. **Suppliers and inventory** (Figs 3.5–3.6): who can sell it to us, when do we reorder,
+   and where is the stock, in what state?
+4. **Pricing and costing** (Figs 3.7–3.8): what do we charge, to whom, where and for how
+   much, and what does it cost us to make?
+5. **Product associations and parts** (Figs 3.9–3.10): which products are built from,
+   bundled with, replaced by, substitutable for or incompatible with which others?
+
+Fig 3.11 is the chapter's summary: no new submodel, but it adds GOOD's subtypes and shows
+which alternates (3.9b, not 3.10b) the overall model keeps.
 
 ## Figures
 
@@ -423,6 +432,325 @@ FACILITY                         (from Ch 2)
   "expected vs counted at the count" matters, it belongs on the variance row (the count event),
   not as a running column on the item.
 
+### Fig 3.7 — Standard product pricing
+**Transcription** (confirmed against the book: ☐; two photos, the figure spans a page break)
+
+```
+PRICE COMPONENT
+  # price_component_id
+  * from_date
+  o thru_date
+  o price
+  o percent
+  o comment
+  -> GEOGRAPHIC BOUNDARY  (many "based on" 1 boundary; boundary "a location used to define" many)
+  -> PARTY TYPE           (many "based on" 1 type; type "used to define" many)
+  -> PRODUCT CATEGORY     (many "based on" 1 category; category "used to define" many)
+  -> QUANTITY BREAK       (many "based on" 1 break; break "a discount level defined for" many)
+  -> ORDER VALUE          (many "based on" 1 value; value "a discount level defined for" many)
+  -> SALE TYPE            (many "based on" 1 type; type "used to define" many)
+  -> CURRENCY MEASURE     (many "in the currency of" 1 currency; currency "used in" many)
+  -> PRODUCT              (many "a price defined for" 1 product; product "priced by" many)
+  -> PRODUCT FEATURE      (many "a price defined for" 1 feature; feature "priced by" many)
+  -> ORGANIZATION         (many "specified for" 1 org; org "the pricer of" many)
+  subtypes, first box:
+    BASE PRICE
+    DISCOUNT COMPONENT
+    SURCHARGE COMPONENT
+    MANUFACTURER SUGGESTED PRICE
+  subtypes, second box:
+    ONE TIME CHARGE
+    RECURRING CHARGE
+      -> TIME FREQUENCY MEASURE?  (many "per" 1 unit; unit "used in" many)
+    UTILIZATION CHARGE
+      o quantity
+      -> UNIT OF MEASURE          (many "per" 1 unit; unit "used in" many)
+
+QUANTITY BREAK
+  # quantity_break_id
+  * from_quantity
+  o thru_quantity
+
+ORDER VALUE
+  # order_value_id
+  * from_amount
+  o thru_amount
+
+SALE TYPE
+  # sale_type_id
+  * description
+
+UNIT OF MEASURE                   (Fig 3.4, now with subtypes)
+  # uom_id
+  * abbreviation
+  * description
+  subtypes:
+    TIME FREQUENCY MEASURE
+    CURRENCY MEASURE
+
+GEOGRAPHIC BOUNDARY, PARTY TYPE, ORGANIZATION   (from Ch 2)
+PRODUCT (3.1), PRODUCT CATEGORY (3.2), PRODUCT FEATURE (3.4)
+```
+
+**To check against the book:**
+- The subtypes sit in **two separate boxes**. I read that as two independent subtype sets: a
+  component is one of base / discount / surcharge / suggested *and* one of one-time /
+  recurring / utilization.
+- RECURRING CHARGE's "per" line runs along the top edge of the UNIT OF MEASURE box. I read it
+  as ending at TIME FREQUENCY MEASURE, but it may stop at UNIT OF MEASURE itself.
+  UTILIZATION CHARGE's line clearly stops at UNIT OF MEASURE.
+- Every line looks dashed (optional) at both ends, including PRODUCT, PRODUCT FEATURE and
+  ORGANIZATION. Is any of them solid at the PRICE COMPONENT end?
+- Naming only: BASE PRICE here, BASE PRODUCT PRICE in Fig 3.10b.
+
+### Fig 3.8 — Estimated product cost
+**Transcription** (confirmed against the book: ☐)
+
+```
+ESTIMATED PRODUCT COST
+  # cost_component_id     (named after "cost component", not after the entity)
+  * from_date
+  o thru_date
+  * cost
+  -> PRODUCT              (many "calculated for" 1 product; product "costed by" many)
+  -> PRODUCT FEATURE      (many "calculated for" 1 feature; feature "costed by" many)
+  (exclusive arc across PRODUCT and PRODUCT FEATURE: one or the other)
+  -> COST COMPONENT TYPE  (many "categorized by" 1 type; type "used to define" many)
+  -> GEOGRAPHIC BOUNDARY  (optional: many "specified for" 1 boundary;
+                           boundary "used to further define" many)
+  -> ORGANIZATION         (optional: many "specified for" 1 org; org "used to further define" many)
+  subtypes:
+    ESTIMATED MATERIALS COST
+    ESTIMATED LABOR COST
+    ESTIMATED OTHER COSTS
+
+COST COMPONENT TYPE
+  # cost_component_type_id
+  * description
+```
+
+**To check against the book:**
+- The arc spans the two "calculated for" lines, and both are solid at the cost end: every
+  estimate is for exactly one product or one feature.
+- COST COMPONENT TYPE is solid at the cost end (mandatory); geography and organization are
+  dashed (optional).
+
+### Fig 3.9a — Product to product associations
+**Transcription** (confirmed against the book: ☐)
+
+```
+PRODUCT COMPONENT
+  * from_date
+  o thru_date
+  o quantity_used
+  o instruction
+  o comment
+  -> PRODUCT  ("in": many components in 1 product; product "made up of" many)
+  -> PRODUCT  ("for": many components for 1 product; product "used in" many)
+
+PRODUCT SUBSTITUTE
+  * from_date
+  * thru_date              (printed mandatory)
+  o quantity
+  o comment
+  -> PRODUCT  ("for" / product "substituted by")
+  -> PRODUCT  ("a use of" / product "used as")
+
+PRODUCT OBSOLESCENCE
+  * supercession_date      (one date, no from/thru)
+  o reason
+  -> PRODUCT  ("for" / product "superseded by")
+  -> PRODUCT  ("a use of" / product "a replacement")
+
+PRODUCT COMPLEMENT
+  * from_date
+  o thru_date
+  o reason
+  -> PRODUCT  ("for" / product "complemented with")
+  -> PRODUCT  ("a use of" / product "a complement for")
+
+PRODUCT INCOMPATIBILITY
+  * from_date
+  o thru_date
+  o reason
+  -> PRODUCT  ("for" / product "incompatible with")
+  -> PRODUCT  ("a use of" / product "incompatible with")
+
+All ten lines: mandatory at the association end, optional at the product end, and each
+carries the bar (part of the identifier). No attribute is marked #.
+
+PRODUCT   (drawn without support_discontinuation_date, which Fig 3.1 has)
+  subtypes: GOOD, SERVICE
+```
+
+The book spells two labels "superceded" and "complimented"; corrected here.
+
+**To check against the book:**
+- PRODUCT SUBSTITUTE's thru_date is printed `*` (mandatory), while every other thru date in
+  the figure is `o`. Fig 3.10a prints PRODUCT COMPONENT's thru_date as `*` too. I take both as
+  slips and would keep thru dates nullable (our effectivity convention).
+- from_date is `*`, not `#`, on all five, while Fig 3.9b marks it `#`.
+- The bar is on all ten lines.
+
+### Fig 3.9b — Product to product associations, alternate model
+**Transcription** (confirmed against the book: ☐)
+
+```
+PRODUCT ASSOCIATION
+  # from_date
+  o thru_date
+  o reason
+  -> PRODUCT                   ("from": many associations from 1 product;
+                                product "associated with" many; part of identifier)
+  -> PRODUCT                   ("to": many associations to 1 product;
+                                product "associated with" many; part of identifier)
+  -> PRODUCT ASSOCIATION TYPE  (many "described by" 1 type; type "the description for" many)
+  subtypes:
+    MARKETING PACKAGE
+      o quantity_used
+      o instruction
+    PRODUCT SUBSTITUTE
+      o quantity
+    PRODUCT OBSOLESCENCE
+    PRODUCT COMPLEMENT
+    PRODUCT INCOMPATIBILITY
+
+PRODUCT ASSOCIATION TYPE
+  # prod_assoc_type_id
+  * description
+```
+
+Compared with 3.9a: PRODUCT COMPONENT becomes MARKETING PACKAGE; obsolescence drops its
+supercession date (from_date does the job); the comments go; reason moves to the supertype.
+
+**To check against the book:**
+- The type line is solid at the association end (every association has a type) and carries
+  no bar, so the identifier is from product + to product + from_date.
+
+### Fig 3.10a — Products and parts
+**Transcription** (confirmed against the book: ☐)
+
+```
+PRODUCT COMPONENT          (3.9a's, redrawn)
+  * from_date
+  * thru_date              (printed mandatory again)
+  o quantity_used
+  o instruction
+  o comment
+  -> PRODUCT  ("in" / product "made up of"; part of identifier)
+  -> PRODUCT  ("for" / product "used in"; part of identifier)
+
+PRODUCT
+  # product_id
+  * name
+  o introduction_date
+  o sales_discontinuation_date
+  o comment
+  subtypes:
+    RAW MATERIAL
+    SUBASSEMBLY
+    FINISHED GOOD
+```
+
+Here the subtypes hang straight off PRODUCT; Fig 3.11 puts the same three under GOOD.
+
+### Fig 3.10b — Product and parts, alternate model
+**Transcription** (confirmed against the book: ☐)
+
+```
+PART
+  # part_id
+  * name
+  subtypes:
+    RAW MATERIAL
+    SUBASSEMBLY
+    FINISHED GOOD
+
+PART BOM
+  # from_date
+  o thru_date
+  o quantity_used
+  o instructions
+  o comment
+  -> PART  ("for" / part "made up of"; part of identifier)
+  -> PART  ("in" / part "used in"; part of identifier)
+
+PRODUCT
+  # product_id
+  * product_name           (NAME in the other figures)
+  subtypes:
+    GOOD
+      -> FINISHED GOOD  (many goods "offered using" 1 finished good;
+                         finished good "used to provide" many goods)
+    SERVICE
+
+INVENTORY ITEM             (Fig 3.6, now pointing at PART instead of GOOD)
+  # inventory_item_id
+  -> PART  (many "the physical occurrence of" 1 part; part "the generic description for" many)
+  subtypes:
+    SERIALIZED INVENTORY ITEM       * serial_num
+    NON-SERIALIZED INVENTORY ITEM   * quantity_on_hand
+
+PRICE COMPONENT            (Fig 3.7, now pointing at PART)
+  # price_component_id, * from_date, o thru_date, o price, o percent, o comment
+  -> PART  (many "specified for" 1 part; part "priced by" many)
+  subtypes: BASE PRODUCT PRICE, DISCOUNT COMPONENT, SURCHARGE COMPONENT,
+            MANUFACTURER SUGGESTED PRICE
+
+REORDER GUIDELINE          (Fig 3.5, now pointing at PART)
+  * from_date, o thru_date, o reorder_qty, o reorder_level
+  -> PART  (many "a basis for ordering" 1 part; part "ordered using" many)
+
+SUPPLIER OFFERING          (Fig 3.5's SUPPLIER PRODUCT, renamed, now pointing at PART)
+  # available_from_date
+  o available_thru_date
+  o standard_lead_time
+  o comment
+  -> PART  (many "a valid supplier of" 1 part; part "supplied thru" many)
+```
+
+**To check against the book:**
+- GOOD ↔ FINISHED GOOD: I read the crow's foot at GOOD (one finished good backs many goods)
+  and the line dashed (optional).
+- PART BOM's two lines carry the bar.
+- The organization links (supplier, manufacturer) and PRICE COMPONENT's other links aren't
+  drawn. I take that as "unchanged, not shown".
+
+### Fig 3.11 — Overall product model
+**Transcription** (confirmed against the book: ☐; identifiers only, no attributes)
+
+```
+Shown, all from Figs 3.1–3.10:
+  PRODUCT CATEGORY, PRODUCT CATEGORY ROLLUP, PRODUCT CATEGORY CLASSIFICATION, MARKET INTEREST,
+  PARTY TYPE, PRODUCT (SERVICE, GOOD), GOOD IDENTIFICATION, PRODUCT FEATURE,
+  PRODUCT FEATURE APPLICABILITY, PRODUCT FEATURE INTERACTION, UNIT OF MEASURE,
+  UNIT OF MEASURE CONVERSION, SUPPLIER PRODUCT, ORGANIZATION, REORDER GUIDELINE,
+  INVENTORY ITEM, INVENTORY ITEM STATUS TYPE, INVENTORY ITEM VARIANCE, LOT, CONTAINER,
+  FACILITY, PRICE COMPONENT, ESTIMATED PRODUCT COST, PRODUCT ASSOCIATION
+
+GOOD
+  subtypes:
+    RAW MATERIAL
+    SUBASSEMBLY
+    FINISHED GOOD
+```
+
+What it adds or settles:
+- **GOOD gets 3.10a's subtypes** (raw material, subassembly, finished good).
+- **Associations use 3.9b:** one PRODUCT ASSOCIATION with two lines to PRODUCT. No PRODUCT
+  COMPONENT box, no PART.
+- **Suppliers stay 3.5's:** SUPPLIER PRODUCT, pointing at PRODUCT and ORGANIZATION. So the
+  overall model is the product-only one, not 3.10b's parts.
+- GOOD IDENTIFICATION and INVENTORY ITEM point at GOOD (as we built them in 3.3 and 3.6).
+- PRICE COMPONENT and ESTIMATED PRODUCT COST each point at PRODUCT and PRODUCT FEATURE.
+- Left out: the lookups (feature category, preference, rating, reason, container type,
+  identification type, sale type, cost component type, association type), QUANTITY BREAK,
+  ORDER VALUE and GEOGRAPHIC BOUNDARY. I take that as abbreviation, not removal.
+
+**To check against the book:**
+- REORDER GUIDELINE's line runs down the right edge of the PRODUCT box. I read it as ending at
+  GOOD, as in 3.5.
+
 ## Design decisions (book → SQL)
 
 ### Fig 3.1
@@ -582,4 +910,4 @@ FACILITY                         (from Ch 2)
   reading.
 - **Fig 3.4:** conversions are per unit pair, so a product-specific pack size ("a box of forms
   holds 50") has nowhere to live. Does a later figure (inventory, supplier products) solve
-  this?
+  this? Not in Ch 3: Figs 3.5–3.11 add no product-specific conversion.

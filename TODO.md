@@ -48,7 +48,12 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [ ] Submodel 2: product features (Fig 3.4): walk-through and questions 2026-10-14, all three rows at 3; parked before the neighbourhood question (asked, unanswered); still to do: neighbourhood + OK to close, scenario, doc entry
   - [x] Confirm Figs 3.2–3.4 against the book (2026-10-11): 3.3 now links to a `good` subtype table; 3.4's unit of measure is on DIMENSION only
   - [ ] Submodel 3: suppliers and inventory (Figs 3.5–3.6, built 2026-10-11): both figures walked through 2026-10-14 (rows at 2–3); 2026-10-15: concept session on qoh / balance / variance (in NOTES); next: recall 1, the K-17 lot question (asked, parked by the user), supplier and reorder to 3, neighbourhoods, scenario, doc entry
-  - [ ] Share the remaining Ch 3 figures (pricing, costs, associations…)
+  - [x] Share the remaining Ch 3 figures (2026-10-16: Figs 3.7–3.11, the last of the chapter)
+  - [ ] Confirm the Figs 3.7–3.11 transcriptions (NOTES, "To check against the book" under each), then build one figure per commit
+  - [ ] Decide which alternates to build: 3.9a (five association tables) vs 3.9b (one table, the one Fig 3.11 keeps); 3.10a (product component) vs 3.10b (PART)
+  - [ ] Submodel 4: pricing and costing (Figs 3.7–3.8): build, walk-through, exercises
+  - [ ] Submodel 5: product associations and parts (Figs 3.9–3.10): build, walk-through, exercises
+  - [ ] Ch 3 card pass: a recall card per submodel, pattern cards, `npm run recall:anki`
 - [ ] Ch 04: Ordering Products
 - [ ] Ch 05: Shipments
   - [ ] Check SHIPMENT RECEIPT and ITEM ISSUANCE link to INVENTORY ITEM (recalled 2026-10-15); add the qoh = balance data-quality query (Ch 3 NOTES, Fig 3.6 vocabulary)
