@@ -86,6 +86,9 @@ and any decisions made.
   mantra against the submodel's transcriptions and design decisions, and the architecture
   card against "How it flows" when it's the chapter's last submodel. NOTES wins unless
   practice proved NOTES wrong. Only the export step is scripted, so the check is Claude's.
+- `/overview` runs the same check (the user's call): on the cards a point or a piece of
+  feedback touches, as soon as it's agreed, and on every card of the chapter once the
+  refactor is finished.
 - 3.10 built on assumptions under the new rule (point 11): no separate PRODUCT COMPONENT table,
   since 3.11 has none. Ponder 21's renaming passage may turn it into MARKETING PACKAGE reuse.
 - The design reference doc's drafts answer some ponders, so it stays closed during exams,
