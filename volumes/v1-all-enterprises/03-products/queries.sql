@@ -784,3 +784,101 @@ join estimated_product_cost b
  and b.from_date < coalesce(a.thru_date, 'infinity')
 left join product pr         on pr.product_id = a.product_id
 left join product_feature pf on pf.product_feature_id = a.product_feature_id;
+
+-- ============================================================
+-- Fig 3.9b — Product to product associations
+-- ============================================================
+
+-- name: 3.9 — Every current association, read as a sentence
+select a.product_association_type_id as type,
+       case a.product_association_type_id
+         when 'MARKETING_PACKAGE' then f.name || ' includes ' || coalesce(a.quantity_used, 1) || ' × ' || t.name
+         when 'SUBSTITUTE'        then t.name || ' can replace ' || f.name || coalesce(' (' || a.quantity || ' for 1)', '')
+         when 'OBSOLESCENCE'      then f.name || ' was superseded by ' || t.name || ' on ' || a.from_date
+         when 'COMPLEMENT'        then f.name || ' goes well with ' || t.name
+         when 'INCOMPATIBILITY'   then f.name || ' doesn''t work with ' || t.name
+       end as sentence,
+       a.reason
+from product_association a
+join product f on f.product_id = a.from_product_id
+join product t on t.product_id = a.to_product_id
+where a.from_date <= current_date and (a.thru_date is null or a.thru_date > current_date)
+order by a.product_association_type_id, a.product_association_id;
+
+-- name: 3.9 — Out of bond paper: what can replace it, and how much of each substitute is in stock
+select s.name as substitute, a.quantity as needed_per_ream,
+       coalesce(sum(case i.inventory_item_kind when 'SERIALIZED' then 1 else i.quantity_on_hand end), 0) as sellable_on_hand
+from product_association a
+join product s              on s.product_id = a.to_product_id
+left join inventory_item i  on i.product_id = s.product_id and i.inventory_item_status_type_id = 'GOOD'
+where a.product_association_type_id = 'SUBSTITUTE'
+  and a.from_product_id = 1
+  and a.from_date <= current_date and (a.thru_date is null or a.thru_date > current_date)
+group by s.name, a.quantity;
+
+-- name: 3.9 — Selling a copier: what to offer with it, and what must not go with it (incompatibility counts both ways)
+select 'offer' as advice, t.name as product, a.reason
+from product_association a
+join product t on t.product_id = a.to_product_id
+where a.product_association_type_id = 'COMPLEMENT' and a.from_product_id = 6
+  and (a.thru_date is null or a.thru_date > current_date)
+union all
+select 'never with', p.name, a.reason
+from product_association a
+join product p on p.product_id = case when a.from_product_id = 6 then a.to_product_id else a.from_product_id end
+where a.product_association_type_id = 'INCOMPATIBILITY' and 6 in (a.from_product_id, a.to_product_id)
+  and (a.thru_date is null or a.thru_date > current_date)
+order by advice desc, product;
+
+-- name: 3.9 — What's in the office starter kit, at today's list prices (Fig 3.7)
+select t.name as product, a.quantity_used, lp.price as list_price, a.quantity_used * lp.price as line_value
+from product_association a
+join product t on t.product_id = a.to_product_id
+left join lateral (
+  select pc.price
+  from price_component pc
+  where pc.product_id = a.to_product_id
+    and pc.price_component_type_id = 'BASE_PRICE' and pc.product_feature_id is null
+    and pc.currency_uom_id = 'USD'
+    and num_nonnulls(pc.geographic_boundary_id, pc.party_type_id, pc.product_category_id,
+                     pc.quantity_break_id, pc.order_value_id, pc.sale_type_id) = 0
+    and pc.from_date <= current_date and (pc.thru_date is null or pc.thru_date > current_date)
+  order by pc.from_date desc
+  limit 1
+) lp on true
+where a.product_association_type_id = 'MARKETING_PACKAGE' and a.from_product_id = 11
+  and a.from_date <= current_date and (a.thru_date is null or a.thru_date > current_date)
+order by t.name;
+
+-- name: 3.9 — Data-quality check: package and substitute attributes on the wrong type (should be empty)
+select product_association_id, product_association_type_id, quantity_used, instruction, quantity
+from product_association
+where (product_association_type_id <> 'MARKETING_PACKAGE' and (quantity_used is not null or instruction is not null))
+   or (product_association_type_id <> 'SUBSTITUTE' and quantity is not null);
+
+-- name: 3.9 — Data-quality check: two products that are complements and incompatible at once, either way round (should be empty)
+select f.name as product_a, t.name as product_b, c.from_date as complement_from, i.from_date as incompatible_from
+from product_association c
+join product_association i
+  on i.product_association_type_id = 'INCOMPATIBILITY'
+ and ((i.from_product_id = c.from_product_id and i.to_product_id = c.to_product_id)
+   or (i.from_product_id = c.to_product_id and i.to_product_id = c.from_product_id))
+ and c.from_date < coalesce(i.thru_date, 'infinity')
+ and i.from_date < coalesce(c.thru_date, 'infinity')
+join product f on f.product_id = c.from_product_id
+join product t on t.product_id = c.to_product_id
+where c.product_association_type_id = 'COMPLEMENT';
+
+-- name: 3.9 — Data-quality check: the same association twice in overlapping periods (should be empty)
+select a.product_association_id as a_id, b.product_association_id as b_id, a.product_association_type_id,
+       f.name as from_product, t.name as to_product, a.from_date as a_from, b.from_date as b_from
+from product_association a
+join product_association b
+  on b.product_association_id > a.product_association_id
+ and b.product_association_type_id = a.product_association_type_id
+ and b.from_product_id = a.from_product_id
+ and b.to_product_id   = a.to_product_id
+ and a.from_date < coalesce(b.thru_date, 'infinity')
+ and b.from_date < coalesce(a.thru_date, 'infinity')
+join product f on f.product_id = a.from_product_id
+join product t on t.product_id = a.to_product_id;

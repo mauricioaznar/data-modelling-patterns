@@ -647,6 +647,25 @@ PRODUCT ASSOCIATION TYPE
 Compared with 3.9a: PRODUCT COMPONENT becomes MARKETING PACKAGE; obsolescence drops its
 supercession date (from_date does the job); the comments go; reason moves to the supertype.
 
+**Discussion (3.9a and 3.9b)**
+- **The naive model** gives PRODUCT columns like `replaced_by_product_id` or
+  `substitute_product_id`: one of each, no dates, no reason, and every new kind of link is a
+  new column.
+- **A product-to-product link is the recursive pattern again:** a link entity with two
+  foreign keys to the same table (from and to), dated, like Ch 2's PARTY RELATIONSHIP and
+  3.2's PRODUCT CATEGORY ROLLUP.
+- **3.9a vs 3.9b** is the Ch 2 move from specific relationships to one PARTY RELATIONSHIP plus
+  a type. 3.9a gives each kind its own entity, attributes and labels (a supersession date, a
+  substitute quantity). 3.9b folds them into one PRODUCT ASSOCIATION with a type and keeps the
+  subtypes only for their few attributes. A new kind of link becomes a row, not a table. The
+  price: rules that were structure (only packages have a quantity used) become data-quality
+  checks, and what "from" and "to" mean depends on the type.
+- **Direction matters for some types only.** A package contains its products; an obsolete
+  product points at its replacement; substitution may hold one way only (premium paper can
+  stand in for standard, not the reverse). Incompatibility is symmetric, so queries look both
+  ways.
+- **Goods and services mix freely:** a copier is complemented by a maintenance plan.
+
 ### Fig 3.10a — Products and parts
 **Transcription** (accepted 2026-10-16; open points under "Points to discuss after the overview")
 
@@ -949,6 +968,23 @@ Silverston intended, not at the literal drawing.
 - **The queries choose between general and specific estimates themselves** (the Mexico query
   prefers the Mexican row per type); the model only stores both.
 
+### Fig 3.9b (3.9a not built)
+- **Built from 3.9b,** the version Fig 3.11 keeps (the user's choice, 2026-10-16). 3.9a stays
+  in these notes as the alternative.
+- **Subtypes → rows in the book's own PRODUCT ASSOCIATION TYPE** (`product_association_type`),
+  as identification types were in 3.3.
+- **MARKETING PACKAGE's `quantity_used` and `instruction`, SUBSTITUTE's `quantity`** become
+  nullable columns; a data-quality query checks they sit on the right type (seed: a complement
+  with a package quantity).
+- **Direction per type is written down in `schema.sql`** (our reading of 3.9a's labels).
+  Obsolescence uses `from_date` as the supersession date, as 3.9b does.
+- **A product can't be associated with itself:** a single-row check constraint.
+- **Surrogate key** instead of from + to + from_date; duplicates are a data-quality query (seed:
+  copier/paper twice). Another catches a pair that is complementary and incompatible at once,
+  either way round (seed: pen/forms).
+- **Three new goods** to associate with (starter kit, recycled paper, USB drive), each with a
+  `good` row and a primary category so the earlier figures' checks stay quiet.
+
 ## When NOT to use this
 
 **Category classification with a rollup network (3.2):**
@@ -995,6 +1031,13 @@ Silverston intended, not at the literal drawing.
 - A reseller that only buys and sells needs the purchase price from its supplier, not a
   cost breakdown. Components pay off when you make, assemble or deliver things yourself and
   want margins by materials, labour and overhead, or costs that differ by plant or region.
+
+**Product associations (3.9):**
+- If the catalogue only ever needs "replaced by", one nullable `replaced_by_product_id` is
+  fine. The association table pays off with several kinds of links, history, or
+  many-to-many links (a kit of several products, a product with several substitutes). Pick
+  3.9a when each kind has its own attributes and rules you want the structure to enforce; 3.9b
+  when kinds come and go.
 
 ## Open questions
 - **Fig 3.6:** is `quantity_on_hand` updated when a variance is recorded, or is the true

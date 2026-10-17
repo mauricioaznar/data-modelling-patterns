@@ -497,3 +497,49 @@ insert into estimated_product_cost (product_id, product_feature_id, cost_compone
   -- bad rows
   (4,    null, 'MARKETING',       null, null, '2024-01-01', null,         0.10),     -- DATA ERROR: its type is outside materials / labor / other (caught by a query)
   (4,    null, 'INK',             null, null, '2024-01-01', null,         1.80);     -- DATA ERROR: overlaps the forms' ink estimate (caught by a query)
+
+-- ============================================================
+-- Fig 3.9b — Product to product associations
+-- ============================================================
+-- Three new goods to associate with. Each gets its good row and a primary
+-- category, so the earlier figures' checks stay quiet about them.
+insert into product (product_id, product_kind, name, introduction_date, uom_id) values
+  (11, 'GOOD', 'Office starter kit',     '2024-01-01', 'EA'),
+  (12, 'GOOD', 'Recycled bond paper',    '2023-01-01', 'REAM'),
+  (13, 'GOOD', 'USB flash drive, 32 GB', '2006-01-01', 'EA');
+
+select setval(pg_get_serial_sequence('product', 'product_id'), (select max(product_id) from product));
+
+insert into good (product_id) values (11), (12), (13);
+
+insert into product_category_classification (product_id, product_category_id, from_date, thru_date, primary_flag, comment) values
+  (11, 1,  '2024-01-01', null, true,  null),
+  (12, 3,  '2023-01-01', null, true,  null),
+  (12, 33, '2023-01-01', null, false, null),
+  (13, 6,  '2006-01-01', null, true,  null);
+
+insert into product_association_type (product_association_type_id, description) values
+  ('MARKETING_PACKAGE', 'Marketing package: sold together as one product'),
+  ('SUBSTITUTE',        'Product substitute'),
+  ('OBSOLESCENCE',      'Product obsolescence: superseded by'),
+  ('COMPLEMENT',        'Product complement'),
+  ('INCOMPATIBILITY',   'Product incompatibility');
+
+insert into product_association (product_association_type_id, from_product_id, to_product_id, from_date, thru_date, reason, quantity_used, instruction, quantity) values
+  -- the starter kit is a package of products we also sell on their own
+  ('MARKETING_PACKAGE', 11, 1,  '2024-01-01', null, null,                                       2,    'Two reams, shrink-wrapped', null),
+  ('MARKETING_PACKAGE', 11, 2,  '2024-01-01', null, null,                                       10,   null,                        null),
+  ('MARKETING_PACKAGE', 11, 4,  '2024-01-01', null, null,                                       1,    null,                        null),
+  -- substitution runs both ways here, but needs a row each way
+  ('SUBSTITUTE',        1,  12, '2023-01-01', null, 'Same size and weight, recycled',           null, null,                        1),
+  ('SUBSTITUTE',        12, 1,  '2023-01-01', null, 'Same size and weight',                     null, null,                        1),
+  ('OBSOLESCENCE',      3,  13, '2006-01-01', null, 'Diskettes superseded by USB drives',       null, null,                        null),
+  -- complements, including a good complemented by a service
+  ('COMPLEMENT',        6,  1,  '2019-01-01', null, 'A copier needs paper',                     null, null,                        null),
+  ('COMPLEMENT',        6,  8,  '2019-01-01', null, 'Offer the maintenance plan with every copier', null, null,                    null),
+  ('COMPLEMENT',        2,  4,  '2001-03-01', null, 'A pen to fill in the claim forms',         null, null,                        null),
+  ('INCOMPATIBILITY',   10, 6,  '2027-01-01', null, 'The laser toner doesn''t fit the OfficeJet', null, null,                      null),
+  -- bad rows
+  ('COMPLEMENT',        2,  1,  '2020-01-01', null, 'DATA ERROR: a package quantity on a complement (caught by a query)', 3, null, null),
+  ('INCOMPATIBILITY',   4,  2,  '2022-01-01', null, 'DATA ERROR: contradicts the pen/forms complement, the other way round (caught by a query)', null, null, null),
+  ('COMPLEMENT',        6,  1,  '2024-01-01', null, 'DATA ERROR: the copier/paper complement again, overlapping (caught by a query)', null, null, null);

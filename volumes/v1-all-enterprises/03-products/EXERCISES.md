@@ -121,6 +121,13 @@ At most 5 per submodel. Answer in a sentence or three under each item.
 19. **[3.8 vs 3.7]** Cost has an arc (a product *or* a feature); price doesn't. Why does that
     difference make sense?
 
+### Submodel 5: product associations and parts
+20. **[3.9a vs 3.9b]** Five association entities, or one with a type? What does each make easy,
+    and what does the generic one lose?
+21. **[3.9b]** (once you've read that passage, no rush) PRODUCT COMPONENT becomes MARKETING
+    PACKAGE in 3.9b. Why the new name, in the figure just before products and parts?
+22. **[3.9b]** Substitution needs a row each way; incompatibility doesn't. Why?
+
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out one submodel in the transcription notation
 (entities, key attributes, relationships and cardinality). Then diff it against `NOTES.md`

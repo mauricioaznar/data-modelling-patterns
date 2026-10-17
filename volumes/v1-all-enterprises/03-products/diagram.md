@@ -87,4 +87,9 @@ erDiagram
   COST_COMPONENT_TYPE |o--o{ COST_COMPONENT_TYPE    : "parent of (MATERIALS, LABOR, OTHER on top)"
   GEOGRAPHIC_BOUNDARY |o--o{ ESTIMATED_PRODUCT_COST : "used to further define"
   ORGANIZATION        |o--o{ ESTIMATED_PRODUCT_COST : "used to further define"
+
+  %% Fig 3.9b — Product associations (3.9a not built)
+  PRODUCT                  ||--o{ PRODUCT_ASSOCIATION : "associated with (from)"
+  PRODUCT                  ||--o{ PRODUCT_ASSOCIATION : "associated with (to)"
+  PRODUCT_ASSOCIATION_TYPE ||--o{ PRODUCT_ASSOCIATION : "the description for"
 ```

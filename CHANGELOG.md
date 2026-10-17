@@ -21,18 +21,27 @@ and any decisions made.
 - Ch 3: the last figures shared (3.7 pricing, 3.8 estimated cost, 3.9a/b associations,
   3.10a/b parts, 3.11 overall) and transcribed into NOTES, each with its "To check against
   the book" list. Two more submodels proposed: pricing and costing, associations and parts.
+- Ch 3 built: Fig 3.7 pricing (price components on two subtype axes, quantity breaks, order
+  values, sale types, currency and time-frequency units, and a "price a line" query), Fig 3.8
+  estimated cost (type hierarchy, product-or-feature arc, margin query) and Fig 3.9b product
+  associations. Ponders 15–22.
 
 **Decisions**
 - `docs/recall.md` stays the source of truth; Anki is a generated copy, re-imported on change.
 - Cards follow chapter order; the stable note ids make renumbering safe.
 - Cards become part of the workflow (the user's call): one per submodel after its
   walk-through, and a card pass at the end of each chapter (CLAUDE.md).
+- Figs 3.7–3.11 accepted as read. The doubtful readings become "points to discuss after the
+  overview", and any refactor waits until then. CLAUDE.md now says to always aim for
+  Silverston's intention (the user's rule).
+- Build 3.9b, not 3.9a (the user's choice). 3.10a vs 3.10b waits until the user has read the
+  renaming passage.
 
 **Next**
 - The user imports the deck; mantras that fail twice get rewritten in the user's words.
 - Card 1 shower question: Laura at the climbing gym, employment or generic relationship?
-- The user confirms Figs 3.7–3.11 and picks the alternates to build (3.9a or b, 3.10a or b);
-  then build one figure per commit.
+- 3.10a or 3.10b, once the user has read the 3.9b renaming passage; then build 3.10 and 3.11.
+- Walk-throughs for submodels 4 and 5.
 
 ## 2026-10-15
 

@@ -49,10 +49,12 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [x] Confirm Figs 3.2–3.4 against the book (2026-10-11): 3.3 now links to a `good` subtype table; 3.4's unit of measure is on DIMENSION only
   - [ ] Submodel 3: suppliers and inventory (Figs 3.5–3.6, built 2026-10-11): both figures walked through 2026-10-14 (rows at 2–3); 2026-10-15: concept session on qoh / balance / variance (in NOTES); next: recall 1, the K-17 lot question (asked, parked by the user), supplier and reorder to 3, neighbourhoods, scenario, doc entry
   - [x] Share the remaining Ch 3 figures (2026-10-16: Figs 3.7–3.11, the last of the chapter)
-  - [ ] Confirm the Figs 3.7–3.11 transcriptions (NOTES, "To check against the book" under each), then build one figure per commit
-  - [ ] Decide which alternates to build: 3.9a (five association tables) vs 3.9b (one table, the one Fig 3.11 keeps); 3.10a (product component) vs 3.10b (PART)
-  - [ ] Submodel 4: pricing and costing (Figs 3.7–3.8): build, walk-through, exercises
-  - [ ] Submodel 5: product associations and parts (Figs 3.9–3.10): build, walk-through, exercises
+  - [x] Figs 3.7–3.11 transcriptions accepted (2026-10-16); doubtful readings moved to "Points to discuss after the overview" in NOTES
+  - [ ] Discuss those 10 points after the overview; refactor then if needed, aiming at Silverston's intention
+  - [x] 3.9a vs 3.9b: build 3.9b, the one Fig 3.11 keeps (the user's choice, 2026-10-16)
+  - [ ] 3.10a (product component) vs 3.10b (PART): decide after the user has read the 3.9b renaming passage (ponder 21), then build 3.10 and 3.11
+  - [ ] Submodel 4: pricing and costing (Figs 3.7–3.8): built 2026-10-16 (ponders 15–19); still to do: walk-through, exercises
+  - [ ] Submodel 5: product associations and parts (Figs 3.9–3.10): 3.9b built 2026-10-16 (ponders 20–22); still to do: 3.10, walk-through, exercises
   - [ ] Ch 3 card pass: a recall card per submodel, pattern cards, `npm run recall:anki`
 - [ ] Ch 04: Ordering Products
 - [ ] Ch 05: Shipments
