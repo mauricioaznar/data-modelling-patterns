@@ -805,6 +805,11 @@ What it adds or settles:
 1. **FACILITY CONTACT MECHANISM's "specified via" / "used by" line stops at COMMUNICATION
    EVENT.** Those are 2.11's labels for its link to CONTACT MECHANISM, so I read the line as a
    slip: it points at CONTACT MECHANISM.
+   → **Kept** (settled by reasoning, no photo, 2026-10-17): (a) the labels are 2.11's for this
+   link and 2.10's for PARTY CONTACT MECHANISM's, and no event line anywhere uses them;
+   (b) FACILITY CONTACT MECHANISM is an attribute-less link whose only job is facility ↔
+   mechanism, so without this line it would have one end; (c) "an event specified via a
+   facility's mechanism" means nothing. 2.11's SQL and the cards already follow this reading.
 2. **The communication event is drawn bare** (no roles, purposes, status or medium). Read as
    abbreviation, not a step back to 2.7's one-relationship event.
 
