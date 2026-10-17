@@ -835,6 +835,21 @@ Silverston intended, not at the literal drawing.
    three charge kinds combine with any mix of the pricing conditions (the user's check). Still
    open, for discussion: is the second set mandatory? `charge_kind` is nullable now, which
    makes null mean ONE_TIME.
+   → **Discussed 2026-10-17** (the user's walk-through of pricing, from their own model):
+   - *Agreed, to refactor:* base prices and suggested prices always carry a charge kind (the
+     ream's 42 is ONE_TIME); a data-quality query checks it.
+   - *Parked by the user:* discounts and surcharges. The user wants it never empty; Claude
+     holds that empty means "any charge", as for every other condition (a 3% category discount
+     should reach both a one-time ream and a monthly plan without two rows).
+   - *Proposed, unconfirmed:* split `per_uom_id` into `per_time_frequency_id` (RECURRING, a
+     plain FK to `time_frequency_measure`, as point 2's line) and `per_uom_id` (UTILIZATION),
+     from the user's worry that one shared column reads vaguely.
+   - *Gap found:* the 3.7 "price a line" query skips feature prices; extend it after the
+     refactor (a feature's base competes only with that feature's, and percents apply to
+     product + features).
+   - *Gap found:* "most specific" counts filled conditions, not depth in a hierarchy. A
+     Jalisco base price and a Mexico base price tie (one condition each), so the lower wins,
+     not the deeper. Decide at the refactor whether depth should break the tie.
 2. **3.7, RECURRING CHARGE "per":** read as ending at TIME FREQUENCY MEASURE; the line may stop
    at UNIT OF MEASURE itself. UTILIZATION CHARGE's ends at UNIT OF MEASURE.
    → **Kept** (the user checked the book, 2026-10-17): the line ends at TIME FREQUENCY MEASURE.

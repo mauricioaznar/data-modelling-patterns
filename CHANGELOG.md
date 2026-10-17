@@ -26,9 +26,17 @@ and any decisions made.
   assemblies. We keep no PART (as 3.11), so one link carries kits and BOMs; telling them
   apart is what PART is for.
 
+- Pricing walk-through (submodel 4, Fig 3.7) from the user's own model: price components,
+  base-price competition, conditions and how they activate (walk-up trees, plain checks,
+  AND). New progress rows for submodel 4 (four at 2, charge kind at 1); parked at the column
+  review. Refactor candidates noted in NOTES (point 1), none applied: the user asked for no
+  model changes yet.
+
 **Next**
-- Ch 3 overview, discussion: is the charge kind mandatory on every price component (Claude
-  leans yes), and Fig 2.14's bare event. Then drafts and cards feedback, refactor, card pass.
+- Resume the pricing column review at the value columns (price, percent); retest base
+  competition and activation cold.
+- Ch 3 overview, discussion: charge kind on discounts and surcharges (parked), and Fig 2.14's
+  bare event. Then drafts and cards feedback, refactor, card pass.
 - Re-import `docs/cards-anki.txt` in Anki (card 9 changed).
 
 ## 2026-10-16

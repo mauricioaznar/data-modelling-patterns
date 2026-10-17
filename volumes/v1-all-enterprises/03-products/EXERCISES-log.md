@@ -257,3 +257,25 @@ variance 0 → 3.
   (the system's belief); variance as "the count" ✗ (the gap the count finds). Final summary in
   the user's words ✓. Vocabulary now in NOTES.
 No scores changed (concept discussion, not assessment). Recall 1 still open.
+
+### 2026-10-17: Submodel 4, pricing walk-through from the user's own model (Fig 3.7)
+- The user asked to start from how they imagine pricing and be led to the implementation.
+- First model: product price + feature prices, each times quantity, components added on top ✓
+  (backbone right). Break #1 (42 list, 40 Midwest, +3 Mexico all summed): "product and feature
+  prices must agree, not add" ✗; "we need a base amount" ✓.
+- Picking the component: primary flag ✗ (one winner for everyone), "a rule" ✓ but vague;
+  "when it's included in the product" ✗ (all three are); geographic boundary ✓ but "a
+  subtype" ✗ (conditions are links, subtypes are what it is). Table given.
+- Competing base prices: LIFO ✗ (time is the dates' job); "more conditions match" ✓ after a
+  strong hint. Quantity range as from/thru columns on the discount (content ✓, place ✗:
+  QUANTITY BREAK, shared, on the supertype). Category as a condition ✓ (guiding question).
+- Column review started: final price on product ✗ (belongs to the sale); type column ✓
+  (not null, lookup); charge kind: discriminator + own attributes ✓, never empty on base
+  prices (agreed, refactor), discounts parked by the user. One-line formula given on request.
+- Activation ("the hierarchy cascade" confused the user): explained as walk-up trees + plain
+  checks + AND. Springfield ✗ (thought it was in Chicago; Claude's tree also wrongly put the
+  Chicago area beside Illinois), table check 2/4 (Chicago again, list price left out),
+  Mexico ✓ (45 over 42), AND check ✓ unprompted.
+Scores (new rows): components 0 → 2, base competition 0 → 2, conditions 0 → 2, feature
+prices 0 → 2, charge kind 0 → 1. Parked at the column review; next: the value columns
+(price, percent).

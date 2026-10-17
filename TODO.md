@@ -58,10 +58,11 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [x] Share the remaining Ch 3 figures (2026-10-16: Figs 3.7–3.11, the last of the chapter)
   - [x] Figs 3.7–3.11 transcriptions accepted (2026-10-16); doubtful readings moved to "Points to discuss after the overview" in NOTES
   - [x] Settle those 11 points (and Fig 2.14's point 1) against the book (2026-10-17): ten kept, point 11 merged the package and component rows
-  - [ ] Overview discussion: is `charge_kind` mandatory (point 1's open half; Claude leans yes), and Fig 2.14's bare event (its point 2)
+  - [ ] Overview discussion: `charge_kind` on discounts and surcharges (parked by the user 2026-10-17; base prices: mandatory, agreed), and Fig 2.14's bare event (its point 2)
+  - [ ] Refactor candidates from the pricing walk-through (NOTES, point 1; no change until the user agrees): charge kind on base prices, split `per_uom_id`, features in the "price a line" query, depth as a tie-break
   - [x] 3.9a vs 3.9b: build 3.9b, the one Fig 3.11 keeps (the user's choice, 2026-10-16)
   - [x] 3.10: built as 3.11 keeps it (GOOD's subtypes + a COMPONENT association type), on assumptions (2026-10-16); 3.10b's PART discussed, not built. Point 11 settled 2026-10-17: COMPONENT is the one row for packages and assemblies
-  - [ ] Submodel 4: pricing and costing (Figs 3.7–3.8): built 2026-10-16 (ponders 15–19); doc draft and card 8 done; still to do: walk-through, exercises
+  - [ ] Submodel 4: pricing and costing (Figs 3.7–3.8): built 2026-10-16 (ponders 15–19); doc draft and card 8 done; walk-through of 3.7 from the user's own model 2026-10-17, parked at the column review (next: the value columns, price and percent); still to do: finish 3.7, 3.8, exercises
   - [ ] Submodel 5: product associations and parts (Figs 3.9–3.10): built 2026-10-16 (ponders 20–23); doc draft and card 9 done; still to do: walk-through, exercises
   - [x] New workflow catch-up (2026-10-16): cards 8–9; doc drafts for Ch 3 submodels 1–5; architecture entries for Ch 2 and Ch 3; Core patterns gains a Ch 3 column and three patterns (rules as rows, exclusive arc, catalogue vs physical instance); question index and roadmap updated
   - [x] Doc drafts for Ch 2 postal addresses, facilities and geography (with its two pitfalls from item 49, roadmap row added) and communication events (the "learnt so far" notes regrouped into the seven sections; "To verify" kept) (2026-10-16)

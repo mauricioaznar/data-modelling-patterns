@@ -51,6 +51,17 @@ it's understood.
 | Where stock is (facility XOR container) + lot | 3.6 | container, container_type, lot | 2 | exam | 10-14 Valencia: looked through the container to the facility unprompted; lot first read as origin, not yet applied |
 | Variance (count adjustments) | 3.6 | inventory_item_variance, reason | 3 | neighbourhood | 10-14 Valencia: −2 THEFT row ✓; argued reported + correction = derived and saw the convention isn't in the table |
 
+#### 4. Pricing and costing
+
+| Concept | Fig | Tables | Level | Next | Evidence |
+|---|---|---|---|---|---|
+| Price built from components (no price on product) | 3.7 | price_component, price_component_type | 2 | column review | 10-17 own model: components that add up, on a product or a feature ✓; then a final price on product ✗ (it belongs to the sale, frozen on the order line) |
+| Base prices compete, most specific wins | 3.7 | price_component (BASE_PRICE) | 2 | retest cold | 10-17: primary flag ✗, LIFO ✗; "more conditions match" after a strong hint. Mexico check: 45 over 42 unprompted |
+| Conditions ("based on"), empty = any, activation | 3.7 | geographic_boundary, party_type, product_category, quantity_break, order_value, sale_type | 2 | retest cold | 10-17: category as a condition with a guiding question; quantity range as columns on the discount (place wrong, content right). Activation: Springfield ✗ twice (US geography, closest box), Mexico ✓, AND check ✓ unprompted |
+| Feature prices add on top of the base | 3.7 | price_component.product_feature_id | 2 | column review | 10-17: "not additive, must agree" ✗; then "just components, combined" ✓ |
+| Charge kind (one-time, recurring, utilization) | 3.7 | price_component.charge_kind, per_uom_id, quantity | 1 | parked | 10-17: discriminator + own attributes ✓; mandatory on base prices (agreed); discounts parked by the user |
+| Estimated cost (product or feature arc) | 3.8 | estimated_product_cost, cost_component_type | 0 | walk-through | |
+
 #### Cross-cutting (carried over from Ch 2, tested inside the submodels)
 
 | Concept | Fig | Tables | Level | Next | Evidence |
