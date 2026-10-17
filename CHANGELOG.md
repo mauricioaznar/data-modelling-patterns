@@ -46,8 +46,8 @@ and any decisions made.
 - Figs 3.7–3.11 accepted as read. The doubtful readings become "points to discuss after the
   overview", and any refactor waits until then. CLAUDE.md now says to always aim for
   Silverston's intention (the user's rule).
-- Build 3.9b, not 3.9a (the user's choice). 3.10a vs 3.10b waits until the user has read the
-  renaming passage.
+- Build 3.9b, not 3.9a (the user's choice). 3.10a vs 3.10b was to wait for the renaming
+  passage; superseded below, since 3.10 was built on assumptions under the new rule.
 - Workflow reorganised (the user's call), replacing the card rule above: when images arrive,
   Claude builds everything on its own reading, with no confirmation gate. That means the
   transcription, the SQL, a *Draft (assumptions)* doc entry (the five sections the figures can
