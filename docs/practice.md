@@ -65,7 +65,7 @@ of the chapter's `EXERCISES.md`.
 - **3. Practice scenario (Create).** One small new-domain problem for this submodel, modelled
   on paper: the minimal entities, what was borrowed from the book and what was left out on
   purpose. This is where scores of 4 come from.
-- **4. Finish the doc entry.** The draft exists since the reading (five sections, see
+- **4. Finish the doc entry (`/close-submodel`).** The draft exists since the reading (five sections, see
   `CLAUDE.md`). Add the pitfalls from the user's mistakes and the scenario, fix what practice
   proved wrong, drop the Draft mark and mark it Done on the roadmap. Swap the recall card's
   Trap for one of the user's real mistakes.

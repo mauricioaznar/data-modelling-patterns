@@ -99,6 +99,17 @@ export function resolveTarget(arg) {
   return { volume, chapter };
 }
 
+// Split a queries.sql into its "-- name: <question it answers>" blocks.
+export function parseQueries(text) {
+  return text
+    .split(/^-- name:\s*/m)
+    .slice(1)
+    .map((block) => {
+      const [title, ...body] = block.split('\n');
+      return { title: title.trim(), sql: body.join('\n').trim() };
+    });
+}
+
 export function printResult(result) {
   if (result.fields.length === 0) {
     if (result.affectedRows) console.log(`(${result.affectedRows} rows affected)`);

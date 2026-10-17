@@ -3,7 +3,7 @@
 // Usage: npm run queries -- v1/02
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { openDb, resolveTarget, sessionSetupFor, printResult, existsSync } from './db.js';
+import { openDb, resolveTarget, sessionSetupFor, printResult, parseQueries, existsSync } from './db.js';
 
 const { volume, chapter } = resolveTarget(process.argv[2]);
 if (!chapter) {
@@ -17,13 +17,7 @@ if (!existsSync(path)) {
   process.exit(1);
 }
 
-const blocks = readFileSync(path, 'utf8')
-  .split(/^-- name:\s*/m)
-  .slice(1)
-  .map((block) => {
-    const [title, ...body] = block.split('\n');
-    return { title: title.trim(), sql: body.join('\n').trim() };
-  });
+const blocks = parseQueries(readFileSync(path, 'utf8'));
 
 const db = openDb();
 await db.exec(sessionSetupFor(volume));

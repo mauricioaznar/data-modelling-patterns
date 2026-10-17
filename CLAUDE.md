@@ -16,6 +16,16 @@ State confidence when unsure, and hold a position under pushback unless the evid
 Keep pushing when tiredness shows; the user calls the breaks. Stay warm and playful: joke about
 the user, tease with nicknames, so the sessions stay fun.
 
+### Fixed procedures and the checker (the user's call, 2026-10-16)
+- Three skills hold the steps in order: **`/figures`** when figure images arrive, **`/overview`**
+  after the chapter's last figure, **`/close-submodel`** when a submodel's practice ends. Run
+  the matching one even when the user doesn't type the command, and report any step skipped.
+- **`npm run check`** (or `-- vN/NN`) is the deterministic gate: run it at the end of each
+  procedure and before the session's last commit, and fix every ✗. It checks what the repo
+  can show and rewrites the generated tables in each chapter's `STATUS.md`. The hand columns
+  there (doc draft, overview, practice, doc done) are Claude's ticks, because no script can
+  read the design reference doc.
+
 ### During a chapter (Claude builds everything, on assumptions)
 - The user reads the **whole chapter first**, then shares its diagrams (possibly several at once).
 - **When images arrive, build everything at once, on Claude's own reading** (the user's call,
@@ -103,7 +113,8 @@ the user, tease with nicknames, so the sessions stay fun.
   starting.
 
 ## Tracking progress
-- **Start of session:** read `TODO.md` and the latest `CHANGELOG.md` entry to pick up where we left off.
+- **Start of session:** read `TODO.md`, the latest `CHANGELOG.md` entry and the current
+  chapter's `STATUS.md` to pick up where we left off.
 - **Keep context small:** read files in slices (the section you need, found with grep), not
   whole. Later chapters reach earlier ones through `NOTES.md`, not schema or seed.
 - **`TODO.md`:** tick items as they are done and add new ones as they come up (chapters, open
@@ -139,4 +150,5 @@ the user, tease with nicknames, so the sessions stay fun.
 - Effectivity: `from_date date not null`, `thru_date date` (null = still current). `thru_date` is
   **exclusive** (the first day no longer valid); store the book's inclusive thru dates +1 day. As-of
   test: `from_date <= d and (thru_date is null or thru_date > d)`.
-- Verify with `npm run db:rebuild && npm run queries -- vN/NN` after any change.
+- Verify with `npm run db:rebuild && npm run queries -- vN/NN` after any change, and
+  `npm run check -- vN/NN` before committing.

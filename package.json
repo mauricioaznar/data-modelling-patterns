@@ -8,7 +8,8 @@
     "sql": "node scripts/sql.js",
     "queries": "node scripts/queries.js",
     "explore": "node tools/explorer/server.js",
-    "recall:anki": "node scripts/recall-anki.js"
+    "recall:anki": "node scripts/recall-anki.js",
+    "check": "node scripts/check.js"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8"

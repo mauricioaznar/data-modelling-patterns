@@ -41,6 +41,12 @@ and any decisions made.
   (with its two pitfalls from item 49, and a roadmap row), and the communication events entry
   regrouped from its "learnt so far" notes into the seven sections ("To verify" kept).
 - The other session was told about the new rules; it acknowledged with commit f361f95.
+- Deterministic workflow: `npm run check` (`scripts/check.js`) checks each chapter against the
+  rules (figures classified and built, cards, doc-draft ticks, ponders, every query runs, every
+  data-quality check catches a bad row, Anki export current) and rewrites the generated tables
+  in its `STATUS.md`. STATUS.md for Ch 2, Ch 3 and the template; the skills `/figures`,
+  `/overview` and `/close-submodel`; `recall.js` and `parseQueries` split out so scripts
+  share them. Tested by breaking eight things on purpose: all caught.
 
 **Decisions**
 - `docs/recall.md` stays the source of truth; Anki is a generated copy, re-imported on change.
@@ -65,6 +71,9 @@ and any decisions made.
   since 3.11 has none. Ponder 21's renaming passage may turn it into MARKETING PACKAGE reuse.
 - The design reference doc's drafts answer some ponders, so it stays closed during exams,
   like the explorer (`docs/practice.md`). Roadmap uses its existing *In progress* for drafts.
+- Steps become fixed procedures (the user's call): skills hold the order, `npm run check` is
+  the gate before commits, STATUS.md holds the ticks no script can verify (the claude.ai doc).
+  The Stop hook is held back until skipping proves to still happen.
 
 **Next**
 - The user imports the deck (16 cards); mantras that fail twice get rewritten in the user's

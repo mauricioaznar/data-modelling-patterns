@@ -56,18 +56,25 @@ npm run db:rebuild -- v1/03                   # stop after volume 1, chapter 03
 npm run queries -- v1/02                      # run the named queries for vol 1, chapter 02
 npm run sql -- "select * from party"          # resolves against v1 by default
 npm run sql -- --vol 2 "select * from party"  # resolves v2 first, then v1
+npm run check                                 # check every chapter against the workflow
+npm run check -- v1/03                        # one chapter; rewrites its STATUS.md tables
+npm run recall:anki                           # regenerate the Anki export from docs/recall.md
 ```
 
 Chapters load cumulatively because later models reference earlier ones: orders, shipments and
 invoices all point back to `party`.
 
-## Workflow for each figure
+## Workflow for each chapter
 
-1. Photograph the figure into `book-refs/vN/chNN/` (gitignored; see [book-refs/README.md](book-refs/README.md)).
-2. Transcribe it into `NOTES.md` and confirm the transcription against the book.
-3. Discuss: what problem is it solving, and what would the naive model get wrong?
-4. Implement it in `schema.sql`, add seed rows and queries, then rebuild.
-5. Commit, one figure per commit.
+Three Claude Code skills hold the fixed steps, and `npm run check` verifies what the repo can
+show. Each chapter's `STATUS.md` tracks where every figure and submodel stands.
+
+1. Photograph the figures into `book-refs/vN/chNN/` (gitignored; see [book-refs/README.md](book-refs/README.md)).
+2. **`/figures`**: transcribe, build one figure per commit, draft the design reference entries
+   and recall cards, run the checker.
+3. **`/overview`**: after the chapter's last figure, discuss the doubtful readings, refactor,
+   card pass.
+4. Practice per submodel ([docs/practice.md](docs/practice.md)), then **`/close-submodel`**.
 
 ## Notation used in transcriptions
 

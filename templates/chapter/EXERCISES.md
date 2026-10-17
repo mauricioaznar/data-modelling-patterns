@@ -33,7 +33,8 @@ it's understood.
 
 ## 0. To ponder (collected while reading)
 Questions and ideas raised while the chapter was being built, tagged with their figure.
-At most 5 per submodel. Answer in a sentence or three under each item.
+At most 5 per submodel. Answer in a sentence or three under each item. Group them under
+`### Submodel N: name` headings, numbered as in STATUS.md, so `npm run check` can count them.
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

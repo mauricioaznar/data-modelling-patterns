@@ -18,6 +18,13 @@ blockers, but each one unlocks something:
   in-memory copy of every chapter. Browse rows, follow foreign keys both ways, run SQL, and
   run each chapter's saved queries (Queries tab; data-quality checks get a red/green badge).
 
+## Workflow tooling
+
+- [x] `npm run check` (`scripts/check.js`): figures classified and built, cards, doc-draft ticks, ponders, queries and data-quality checks, Anki export, changelog, uncommitted files; rewrites each chapter's STATUS.md tables (2026-10-16)
+- [x] `STATUS.md` per chapter (Ch 2, Ch 3, template) and the skills `/figures`, `/overview`, `/close-submodel` (2026-10-16)
+- [ ] Stop hook that runs `npm run check` at the end of a turn: held back by the user's choice; add it if steps still get skipped
+- [ ] Roadmap says Done for Ch 2 parties and contact mechanisms, but their practice isn't finished (TODO, STATUS.md): settle which is right
+
 ## Morning recall
 
 - [x] Hooks and mantras for cards 1–6 (Claude's, at the user's request, 2026-10-16)
