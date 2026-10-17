@@ -867,8 +867,10 @@ Silverston intended, not at the literal drawing.
    unchanged, just not drawn.
    → **Kept** (photo, 2026-10-17); 3.10b isn't built, so no SQL rides on it.
 10. **3.11:** REORDER GUIDELINE's line read as ending at GOOD, as in 3.5.
-    → *Book check pending:* the photo shows the line entering PRODUCT on its right edge; where
-    it stops is unclear.
+    → **Kept GOOD** (the user checked the book, 2026-10-17): the printed line doesn't reach GOOD,
+    read as a print slip. Silverston means GOOD: 3.5 draws it there, 3.10b hangs it on PART (the
+    physical thing), and only goods are stocked, so only goods reorder. The SQL already
+    references `good`.
 11. **3.10, built as 3.11 keeps it:** the three subtypes on GOOD (a `good_kind` discriminator),
     and 3.10a's PRODUCT COMPONENT as a COMPONENT row in 3.9b's association table, not a table of
     its own (3.11 has no PRODUCT COMPONENT box). 3.10b's PART is not built. Ponder 21 (the
