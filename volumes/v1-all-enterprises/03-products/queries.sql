@@ -797,6 +797,7 @@ select a.product_association_type_id as type,
          when 'OBSOLESCENCE'      then f.name || ' was superseded by ' || t.name || ' on ' || a.from_date
          when 'COMPLEMENT'        then f.name || ' goes well with ' || t.name
          when 'INCOMPATIBILITY'   then f.name || ' doesn''t work with ' || t.name
+         when 'COMPONENT'         then f.name || ' is made with ' || a.quantity_used || ' × ' || t.name   -- Fig 3.10
        end as sentence,
        a.reason
 from product_association a
@@ -853,7 +854,7 @@ order by t.name;
 -- name: 3.9 — Data-quality check: package and substitute attributes on the wrong type (should be empty)
 select product_association_id, product_association_type_id, quantity_used, instruction, quantity
 from product_association
-where (product_association_type_id <> 'MARKETING_PACKAGE' and (quantity_used is not null or instruction is not null))
+where (product_association_type_id not in ('MARKETING_PACKAGE', 'COMPONENT') and (quantity_used is not null or instruction is not null))
    or (product_association_type_id <> 'SUBSTITUTE' and quantity is not null);
 
 -- name: 3.9 — Data-quality check: two products that are complements and incompatible at once, either way round (should be empty)
@@ -882,3 +883,61 @@ join product_association b
  and b.from_date < coalesce(a.thru_date, 'infinity')
 join product f on f.product_id = a.from_product_id
 join product t on t.product_id = a.to_product_id;
+
+-- ============================================================
+-- Fig 3.10a — Products and parts
+-- ============================================================
+
+-- name: 3.10 — Explode the copier's bill of materials: every component at every level, with the quantity per copier
+with recursive bom (product_id, level, quantity, path) as (
+  select a.to_product_id, 1, a.quantity_used, array[a.from_product_id, a.to_product_id]
+  from product_association a
+  where a.product_association_type_id = 'COMPONENT' and a.from_product_id = 6
+    and a.from_date <= current_date and (a.thru_date is null or a.thru_date > current_date)
+  union all
+  select a.to_product_id, b.level + 1, b.quantity * a.quantity_used, b.path || a.to_product_id
+  from bom b
+  join product_association a
+    on a.from_product_id = b.product_id
+   and a.product_association_type_id = 'COMPONENT'
+   and a.from_date <= current_date and (a.thru_date is null or a.thru_date > current_date)
+  where a.to_product_id <> all (b.path)   -- a cycle in the data stops the walk
+)
+select repeat('  ', level - 1) || p.name as component, g.good_kind, b.quantity, p.uom_id
+from bom b
+join product p on p.product_id = b.product_id
+join good g    on g.product_id = b.product_id
+order by b.path;
+
+-- name: 3.10 — Raw materials to buy for one copier (summed across levels)
+with recursive bom (product_id, quantity, path) as (
+  select a.to_product_id, a.quantity_used, array[a.from_product_id, a.to_product_id]
+  from product_association a
+  where a.product_association_type_id = 'COMPONENT' and a.from_product_id = 6
+    and a.from_date <= current_date and (a.thru_date is null or a.thru_date > current_date)
+  union all
+  select a.to_product_id, b.quantity * a.quantity_used, b.path || a.to_product_id
+  from bom b
+  join product_association a
+    on a.from_product_id = b.product_id
+   and a.product_association_type_id = 'COMPONENT'
+   and a.from_date <= current_date and (a.thru_date is null or a.thru_date > current_date)
+  where a.to_product_id <> all (b.path)
+)
+select p.name as raw_material, sum(b.quantity) as quantity_per_copier, p.uom_id
+from bom b
+join product p on p.product_id = b.product_id
+join good g    on g.product_id = b.product_id and g.good_kind = 'RAW_MATERIAL'
+group by p.name, p.uom_id
+order by p.name;
+
+-- name: 3.10 — Data-quality check: a raw material made up of something, or a component that isn't a good (should be empty)
+select a.product_association_id, f.name as assembly, t.name as component,
+       fg.good_kind as assembly_kind, tg.good_kind as component_kind
+from product_association a
+join product f   on f.product_id = a.from_product_id
+join product t   on t.product_id = a.to_product_id
+left join good fg on fg.product_id = a.from_product_id
+left join good tg on tg.product_id = a.to_product_id
+where a.product_association_type_id = 'COMPONENT'
+  and (fg.good_kind = 'RAW_MATERIAL' or fg.product_id is null or tg.product_id is null);

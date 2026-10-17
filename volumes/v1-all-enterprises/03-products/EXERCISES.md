@@ -127,6 +127,9 @@ At most 5 per submodel. Answer in a sentence or three under each item.
 21. **[3.9b]** (once you've read that passage, no rush) PRODUCT COMPONENT becomes MARKETING
     PACKAGE in 3.9b. Why the new name, in the figure just before products and parts?
 22. **[3.9b]** Substitution needs a row each way; incompatibility doesn't. Why?
+23. **[3.10a vs 3.10b]** Our resin and toner powder now show "on sale" in the 3.1 catalogue
+    query. What is 3.10a getting wrong there, how does 3.10b's PART fix it, and what does PART
+    cost you?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out one submodel in the transcription notation

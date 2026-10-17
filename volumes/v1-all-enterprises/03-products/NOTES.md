@@ -749,6 +749,25 @@ SUPPLIER OFFERING          (Fig 3.5's SUPPLIER PRODUCT, renamed, now pointing at
   -> PART  (many "a valid supplier of" 1 part; part "supplied thru" many)
 ```
 
+Labels (checked against the photos, 2026-10-16): 3.10a and 3.10b swap "in" and "for". In 3.10a
+the "in" line reaches the product "made up of" components; in 3.10b the "for" line does. The
+reverse labels agree in both, so the side marked "made up of" is the assembly.
+
+**Discussion (3.10a and 3.10b)**
+- **The naive model** puts parts in a text column or a single `parent_product_id`. It can't say
+  how many, can't share a component between assemblies, and can't date a design change.
+- **A bill of materials is the recursive link again:** assembly → component, with a quantity,
+  dated. Exploding it means walking the links and multiplying quantities down the levels.
+- **3.10a keeps everything a PRODUCT.** Resin and toner powder sit in the catalogue next to the
+  copier, so our 3.1 catalogue query shows them "on sale". That's fine while what you make and
+  what you sell are the same things.
+- **3.10b splits what is marketed (PRODUCT) from what physically exists (PART).** Stock,
+  reorder rules, suppliers, prices and the BOM move to PART, and a GOOD is "offered using" a
+  finished good. It pays off in a manufacturer, where parts matter on their own and one part
+  can be sold as several goods (the same drive in two retail packs).
+- **Raw material, subassembly and finished good are about making things.** A reseller only
+  ever holds finished goods.
+
 ### Fig 3.11 — Overall product model
 **Transcription** (accepted 2026-10-16; open points under "Points to discuss after the overview"; identifiers only, no attributes)
 
@@ -776,6 +795,9 @@ What it adds or settles:
   overall model is the product-only one, not 3.10b's parts.
 - GOOD IDENTIFICATION and INVENTORY ITEM point at GOOD (as we built them in 3.3 and 3.6).
 - PRICE COMPONENT and ESTIMATED PRODUCT COST each point at PRODUCT and PRODUCT FEATURE.
+- Two more lines, both from earlier figures, missing from my first list (found against the
+  photo, 2026-10-16): PRODUCT "manufactured by" ORGANIZATION (3.5) and PRODUCT "measured
+  using" UNIT OF MEASURE (3.4).
 - Left out: the lookups (feature category, preference, rating, reason, container type,
   identification type, sale type, cost component type, association type), QUANTITY BREAK,
   ORDER VALUE and GEOGRAPHIC BOUNDARY. I take that as abbreviation, not removal.
@@ -785,7 +807,8 @@ What it adds or settles:
   (what we can hold). Catalogue facts hang off PRODUCT, and physical facts hang off GOOD.
 - **Define → describe:** a PRODUCT sits in categories (rollup, classification), and those
   categories carry MARKET INTEREST from party types. Features attach through APPLICABILITY,
-  INTERACTION says which features go together or clash, and UNIT OF MEASURE sizes them.
+  INTERACTION says which features go together or clash. UNIT OF MEASURE (with conversions) is
+  what a product, or a dimension feature, is measured in.
 - **Source → stock:** SUPPLIER PRODUCT says which ORGANIZATION sells us a product. On the GOOD
   side, IDENTIFICATION gives its codes, REORDER GUIDELINE says when to buy more, and INVENTORY
   ITEM is the real stock at a FACILITY (in a container, from a lot, with a status and variances).
@@ -793,7 +816,7 @@ What it adds or settles:
   feature, so a price or cost is built up from those parts, not stored as one number.
 - **Relate:** PRODUCT ASSOCIATION (3.9b) links product to product. GOOD splits into raw
   material, subassembly and finished good (3.10a's subtypes, not 3.10b's PART).
-- **From Ch 2:** ORGANIZATION (suppliers), PARTY TYPE (market interest), FACILITY (where stock
+- **From Ch 2:** ORGANIZATION (suppliers and manufacturers), PARTY TYPE (market interest), FACILITY (where stock
   lives) and GEOGRAPHIC BOUNDARY (where a price applies).
 
 ### Points to discuss after the overview (Figs 3.7–3.11)
@@ -821,6 +844,11 @@ Silverston intended, not at the literal drawing.
    two lines carry the bar; the organization links and PRICE COMPONENT's other links are
    unchanged, just not drawn.
 10. **3.11:** REORDER GUIDELINE's line read as ending at GOOD, as in 3.5.
+11. **3.10, built as 3.11 keeps it:** the three subtypes on GOOD (a `good_kind` discriminator),
+    and 3.10a's PRODUCT COMPONENT as a COMPONENT row in 3.9b's association table, not a table of
+    its own (3.11 has no PRODUCT COMPONENT box). 3.10b's PART is not built. Ponder 21 (the
+    renaming passage) may change this: if MARKETING PACKAGE simply *is* the old PRODUCT
+    COMPONENT, the COMPONENT row duplicates it.
 
 ## Design decisions (book → SQL)
 
@@ -1002,6 +1030,18 @@ Silverston intended, not at the literal drawing.
 - **Three new goods** to associate with (starter kit, recycled paper, USB drive), each with a
   `good` row and a primary category so the earlier figures' checks stay quiet.
 
+### Fig 3.10a (3.10b not built)
+- **GOOD's subtypes → `good.good_kind`** (raw material, subassembly, finished good), a
+  discriminator like `product_kind`. The default, FINISHED_GOOD, is a good sold as it comes.
+- **PRODUCT COMPONENT → a COMPONENT row in `product_association_type`** (point 11), reusing
+  `quantity_used` and `instruction`: from = the assembly, to = the component. The 3.9 sentence
+  query and attribute check now know about it.
+- **Thru date nullable**, as point 6 reads the `*`.
+- **Seed:** a two-level BOM for the copier (a cartridge subassembly; toner powder and resin as
+  raw materials). Bad row: toner powder made of resin, caught by a query. It also leaks into the
+  explosion (resin under powder, 3.225 kg instead of 3.2), which is why the check matters.
+- **Cycle guard:** the explosion carries its path and stops at a product already on it.
+
 ## When NOT to use this
 
 **Category classification with a rollup network (3.2):**
@@ -1055,6 +1095,11 @@ Silverston intended, not at the literal drawing.
   many-to-many links (a kit of several products, a product with several substitutes). Pick
   3.9a when each kind has its own attributes and rules you want the structure to enforce; 3.9b
   when kinds come and go.
+
+**Bill of materials (3.10):**
+- A reseller needs none: every good is finished. If you assemble, 3.10a is enough while the
+  things you make are the things you sell. Move to 3.10b's PART once parts carry their own
+  stock, suppliers and prices, or one part is sold under several offers.
 
 ## Open questions
 - **Fig 3.6:** is `quantity_on_hand` updated when a variance is recorded, or is the true

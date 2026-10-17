@@ -543,3 +543,38 @@ insert into product_association (product_association_type_id, from_product_id, t
   ('COMPLEMENT',        2,  1,  '2020-01-01', null, 'DATA ERROR: a package quantity on a complement (caught by a query)', 3, null, null),
   ('INCOMPATIBILITY',   4,  2,  '2022-01-01', null, 'DATA ERROR: contradicts the pen/forms complement, the other way round (caught by a query)', null, null, null),
   ('COMPLEMENT',        6,  1,  '2024-01-01', null, 'DATA ERROR: the copier/paper complement again, overlapping (caught by a query)', null, null, null);
+
+-- ============================================================
+-- Fig 3.10a — Products and parts
+-- ============================================================
+-- Every earlier good keeps the FINISHED_GOOD default. Three new goods make a
+-- two-level bill of materials for the OfficeJet copier:
+--   copier (6) = 1 toner cartridge + 3 kg plastic resin (the housing)
+--   toner cartridge (14) = 0.25 kg toner powder + 0.2 kg plastic resin
+insert into product (product_id, product_kind, name, introduction_date, uom_id) values
+  (14, 'GOOD', 'Toner cartridge assembly', '2019-01-01', 'EA'),
+  (15, 'GOOD', 'Toner powder',             '2019-01-01', 'KG'),
+  (16, 'GOOD', 'ABS plastic resin',        '2019-01-01', 'KG');
+
+select setval(pg_get_serial_sequence('product', 'product_id'), (select max(product_id) from product));
+
+insert into good (product_id, good_kind) values
+  (14, 'SUBASSEMBLY'),
+  (15, 'RAW_MATERIAL'),
+  (16, 'RAW_MATERIAL');
+
+insert into product_category_classification (product_id, product_category_id, from_date, thru_date, primary_flag, comment) values
+  (14, 5,  '2019-01-01', null, true, null),
+  (15, 5,  '2019-01-01', null, true, null),
+  (16, 31, '2019-01-01', null, true, null);
+
+insert into product_association_type (product_association_type_id, description) values
+  ('COMPONENT', 'Product component: made up of (Fig 3.10a)');
+
+insert into product_association (product_association_type_id, from_product_id, to_product_id, from_date, thru_date, reason, quantity_used, instruction, quantity) values
+  ('COMPONENT', 6,  14, '2019-01-01', null, null, 1,    'Fit last, after the housing',  null),
+  ('COMPONENT', 6,  16, '2019-01-01', null, null, 3,    'Moulded into the housing',     null),
+  ('COMPONENT', 14, 15, '2019-01-01', null, null, 0.25, null,                           null),
+  ('COMPONENT', 14, 16, '2019-01-01', null, null, 0.2,  null,                           null),
+  -- bad row
+  ('COMPONENT', 15, 16, '2019-01-01', null, 'DATA ERROR: a raw material made up of something (caught by a query)', 0.1, null, null);

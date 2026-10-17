@@ -514,9 +514,31 @@ create table product_association (
   from_date                   date    not null,
   thru_date                   date,
   reason                      text,
-  quantity_used               numeric check (quantity_used > 0),   -- MARKETING_PACKAGE only: how many of "to" in the package
-  instruction                 text,                                -- MARKETING_PACKAGE only
+  quantity_used               numeric check (quantity_used > 0),   -- MARKETING_PACKAGE (and COMPONENT, Fig 3.10): how many of "to" in "from"
+  instruction                 text,                                -- MARKETING_PACKAGE and COMPONENT only
   quantity                    numeric check (quantity > 0),        -- SUBSTITUTE only: how many of "to" replace one of "from"
   check (from_product_id <> to_product_id),
   check (thru_date is null or thru_date > from_date)
 );
+
+-- ============================================================
+-- Fig 3.10a — Products and parts
+-- ============================================================
+-- Built as Fig 3.11 keeps it: the three subtypes sit under GOOD, and there
+-- is no PRODUCT COMPONENT box and no PART (3.10b, see NOTES). Our reading,
+-- on assumptions until the overview (discussion point 11).
+--
+-- RAW MATERIAL / SUBASSEMBLY / FINISHED GOOD: exclusive, no attributes, so a
+-- discriminator on good (as product_kind on product). The default marks a
+-- good we sell as it comes, which is every good a reseller holds.
+alter table good
+  add column good_kind text not null default 'FINISHED_GOOD'
+    check (good_kind in ('RAW_MATERIAL', 'SUBASSEMBLY', 'FINISHED_GOOD'));
+
+-- PRODUCT COMPONENT ("made up of" / "used in") is 3.9a's entity redrawn, with
+-- the same attributes as 3.9b's MARKETING PACKAGE. In the 3.9b model a new
+-- kind of link is a row, not a table, so it becomes a COMPONENT row in
+-- product_association_type (seed.sql), reusing quantity_used and instruction:
+--   COMPONENT  from = the assembly ("made up of"), to = a component ("used in")
+-- A package is sold as one offer; a component is consumed to make a good.
+-- A raw material made up of something is a data-quality query.
