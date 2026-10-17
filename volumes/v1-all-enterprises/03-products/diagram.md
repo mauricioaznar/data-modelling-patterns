@@ -79,4 +79,12 @@ erDiagram
   QUANTITY_BREAK       |o--o{ PRICE_COMPONENT        : "a discount level defined for"
   ORDER_VALUE          |o--o{ PRICE_COMPONENT        : "a discount level defined for"
   SALE_TYPE            |o--o{ PRICE_COMPONENT        : "used to define"
+
+  %% Fig 3.8 — Estimated product cost (product XOR feature: check constraint)
+  PRODUCT             |o--o{ ESTIMATED_PRODUCT_COST : "costed by"
+  PRODUCT_FEATURE     |o--o{ ESTIMATED_PRODUCT_COST : "costed by"
+  COST_COMPONENT_TYPE ||--o{ ESTIMATED_PRODUCT_COST : "used to define"
+  COST_COMPONENT_TYPE |o--o{ COST_COMPONENT_TYPE    : "parent of (MATERIALS, LABOR, OTHER on top)"
+  GEOGRAPHIC_BOUNDARY |o--o{ ESTIMATED_PRODUCT_COST : "used to further define"
+  ORGANIZATION        |o--o{ ESTIMATED_PRODUCT_COST : "used to further define"
 ```

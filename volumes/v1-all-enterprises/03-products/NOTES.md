@@ -546,6 +546,26 @@ COST COMPONENT TYPE
   * description
 ```
 
+**Discussion**
+- **The naive model** puts a `cost` column on PRODUCT. One number can't say what it's made of
+  (how much is paper, how much labour), can't differ by place or plant, and loses history when
+  the paper supplier raises prices.
+- **Cost mirrors price, simplified.** Like PRICE COMPONENT, it's a set of dated components
+  rather than one number, scoped optionally by geography and organization. But it has no
+  party types, quantity breaks or sale types: a cost doesn't depend on who buys. Margin is the
+  query that brings the two figures together.
+- **The arc:** an estimate is for a product *or* for a feature, never both and never neither.
+  A feature's cost (the duplex unit's parts and installation) belongs to the feature wherever
+  it's fitted. Price has no arc, because "the duplex unit is 250 *on this copier*" is a real
+  pricing rule.
+- **Subtypes and a type entity at once.** The subtypes give the fixed top split (materials,
+  labour, other) that every cost report needs; COST COMPONENT TYPE holds the open-ended detail
+  (paper stock, ink, printing, freight). Our build stacks them into one hierarchy, as Ch 2 did
+  for party classifications.
+- **Geography and organization "further define" an estimate:** printing in Mexico costs less;
+  a subsidiary with its own trucks pays less freight. Choosing among general and specific
+  estimates is the same "most specific wins" problem as pricing.
+
 ### Fig 3.9a — Product to product associations
 **Transcription** (accepted 2026-10-16; open points under "Points to discuss after the overview")
 
@@ -912,6 +932,23 @@ Silverston intended, not at the literal drawing.
 - **Duplicate rules** (same type and conditions, overlapping periods) are a data-quality query
   (seed: the pen at 2.50 and 2.75).
 
+### Fig 3.8
+- **Subtypes + COST COMPONENT TYPE → one `cost_component_type` hierarchy** (`parent_type_id`):
+  MATERIALS, LABOR and OTHER are the top level and the finer types sit under them, as with Ch 2's
+  party types. A data-quality query checks every type rolls up to one of the three (seed: a
+  stray top-level MARKETING type).
+- **`estimated_product_cost_id`**, not the book's `cost_component_id`, by our `<table>_id` rule.
+- **The arc is a check constraint** (`num_nonnulls(product_id, product_feature_id) = 1`), as in
+  3.6, so no bad seed row is possible.
+- **`organization_party_id`** for "specified for" ORGANIZATION; our reading is the internal
+  organization whose estimate it is (a subsidiary, a plant).
+- **No currency or unit in the book.** Ours are USD per unit of the product's unit of measure
+  (per ream, per box, per hour).
+- **Duplicate estimates** (same thing, type, geography and organization, overlapping periods) are
+  a data-quality query (seed: the forms' ink twice).
+- **The queries choose between general and specific estimates themselves** (the Mexico query
+  prefers the Mexican row per type); the model only stores both.
+
 ## When NOT to use this
 
 **Category classification with a rollup network (3.2):**
@@ -953,6 +990,11 @@ Silverston intended, not at the literal drawing.
   subscription or usage billing, or several organizations setting prices. The cost: a price
   is a calculation, not a lookup, and the combining rules live in code, so two applications can
   compute different prices from the same rows.
+
+**Estimated cost components (3.8):**
+- A reseller that only buys and sells needs the purchase price from its supplier, not a
+  cost breakdown. Components pay off when you make, assemble or deliver things yourself and
+  want margins by materials, labour and overhead, or costs that differ by plant or region.
 
 ## Open questions
 - **Fig 3.6:** is `quantity_on_hand` updated when a variance is recorded, or is the true

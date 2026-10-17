@@ -682,3 +682,105 @@ join price_component b
  and a.from_date < coalesce(b.thru_date, 'infinity')
  and b.from_date < coalesce(a.thru_date, 'infinity')
 left join product pr on pr.product_id = a.product_id;
+
+-- ============================================================
+-- Fig 3.8 — Estimated product cost
+-- ============================================================
+
+-- name: 3.8 — Estimated unit cost today, split into materials / labor / other (general estimates only)
+with recursive up (cost_component_type_id, subtype) as (   -- each type with its top-level type
+  select cost_component_type_id, cost_component_type_id from cost_component_type where parent_type_id is null
+  union all
+  select t.cost_component_type_id, u.subtype
+  from cost_component_type t
+  join up u on t.parent_type_id = u.cost_component_type_id
+)
+select coalesce(pr.name, 'feature: ' || pf.description) as costed,
+       sum(e.cost) filter (where u.subtype = 'MATERIALS') as materials,
+       sum(e.cost) filter (where u.subtype = 'LABOR')     as labor,
+       sum(e.cost) filter (where u.subtype = 'OTHER')     as other,
+       sum(e.cost)                                        as total
+from estimated_product_cost e
+join up u                    on u.cost_component_type_id = e.cost_component_type_id
+left join product pr         on pr.product_id = e.product_id
+left join product_feature pf on pf.product_feature_id = e.product_feature_id
+where e.geographic_boundary_id is null and e.organization_party_id is null
+  and e.from_date <= current_date and (e.thru_date is null or e.thru_date > current_date)
+group by pr.name, pf.description
+order by costed;
+
+-- name: 3.8 — The insurance forms printed in Mexico: each cost component, using the Mexican estimate where there is one
+with candidate as (
+  select e.*,
+         row_number() over (partition by e.cost_component_type_id
+                            order by (e.geographic_boundary_id is not null) desc, e.estimated_product_cost_id) as pick
+  from estimated_product_cost e
+  where e.product_id = 4
+    and (e.geographic_boundary_id is null or e.geographic_boundary_id = 1)
+    and e.organization_party_id is null
+    and e.from_date <= current_date and (e.thru_date is null or e.thru_date > current_date)
+)
+select t.description as cost_component, c.cost,
+       case when c.geographic_boundary_id is null then 'general' else 'Mexico' end as estimate
+from candidate c
+join cost_component_type t on t.cost_component_type_id = c.cost_component_type_id
+where c.pick = 1
+union all
+select 'TOTAL', sum(cost), null from candidate where pick = 1;
+
+-- name: 3.8 — Margin today: list price (Fig 3.7) vs estimated cost
+with cost as (
+  select product_id, product_feature_id, sum(cost) as cost
+  from estimated_product_cost
+  where geographic_boundary_id is null and organization_party_id is null
+    and from_date <= current_date and (thru_date is null or thru_date > current_date)
+  group by product_id, product_feature_id
+),
+list_price as (        -- unconditional current base prices in USD
+  select product_id, product_feature_id, price
+  from price_component
+  where price_component_type_id = 'BASE_PRICE' and charge_kind is distinct from 'ONE_TIME'
+    and currency_uom_id = 'USD'
+    and num_nonnulls(geographic_boundary_id, party_type_id, product_category_id,
+                     quantity_break_id, order_value_id, sale_type_id) = 0
+    and from_date <= current_date and (thru_date is null or thru_date > current_date)
+)
+select coalesce(pr.name, 'feature: ' || pf.description) as costed, p.price, c.cost,
+       p.price - c.cost as margin, round(100 * (p.price - c.cost) / p.price, 1) as margin_pct
+from cost c
+left join list_price p
+  on (c.product_id is not null and p.product_id = c.product_id and p.product_feature_id is null)
+  or (c.product_feature_id is not null and p.product_feature_id = c.product_feature_id)
+left join product pr         on pr.product_id = c.product_id
+left join product_feature pf on pf.product_feature_id = c.product_feature_id
+order by costed;
+
+-- name: 3.8 — Data-quality check: cost types that don't roll up to materials, labor or other (should be empty)
+with recursive up (cost_component_type_id, subtype) as (
+  select cost_component_type_id, cost_component_type_id from cost_component_type where parent_type_id is null
+  union all
+  select t.cost_component_type_id, u.subtype
+  from cost_component_type t
+  join up u on t.parent_type_id = u.cost_component_type_id
+)
+select u.cost_component_type_id, u.subtype as top_level,
+       (select count(*) from estimated_product_cost e where e.cost_component_type_id = u.cost_component_type_id) as estimates
+from up u
+where u.subtype not in ('MATERIALS', 'LABOR', 'OTHER');
+
+-- name: 3.8 — Data-quality check: two estimates for the same thing, type and scope in overlapping periods (should be empty)
+select a.estimated_product_cost_id as a_id, b.estimated_product_cost_id as b_id,
+       coalesce(pr.name, pf.description) as costed, a.cost_component_type_id,
+       a.cost as a_cost, b.cost as b_cost, a.from_date as a_from, b.from_date as b_from
+from estimated_product_cost a
+join estimated_product_cost b
+  on b.estimated_product_cost_id > a.estimated_product_cost_id
+ and b.product_id             is not distinct from a.product_id
+ and b.product_feature_id     is not distinct from a.product_feature_id
+ and b.cost_component_type_id = a.cost_component_type_id
+ and b.geographic_boundary_id is not distinct from a.geographic_boundary_id
+ and b.organization_party_id  is not distinct from a.organization_party_id
+ and a.from_date < coalesce(b.thru_date, 'infinity')
+ and b.from_date < coalesce(a.thru_date, 'infinity')
+left join product pr         on pr.product_id = a.product_id
+left join product_feature pf on pf.product_feature_id = a.product_feature_id;

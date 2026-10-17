@@ -454,3 +454,46 @@ insert into price_component (price_component_id, price_component_type_id, charge
   (25, 'BASE_PRICE', null,          '2024-01-01', null,         2.75,    null, 'USD', 2,    null, 4,    null, null,            null, null, null, null,       null,    null, 'DATA ERROR: overlaps the pen''s 2.50 under the same conditions (caught by a query)');
 
 select setval(pg_get_serial_sequence('price_component', 'price_component_id'), (select max(price_component_id) from price_component));
+
+-- ============================================================
+-- Fig 3.8 — Estimated product cost
+-- ============================================================
+-- The three subtypes are the top of the type hierarchy; finer types sit
+-- under them. Costs are USD per unit of the product's unit of measure.
+insert into cost_component_type (cost_component_type_id, parent_type_id, description) values
+  ('MATERIALS',       null,        'Estimated materials cost'),
+  ('LABOR',           null,        'Estimated labor cost'),
+  ('OTHER',           null,        'Estimated other costs'),
+  ('PAPER_STOCK',     'MATERIALS', 'Paper stock'),
+  ('INK',             'MATERIALS', 'Ink'),
+  ('PURCHASED_PART',  'MATERIALS', 'Goods and parts bought in'),
+  ('PRINTING',        'LABOR',     'Printing labor'),
+  ('INSTALLATION',    'LABOR',     'Installation labor'),
+  ('CONSULTANT_TIME', 'LABOR',     'Consultant time'),
+  ('FREIGHT',         'OTHER',     'Inbound freight'),
+  ('OVERHEAD',        'OTHER',     'Overhead allocation'),
+  ('MARKETING',       null,        'Marketing allowance');   -- DATA ERROR: a fourth top-level type (caught by a query)
+
+-- Ch 2: Mexico is geographic boundary 1; ABC Subsidiary (13) is an internal organization.
+insert into estimated_product_cost (product_id, product_feature_id, cost_component_type_id, geographic_boundary_id, organization_party_id, from_date, thru_date, cost) values
+  -- preprinted insurance forms (per box): we print them ourselves
+  (4,    null, 'PAPER_STOCK',     null, null, '2018-01-01', '2022-01-01', 5.00),
+  (4,    null, 'PAPER_STOCK',     null, null, '2022-01-01', null,         6.00),     -- paper got dearer
+  (4,    null, 'INK',             null, null, '2018-01-01', null,         1.50),
+  (4,    null, 'PRINTING',        null, null, '2018-01-01', null,         3.00),
+  (4,    null, 'PRINTING',        1,    null, '2020-01-01', null,         1.20),     -- printed in Mexico
+  (4,    null, 'OVERHEAD',        null, null, '2018-01-01', null,         0.75),
+  -- bond paper (per ream): bought in, plus freight
+  (1,    null, 'PURCHASED_PART',  null, null, '2025-01-01', null,         30.00),
+  (1,    null, 'FREIGHT',         null, null, '2025-01-01', null,         2.50),
+  (1,    null, 'FREIGHT',         null, 13,   '2025-01-01', null,         1.80),     -- ABC Subsidiary uses its own trucks
+  -- consulting (per hour) and the copier
+  (5,    null, 'CONSULTANT_TIME', null, null, '2003-01-01', null,         85.00),
+  (6,    null, 'PURCHASED_PART',  null, null, '2019-01-01', null,         2600.00),
+  -- copier options: costed per feature, for no particular product
+  (null, 13,   'PURCHASED_PART',  null, null, '2019-01-01', null,         120.00),   -- duplex unit
+  (null, 13,   'INSTALLATION',    null, null, '2019-01-01', null,         30.00),
+  (null, 14,   'PURCHASED_PART',  null, null, '2019-01-01', null,         90.00),    -- stapling finisher
+  -- bad rows
+  (4,    null, 'MARKETING',       null, null, '2024-01-01', null,         0.10),     -- DATA ERROR: its type is outside materials / labor / other (caught by a query)
+  (4,    null, 'INK',             null, null, '2024-01-01', null,         1.80);     -- DATA ERROR: overlaps the forms' ink estimate (caught by a query)
