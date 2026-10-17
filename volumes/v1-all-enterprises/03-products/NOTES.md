@@ -826,29 +826,49 @@ Silverston intended, not at the literal drawing.
 
 1. **3.7, two subtype boxes:** read as two independent subtype sets (base / discount /
    surcharge / suggested, and one-time / recurring / utilization).
+   → **Kept** (photos, 2026-10-17): two separate boxes side by side in the supertype, both
+   whole on p. 88, so the page break splits neither. Still open, for discussion: is the
+   second set mandatory? `charge_kind` is nullable now, which makes null mean ONE_TIME.
 2. **3.7, RECURRING CHARGE "per":** read as ending at TIME FREQUENCY MEASURE; the line may stop
    at UNIT OF MEASURE itself. UTILIZATION CHARGE's ends at UNIT OF MEASURE.
+   → *Book check pending:* the photo puts "used in" by UNIT OF MEASURE, not by the subtype.
 3. **3.7, optionality:** every line read as dashed (optional) at both ends, including PRODUCT,
    PRODUCT FEATURE and ORGANIZATION.
+   → *Book check pending:* the photo blurs the three vertical lines.
 4. **3.7 vs 3.10b, naming:** BASE PRICE vs BASE PRODUCT PRICE.
+   → **Kept BASE PRICE** (2026-10-17): 3.7 is the figure that defines pricing; 3.10b redraws
+   PRICE COMPONENT only as context (it leaves out the second subtype box too).
 5. **3.8:** the arc spans the two "calculated for" lines, both solid at the cost end (each
    estimate is for exactly one product or feature). COST COMPONENT TYPE is mandatory;
    geography and organization are optional.
+   → **Kept** (photo, 2026-10-17): the arc, the solid halves and the dashed geography and
+   organization lines are all clear.
 6. **3.9a and 3.10a, thru dates printed `*`** on PRODUCT SUBSTITUTE and PRODUCT COMPONENT:
    read as slips, so thru dates stay nullable.
+   → **Kept nullable** (photos, 2026-10-17): the same PRODUCT COMPONENT prints thru `o` in 3.9a
+   and `*` in 3.10a, and 3.9b's supertype prints `o`. The book disagrees with itself.
 7. **3.9a identifiers:** from_date is `*`, not `#`, on all five entities (3.9b marks it `#`);
    the bar is on all ten product lines.
+   → **Closed, nothing to change** (2026-10-17): printed as transcribed, and 3.9a isn't built;
+   3.9b's `# FROM DATE` is what the SQL follows.
 8. **3.9b:** the type line read as solid at the association end and without a bar, so the
    identifier is from product + to product + from_date.
+   → **Kept** (photo, 2026-10-17): the from and to lines carry the bar, the type line doesn't.
 9. **3.10b:** one finished good backs many goods (crow's foot at GOOD, dashed line); PART BOM's
    two lines carry the bar; the organization links and PRICE COMPONENT's other links are
    unchanged, just not drawn.
+   → **Kept** (photo, 2026-10-17); 3.10b isn't built, so no SQL rides on it.
 10. **3.11:** REORDER GUIDELINE's line read as ending at GOOD, as in 3.5.
+    → *Book check pending:* the photo shows the line entering PRODUCT on its right edge; where
+    it stops is unclear.
 11. **3.10, built as 3.11 keeps it:** the three subtypes on GOOD (a `good_kind` discriminator),
     and 3.10a's PRODUCT COMPONENT as a COMPONENT row in 3.9b's association table, not a table of
     its own (3.11 has no PRODUCT COMPONENT box). 3.10b's PART is not built. Ponder 21 (the
     renaming passage) may change this: if MARKETING PACKAGE simply *is* the old PRODUCT
     COMPONENT, the COMPONENT row duplicates it.
+    → *Book check pending:* the text between 3.9b and 3.10a. The photos already show 3.9b's
+    MARKETING PACKAGE carrying exactly the attributes PRODUCT COMPONENT has in 3.9a and 3.10a
+    (quantity used, instruction).
 
 ## Design decisions (book → SQL)
 
