@@ -375,3 +375,82 @@ insert into inventory_item_variance (inventory_item_id, physical_inventory_date,
   (2, '2026-09-30',  2, 'FOUND',    'Two reams behind the bin'),
   (7, '2026-09-30', -1, 'THEFT',    null),
   (1, '2026-09-30', -1, 'MISCOUNT', 'DATA ERROR: a second variance for item 1 on the same count date (caught by a query)');
+
+-- ============================================================
+-- Fig 3.7 — Standard product pricing
+-- ============================================================
+-- Ch 2 geography: 1 Mexico, 2 Spain, 13 Springfield (in Illinois, the US,
+-- the Midwest Sales territory 30 and North America 31).
+-- Ch 2 parties: Northwind (4) sets our prices; ACME (16) makes the copier;
+-- Contoso (5) is classified IND_LOGISTICS.
+insert into unit_of_measure (uom_id, abbreviation, description) values
+  ('USD',   'USD', 'US dollar'),
+  ('EUR',   'EUR', 'Euro'),
+  ('MONTH', 'mo',  'Month'),
+  ('YEAR',  'yr',  'Year'),
+  ('PAGE',  'pg',  'Printed page');
+
+insert into time_frequency_measure (uom_id) values ('HR'), ('MONTH'), ('YEAR');
+insert into currency_measure (uom_id) values ('USD'), ('EUR');
+
+insert into quantity_break (quantity_break_id, from_quantity, thru_quantity) values
+  (1, 1,    100),
+  (2, 100,  1000),
+  (3, 1000, null);
+
+insert into order_value (order_value_id, from_amount, thru_amount) values
+  (1, 0,    500),
+  (2, 500,  2000),
+  (3, 2000, null);
+
+select setval(pg_get_serial_sequence('quantity_break', 'quantity_break_id'), (select max(quantity_break_id) from quantity_break));
+select setval(pg_get_serial_sequence('order_value', 'order_value_id'), (select max(order_value_id) from order_value));
+
+insert into sale_type (sale_type_id, description) values
+  ('INTERNET', 'Internet sale'),
+  ('CATALOG',  'Catalog sale'),
+  ('STORE',    'In-store sale');
+
+insert into price_component_type (price_component_type_id, description) values
+  ('BASE_PRICE', 'Base price'),
+  ('DISCOUNT',   'Discount component'),
+  ('SURCHARGE',  'Surcharge component'),
+  ('MSRP',       'Manufacturer suggested price');
+
+insert into price_component (price_component_id, price_component_type_id, charge_kind, from_date, thru_date, price, percent, currency_uom_id,
+                             product_id, product_feature_id, pricer_party_id,
+                             geographic_boundary_id, party_type_id, product_category_id, quantity_break_id, order_value_id, sale_type_id,
+                             per_uom_id, quantity, comment) values
+  -- bond paper (a ream): a price change, and a cheaper regional base price
+  (1,  'BASE_PRICE', null,          '2020-01-01', '2025-01-01', 38.00,   null, 'USD', 1,    null, 4,    null, null,            null, null, null, null,       null,    null, 'Old list price'),
+  (2,  'BASE_PRICE', null,          '2025-01-01', null,         42.00,   null, 'USD', 1,    null, 4,    null, null,            null, null, null, null,       null,    null, 'List price'),
+  (3,  'BASE_PRICE', null,          '2025-01-01', null,         40.00,   null, 'USD', 1,    null, 4,    30,   null,            null, null, null, null,       null,    null, 'Midwest Sales territory price'),
+  (4,  'MSRP',       null,          '2025-01-01', null,         45.00,   null, 'USD', 1,    null, 40,   null, null,            null, null, null, null,       null,    null, 'Johnson''s suggested price'),
+  (5,  'DISCOUNT',   null,          '2020-01-01', null,         null,    5,    null,  1,    null, null, null, null,            null, 2,    null, null,       null,    null, '100 to 999 reams'),
+  (6,  'DISCOUNT',   null,          '2020-01-01', null,         null,    10,   null,  1,    null, null, null, null,            null, 3,    null, null,       null,    null, '1000 reams or more'),
+  (7,  'SURCHARGE',  null,          '2020-01-01', null,         3.00,    null, 'USD', 1,    null, null, 1,    null,            null, null, null, null,       null,    null, 'Shipping paper to Mexico'),
+  -- rules for no single product: a category, a party type, an order size, a channel
+  (8,  'DISCOUNT',   null,          '2022-01-01', null,         null,    3,    null,  null, null, null, null, 'IND_LOGISTICS', 1,    null, null, null,       null,    null, 'Logistics companies: 3% off anything under Office supplies'),
+  (9,  'DISCOUNT',   null,          '2022-01-01', null,         null,    2,    null,  null, null, null, null, null,            null, null, 2,    null,       null,    null, 'Orders of 500 to 1999 USD'),
+  (10, 'DISCOUNT',   null,          '2022-01-01', null,         null,    4,    null,  null, null, null, null, null,            null, null, 3,    null,       null,    null, 'Orders of 2000 USD or more'),
+  (11, 'DISCOUNT',   null,          '2024-01-01', null,         null,    1,    null,  null, null, null, null, null,            null, null, null, 'INTERNET', null,    null, 'Internet orders'),
+  -- the pen, and a book priced in euros for Spain
+  (12, 'BASE_PRICE', null,          '1998-06-01', null,         2.50,    null, 'USD', 2,    null, 4,    null, null,            null, null, null, null,       null,    null, null),
+  (13, 'BASE_PRICE', null,          '2015-01-01', null,         59.95,   null, 'USD', 7,    null, 4,    null, null,            null, null, null, null,       null,    null, null),
+  (14, 'BASE_PRICE', null,          '2015-01-01', null,         54.00,   null, 'EUR', 7,    null, 4,    2,    null,            null, null, null, null,       null,    null, 'Spain'),
+  -- the copier and its options: feature prices, on this product or on any
+  (15, 'BASE_PRICE', null,          '2019-01-01', null,         3500.00, null, 'USD', 6,    null, 4,    null, null,            null, null, null, null,       null,    null, null),
+  (16, 'MSRP',       null,          '2019-01-01', null,         3999.00, null, 'USD', 6,    null, 16,   null, null,            null, null, null, null,       null,    null, 'ACME''s suggested price'),
+  (17, 'BASE_PRICE', null,          '2019-01-01', null,         250.00,  null, 'USD', 6,    13,   4,    null, null,            null, null, null, null,       null,    null, 'Duplex unit, on the OfficeJet'),
+  (18, 'BASE_PRICE', null,          '2019-01-01', null,         180.00,  null, 'USD', null, 14,   4,    null, null,            null, null, null, null,       null,    null, 'Stapling finisher, on any copier'),
+  -- services: charged per hour, per month, per page, and once
+  (19, 'BASE_PRICE', 'UTILIZATION', '2003-01-01', null,         150.00,  null, 'USD', 5,    null, 4,    null, null,            null, null, null, null,       'HR',    null, 'Consulting by the hour'),
+  (20, 'BASE_PRICE', 'RECURRING',   '2019-01-01', null,         99.00,   null, 'USD', 8,    null, 4,    null, null,            null, null, null, null,       'MONTH', null, 'Maintenance plan fee'),
+  (21, 'BASE_PRICE', 'UTILIZATION', '2019-01-01', null,         5.00,    null, 'USD', 8,    null, 4,    null, null,            null, null, null, null,       'PAGE',  1000, 'Plus 5 USD per 1000 pages printed'),
+  (22, 'BASE_PRICE', 'ONE_TIME',    '2019-01-01', null,         200.00,  null, 'USD', 8,    null, 4,    null, null,            null, null, null, null,       null,    null, 'Set-up fee'),
+  -- bad rows
+  (23, 'DISCOUNT',   null,          '2024-01-01', null,         1.00,    5,    'USD', 2,    null, null, null, null,            null, 2,    null, null,       null,    null, 'DATA ERROR: an amount AND a percent (caught by a query)'),
+  (24, 'BASE_PRICE', 'RECURRING',   '2027-01-01', null,         30.00,   null, 'USD', 10,   null, 4,    null, null,            null, null, null, null,       'EA',    null, 'DATA ERROR: recurring "per each" is not a time frequency (caught by a query)'),
+  (25, 'BASE_PRICE', null,          '2024-01-01', null,         2.75,    null, 'USD', 2,    null, 4,    null, null,            null, null, null, null,       null,    null, 'DATA ERROR: overlaps the pen''s 2.50 under the same conditions (caught by a query)');
+
+select setval(pg_get_serial_sequence('price_component', 'price_component_id'), (select max(price_component_id) from price_component));

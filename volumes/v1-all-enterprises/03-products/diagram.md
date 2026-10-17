@@ -63,4 +63,20 @@ erDiagram
   FACILITY                   ||--o{ CONTAINER               : "the location of"
   INVENTORY_ITEM             ||--o{ INVENTORY_ITEM_VARIANCE : "adjusted thru"
   REASON                     ||--o{ INVENTORY_ITEM_VARIANCE : "the explanation for"
+
+  %% Fig 3.7 — Standard product pricing (every "based on" link is optional)
+  UNIT_OF_MEASURE      ||--o| TIME_FREQUENCY_MEASURE : "subtype"
+  UNIT_OF_MEASURE      ||--o| CURRENCY_MEASURE       : "subtype"
+  PRICE_COMPONENT_TYPE ||--o{ PRICE_COMPONENT        : "kind of"
+  CURRENCY_MEASURE     |o--o{ PRICE_COMPONENT        : "used in (currency)"
+  UNIT_OF_MEASURE      |o--o{ PRICE_COMPONENT        : "used in (per: RECURRING, UTILIZATION)"
+  PRODUCT              |o--o{ PRICE_COMPONENT        : "priced by"
+  PRODUCT_FEATURE      |o--o{ PRICE_COMPONENT        : "priced by"
+  ORGANIZATION         |o--o{ PRICE_COMPONENT        : "the pricer of"
+  GEOGRAPHIC_BOUNDARY  |o--o{ PRICE_COMPONENT        : "a location used to define"
+  PARTY_TYPE           |o--o{ PRICE_COMPONENT        : "used to define"
+  PRODUCT_CATEGORY     |o--o{ PRICE_COMPONENT        : "used to define"
+  QUANTITY_BREAK       |o--o{ PRICE_COMPONENT        : "a discount level defined for"
+  ORDER_VALUE          |o--o{ PRICE_COMPONENT        : "a discount level defined for"
+  SALE_TYPE            |o--o{ PRICE_COMPONENT        : "used to define"
 ```

@@ -109,6 +109,14 @@ At most 5 per submodel. Answer in a sentence or three under each item.
     add a variance. What does each lose?
     *Answered 2026-10-14 (log: Submodel 3, Valencia phone shop).*
 
+### Submodel 4: pricing and costing
+15. **[3.7]** The model never stores "the price of bond paper". What does a (product, price)
+    table fail to say, and what do you pay for the component model in exchange?
+16. **[3.7]** Two base prices apply to one order line (list 42.00, Midwest 40.00). What does
+    the model say about which one wins, and who decides? Compare ponder 12.
+17. **[3.7]** The "based on" links point at party types, categories and regions, never at one
+    customer. How would you give ACME alone a special price without changing the model?
+
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out one submodel in the transcription notation
 (entities, key attributes, relationships and cardinality). Then diff it against `NOTES.md`

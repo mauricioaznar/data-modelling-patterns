@@ -483,3 +483,202 @@ select inventory_item_id, physical_inventory_date, count(*) as variances
 from inventory_item_variance
 group by inventory_item_id, physical_inventory_date
 having count(*) > 1;
+
+-- ============================================================
+-- Fig 3.7 — Standard product pricing
+-- ============================================================
+
+-- name: 3.7 — Price list today: every current price component, with what it is based on
+select pc.price_component_id as id, t.description as component, pc.charge_kind,
+       coalesce(pr.name, '(any product)') as product, pf.description as feature,
+       case when pc.price is not null then pc.price || ' ' || pc.currency_uom_id else pc.percent || '%' end
+         || coalesce(' per ' || coalesce(pc.quantity || ' ', '') || u.abbreviation, '') as amount,
+       concat_ws(', ',
+         'in ' || gb.name,
+         'party type ' || pt.description,
+         'category ' || cat.description,
+         'qty ' || qb.from_quantity || coalesce(' to <' || qb.thru_quantity, '+'),
+         'order ' || ov.from_amount || coalesce(' to <' || ov.thru_amount, '+'),
+         'sale ' || st.description) as based_on
+from price_component pc
+join price_component_type t      on t.price_component_type_id = pc.price_component_type_id
+left join product pr             on pr.product_id = pc.product_id
+left join product_feature pf     on pf.product_feature_id = pc.product_feature_id
+left join unit_of_measure u      on u.uom_id = pc.per_uom_id
+left join geographic_boundary gb on gb.geographic_boundary_id = pc.geographic_boundary_id
+left join party_type pt          on pt.party_type_id = pc.party_type_id
+left join product_category cat   on cat.product_category_id = pc.product_category_id
+left join quantity_break qb      on qb.quantity_break_id = pc.quantity_break_id
+left join order_value ov         on ov.order_value_id = pc.order_value_id
+left join sale_type st           on st.sale_type_id = pc.sale_type_id
+where pc.from_date <= current_date
+  and (pc.thru_date is null or pc.thru_date > current_date)
+order by pc.product_id nulls last, pc.price_component_id;
+
+-- name: 3.7 — Price a line: 250 reams of bond paper for Contoso, shipped to Springfield, in a 9,500 USD internet order, today
+-- Our rules (the figure stores components; combining them is the application's
+-- job): the most specific applicable base price wins (most conditions met,
+-- then the lowest); percents apply to that base; amounts are per unit.
+-- The manufacturer's suggested price is information, not part of the price.
+with params as (
+  select 1 as product_id, 250::numeric as quantity, 5 as customer_party_id, 13 as ship_to_geo_id,
+         9500::numeric as order_amount, 'INTERNET'::text as sale_type_id, 'USD'::text as currency,
+         current_date as on_date
+),
+customer_type as (     -- the customer's current classifications (Ch 2)
+  select c.party_type_id
+  from party_classification c, params p
+  where c.party_id = p.customer_party_id
+    and c.from_date <= p.on_date and (c.thru_date is null or c.thru_date > p.on_date)
+),
+product_cat as (       -- the product's current categories and every category above them
+  select c.product_category_id
+  from product_category_classification c, params p
+  where c.product_id = p.product_id
+    and c.from_date <= p.on_date and (c.thru_date is null or c.thru_date > p.on_date)
+  union
+  select a.ancestor_id
+  from product_category_classification c
+  join product_category_ancestor a on a.product_category_id = c.product_category_id, params p
+  where c.product_id = p.product_id
+    and c.from_date <= p.on_date and (c.thru_date is null or c.thru_date > p.on_date)
+),
+applicable as (        -- every condition is either null (any) or met
+  select pc.*
+  from price_component pc, params p
+  where pc.price_component_type_id <> 'MSRP'
+    and pc.from_date <= p.on_date and (pc.thru_date is null or pc.thru_date > p.on_date)
+    and (pc.product_id is null or pc.product_id = p.product_id)
+    and pc.product_feature_id is null                       -- no features chosen on this line
+    and (pc.currency_uom_id is null or pc.currency_uom_id = p.currency)
+    and (pc.geographic_boundary_id is null or pc.geographic_boundary_id in
+          (select ancestor_id from geographic_boundary_ancestor where geographic_boundary_id = p.ship_to_geo_id))
+    and (pc.party_type_id is null or pc.party_type_id in (select party_type_id from customer_type))
+    and (pc.product_category_id is null or pc.product_category_id in (select product_category_id from product_cat))
+    and (pc.quantity_break_id is null or exists (
+          select 1 from quantity_break q
+          where q.quantity_break_id = pc.quantity_break_id
+            and q.from_quantity <= p.quantity and (q.thru_quantity is null or q.thru_quantity > p.quantity)))
+    and (pc.order_value_id is null or exists (
+          select 1 from order_value o
+          where o.order_value_id = pc.order_value_id
+            and o.from_amount <= p.order_amount and (o.thru_amount is null or o.thru_amount > p.order_amount)))
+    and (pc.sale_type_id is null or pc.sale_type_id = p.sale_type_id)
+),
+base as (
+  select price_component_id, price
+  from applicable
+  where price_component_type_id = 'BASE_PRICE'
+  order by num_nonnulls(geographic_boundary_id, party_type_id, product_category_id,
+                        quantity_break_id, order_value_id, sale_type_id) desc, price
+  limit 1
+),
+effect as (
+  select a.price_component_id, a.price_component_type_id, a.comment,
+         case when a.price is not null then a.price || ' ' || a.currency_uom_id else a.percent || '%' end as amount,
+         case a.price_component_type_id
+           when 'BASE_PRICE' then case when a.price_component_id = b.price_component_id then a.price end
+           when 'DISCOUNT'   then -coalesce(a.price, round(b.price * a.percent / 100, 2))
+           when 'SURCHARGE'  then  coalesce(a.price, round(b.price * a.percent / 100, 2))
+         end as unit_effect
+  from applicable a cross join base b
+)
+select component, rule, amount, unit_effect
+from (
+  select 1 as seq, price_component_id,
+         price_component_type_id || case when price_component_type_id = 'BASE_PRICE' and unit_effect is null
+                                         then ' (not used)' else '' end as component,
+         comment as rule, amount, unit_effect
+  from effect
+  union all
+  select 2, null, 'UNIT PRICE', null, null, sum(unit_effect) from effect
+  union all
+  select 3, null, 'LINE TOTAL', null, null, sum(unit_effect) * (select quantity from params) from effect
+) lines
+order by seq, price_component_id;
+
+-- name: 3.7 — Services: what each one charges, and per what
+select pr.name as service, coalesce(pc.charge_kind, '(none)') as charge_kind,
+       pc.price || ' ' || pc.currency_uom_id
+         || coalesce(' per ' || coalesce(pc.quantity || ' ', '') || u.abbreviation, '') as charge,
+       pc.comment
+from price_component pc
+join product pr         on pr.product_id = pc.product_id
+left join unit_of_measure u on u.uom_id = pc.per_uom_id
+where pr.product_kind = 'SERVICE'
+  and pc.from_date <= current_date
+  and (pc.thru_date is null or pc.thru_date > current_date)
+order by pr.name, pc.charge_kind;
+
+-- name: 3.7 — Our list price vs the manufacturer's suggested price, today
+select pr.name as product, b.price as our_price, m.price as suggested, o.name as suggested_by,
+       round(100 * (m.price - b.price) / m.price, 1) as pct_below_suggested
+from price_component m
+join product pr      on pr.product_id = m.product_id
+join organization o  on o.party_id = m.pricer_party_id
+join price_component b
+  on b.product_id = m.product_id
+ and b.price_component_type_id = 'BASE_PRICE'
+ and b.product_feature_id is null
+ and b.currency_uom_id = m.currency_uom_id
+ and num_nonnulls(b.geographic_boundary_id, b.party_type_id, b.product_category_id,
+                  b.quantity_break_id, b.order_value_id, b.sale_type_id) = 0   -- the unconditional list price
+ and b.from_date <= current_date and (b.thru_date is null or b.thru_date > current_date)
+where m.price_component_type_id = 'MSRP'
+  and m.from_date <= current_date and (m.thru_date is null or m.thru_date > current_date);
+
+-- name: 3.7 — Bond paper's list price over time
+select from_date, thru_date, price, currency_uom_id, comment
+from price_component
+where product_id = 1
+  and price_component_type_id = 'BASE_PRICE'
+  and geographic_boundary_id is null
+order by from_date;
+
+-- name: 3.7 — Data-quality check: amount vs percent for each component type (should be empty)
+select price_component_id, price_component_type_id, price, percent, currency_uom_id, problem
+from (
+  select pc.*,
+         case
+           when price_component_type_id in ('BASE_PRICE', 'MSRP') and (price is null or percent is not null)
+             then 'needs an amount, not a percent'
+           when price_component_type_id in ('DISCOUNT', 'SURCHARGE') and num_nonnulls(price, percent) <> 1
+             then 'needs an amount or a percent, not both'
+           when price is not null and currency_uom_id is null then 'an amount without a currency'
+           when price is null and currency_uom_id is not null then 'a currency without an amount'
+         end as problem
+  from price_component pc
+) x
+where problem is not null;
+
+-- name: 3.7 — Data-quality check: charge kind vs its "per" unit and quantity (should be empty)
+select pc.price_component_id, pc.charge_kind, pc.per_uom_id, pc.quantity
+from price_component pc
+where (pc.charge_kind = 'RECURRING'
+       and (pc.quantity is not null
+            or not exists (select 1 from time_frequency_measure t where t.uom_id = pc.per_uom_id)))
+   or (pc.charge_kind = 'UTILIZATION' and pc.per_uom_id is null)
+   or (pc.charge_kind is distinct from 'RECURRING' and pc.charge_kind is distinct from 'UTILIZATION'
+       and (pc.per_uom_id is not null or pc.quantity is not null));
+
+-- name: 3.7 — Data-quality check: two components of the same type, same conditions, overlapping periods (should be empty)
+select a.price_component_id as a_id, b.price_component_id as b_id, a.price_component_type_id,
+       pr.name as product, a.price as a_price, b.price as b_price, a.from_date as a_from, b.from_date as b_from
+from price_component a
+join price_component b
+  on b.price_component_id > a.price_component_id
+ and b.price_component_type_id = a.price_component_type_id
+ and b.charge_kind            is not distinct from a.charge_kind
+ and b.product_id             is not distinct from a.product_id
+ and b.product_feature_id     is not distinct from a.product_feature_id
+ and b.currency_uom_id        is not distinct from a.currency_uom_id
+ and b.per_uom_id             is not distinct from a.per_uom_id
+ and b.geographic_boundary_id is not distinct from a.geographic_boundary_id
+ and b.party_type_id          is not distinct from a.party_type_id
+ and b.product_category_id    is not distinct from a.product_category_id
+ and b.quantity_break_id      is not distinct from a.quantity_break_id
+ and b.order_value_id         is not distinct from a.order_value_id
+ and b.sale_type_id           is not distinct from a.sale_type_id
+ and a.from_date < coalesce(b.thru_date, 'infinity')
+ and b.from_date < coalesce(a.thru_date, 'infinity')
+left join product pr on pr.product_id = a.product_id;

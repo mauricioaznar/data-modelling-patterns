@@ -492,6 +492,34 @@ GEOGRAPHIC BOUNDARY, PARTY TYPE, ORGANIZATION   (from Ch 2)
 PRODUCT (3.1), PRODUCT CATEGORY (3.2), PRODUCT FEATURE (3.4)
 ```
 
+**Discussion**
+- **The naive model** puts `price` on PRODUCT, or keeps a price list of (product, price). That
+  holds one price per product. It can't say "cheaper in the Midwest", "5% off 100 reams", "3%
+  off for logistics companies", "1% off online" or "99 a month plus 5 per 1,000 pages", and
+  without dates it loses every old price.
+- **A price component is a rule, not a price.** Each row says what it is worth (an amount or a
+  percent) and when it applies (its "based on" links, each one optional). The price of an order
+  line is *computed*: collect every component whose conditions hold, pick the base price, apply
+  the discounts and surcharges. The model stores the rules; how to combine them (which base
+  wins when two apply, whether percents compound) is left to the application.
+- **The conditions point at groups, not individuals:** a geographic boundary (not an
+  address), a party type (not a customer), a product category, a quantity break, an order value
+  band, a sale type. That's how one row can price thousands of order lines. It's the knowledge
+  level again: rules about kinds of things, built on Ch 2's party types and 3.2's categories.
+- **Two independent subtype sets.** The first says what the component does to the price:
+  base, discount, surcharge, or the manufacturer's suggested price (information, not a charge).
+  The second says how it's billed over time: once, every period (per month), or per use (per
+  page, per hour). That's what services and subscriptions need.
+- **A product, a feature, both, or neither.** A component can price a product, a feature on
+  any product ("stapling finisher: 180"), a feature on one product ("duplex unit: 250 on the
+  OfficeJet"), or no product at all: a rule that reaches products through a category, a party
+  type or an order size.
+- **The organization is the pricer** (our reading): whoever sets the price, an internal
+  organization for our own prices, the manufacturer for a suggested price. Two divisions can
+  then price the same product differently.
+- **Currencies and time frequencies are units too,** so "in the currency of" and "per month"
+  reuse UNIT OF MEASURE through two new subtypes.
+
 ### Fig 3.8 — Estimated product cost
 **Transcription** (accepted 2026-10-16; open points under "Points to discuss after the overview")
 
@@ -854,6 +882,36 @@ Silverston intended, not at the literal drawing.
 - **The reorder query compares only facility-based guidelines** with stock at that facility.
   Region- or organization-based guidelines would need stock rolled up by geography or owner.
 
+### Fig 3.7
+- **UNIT OF MEASURE subtypes become two subtype tables** (`time_frequency_measure`,
+  `currency_measure`) sharing `uom_id`, as GOOD did in 3.3: each has a relationship of its own,
+  so `price_component.currency_uom_id` references `currency_measure` and a plain FK insists on
+  a currency. No discriminator, because most units (each, ream, inch) are neither.
+- **First subtype set → `price_component_type`** lookup rows (BASE_PRICE, DISCOUNT, SURCHARGE,
+  MSRP), mandatory.
+- **Second subtype set → `charge_kind`** (ONE_TIME / RECURRING / UTILIZATION) plus nullable
+  `per_uom_id` and `quantity`, as in 3.6. Nullable, because a ream of paper's base price is no
+  kind of charge (discussion point 1). A data-quality query checks the combination (seed: a
+  recurring charge "per each").
+- **One `per_uom_id` for both "per" lines:** the figure draws two relationships (from RECURRING
+  and from UTILIZATION) for one role. It references `unit_of_measure`, and the data-quality
+  query requires a time frequency for RECURRING (discussion point 2).
+- **UTILIZATION's `quantity`** (our reading): per how many units, as in 5 USD per 1,000 pages;
+  null means 1.
+- **Price or percent:** both optional in the book. A data-quality query checks them per type
+  (base and suggested prices need an amount; discounts and surcharges one of the two) and that
+  an amount has a currency (seed: a discount with both). Stored positive; the type gives the sign.
+- **Quantity break and order value thru values are exclusive,** like thru dates, so bands meet
+  without gaps (100 ≤ quantity < 1000). The book gives order values no currency; ours are USD.
+- **No arc between product and feature,** unlike 3.8: a component may name both.
+- **`pricer_party_id`** for the organization ("specified for" / "the pricer of"), named like
+  `manufacturer_party_id` and `supplier_party_id`.
+- **The combining rules in the "Price a line" query are ours,** not the book's: the most
+  specific base price wins (most conditions met, then the lowest), percents apply to that base
+  without compounding, amounts are per unit, and the suggested price is left out.
+- **Duplicate rules** (same type and conditions, overlapping periods) are a data-quality query
+  (seed: the pen at 2.50 and 2.75).
+
 ## When NOT to use this
 
 **Category classification with a rollup network (3.2):**
@@ -888,6 +946,13 @@ Silverston intended, not at the literal drawing.
 **Inventory items (3.6):**
 - A shop with one stockroom can keep a quantity per product. Inventory items pay off with
   several locations, stock in different states, serial-number tracking or lot recalls.
+
+**Price components (3.7):**
+- A shop with one price per product and the odd promotion needs a dated price table, nothing
+  more. Price components pay off with many discount rules (volume, segment, region, channel),
+  subscription or usage billing, or several organizations setting prices. The cost: a price
+  is a calculation, not a lookup, and the combining rules live in code, so two applications can
+  compute different prices from the same rows.
 
 ## Open questions
 - **Fig 3.6:** is `quantity_on_hand` updated when a variance is recorded, or is the true
