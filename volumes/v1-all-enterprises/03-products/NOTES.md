@@ -22,8 +22,9 @@ rules stored as data.
 5. **Product associations and parts** (Figs 3.9–3.10): which products are built from,
    bundled with, replaced by, substitutable for or incompatible with which others?
 
-Fig 3.11 is the chapter's summary: no new submodel, but it adds GOOD's subtypes and shows
-which alternates (3.9b, not 3.10b) the overall model keeps.
+Fig 3.11 is the chapter's **architecture figure**: no new submodel and no SQL, just how the
+submodels flow together (under the figure). It adds GOOD's subtypes and shows which
+alternates (3.9b, not 3.10b) the overall model keeps.
 
 ## Figures
 
@@ -778,6 +779,22 @@ What it adds or settles:
 - Left out: the lookups (feature category, preference, rating, reason, container type,
   identification type, sale type, cost component type, association type), QUANTITY BREAK,
   ORDER VALUE and GEOGRAPHIC BOUNDARY. I take that as abbreviation, not removal.
+
+**How it flows** (architecture figure: no SQL, on assumptions until the overview)
+- **Two hubs.** PRODUCT is the catalogue idea (what we sell), and GOOD is its physical side
+  (what we can hold). Catalogue facts hang off PRODUCT, and physical facts hang off GOOD.
+- **Define → describe:** a PRODUCT sits in categories (rollup, classification), and those
+  categories carry MARKET INTEREST from party types. Features attach through APPLICABILITY,
+  INTERACTION says which features go together or clash, and UNIT OF MEASURE sizes them.
+- **Source → stock:** SUPPLIER PRODUCT says which ORGANIZATION sells us a product. On the GOOD
+  side, IDENTIFICATION gives its codes, REORDER GUIDELINE says when to buy more, and INVENTORY
+  ITEM is the real stock at a FACILITY (in a container, from a lot, with a status and variances).
+- **Price → cost:** PRICE COMPONENT and ESTIMATED PRODUCT COST each point at a product *or* a
+  feature, so a price or cost is built up from those parts, not stored as one number.
+- **Relate:** PRODUCT ASSOCIATION (3.9b) links product to product. GOOD splits into raw
+  material, subassembly and finished good (3.10a's subtypes, not 3.10b's PART).
+- **From Ch 2:** ORGANIZATION (suppliers), PARTY TYPE (market interest), FACILITY (where stock
+  lives) and GEOGRAPHIC BOUNDARY (where a price applies).
 
 ### Points to discuss after the overview (Figs 3.7–3.11)
 The readings below stand, and the SQL follows them (the user's call, 2026-10-16). We look at

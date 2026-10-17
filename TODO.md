@@ -27,7 +27,7 @@ blockers, but each one unlocks something:
 - [x] Card 3: postal addresses, facilities and geography, hook and mantra Claude's at the user's request; cards renumbered in chapter order, old 3–6 now 4–7 (2026-10-16)
 - [x] Export: subdecks Data Models::Submodels and Data Models::Patterns, stable note ids, `v1::ch02` tags (2026-10-16)
 - [ ] Anki, once: delete *Data Models::Recall* and its two empty subdecks (the old notes, without stable ids); keep *Data Models::Submodels* (7) and *Patterns* (7)
-- [ ] Add a card per new submodel after its walk-through; card pass at each chapter's end (CLAUDE.md)
+- [x] Workflow reorganised (the user's call, 2026-10-16): Claude drafts each submodel's card and doc entry when its figures land; card pass at the chapter overview (CLAUDE.md)
 - [ ] Pick the next deck to add (shortlist 2026-10-16: Traps from the gaps logs, Scenarios as business → model, SQL idioms)
 
 ## Vol 1: A Library of Universal Data Models for All Enterprises
@@ -55,7 +55,9 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [ ] 3.10a (product component) vs 3.10b (PART): decide after the user has read the 3.9b renaming passage (ponder 21), then build 3.10 and 3.11
   - [ ] Submodel 4: pricing and costing (Figs 3.7–3.8): built 2026-10-16 (ponders 15–19); still to do: walk-through, exercises
   - [ ] Submodel 5: product associations and parts (Figs 3.9–3.10): 3.9b built 2026-10-16 (ponders 20–22); still to do: 3.10, walk-through, exercises
-  - [ ] Ch 3 card pass: a recall card per submodel, pattern cards, `npm run recall:anki`
+  - [ ] New workflow catch-up: card 8 (pricing and costing) and card 9 (associations and parts), a *Draft (assumptions)* doc entry for every submodel that has none yet, and the Ch 3 architecture entry in the doc (from "How it flows" under Fig 3.11, no SQL)
+  - [ ] Ch 2: check the book for an overall figure after 2.13; if there is one, it gets an architecture entry
+  - [ ] Ch 3 overview: the user's feedback on the points to discuss, the doc drafts and the cards; refactor from it; card pass (pattern cards, `npm run recall:anki`); then practice resumes
 - [ ] Ch 04: Ordering Products
 - [ ] Ch 05: Shipments
   - [ ] Check SHIPMENT RECEIPT and ITEM ISSUANCE link to INVENTORY ITEM (recalled 2026-10-15); add the qoh = balance data-quality query (Ch 3 NOTES, Fig 3.6 vocabulary)

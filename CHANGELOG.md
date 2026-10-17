@@ -36,12 +36,24 @@ and any decisions made.
   Silverston's intention (the user's rule).
 - Build 3.9b, not 3.9a (the user's choice). 3.10a vs 3.10b waits until the user has read the
   renaming passage.
+- Workflow reorganised (the user's call), replacing the card rule above: when images arrive,
+  Claude builds everything on its own reading, with no confirmation gate. That means the
+  transcription, the SQL, a *Draft (assumptions)* doc entry (the five sections the figures can
+  answer) and the recall card. The chapter overview collects feedback, drives the refactor and
+  holds the card pass. Practice then finishes the doc entry (pitfalls, scenario) and swaps each
+  card's Trap for a real mistake. CLAUDE.md, `docs/practice.md` and `docs/recall.md` updated.
+- New category, **architecture figures** (the user's call): a chapter's last, overall figure
+  gets no SQL, just a short "How it flows" in NOTES and an architecture entry in the doc.
+  Ch 3's is written under Fig 3.11.
 
 **Next**
 - The user imports the deck; mantras that fail twice get rewritten in the user's words.
 - Card 1 shower question: Laura at the climbing gym, employment or generic relationship?
-- 3.10a or 3.10b, once the user has read the 3.9b renaming passage; then build 3.10 and 3.11.
+- 3.10a or 3.10b, once the user has read the 3.9b renaming passage; then build 3.10. Fig 3.11
+  is an architecture figure: no SQL, its "How it flows" is already in NOTES.
 - Walk-throughs for submodels 4 and 5.
+- Catch up with the new workflow: cards 8–9 and draft doc entries for the submodels that have
+  none; then the Ch 3 overview.
 
 ## 2026-10-15
 

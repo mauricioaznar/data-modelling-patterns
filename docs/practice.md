@@ -17,7 +17,7 @@ or resumes, not every session.
 
 ## Time budget
 - **About 3 hours per submodel**, split roughly: exam 45 min · reinforce 1 h 15 min · practice
-  scenario 45 min · writing the doc entry 15 min.
+  scenario 45 min · finishing the doc entry 15 min.
 - Go over only when a gap still needs reinforcing; say so and agree before continuing.
 - Don't build more exercises than fit the budget. Unused menu items are fine to leave undone.
 
@@ -65,8 +65,10 @@ of the chapter's `EXERCISES.md`.
 - **3. Practice scenario (Create).** One small new-domain problem for this submodel, modelled
   on paper: the minimal entities, what was borrowed from the book and what was left out on
   purpose. This is where scores of 4 come from.
-- **4. Write the doc entry** (seven sections, see `CLAUDE.md`), update Core patterns, the
-  question index and the roadmap.
+- **4. Finish the doc entry.** The draft exists since the reading (five sections, see
+  `CLAUDE.md`). Add the pitfalls from the user's mistakes and the scenario, fix what practice
+  proved wrong, drop the Draft mark and mark it Done on the roadmap. Swap the recall card's
+  Trap for one of the user's real mistakes.
 - **Submodel done when:** every row scores 3+, the scenario holds up, and the doc entry is
   written. **Chapter done when** all its submodels are done; then tick it in `TODO.md`.
 

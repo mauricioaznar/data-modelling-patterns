@@ -41,8 +41,10 @@ deep-dive session.
 
 ## Rules for a good mantra
 
-- **You write it, not Claude.** Generating it is half the encoding. Claude only checks that it
-  explodes (does every spine entity fall out of it?) and that it's not wrong.
+- **Claude drafts it, you own it.** Claude writes each card when its figures land (the user's
+  call, 2026-10-16). Generating a mantra is half the encoding, so rewriting one in your own
+  words is worth more than re-reading it; Claude checks a rewrite still explodes (does every
+  spine entity fall out of it?) and isn't wrong.
 - **Spine nouns in connection order.** "A party plays a role; two roles make a relationship"
   tells you `party_relationship` hangs off roles, not parties. Order *is* the model.
 - **One verb per link.** The verb is the FK. "plays", "pairs", "groups", "triggers".
@@ -56,7 +58,7 @@ deep-dive session.
 
 | Min | Block | What you do |
 |---|---|---|
-| 0–5 | **Map** | On a blank page, draw the chain of every submodel so far as boxes (Party → Contact → Places → Comms → Product → Features → Inventory…) and write each one's hook. No peeking. |
+| 0–5 | **Map** | On a blank page, draw the chain of every submodel so far as boxes (Party → Contact → Places → Comms → Product → Features → Inventory…) and write each one's hook. No peeking; then check it against each chapter's "How it flows" (its architecture figure). |
 | 5–20 | **Deck** | The cards due today (see Schedule). For each: read the cue, say the mantra out loud, write S · W · T · D, then open the key and grade yourself. |
 | 20–27 | **Twist** | Pick one due card and apply it to a random business (a dentist, a bike shop, a school, a festival). Two or three example rows, in your head or on paper. This is the step that stops it being parroting. |
 | 27–30 | **Log** | One line per card in the log below: date, card, grade, box. Circle anything to bring to the next session. |
@@ -79,16 +81,16 @@ Grade each card after opening the key:
 | 3 | week | holding |
 | 4 | 2 weeks | solid; most of the deck should end up here |
 
-New cards start in box 1. A card enters the deck **after its walk-through** (when you first
-understand the submodel), not after its practice ends, so nothing waits weeks to be revised.
+New cards start in box 1. A card enters the deck **when its figures are built**, not after its
+practice ends, so nothing waits weeks to be revised. Its Trap starts as the naive-model
+mistake and becomes one of yours when practice ends.
 
 ---
 
 ## Deck: submodels
 
-Cue · your hook · your mantra · the key (click to open, **after** you've recalled). Fill the
-hook and mantra yourself. Cards 1–7 are Claude's, at the user's request: rewrite any that
-don't explode, in your own words.
+Cue · hook · mantra · the key (click to open, **after** you've recalled). Claude drafts the
+hook and mantra when the figures land: rewrite any that don't explode, in your own words.
 
 ### Card 1 · V1 Ch 2 · Parties, roles and relationships (Figs 2.1–2.7)
 - **Cue:** "Who is this, what are they to us, and how are they tied to each other?"
