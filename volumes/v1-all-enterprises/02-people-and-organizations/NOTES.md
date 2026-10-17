@@ -749,6 +749,65 @@ Optionality (confirmed): an event may be part of a case; every case has a status
 - **WORK EFFORT is a preview of Ch 6.** Only the attributes needed here are drawn; Ch 6 builds it
   out.
 
+### Fig 2.14 — Overall party model
+**Transcription** (from the photo, 2026-10-16, on assumptions until the overview; identifiers
+only, no attributes). An architecture figure: no SQL.
+
+```
+Shown, all from Figs 2.3–2.13:
+  PARTY (PERSON, ORGANIZATION), PARTY ROLE, PARTY ROLE TYPE, PARTY RELATIONSHIP,
+  PARTY CONTACT MECHANISM, PARTY CONTACT MECHANISM PURPOSE, CONTACT MECHANISM,
+  CONTACT MECHANISM TYPE, CONTACT MECHANISM LINK, FACILITY, PARTY FACILITY,
+  FACILITY CONTACT MECHANISM, COMMUNICATION EVENT, CASE, COMMUNICATION EVENT WORK EFFORT
+
+PARTY ROLE                       -> PARTY ("for" / "acting as"), -> PARTY ROLE TYPE
+PARTY RELATIONSHIP               -> PARTY ROLE "from", -> PARTY ROLE "to" (role "involved in")
+PARTY CONTACT MECHANISM          -> PARTY ("the mechanism to contact" / "contacted via")
+                                 -> CONTACT MECHANISM ("specified via" / "used by")
+                                 -> PARTY ROLE TYPE ("specified for")
+PARTY CONTACT MECHANISM PURPOSE  -> PARTY CONTACT MECHANISM ("used within" / "used for the")
+CONTACT MECHANISM                -> CONTACT MECHANISM TYPE ("described by" / "the description for")
+CONTACT MECHANISM LINK           -> CONTACT MECHANISM (twice)
+PARTY FACILITY                   -> PARTY ("for" / "involved in"), -> FACILITY ("of" / "involving")
+FACILITY CONTACT MECHANISM       -> FACILITY; a "specified via" / "used by" line that ends at
+                                    COMMUNICATION EVENT (point 1 below)
+FACILITY                         -> FACILITY ("part of" / "made up of")
+COMMUNICATION EVENT              -> PARTY RELATIONSHIP ("within the context of" / "in the context of")
+                                 -> CASE ("communicated as part of" / "encompassing")
+COMMUNICATION EVENT WORK EFFORT  -> COMMUNICATION EVENT ("from" / "followed up with")
+```
+
+What it adds or settles:
+- **FACILITY ROLE is drawn as PARTY FACILITY**, with 2.11's lines and labels. Only the name
+  changes (our table stays `facility_role`).
+- **Relationships hang off roles**, so the overall model keeps 2.6a's generic PARTY
+  RELATIONSHIP, not 2.5's specific ones.
+- Left out: names and person/organization attributes, classification and party types, every
+  type and status lookup, postal addresses and geographic boundaries (2.8), the event's roles,
+  purposes, status and medium (2.12), CASE ROLE and WORK EFFORT itself. I take that as
+  abbreviation, not removal, as in Fig 3.11.
+
+**How it flows** (architecture figure: no SQL, on assumptions until the overview)
+- **One hub: PARTY**, a person or an organization. Every submodel answers a question about it.
+- **Who they are to us:** a PARTY ROLE (typed) says what a party acts as: customer, supplier,
+  employee.
+- **How they're related:** a PARTY RELATIONSHIP joins two *roles*, from and to, dated, so the
+  same two parties can be related in several ways at once.
+- **How to reach them:** PARTY CONTACT MECHANISM joins a party to a shared CONTACT MECHANISM
+  (address, phone, e-mail), dated, with purposes and an optional role type.
+- **Where they are:** a FACILITY is a physical place, nested by "part of". Parties tie in through
+  PARTY FACILITY, and facilities get contact mechanisms the way parties do.
+- **What we said:** a COMMUNICATION EVENT, optionally within a relationship, gathered into a
+  CASE and followed up with work (into Ch 6).
+- **Used later:** Ch 3 borrows ORGANIZATION, PARTY TYPE, FACILITY and GEOGRAPHIC BOUNDARY.
+
+### Points to discuss after the overview (Fig 2.14)
+1. **FACILITY CONTACT MECHANISM's "specified via" / "used by" line stops at COMMUNICATION
+   EVENT.** Those are 2.11's labels for its link to CONTACT MECHANISM, so I read the line as a
+   slip: it points at CONTACT MECHANISM.
+2. **The communication event is drawn bare** (no roles, purposes, status or medium). Read as
+   abbreviation, not a step back to 2.7's one-relationship event.
+
 ## Design decisions (book → SQL)
 
 ### Fig 2.1
