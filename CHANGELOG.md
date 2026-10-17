@@ -37,6 +37,10 @@ and any decisions made.
   Ch 3, a refreshed study loop, a Ch 3 column and three new rows in Core patterns (rules as
   rows, exclusive arc, catalogue vs physical instance), six question-index rows, Ch 3 In
   progress on the roadmap.
+- Design reference doc, Ch 2 catch-up: a draft for postal addresses, facilities and geography
+  (with its two pitfalls from item 49, and a roadmap row), and the communication events entry
+  regrouped from its "learnt so far" notes into the seven sections ("To verify" kept).
+- The other session was told about the new rules; it acknowledged with commit f361f95.
 
 **Decisions**
 - `docs/recall.md` stays the source of truth; Anki is a generated copy, re-imported on change.
@@ -68,8 +72,6 @@ and any decisions made.
 - Card 1 shower question: Laura at the climbing gym, employment or generic relationship?
 - Ch 3 overview: the 11 points to discuss (plus Fig 2.14's two), the doc drafts and cards 8–9;
   refactor from the feedback, then practice resumes (walk-throughs for submodels 4 and 5).
-- Still without a doc draft: Ch 2 postal addresses, facilities and geography, and the
-  communication events entry in the seven-section shape.
 
 ## 2026-10-15
 

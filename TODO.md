@@ -56,7 +56,8 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [ ] Submodel 4: pricing and costing (Figs 3.7–3.8): built 2026-10-16 (ponders 15–19); doc draft and card 8 done; still to do: walk-through, exercises
   - [ ] Submodel 5: product associations and parts (Figs 3.9–3.10): built 2026-10-16 (ponders 20–23); doc draft and card 9 done; still to do: walk-through, exercises
   - [x] New workflow catch-up (2026-10-16): cards 8–9; doc drafts for Ch 3 submodels 1–5; architecture entries for Ch 2 and Ch 3; Core patterns gains a Ch 3 column and three patterns (rules as rows, exclusive arc, catalogue vs physical instance); question index and roadmap updated
-  - [ ] Still without a draft in the doc: Ch 2 postal addresses, facilities and geography (parked), and the communication events entry (a "learnt so far" list, not yet in the seven sections)
+  - [x] Doc drafts for Ch 2 postal addresses, facilities and geography (with its two pitfalls from item 49, roadmap row added) and communication events (the "learnt so far" notes regrouped into the seven sections; "To verify" kept) (2026-10-16)
+  - [x] The other session told about the new rules (2026-10-16); it acknowledged with commit f361f95
   - [x] Ch 2: overall figure 2.14 shared (2026-10-16); transcribed with its "How it flows" (no SQL), two points to discuss
   - [ ] Recall: pattern cards for P8 · catalogue vs physical instance (new in the doc's Core patterns); align the doc's pattern rows with P1–P7 at the overview
   - [ ] Ch 3 overview: the user's feedback on the points to discuss, the doc drafts and the cards; refactor from it; card pass (pattern cards, `npm run recall:anki`); then practice resumes
