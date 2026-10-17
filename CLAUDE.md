@@ -88,7 +88,7 @@ the user, tease with nicknames, so the sessions stay fun.
   choices and why (Understand) · patterns used (Analyze) · pitfalls from the user's own mistakes
   (Evaluate) · practice scenario (Create).
 - **Draft when the figures land:** the first five sections, from Claude's reading, with the
-  entry marked *Draft (assumptions)* and *Drafted* on the roadmap. The overview revises it.
+  entry marked *Draft (assumptions)* and *In progress* on the roadmap. The overview revises it.
 - **Finish when practice ends:** add the pitfalls and the scenario, fix whatever practice
   proved wrong, drop the Draft mark and mark it Done on the roadmap.
 - **Patterns first:** add a new pattern to Core patterns, or a new example to an existing row.

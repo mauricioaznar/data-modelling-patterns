@@ -84,5 +84,7 @@ of the chapter's `EXERCISES.md`.
 - **Data explorer (`npm run explore`):** keep it closed for the exam and gap checks, and open
   for learning and for checking an answer *after* giving it from memory. An answer found with
   the explorer open scores 2 at most ("with help").
+- **The design reference doc, too:** its drafts now exist before practice and answer some of
+  the ponders, so the same rule applies. Keep it closed for the exam and gap checks.
 - **Next session start:** open with 3 quick recall questions on the most recently finished
   submodel, favouring its open gaps.

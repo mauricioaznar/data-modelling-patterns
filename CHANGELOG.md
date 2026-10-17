@@ -25,6 +25,18 @@ and any decisions made.
   values, sale types, currency and time-frequency units, and a "price a line" query), Fig 3.8
   estimated cost (type hierarchy, product-or-feature arc, margin query) and Fig 3.9b product
   associations. Ponders 15–22.
+- Ch 3 Fig 3.10a built as Fig 3.11 keeps it: `good.good_kind` (raw material, subassembly,
+  finished good) and a COMPONENT association type, with a two-level BOM for the copier, an
+  explosion query with a cycle guard and a raw-material-with-components check. 3.10b's PART
+  discussed, not built. Ponder 23. The photos confirmed the 3.10–3.11 transcriptions; 3.11 had
+  two unnamed lines (manufacturer, unit of measure), now in NOTES and "How it flows".
+- Ch 2 Fig 2.14 (overall party model) shared and transcribed as an architecture figure, with
+  its "How it flows" and two points to discuss (a stray line, the bare event).
+- Recall cards 8 (pricing and costing) and 9 (associations and parts); Anki export 16 cards.
+- Design reference doc: drafts for the five Ch 3 submodels, architecture entries for Ch 2 and
+  Ch 3, a refreshed study loop, a Ch 3 column and three new rows in Core patterns (rules as
+  rows, exclusive arc, catalogue vs physical instance), six question-index rows, Ch 3 In
+  progress on the roadmap.
 
 **Decisions**
 - `docs/recall.md` stays the source of truth; Anki is a generated copy, re-imported on change.
@@ -45,15 +57,19 @@ and any decisions made.
 - New category, **architecture figures** (the user's call): a chapter's last, overall figure
   gets no SQL, just a short "How it flows" in NOTES and an architecture entry in the doc.
   Ch 3's is written under Fig 3.11.
+- 3.10 built on assumptions under the new rule (point 11): no separate PRODUCT COMPONENT table,
+  since 3.11 has none. Ponder 21's renaming passage may turn it into MARKETING PACKAGE reuse.
+- The design reference doc's drafts answer some ponders, so it stays closed during exams,
+  like the explorer (`docs/practice.md`). Roadmap uses its existing *In progress* for drafts.
 
 **Next**
-- The user imports the deck; mantras that fail twice get rewritten in the user's words.
+- The user imports the deck (16 cards); mantras that fail twice get rewritten in the user's
+  words.
 - Card 1 shower question: Laura at the climbing gym, employment or generic relationship?
-- 3.10a or 3.10b, once the user has read the 3.9b renaming passage; then build 3.10. Fig 3.11
-  is an architecture figure: no SQL, its "How it flows" is already in NOTES.
-- Walk-throughs for submodels 4 and 5.
-- Catch up with the new workflow: cards 8–9 and draft doc entries for the submodels that have
-  none; then the Ch 3 overview.
+- Ch 3 overview: the 11 points to discuss (plus Fig 2.14's two), the doc drafts and cards 8–9;
+  refactor from the feedback, then practice resumes (walk-throughs for submodels 4 and 5).
+- Still without a doc draft: Ch 2 postal addresses, facilities and geography, and the
+  communication events entry in the seven-section shape.
 
 ## 2026-10-15
 

@@ -50,13 +50,15 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [ ] Submodel 3: suppliers and inventory (Figs 3.5–3.6, built 2026-10-11): both figures walked through 2026-10-14 (rows at 2–3); 2026-10-15: concept session on qoh / balance / variance (in NOTES); next: recall 1, the K-17 lot question (asked, parked by the user), supplier and reorder to 3, neighbourhoods, scenario, doc entry
   - [x] Share the remaining Ch 3 figures (2026-10-16: Figs 3.7–3.11, the last of the chapter)
   - [x] Figs 3.7–3.11 transcriptions accepted (2026-10-16); doubtful readings moved to "Points to discuss after the overview" in NOTES
-  - [ ] Discuss those 10 points after the overview; refactor then if needed, aiming at Silverston's intention
+  - [ ] Discuss those 11 points (and Fig 2.14's two) after the overview; refactor then if needed, aiming at Silverston's intention
   - [x] 3.9a vs 3.9b: build 3.9b, the one Fig 3.11 keeps (the user's choice, 2026-10-16)
-  - [ ] 3.10a (product component) vs 3.10b (PART): decide after the user has read the 3.9b renaming passage (ponder 21), then build 3.10 and 3.11
-  - [ ] Submodel 4: pricing and costing (Figs 3.7–3.8): built 2026-10-16 (ponders 15–19); still to do: walk-through, exercises
-  - [ ] Submodel 5: product associations and parts (Figs 3.9–3.10): 3.9b built 2026-10-16 (ponders 20–22); still to do: 3.10, walk-through, exercises
-  - [ ] New workflow catch-up: card 8 (pricing and costing) and card 9 (associations and parts), a *Draft (assumptions)* doc entry for every submodel that has none yet, and the Ch 3 architecture entry in the doc (from "How it flows" under Fig 3.11, no SQL)
-  - [ ] Ch 2: check the book for an overall figure after 2.13; if there is one, it gets an architecture entry
+  - [x] 3.10: built as 3.11 keeps it (GOOD's subtypes + a COMPONENT association type), on assumptions (2026-10-16); 3.10b's PART discussed, not built. Point 11 and ponder 21 may change it at the overview
+  - [ ] Submodel 4: pricing and costing (Figs 3.7–3.8): built 2026-10-16 (ponders 15–19); doc draft and card 8 done; still to do: walk-through, exercises
+  - [ ] Submodel 5: product associations and parts (Figs 3.9–3.10): built 2026-10-16 (ponders 20–23); doc draft and card 9 done; still to do: walk-through, exercises
+  - [x] New workflow catch-up (2026-10-16): cards 8–9; doc drafts for Ch 3 submodels 1–5; architecture entries for Ch 2 and Ch 3; Core patterns gains a Ch 3 column and three patterns (rules as rows, exclusive arc, catalogue vs physical instance); question index and roadmap updated
+  - [ ] Still without a draft in the doc: Ch 2 postal addresses, facilities and geography (parked), and the communication events entry (a "learnt so far" list, not yet in the seven sections)
+  - [x] Ch 2: overall figure 2.14 shared (2026-10-16); transcribed with its "How it flows" (no SQL), two points to discuss
+  - [ ] Recall: pattern cards for P8 · catalogue vs physical instance (new in the doc's Core patterns); align the doc's pattern rows with P1–P7 at the overview
   - [ ] Ch 3 overview: the user's feedback on the points to discuss, the doc drafts and the cards; refactor from it; card pass (pattern cards, `npm run recall:anki`); then practice resumes
 - [ ] Ch 04: Ordering Products
 - [ ] Ch 05: Shipments
