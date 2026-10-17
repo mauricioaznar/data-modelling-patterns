@@ -328,6 +328,7 @@ to use it**.
 - **P5 · Self-referencing link (from / to, rollup).** Cue: "A thing related to another of its own kind."
 - **P6 · Rules as rows.** Cue: "Which combinations are allowed, without a code change."
 - **P7 · Exclusive arc.** Cue: "Here or there, never both, never neither."
+- **P8 · Catalogue vs physical instance.** Cue: "One description, many things you can count on the shelf."
 
 ---
 

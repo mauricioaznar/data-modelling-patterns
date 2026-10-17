@@ -20,3 +20,4 @@ Pattern P4<br><br>It was true then, it isn't now.	<b>Effectivity dates.</b><br><
 Pattern P5<br><br>A thing related to another of its own kind.	<b>Self-referencing link (from / to, rollup).</b><br><br>Now: two examples from different chapters, and when not to use it.	pattern	Data Models::Patterns	dm-pattern-p5
 Pattern P6<br><br>Which combinations are allowed, without a code change.	<b>Rules as rows.</b><br><br>Now: two examples from different chapters, and when not to use it.	pattern	Data Models::Patterns	dm-pattern-p6
 Pattern P7<br><br>Here or there, never both, never neither.	<b>Exclusive arc.</b><br><br>Now: two examples from different chapters, and when not to use it.	pattern	Data Models::Patterns	dm-pattern-p7
+Pattern P8<br><br>One description, many things you can count on the shelf.	<b>Catalogue vs physical instance.</b><br><br>Now: two examples from different chapters, and when not to use it.	pattern	Data Models::Patterns	dm-pattern-p8
