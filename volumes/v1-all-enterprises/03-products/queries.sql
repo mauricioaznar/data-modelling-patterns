@@ -792,12 +792,11 @@ left join product_feature pf on pf.product_feature_id = a.product_feature_id;
 -- name: 3.9 — Every current association, read as a sentence
 select a.product_association_type_id as type,
        case a.product_association_type_id
-         when 'MARKETING_PACKAGE' then f.name || ' includes ' || coalesce(a.quantity_used, 1) || ' × ' || t.name
+         when 'COMPONENT'         then f.name || ' is made up of ' || coalesce(a.quantity_used, 1) || ' × ' || t.name
          when 'SUBSTITUTE'        then t.name || ' can replace ' || f.name || coalesce(' (' || a.quantity || ' for 1)', '')
          when 'OBSOLESCENCE'      then f.name || ' was superseded by ' || t.name || ' on ' || a.from_date
          when 'COMPLEMENT'        then f.name || ' goes well with ' || t.name
          when 'INCOMPATIBILITY'   then f.name || ' doesn''t work with ' || t.name
-         when 'COMPONENT'         then f.name || ' is made with ' || a.quantity_used || ' × ' || t.name   -- Fig 3.10
        end as sentence,
        a.reason
 from product_association a
@@ -847,14 +846,14 @@ left join lateral (
   order by pc.from_date desc
   limit 1
 ) lp on true
-where a.product_association_type_id = 'MARKETING_PACKAGE' and a.from_product_id = 11
+where a.product_association_type_id = 'COMPONENT' and a.from_product_id = 11
   and a.from_date <= current_date and (a.thru_date is null or a.thru_date > current_date)
 order by t.name;
 
--- name: 3.9 — Data-quality check: package and substitute attributes on the wrong type (should be empty)
+-- name: 3.9 — Data-quality check: component and substitute attributes on the wrong type (should be empty)
 select product_association_id, product_association_type_id, quantity_used, instruction, quantity
 from product_association
-where (product_association_type_id not in ('MARKETING_PACKAGE', 'COMPONENT') and (quantity_used is not null or instruction is not null))
+where (product_association_type_id <> 'COMPONENT' and (quantity_used is not null or instruction is not null))
    or (product_association_type_id <> 'SUBSTITUTE' and quantity is not null);
 
 -- name: 3.9 — Data-quality check: two products that are complements and incompatible at once, either way round (should be empty)
@@ -905,8 +904,8 @@ with recursive bom (product_id, level, quantity, path) as (
 )
 select repeat('  ', level - 1) || p.name as component, g.good_kind, b.quantity, p.uom_id
 from bom b
-join product p on p.product_id = b.product_id
-join good g    on g.product_id = b.product_id
+join product p   on p.product_id = b.product_id
+left join good g on g.product_id = b.product_id   -- a component may be a service (installation in a package)
 order by b.path;
 
 -- name: 3.10 — Raw materials to buy for one copier (summed across levels)
@@ -931,13 +930,11 @@ join good g    on g.product_id = b.product_id and g.good_kind = 'RAW_MATERIAL'
 group by p.name, p.uom_id
 order by p.name;
 
--- name: 3.10 — Data-quality check: a raw material made up of something, or a component that isn't a good (should be empty)
-select a.product_association_id, f.name as assembly, t.name as component,
-       fg.good_kind as assembly_kind, tg.good_kind as component_kind
+-- name: 3.10 — Data-quality check: a raw material made up of something (should be empty)
+-- PRODUCT COMPONENT links product to product, so a service may sit in a package.
+select a.product_association_id, f.name as assembly, t.name as component
 from product_association a
-join product f   on f.product_id = a.from_product_id
-join product t   on t.product_id = a.to_product_id
-left join good fg on fg.product_id = a.from_product_id
-left join good tg on tg.product_id = a.to_product_id
-where a.product_association_type_id = 'COMPONENT'
-  and (fg.good_kind = 'RAW_MATERIAL' or fg.product_id is null or tg.product_id is null);
+join product f on f.product_id = a.from_product_id
+join product t on t.product_id = a.to_product_id
+join good fg   on fg.product_id = a.from_product_id and fg.good_kind = 'RAW_MATERIAL'
+where a.product_association_type_id = 'COMPONENT';

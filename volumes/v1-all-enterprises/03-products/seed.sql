@@ -519,7 +519,7 @@ insert into product_category_classification (product_id, product_category_id, fr
   (13, 6,  '2006-01-01', null, true,  null);
 
 insert into product_association_type (product_association_type_id, description) values
-  ('MARKETING_PACKAGE', 'Marketing package: sold together as one product'),
+  ('COMPONENT',         'Product component: made up of (3.9b''s marketing package, 3.10a''s product component)'),
   ('SUBSTITUTE',        'Product substitute'),
   ('OBSOLESCENCE',      'Product obsolescence: superseded by'),
   ('COMPLEMENT',        'Product complement'),
@@ -527,9 +527,9 @@ insert into product_association_type (product_association_type_id, description) 
 
 insert into product_association (product_association_type_id, from_product_id, to_product_id, from_date, thru_date, reason, quantity_used, instruction, quantity) values
   -- the starter kit is a package of products we also sell on their own
-  ('MARKETING_PACKAGE', 11, 1,  '2024-01-01', null, null,                                       2,    'Two reams, shrink-wrapped', null),
-  ('MARKETING_PACKAGE', 11, 2,  '2024-01-01', null, null,                                       10,   null,                        null),
-  ('MARKETING_PACKAGE', 11, 4,  '2024-01-01', null, null,                                       1,    null,                        null),
+  ('COMPONENT',         11, 1,  '2024-01-01', null, null,                                       2,    'Two reams, shrink-wrapped', null),
+  ('COMPONENT',         11, 2,  '2024-01-01', null, null,                                       10,   null,                        null),
+  ('COMPONENT',         11, 4,  '2024-01-01', null, null,                                       1,    null,                        null),
   -- substitution runs both ways here, but needs a row each way
   ('SUBSTITUTE',        1,  12, '2023-01-01', null, 'Same size and weight, recycled',           null, null,                        1),
   ('SUBSTITUTE',        12, 1,  '2023-01-01', null, 'Same size and weight',                     null, null,                        1),
@@ -568,9 +568,7 @@ insert into product_category_classification (product_id, product_category_id, fr
   (15, 5,  '2019-01-01', null, true, null),
   (16, 31, '2019-01-01', null, true, null);
 
-insert into product_association_type (product_association_type_id, description) values
-  ('COMPONENT', 'Product component: made up of (Fig 3.10a)');
-
+-- The COMPONENT type is 3.9b's row: a bill of materials and a package share it.
 insert into product_association (product_association_type_id, from_product_id, to_product_id, from_date, thru_date, reason, quantity_used, instruction, quantity) values
   ('COMPONENT', 6,  14, '2019-01-01', null, null, 1,    'Fit last, after the housing',  null),
   ('COMPONENT', 6,  16, '2019-01-01', null, null, 3,    'Moulded into the housing',     null),

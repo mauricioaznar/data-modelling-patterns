@@ -498,7 +498,8 @@ create table product_association_type (
 );
 
 -- Direction, per type (our reading of 3.9a's labels):
---   MARKETING_PACKAGE  from = the package,         to = a product in it
+--   COMPONENT          from = the whole,           to = a product in it
+--                      (3.9b draws this subtype as MARKETING PACKAGE: see Fig 3.10a below)
 --   SUBSTITUTE         from = the product,         to = what can replace it
 --   OBSOLESCENCE       from = the obsolete product, to = its replacement
 --                      (from_date = the supersession date; 3.9b drops the column)
@@ -514,8 +515,8 @@ create table product_association (
   from_date                   date    not null,
   thru_date                   date,
   reason                      text,
-  quantity_used               numeric check (quantity_used > 0),   -- MARKETING_PACKAGE (and COMPONENT, Fig 3.10): how many of "to" in "from"
-  instruction                 text,                                -- MARKETING_PACKAGE and COMPONENT only
+  quantity_used               numeric check (quantity_used > 0),   -- COMPONENT only: how many of "to" in "from"
+  instruction                 text,                                -- COMPONENT only
   quantity                    numeric check (quantity > 0),        -- SUBSTITUTE only: how many of "to" replace one of "from"
   check (from_product_id <> to_product_id),
   check (thru_date is null or thru_date > from_date)
@@ -525,8 +526,8 @@ create table product_association (
 -- Fig 3.10a — Products and parts
 -- ============================================================
 -- Built as Fig 3.11 keeps it: the three subtypes sit under GOOD, and there
--- is no PRODUCT COMPONENT box and no PART (3.10b, see NOTES). Our reading,
--- on assumptions until the overview (discussion point 11).
+-- is no PRODUCT COMPONENT box and no PART (3.10b, see NOTES). Settled at the
+-- overview (point 11).
 --
 -- RAW MATERIAL / SUBASSEMBLY / FINISHED GOOD: exclusive, no attributes, so a
 -- discriminator on good (as product_kind on product). The default marks a
@@ -535,10 +536,10 @@ alter table good
   add column good_kind text not null default 'FINISHED_GOOD'
     check (good_kind in ('RAW_MATERIAL', 'SUBASSEMBLY', 'FINISHED_GOOD'));
 
--- PRODUCT COMPONENT ("made up of" / "used in") is 3.9a's entity redrawn, with
--- the same attributes as 3.9b's MARKETING PACKAGE. In the 3.9b model a new
--- kind of link is a row, not a table, so it becomes a COMPONENT row in
--- product_association_type (seed.sql), reusing quantity_used and instruction:
---   COMPONENT  from = the assembly ("made up of"), to = a component ("used in")
--- A package is sold as one offer; a component is consumed to make a good.
+-- PRODUCT COMPONENT ("made up of" / "used in") is the COMPONENT row already
+-- in product_association_type (seed.sql, Fig 3.9b): no new table, no new row.
+-- The book's text calls MARKETING PACKAGE another name for the same entity,
+-- fitting only once PART takes the parts (3.10b). Without PART, one link
+-- carries both a package of products and an assembly of goods, so the row
+-- keeps 3.10a's name. Telling the two apart is what PART is for.
 -- A raw material made up of something is a data-quality query.

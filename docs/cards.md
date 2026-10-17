@@ -294,23 +294,25 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 9 · V1 Ch 3 · Product associations and parts (Figs 3.9–3.10)
 - **Cue:** "Which products go with, replace, clash with or are built from which others?"
 - **Hook:** the product family tree *(Claude's, drafted when the figures landed)*
-- **Mantra:** One dated, typed link joins product to product: package, substitute, successor,
-  complement, clash or component; components explode level by level.
+- **Mantra:** One dated, typed link joins product to product: component (a package or an
+  assembly), substitute, successor, complement or clash; components explode level by level.
 
 <details><summary>Key</summary>
 
 - **S:** `product_association` (from product → to product, dated, with a reason; what "from"
-  and "to" mean depends on the type) · `product_association_type` (marketing package,
-  substitute, obsolescence, complement, incompatibility, component) · `quantity_used` and
-  `instruction` for packages and components, `quantity` for substitutes · `good.good_kind`
-  (raw material, subassembly, finished good).
+  and "to" mean depends on the type) · `product_association_type` (component, substitute,
+  obsolescence, complement, incompatibility; component is 3.9b's marketing package and
+  3.10a's product component, one link for a kit and a BOM alike) · `quantity_used` and
+  `instruction` for components, `quantity` for substitutes · `good.good_kind` (raw material,
+  subassembly, finished good).
 - **W:** columns like `replaced_by_product_id` and `substitute_product_id`: one of each, no
   dates, no reason, and a new column for every new kind of link.
 - **T:** *(the naive-model trap until practice gives yours)* forgetting direction. Substitution
   needs a row each way; incompatibility is read both ways; a BOM explosion multiplies
   quantities down the levels and needs a cycle guard.
 - **D:** product ← association (from), association (to) → product; association → type; good
-  (= product) carries good_kind. Not built: 3.10b's PART, the physical side of a product.
+  (= product) carries good_kind. Not built: 3.10b's PART, the physical side of a product,
+  which would take the assemblies and leave the component link only the packages.
 </details>
 
 ---

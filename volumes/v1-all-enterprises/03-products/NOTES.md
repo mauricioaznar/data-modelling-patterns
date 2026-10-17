@@ -659,7 +659,7 @@ supercession date (from_date does the job); the comments go; reason moves to the
   a type. 3.9a gives each kind its own entity, attributes and labels (a supersession date, a
   substitute quantity). 3.9b folds them into one PRODUCT ASSOCIATION with a type and keeps the
   subtypes only for their few attributes. A new kind of link becomes a row, not a table. The
-  price: rules that were structure (only packages have a quantity used) become data-quality
+  price: rules that were structure (only components have a quantity used) become data-quality
   checks, and what "from" and "to" mean depends on the type.
 - **Direction matters for some types only.** A package contains its products; an obsolete
   product points at its replacement; substitution may hold one way only (premium paper can
@@ -767,6 +767,10 @@ reverse labels agree in both, so the side marked "made up of" is the assembly.
   can be sold as several goods (the same drive in two retail packs).
 - **Raw material, subassembly and finished good are about making things.** A reseller only
   ever holds finished goods.
+- **One link, two jobs.** Without PART, PRODUCT COMPONENT holds both a package of products
+  sold together and an assembly of goods. Once PART takes the assemblies (3.10b), only the
+  packages are left, which is why the text offers MARKETING PACKAGE as its other name, and
+  why 3.9b already draws it so (point 11).
 
 ### Fig 3.11 — Overall product model
 **Transcription** (accepted 2026-10-16; open points under "Points to discuss after the overview"; identifiers only, no attributes)
@@ -876,9 +880,13 @@ Silverston intended, not at the literal drawing.
     its own (3.11 has no PRODUCT COMPONENT box). 3.10b's PART is not built. Ponder 21 (the
     renaming passage) may change this: if MARKETING PACKAGE simply *is* the old PRODUCT
     COMPONENT, the COMPONENT row duplicates it.
-    → *Book check pending:* the text between 3.9b and 3.10a. The photos already show 3.9b's
-    MARKETING PACKAGE carrying exactly the attributes PRODUCT COMPONENT has in 3.9a and 3.10a
-    (quantity used, instruction).
+    → **Changed** (the user's photo of the text after 3.10b, 2026-10-17): MARKETING PACKAGE is
+    another name for PRODUCT COMPONENT, the name it earns once PART takes the parts and only
+    packages of products are left. The attributes agree (quantity used, instruction in 3.9a,
+    3.9b and 3.10a). We keep no PART, so one link carries both jobs: the two rows became one
+    COMPONENT row, seeded with 3.9b. The starter kit and the copier's BOM share it, the
+    component check no longer insists on goods (3.10a links product to product), and the BOM
+    explosion keeps a service component in view. Card 9 and the doc entry follow.
 
 ## Design decisions (book → SQL)
 
@@ -1048,7 +1056,9 @@ Silverston intended, not at the literal drawing.
   in these notes as the alternative.
 - **Subtypes → rows in the book's own PRODUCT ASSOCIATION TYPE** (`product_association_type`),
   as identification types were in 3.3.
-- **MARKETING PACKAGE's `quantity_used` and `instruction`, SUBSTITUTE's `quantity`** become
+- **MARKETING PACKAGE → the COMPONENT row** (point 11): the text calls it another name for
+  PRODUCT COMPONENT, fitting only with PART, which we don't build.
+- **COMPONENT's `quantity_used` and `instruction`, SUBSTITUTE's `quantity`** become
   nullable columns; a data-quality query checks they sit on the right type (seed: a complement
   with a package quantity).
 - **Direction per type is written down in `schema.sql`** (our reading of 3.9a's labels).
@@ -1063,9 +1073,11 @@ Silverston intended, not at the literal drawing.
 ### Fig 3.10a (3.10b not built)
 - **GOOD's subtypes → `good.good_kind`** (raw material, subassembly, finished good), a
   discriminator like `product_kind`. The default, FINISHED_GOOD, is a good sold as it comes.
-- **PRODUCT COMPONENT → a COMPONENT row in `product_association_type`** (point 11), reusing
-  `quantity_used` and `instruction`: from = the assembly, to = the component. The 3.9 sentence
-  query and attribute check now know about it.
+- **PRODUCT COMPONENT → the COMPONENT row 3.9b already seeds** (point 11, settled 2026-10-17),
+  reusing `quantity_used` and `instruction`: from = the whole, to = what's in it. Packages and
+  assemblies share it; only `good_kind` tells a BOM line from a package line.
+- **The component check only catches a raw material made up of something:** 3.10a's lines run
+  product to product, so a service in a package is fine.
 - **Thru date nullable**, as point 6 reads the `*`.
 - **Seed:** a two-level BOM for the copier (a cartridge subassembly; toner powder and resin as
   raw materials). Bad row: toner powder made of resin, caught by a query. It also leaks into the
