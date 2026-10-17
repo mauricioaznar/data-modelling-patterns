@@ -265,6 +265,53 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   inventory_item ← variance → reason.
 </details>
 
+### Card 8 · V1 Ch 3 · Pricing and costing (Figs 3.7–3.8)
+- **Cue:** "What do we charge, under which conditions, and what does it cost us?"
+- **Hook:** the price is a recipe *(Claude's, drafted when the figures landed)*
+- **Mantra:** Price components are conditional rules; matching ones add up to the price; cost
+  estimates hit a product or feature, never both.
+
+<details><summary>Key</summary>
+
+- **S:** `price_component` (one pricing rule: base price, discount, surcharge or suggested
+  price; for a product and/or a feature; optional "based on" conditions: region, party type,
+  category, quantity break, order value, sale type, organization; optionally a one-time,
+  recurring or usage charge) · `quantity_break` and `order_value` (ranges, exclusive thru) ·
+  `estimated_product_cost` (a dated estimate per cost component type, for a product **or** a
+  feature) · `cost_component_type` (a hierarchy under materials, labour, other) · currency
+  and time-frequency units of measure.
+- **W:** a `price` column on the product: one number, so no discounts, regions, quantity breaks
+  or history. One `cost` number gives no margin by materials or labour.
+- **T:** *(the naive-model trap until practice gives yours)* looking up "the price" of a
+  product: there isn't one. A price is computed per order line from every component whose
+  conditions all hold.
+- **D:** product and/or feature ← price_component → region / party type / category / quantity
+  break / order value / sale type / organization (all optional), → currency; product | feature
+  ← estimated_product_cost → cost_component_type.
+</details>
+
+### Card 9 · V1 Ch 3 · Product associations and parts (Figs 3.9–3.10)
+- **Cue:** "Which products go with, replace, clash with or are built from which others?"
+- **Hook:** the product family tree *(Claude's, drafted when the figures landed)*
+- **Mantra:** One dated, typed link joins product to product: package, substitute, successor,
+  complement, clash or component; components explode level by level.
+
+<details><summary>Key</summary>
+
+- **S:** `product_association` (from product → to product, dated, with a reason; what "from"
+  and "to" mean depends on the type) · `product_association_type` (marketing package,
+  substitute, obsolescence, complement, incompatibility, component) · `quantity_used` and
+  `instruction` for packages and components, `quantity` for substitutes · `good.good_kind`
+  (raw material, subassembly, finished good).
+- **W:** columns like `replaced_by_product_id` and `substitute_product_id`: one of each, no
+  dates, no reason, and a new column for every new kind of link.
+- **T:** *(the naive-model trap until practice gives yours)* forgetting direction. Substitution
+  needs a row each way; incompatibility is read both ways; a BOM explosion multiplies
+  quantities down the levels and needs a cycle guard.
+- **D:** product ← association (from), association (to) → product; association → type; good
+  (= product) carries good_kind. Not built: 3.10b's PART, the physical side of a product.
+</details>
+
 ---
 
 ## Deck: patterns
