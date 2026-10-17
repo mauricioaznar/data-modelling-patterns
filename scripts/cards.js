@@ -1,5 +1,5 @@
-// Reads docs/recall.md: the submodel cards and the pattern cue lines.
-// Shared by recall-anki.js (writes the Anki file) and check.js (checks it's current).
+// Reads docs/cards.md: the submodel cards and the pattern cue lines.
+// Shared by cards-anki.js (writes the Anki file) and check.js (checks it's current).
 // Each note gets a stable id (Anki's GUID) from its volume, chapter and figures,
 // or its pattern number, so renumbering or rewording a card updates the note
 // and keeps its review history instead of adding a duplicate.
@@ -8,11 +8,11 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-export const RECALL_MD = join(ROOT, 'docs', 'recall.md');
-export const RECALL_ANKI = join(ROOT, 'docs', 'recall-anki.txt');
+export const CARDS_MD = join(ROOT, 'docs', 'cards.md');
+export const CARDS_ANKI = join(ROOT, 'docs', 'cards-anki.txt');
 
 // Windows checkouts (core.autocrlf) have CRLF; the regexes below expect LF.
-export const readRecall = () => readFileSync(RECALL_MD, 'utf8').replace(/\r\n/g, '\n');
+export const readCards = () => readFileSync(CARDS_MD, 'utf8').replace(/\r\n/g, '\n');
 
 // "### Card 9 · V1 Ch 3 · Product associations and parts (Figs 3.9–3.10)"
 export function parseCardHeadings(src) {
@@ -45,7 +45,7 @@ const field = (block, label) => {
     .trim();
 };
 
-// The Anki import file for a recall.md source: { text, count }.
+// The Anki import file for a cards.md source: { text, count }.
 export function buildAnki(src) {
   const rows = [];
 

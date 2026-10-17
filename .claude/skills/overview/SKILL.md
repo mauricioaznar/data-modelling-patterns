@@ -1,6 +1,6 @@
 ---
 name: overview
-description: Fixed procedure for a chapter's overview, once all its figures are built and drafted. Discusses the points one at a time, collects feedback on the doc drafts and recall cards, refactors, runs the card pass, then hands over to practice.
+description: Fixed procedure for a chapter's overview, once all its figures are built and drafted. Discusses the points one at a time, collects feedback on the doc drafts and cards, refactors, runs the card pass, then hands over to practice.
 argument-hint: vN/NN
 ---
 
@@ -28,7 +28,7 @@ argument-hint: vN/NN
 
 ## 4. Card pass
 - Every submodel has its card. Every pattern new to Core patterns gets a pattern card in
-  `docs/recall.md` (P-numbers continue). `npm run recall:anki`, then remind the user to
+  `docs/cards.md` (P-numbers continue). `npm run cards:anki`, then remind the user to
   re-import.
 
 ## 5. Close

@@ -1,9 +1,9 @@
-# Morning recall: mantras that explode
+# Cards: mantras that explode
 
 A solo routine for every morning, separate from the deep-dive sessions. The deep dives build
 understanding; this keeps it from fading. No Claude needed, about 30 minutes, pen and paper.
 
-**Anki:** `npm run recall:anki` writes `docs/recall-anki.txt`; import it with File → Import.
+**Anki:** `npm run cards:anki` writes `docs/cards-anki.txt`; import it with File → Import.
 It fills two subdecks, *Data Models::Submodels* and *Data Models::Patterns*. This file stays
 the source of truth: edit here, rerun, re-import. Each note's id comes from the volume, chapter
 and figures in its heading (or the pattern number), so renumbering or rewording a card updates
@@ -36,7 +36,7 @@ mantra is only the zip file; the drill is unzipping it.
 | **T**rap | One mistake you actually made (from the gaps log), and the fix | 30 s |
 | **D**raw | Boxes and lines from memory: which table points at which | 1 min |
 
-Three minutes a card. If it takes ten, it's not a recall card any more: stop and flag it for a
+Three minutes a card. If it takes ten, it's not a card any more: stop and flag it for a
 deep-dive session.
 
 ## Rules for a good mantra

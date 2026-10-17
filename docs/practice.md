@@ -67,7 +67,7 @@ of the chapter's `EXERCISES.md`.
   purpose. This is where scores of 4 come from.
 - **4. Finish the doc entry (`/close-submodel`).** The draft exists since the reading (five sections, see
   `CLAUDE.md`). Add the pitfalls from the user's mistakes and the scenario, fix what practice
-  proved wrong, drop the Draft mark and mark it Done on the roadmap. Swap the recall card's
+  proved wrong, drop the Draft mark and mark it Done on the roadmap. Swap the card's
   Trap for one of the user's real mistakes.
 - **Submodel done when:** every row scores 3+, the scenario holds up, and the doc entry is
   written. **Chapter done when** all its submodels are done; then tick it in `TODO.md`.

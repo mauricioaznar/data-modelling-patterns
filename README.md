@@ -58,7 +58,7 @@ npm run sql -- "select * from party"          # resolves against v1 by default
 npm run sql -- --vol 2 "select * from party"  # resolves v2 first, then v1
 npm run check                                 # check every chapter against the workflow
 npm run check -- v1/03                        # one chapter; rewrites its STATUS.md tables
-npm run recall:anki                           # regenerate the Anki export from docs/recall.md
+npm run cards:anki                           # regenerate the Anki export from docs/cards.md
 ```
 
 Chapters load cumulatively because later models reference earlier ones: orders, shipments and
@@ -71,7 +71,7 @@ show. Each chapter's `STATUS.md` tracks where every figure and submodel stands.
 
 1. Photograph the figures into `book-refs/vN/chNN/` (gitignored; see [book-refs/README.md](book-refs/README.md)).
 2. **`/figures`**: transcribe, build one figure per commit, draft the design reference entries
-   and recall cards, run the checker.
+   and cards, run the checker.
 3. **`/overview`**: after the chapter's last figure, discuss the doubtful readings, refactor,
    card pass.
 4. Practice per submodel ([docs/practice.md](docs/practice.md)), then **`/close-submodel`**.

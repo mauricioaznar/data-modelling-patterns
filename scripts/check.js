@@ -11,7 +11,7 @@ import { execSync } from 'node:child_process';
 import {
   ROOT, openDb, loadChapters, listVolumes, listChapters, resolveTarget, sessionSetupFor, parseQueries,
 } from './db.js';
-import { readRecall, parseCardHeadings, buildAnki, RECALL_ANKI } from './recall.js';
+import { readCards, parseCardHeadings, buildAnki, CARDS_ANKI } from './cards.js';
 
 const BEGIN = '<!-- check:begin -->';
 const END = '<!-- check:end -->';
@@ -174,7 +174,7 @@ async function checkChapter({ volume, chapter }, ctx) {
     const built = mine.some((f) => !isArch(f.id) && !isNotBuilt(f.id) && sql.schema.has(f.id));
     const card = cards.find((c) => sameFigs(c.figs, r.figs));
     if (!mine.length) fail(`${label}: none of its figures (${r.figs}) is in NOTES`);
-    if (built && !card) fail(`${label}: no recall card headed "(Figs ${r.figs})" in docs/recall.md`);
+    if (built && !card) fail(`${label}: no card headed "(Figs ${r.figs})" in docs/cards.md`);
     if (built && !isDone(r['doc draft'])) fail(`${label}: doc draft not ticked in STATUS.md (write it in the design reference, then tick)`);
     if (isDone(r['doc done']) && !isDone(r.practice)) fail(`${label}: doc done is ticked but practice isn't`);
     const n = ponders ? ponders[r['#']] ?? 0 : null;
@@ -239,12 +239,12 @@ async function checkChapter({ volume, chapter }, ctx) {
 
 function repoChecks(ctx, dirty) {
   const out = [];
-  const src = readRecall();
-  const anki = readText(RECALL_ANKI);
-  if (anki !== buildAnki(src).text) out.push(['✗', 'docs/recall-anki.txt is stale: run npm run recall:anki, then re-import in Anki']);
-  else out.push(['✓', 'docs/recall-anki.txt matches docs/recall.md']);
+  const src = readCards();
+  const anki = readText(CARDS_ANKI);
+  if (anki !== buildAnki(src).text) out.push(['✗', 'docs/cards-anki.txt is stale: run npm run cards:anki, then re-import in Anki']);
+  else out.push(['✓', 'docs/cards-anki.txt matches docs/cards.md']);
   const numbers = ctx.cards.map((c) => c.number);
-  if (numbers.some((n, i) => n !== i + 1)) out.push(['!', `recall cards aren't numbered 1..${numbers.length} in order: ${numbers.join(', ')}`]);
+  if (numbers.some((n, i) => n !== i + 1)) out.push(['!', `cards aren't numbered 1..${numbers.length} in order: ${numbers.join(', ')}`]);
   if (!new RegExp(`^## ${today}$`, 'm').test(readText(join(ROOT, 'CHANGELOG.md')) ?? '')) {
     out.push(['!', `CHANGELOG.md has no entry for ${today} (add one before the session's last commit)`]);
   }
@@ -268,7 +268,7 @@ try {
 }
 
 const db = openDb('memory://');
-const ctx = { db, cards: parseCardHeadings(readRecall()), loadError: null };
+const ctx = { db, cards: parseCardHeadings(readCards()), loadError: null };
 try {
   await loadChapters(db, null, () => {});
 } catch (err) {

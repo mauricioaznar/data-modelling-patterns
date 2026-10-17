@@ -21,7 +21,7 @@ argument-hint: vN/NN <submodel #>
 
 ## 2. The card
 - Swap the Trap for one of the user's real mistakes from the gaps log, and update the key if
-  practice changed it. `npm run recall:anki`, then remind the user to re-import.
+  practice changed it. `npm run cards:anki`, then remind the user to re-import.
 
 ## 3. Close out
 - STATUS.md: tick `Practice` and `Doc done` with today's date.

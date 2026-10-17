@@ -47,6 +47,10 @@ and any decisions made.
   in its `STATUS.md`. STATUS.md for Ch 2, Ch 3 and the template; the skills `/figures`,
   `/overview` and `/close-submodel`; `recall.js` and `parseQueries` split out so scripts
   share them. Tested by breaking eight things on purpose: all caught.
+- "Recall" renamed to **cards** (the user's call): `docs/cards.md`, `docs/cards-anki.txt`,
+  `scripts/cards.js`, `scripts/cards-anki.js`, `npm run cards:anki`, and every mention in
+  CLAUDE.md, the skills, the checker, TODO, README and practice.md. Anki note ids are
+  unchanged, so importing the new file updates the notes. Entries above keep the old names.
 
 **Decisions**
 - `docs/recall.md` stays the source of truth; Anki is a generated copy, re-imported on change.

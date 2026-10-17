@@ -1,6 +1,6 @@
 ---
 name: figures
-description: Fixed procedure for when the user shares book figures (photos or transcriptions) for a chapter. Transcribes them, builds the SQL, drafts the design reference entries and recall cards, then runs the checker. Use whenever figure images arrive, even without the slash command.
+description: Fixed procedure for when the user shares book figures (photos or transcriptions) for a chapter. Transcribes them, builds the SQL, drafts the design reference entries and cards, then runs the checker. Use whenever figure images arrive, even without the slash command.
 argument-hint: vN/NN
 ---
 
@@ -49,10 +49,10 @@ report instead of skipping it silently.
    core entities, optional add-ons, design choices, patterns used), marked *Draft
    (assumptions)*. New patterns or examples in Core patterns, its questions in the question
    index, roadmap *In progress*.
-2. Recall card in `docs/recall.md`, headed `### Card N · VN Ch N · name (Figs …)` with the
+2. Card in `docs/cards.md`, headed `### Card N · VN Ch N · name (Figs …)` with the
    same `Figs` as STATUS.md: hook, mantra (about 20 words at most), key in S · W · T · D (the
    Trap is the naive-model trap until practice). Keep cards in chapter order. Then
-   `npm run recall:anki`.
+   `npm run cards:anki`.
 3. Tick `Doc draft` in STATUS.md with today's date.
 4. The architecture figure: its "Ch N architecture" entry in the doc, then tick the `A` row.
 

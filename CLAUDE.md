@@ -29,7 +29,7 @@ the user, tease with nicknames, so the sessions stay fun.
 ### During a chapter (Claude builds everything, on assumptions)
 - The user reads the **whole chapter first**, then shares its diagrams (possibly several at once).
 - **When images arrive, build everything at once, on Claude's own reading** (the user's call,
-  2026-10-16): transcription, SQL, the doc entry draft and the recall card. Nothing waits for
+  2026-10-16): transcription, SQL, the doc entry draft and the card. Nothing waits for
   confirmation. Feedback comes at the overview, and the refactor follows it.
 - For each figure (a photo in `book-refs/vN/chNN/` or a text transcription), transcribe it into
   the chapter's `NOTES.md`. The book is the source of truth; recall of exact attributes may be
@@ -45,8 +45,8 @@ the user, tease with nicknames, so the sessions stay fun.
   rows) and queries.
 - **Doc entry draft:** as a submodel's figures land, draft its entry in the design reference
   doc (the five sections the figures can answer, see below) and add its patterns and questions.
-- **Recall card:** as a submodel's figures land, Claude writes its card in `docs/recall.md`
-  (hook, mantra and hidden key) and reruns `npm run recall:anki`. Until practice gives a real
+- **Card:** as a submodel's figures land, Claude writes its card in `docs/cards.md`
+  (hook, mantra and hidden key) and reruns `npm run cards:anki`. Until practice gives a real
   mistake, the card's Trap is the naive-model mistake.
 - **Architecture figures** (the user's call, 2026-10-16): a chapter's last, overall figure is
   its own category, not a submodel. No SQL. Transcribe it, then write a short **How it flows**
@@ -66,7 +66,7 @@ the user, tease with nicknames, so the sessions stay fun.
   transcriptions, the "Points to discuss" list, the doc entry drafts and the cards. Claude then
   refactors NOTES, SQL, doc and cards from that feedback, still aiming at Silverston's intention.
 - **Card pass:** every submodel has its card, each pattern new to Core patterns gets a pattern
-  card, `npm run recall:anki` regenerates the export, and the user re-imports it. Card headings
+  card, `npm run cards:anki` regenerates the export, and the user re-imports it. Card headings
   keep the `Card N · VN Ch N · name (Figs …)` shape: the Anki note id comes from the volume,
   chapter and figures.
 
@@ -80,7 +80,7 @@ the user, tease with nicknames, so the sessions stay fun.
 - **Ask one question at a time** and wait for the answer.
 - **Next session start:** open with 3 quick recall questions on the most recently finished
   submodel, favouring its open gaps.
-- **Morning recall (solo):** `docs/recall.md` holds one mantra card per submodel, drafted by
+- **Cards (solo, every morning):** `docs/cards.md` holds one mantra card per submodel, drafted by
   Claude when the figures land. The user rewrites in their own words any mantra that fails to
   explode, and Claude checks the rewrite still unpacks into the key. When practice ends, the
   card's Trap becomes one of the user's real mistakes. Circled cards from the user's log come to

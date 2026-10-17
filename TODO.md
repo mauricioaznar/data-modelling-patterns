@@ -25,12 +25,12 @@ blockers, but each one unlocks something:
 - [ ] Stop hook that runs `npm run check` at the end of a turn: held back by the user's choice; add it if steps still get skipped
 - [ ] Roadmap says Done for Ch 2 parties and contact mechanisms, but their practice isn't finished (TODO, STATUS.md): settle which is right
 
-## Morning recall
+## Cards
 
 - [x] Hooks and mantras for cards 1–6 (Claude's, at the user's request, 2026-10-16)
 - [x] Card 1: mantra patched to unpack into party_classification (2026-10-16)
 - [ ] Rewrite any mantra that fails to explode twice, in your own words
-- [x] Anki export: `npm run recall:anki` → `docs/recall-anki.txt` (2026-10-16)
+- [x] Anki export: `npm run cards:anki` → `docs/cards-anki.txt` (2026-10-16)
 - [x] Card 3: postal addresses, facilities and geography, hook and mantra Claude's at the user's request; cards renumbered in chapter order, old 3–6 now 4–7 (2026-10-16)
 - [x] Export: subdecks Data Models::Submodels and Data Models::Patterns, stable note ids, `v1::ch02` tags (2026-10-16)
 - [ ] Anki, once: delete *Data Models::Recall* and its two empty subdecks (the old notes, without stable ids); keep *Data Models::Submodels* (7) and *Patterns* (7)
@@ -66,8 +66,8 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [x] Doc drafts for Ch 2 postal addresses, facilities and geography (with its two pitfalls from item 49, roadmap row added) and communication events (the "learnt so far" notes regrouped into the seven sections; "To verify" kept) (2026-10-16)
   - [x] The other session told about the new rules (2026-10-16); it acknowledged with commit f361f95
   - [x] Ch 2: overall figure 2.14 shared (2026-10-16); transcribed with its "How it flows" (no SQL), two points to discuss
-  - [ ] Recall: pattern cards for P8 · catalogue vs physical instance (new in the doc's Core patterns); align the doc's pattern rows with P1–P7 at the overview
-  - [ ] Ch 3 overview: the user's feedback on the points to discuss, the doc drafts and the cards; refactor from it; card pass (pattern cards, `npm run recall:anki`); then practice resumes
+  - [ ] Cards: a pattern card for P8 · catalogue vs physical instance (new in the doc's Core patterns); align the doc's pattern rows with P1–P7 at the overview
+  - [ ] Ch 3 overview: the user's feedback on the points to discuss, the doc drafts and the cards; refactor from it; card pass (pattern cards, `npm run cards:anki`); then practice resumes
 - [ ] Ch 04: Ordering Products
 - [ ] Ch 05: Shipments
   - [ ] Check SHIPMENT RECEIPT and ITEM ISSUANCE link to INVENTORY ITEM (recalled 2026-10-15); add the qoh = balance data-quality query (Ch 3 NOTES, Fig 3.6 vocabulary)
