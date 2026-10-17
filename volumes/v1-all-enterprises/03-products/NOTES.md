@@ -827,11 +827,15 @@ Silverston intended, not at the literal drawing.
 1. **3.7, two subtype boxes:** read as two independent subtype sets (base / discount /
    surcharge / suggested, and one-time / recurring / utilization).
    → **Kept** (photos, 2026-10-17): two separate boxes side by side in the supertype, both
-   whole on p. 88, so the page break splits neither. Still open, for discussion: is the
-   second set mandatory? `charge_kind` is nullable now, which makes null mean ONE_TIME.
+   whole on p. 88, so the page break splits neither. The text after the figure backs it: the
+   three charge kinds combine with any mix of the pricing conditions (the user's check). Still
+   open, for discussion: is the second set mandatory? `charge_kind` is nullable now, which
+   makes null mean ONE_TIME.
 2. **3.7, RECURRING CHARGE "per":** read as ending at TIME FREQUENCY MEASURE; the line may stop
    at UNIT OF MEASURE itself. UTILIZATION CHARGE's ends at UNIT OF MEASURE.
-   → *Book check pending:* the photo puts "used in" by UNIT OF MEASURE, not by the subtype.
+   → **Kept** (the user checked the book, 2026-10-17): the line ends at TIME FREQUENCY MEASURE.
+   The SQL already says so: one `per_uom_id`, and the data-quality query demands a time
+   frequency for RECURRING.
 3. **3.7, optionality:** every line read as dashed (optional) at both ends, including PRODUCT,
    PRODUCT FEATURE and ORGANIZATION.
    → *Book check pending:* the photo blurs the three vertical lines.
@@ -842,7 +846,9 @@ Silverston intended, not at the literal drawing.
    estimate is for exactly one product or feature). COST COMPONENT TYPE is mandatory;
    geography and organization are optional.
    → **Kept** (photo, 2026-10-17): the arc, the solid halves and the dashed geography and
-   organization lines are all clear.
+   organization lines are all clear. The user confirmed in the book: the product, feature and
+   type lines are mandatory at the cost end and optional at the other (a product needn't have
+   an estimate). The SQL matches: the arc is a check constraint, the type is `not null`.
 6. **3.9a and 3.10a, thru dates printed `*`** on PRODUCT SUBSTITUTE and PRODUCT COMPONENT:
    read as slips, so thru dates stay nullable.
    → **Kept nullable** (photos, 2026-10-17): the same PRODUCT COMPONENT prints thru `o` in 3.9a
