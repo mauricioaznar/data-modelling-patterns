@@ -10,13 +10,26 @@ and any decisions made.
   finished practice; Ch 3 submodels 4–5 untested.
 - Housekeeping: the P8 card item ticked in TODO (the card landed 2026-10-16), with the
   doc-alignment half kept open for the overview.
+- Ch 3 overview started, book checks first (the user's call): all 11 points to discuss
+  settled. Points 1 and 4–9 from the photos, 2, 3, 5 and 10 with the user checking the book,
+  11 from the user's photo of the text after 3.10b. Ten kept as read; point 11 changed the SQL.
+- Point 11 (Figs 3.9b, 3.10a): the MARKETING_PACKAGE and COMPONENT association rows merged into
+  one COMPONENT row. Seed, queries (the component check no longer insists on goods), NOTES,
+  card 9, the Anki export and the doc entry follow.
+- Fig 2.14 point 1 kept by reasoning: the facility contact mechanism line means CONTACT
+  MECHANISM (its labels, and a link entity needs both ends).
 
 **Decisions**
 - Design reference roadmap: Ch 2 parties and contact mechanisms set back from Done to In
   progress. STATUS.md was right: their practice (scenarios, the gaps at 2) isn't finished.
+- MARKETING PACKAGE is PRODUCT COMPONENT's other name, apt only once PART takes the
+  assemblies. We keep no PART (as 3.11), so one link carries kits and BOMs; telling them
+  apart is what PART is for.
 
 **Next**
-- Ch 3 overview (`/overview`), with Fig 2.14's two points; or resume Ch 2 practice.
+- Ch 3 overview, discussion: is the charge kind mandatory on every price component (Claude
+  leans yes), and Fig 2.14's bare event. Then drafts and cards feedback, refactor, card pass.
+- Re-import `docs/cards-anki.txt` in Anki (card 9 changed).
 
 ## 2026-10-16
 
