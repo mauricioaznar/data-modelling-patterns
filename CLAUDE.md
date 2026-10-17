@@ -86,8 +86,9 @@ the user, tease with nicknames, so the sessions stay fun.
 - **Cards (solo, every morning):** `docs/cards.md` holds one mantra card per submodel, drafted by
   Claude when the figures land. The user rewrites in their own words any mantra that fails to
   explode, and Claude checks the rewrite still unpacks into the key. When practice ends, the
-  card's Trap becomes one of the user's real mistakes. Circled cards from the user's log come to
-  the next session.
+  card's Trap becomes one of the user's real mistakes, and Claude checks the whole card against
+  NOTES.md (the user's call, 2026-10-16), since nothing carries NOTES changes to the cards by
+  itself. Circled cards from the user's log come to the next session.
 
 ### Design reference (the distilled output)
 - The claude.ai doc **Universal Data Models — Design Reference**

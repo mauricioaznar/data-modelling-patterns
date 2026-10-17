@@ -1,6 +1,6 @@
 ---
 name: close-submodel
-description: Fixed procedure for ending a submodel's practice. Checks it's really done, finishes its design reference entry (pitfalls, scenario), swaps the card's trap for a real mistake, ticks STATUS.md and closes out.
+description: Fixed procedure for ending a submodel's practice. Checks it's really done, finishes its design reference entry (pitfalls, scenario), swaps the card's trap for a real mistake, checks the card against NOTES, ticks STATUS.md and closes out.
 argument-hint: vN/NN <submodel #>
 ---
 
@@ -21,7 +21,21 @@ argument-hint: vN/NN <submodel #>
 
 ## 2. The card
 - Swap the Trap for one of the user's real mistakes from the gaps log, and update the key if
-  practice changed it. `npm run cards:anki`, then remind the user to re-import.
+  practice changed it.
+- **Check the card against NOTES.md**, the submodel's figures (transcriptions, readings,
+  "Design decisions (book → SQL)"). The overview and practice change NOTES, and nothing
+  carries those changes to the card by itself:
+  - **S:** every entity is in NOTES under the name the SQL uses, with the job NOTES gives
+    it; nothing NOTES treats as a core entity is missing.
+  - **D:** every line is a relationship in the transcription, pointing the same way, with the
+    same arc or optionality; a not-built alternate is named as not built.
+  - **W and T:** nothing contradicts NOTES or a recorded decision.
+  - **Mantra:** every S entity still falls out of it.
+  - If the submodel is the chapter's last, check the architecture card against "How it
+    flows" the same way.
+  - A mismatch: NOTES wins and the card is fixed. If practice proved NOTES wrong instead, say
+    so, fix NOTES with the user (and the SQL, one commit per figure), then the card.
+- `npm run cards:anki`, then remind the user to re-import.
 
 ## 3. Close out
 - STATUS.md: tick `Practice` and `Doc done` with today's date.
@@ -30,5 +44,6 @@ argument-hint: vN/NN <submodel #>
 - `npm run check -- vN/NN` until no ✗ is left; commit.
 
 ## 4. Report
-- What the entry gained, the trap now on the card, and what comes next: the next submodel,
+- What the entry gained, the trap now on the card, each card-vs-NOTES mismatch and how it
+  was settled (or that there were none), and what comes next: the next submodel,
   or the mini app once three chapters are done.

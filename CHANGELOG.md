@@ -82,6 +82,10 @@ and any decisions made.
 - Architecture figures get a card too (the user's call, after asking where they were): the
   Map warm-up only chains the chapters, so nothing scheduled the hubs, the plug-ins from
   earlier chapters or the alternates kept.
+- `/close-submodel` checks the card against NOTES.md (the user's call): S, D, W, T and the
+  mantra against the submodel's transcriptions and design decisions, and the architecture
+  card against "How it flows" when it's the chapter's last submodel. NOTES wins unless
+  practice proved NOTES wrong. Only the export step is scripted, so the check is Claude's.
 - 3.10 built on assumptions under the new rule (point 11): no separate PRODUCT COMPONENT table,
   since 3.11 has none. Ponder 21's renaming passage may turn it into MARKETING PACKAGE reuse.
 - The design reference doc's drafts answer some ponders, so it stays closed during exams,
