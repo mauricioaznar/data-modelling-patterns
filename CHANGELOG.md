@@ -3,6 +3,21 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-17
+
+**Built**
+- Status review of every submodel (Ch 2 and Ch 3): all built, drafted and carded; none has
+  finished practice; Ch 3 submodels 4–5 untested.
+- Housekeeping: the P8 card item ticked in TODO (the card landed 2026-10-16), with the
+  doc-alignment half kept open for the overview.
+
+**Decisions**
+- Design reference roadmap: Ch 2 parties and contact mechanisms set back from Done to In
+  progress. STATUS.md was right: their practice (scenarios, the gaps at 2) isn't finished.
+
+**Next**
+- Ch 3 overview (`/overview`), with Fig 2.14's two points; or resume Ch 2 practice.
+
 ## 2026-10-16
 
 **Built**

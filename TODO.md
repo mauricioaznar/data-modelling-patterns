@@ -23,7 +23,7 @@ blockers, but each one unlocks something:
 - [x] `npm run check` (`scripts/check.js`): figures classified and built, cards, doc-draft ticks, ponders, queries and data-quality checks, Anki export, changelog, uncommitted files; rewrites each chapter's STATUS.md tables (2026-10-16)
 - [x] `STATUS.md` per chapter (Ch 2, Ch 3, template) and the skills `/figures`, `/overview`, `/close-submodel` (2026-10-16)
 - [ ] Stop hook that runs `npm run check` at the end of a turn: held back by the user's choice; add it if steps still get skipped
-- [ ] Roadmap says Done for Ch 2 parties and contact mechanisms, but their practice isn't finished (TODO, STATUS.md): settle which is right
+- [x] Roadmap said Done for Ch 2 parties and contact mechanisms, but their practice isn't finished: STATUS.md was right, both rows set back to In progress (2026-10-17)
 
 ## Cards
 
@@ -66,7 +66,8 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [x] Doc drafts for Ch 2 postal addresses, facilities and geography (with its two pitfalls from item 49, roadmap row added) and communication events (the "learnt so far" notes regrouped into the seven sections; "To verify" kept) (2026-10-16)
   - [x] The other session told about the new rules (2026-10-16); it acknowledged with commit f361f95
   - [x] Ch 2: overall figure 2.14 shared (2026-10-16); transcribed with its "How it flows" (no SQL), two points to discuss
-  - [ ] Cards: a pattern card for P8 · catalogue vs physical instance (new in the doc's Core patterns); align the doc's pattern rows with P1–P7 at the overview
+  - [x] Cards: a pattern card for P8 · catalogue vs physical instance (new in the doc's Core patterns) (2026-10-16)
+  - [ ] Align the doc's Core patterns rows with cards P1–P8 at the overview
   - [ ] Ch 3 overview: the user's feedback on the points to discuss, the doc drafts and the cards; refactor from it; card pass (pattern cards, `npm run cards:anki`); then practice resumes
 - [ ] Ch 04: Ordering Products
 - [ ] Ch 05: Shipments
