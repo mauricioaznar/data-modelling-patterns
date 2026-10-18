@@ -13,7 +13,7 @@ Architecture figure:
 |---|---|---|---|---|---|---|
 | 1 | Orders, items and order parties | 4.1–4.5 | 2026-10-18 | | | |
 | 2 | Order adjustments | 4.6 | 2026-10-18 | | | |
-| 3 | Order status, terms and item associations | 4.7 | | | | |
+| 3 | Order status, terms and item associations | 4.7–4.8 | | | | |
 | A | Architecture | | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 4.1–4.3)`; the `A` row's matches the

@@ -592,7 +592,57 @@ shipments and invoices tied to the order, and backordered from the item associat
   late delivery); a price component (Ch 3) is a rule for prices in general.
 - **Both directions:** A2395's nonperformance penalty binds the supplier on a purchase order.
 
-### Points to discuss after the overview (Figs 4.1–4.7)
+### Fig 4.8 — Order item association
+**Transcription** (accepted: ☐; one landscape photo, with Table 4.10; open points under "To
+check against the book")
+
+```
+ORDER ITEM ASSOCIATION       (no attributes drawn)
+  -> SALES ORDER ITEM        (many "from" 1 item, bar; item "associated with" many)
+  -> PURCHASE ORDER ITEM     (many "to" 1 item, bar; item "used to fulfill" many)
+
+ORDER ITEM                   (as 4.2; subtypes SALES ORDER ITEM (o corresponding_po_id) and
+                              PURCHASE ORDER ITEM, drawn with no attribute here)
+  -> ORDER                   (many "part of" 1, bar; order "composed of" many)
+ORDER                        (as 4.2; subtypes SALES ORDER, PURCHASE ORDER)
+```
+
+**Table 4.10** (the book's sample, in our words): one row. Line 1 of sales order 13480 is
+tied to line 1 of purchase order 23490, the purchase that will supply what the sale needs.
+
+**The text beside it**, in short: a distributor that can't fill a sales line from stock buys
+the goods on a purchase order, so the sales line waits on the purchase (it's "backordered").
+One purchase line may fill several sales lines, and one sales line may need several purchase
+lines from different suppliers: many to many, hence the association.
+
+**To check against the book**
+- Bars read on both lines (the "~" marks): an association is identified by its two items, as
+  Table 4.10's four key columns show.
+- Labels read as: a sales item "associated with" many associations, a purchase item "used to
+  fulfill" through many.
+- The entity is named for any two order items, but its lines land on the subtypes. Read
+  literally: from a sales line to a purchase line, as the text says (point 16).
+- No quantity drawn: when one purchase line fills several sales lines, how many go to each is
+  not recorded (point 17).
+
+**Discussion**
+- **The problem.** A sales line we can't fill from stock; we buy the goods. Which purchase
+  line will fill which sales line? Without the link, "is the customer's copier on order?" has
+  no answer, and when a purchase arrives late nobody knows which customers to call.
+- **A many-to-many between two subtypes.** The lines land on SALES ORDER ITEM and PURCHASE
+  ORDER ITEM, so the direction is part of the model: a sale is filled by a purchase. 12564's
+  500 reams fill 12561's 20 and 12566's 10, and 12561's 20 are bought on 12570 as well.
+- **4.4's drop ship, linked at last.** 12568 bought the copier sold on 12561, and nothing tied
+  the two lines; now a row does.
+- **Backordered, worked out.** A sales line with a purchase line behind it is waiting on a
+  purchase, which is how the 4.7 text derives "backordered". The link alone can't say whether
+  the goods have arrived: that needs shipments (Ch 5). The 4.8 queries set the link beside the
+  status recorded, and catch a backorder with no purchase behind it.
+- **No quantity.** Who gets how many from a purchase line that fills several sales lines? The
+  association can't say, and Fig 4.9's ORDER REQUIREMENT COMMITMENT, which links an order line
+  to a need, carries a quantity where this one doesn't. (Ponder 4.)
+
+### Points to discuss after the overview (Figs 4.1–4.8)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing. The list moves under the chapter's last figure when that one arrives.
@@ -652,6 +702,12 @@ the literal drawing. The list moves under the chapter's last figure when that on
     joined Ch 2's shared status table, as its notes foresaw, while each role type so far got
     a lookup of its own (point 5). Settle both at once. TERM TYPE is a flat lookup with a
     general name, ready for other terms.
+16. **4.8, sales to purchase only:** the lines land on the subtypes, so we link a sales line
+    to a purchase line and nothing else. The entity's general name could mean any item to any
+    item, with a type (a replacement line, a split line); not built.
+17. **4.8, no quantity:** built without one, as drawn. When a purchase line fills several
+    sales lines, or a sales line draws on several purchase lines, the split is unknown. A
+    quantity on the association would fix it.
 
 ## Design decisions (book → SQL)
 
@@ -834,6 +890,21 @@ the literal drawing. The list moves under the chapter's last figure when that on
 - **Table 4.9's terms are seeded as given:** 12560's two order terms and its pen line's, and
   A2395's two on its cleaning line (order 2395, item 27).
 
+### Fig 4.8
+- **`order_item_association` references the subtype tables,** `sales_order_item` ("from") and
+  `purchase_order_item` ("to"), so a plain FK keeps the direction: a reason the subtype tables
+  were worth building. Surrogate key; the identifier (both items) is a data-quality query
+  (seed: 12561's copier linked to 12568's twice).
+- **Table 4.10's orders 13480 and 23490 are seeded with one line each.** The products,
+  quantities, dates and parties are ours: ACME buys 200 pens from ABC Subsidiary, which buys
+  them from Fantastic Supplies for ABC Retail Store.
+- **A purchase line for another product** than the sales line it fills is a data-quality query
+  (seed: 12564's books "filling" 12562's pens). Lines without a product are left out.
+- **A recorded backorder with no purchase line behind it** is a data-quality query: the 4.7
+  status checked against 4.8's facts (seed: Ben's engraved pen set on 12563).
+- **No quantity** (point 17): the queries show both sides' quantities and flag where the
+  split is unknown.
+
 ## When NOT to use this
 - **A shop that only sells**, and buys through some other system, gets little from the ORDER
   supertype. It costs one discriminator, so it's cheap to keep, but don't model purchase
@@ -858,5 +929,8 @@ the literal drawing. The list moves under the chapter's last figure when that on
 - **Order terms (4.7)** when every order runs on the same standard terms: keep those once (in
   an agreement, or the terms printed on the form). Term rows are for what was negotiated for
   this order or this line.
+- **Order item association (4.8)** when the business never buys to fill a particular sale (it
+  sells from stock and restocks by reorder level, Ch 3's reorder guideline): there is
+  nothing to link.
 
 ## Open questions

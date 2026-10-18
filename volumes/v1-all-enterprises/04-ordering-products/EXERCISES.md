@@ -75,6 +75,9 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 3. **[4.7]** An ORDER TERM's value is a bare number: 25 means a percentage, 10 a number of
    days, only through the TERM TYPE. What does a query that works out a cancellation deadline
    have to know, and what would you add if terms needed units or text?
+4. **[4.8]** ORDER ITEM ASSOCIATION has no quantity. 12564's 100 pens fill a 30-pen and a
+   20-pen sales line. What can't the model tell you, and what would you add to fix it? Why
+   might Silverston have left it out?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

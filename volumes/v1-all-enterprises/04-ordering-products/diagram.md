@@ -63,4 +63,8 @@ erDiagram
   ORDER                   |o--o{ ORDER_TERM          : "subject to"
   ORDER_ITEM              |o--o{ ORDER_TERM          : "subject to"
   TERM_TYPE               ||--o{ ORDER_TERM          : "description for"
+
+  %% Fig 4.8 — Order item association (a sales line filled by purchase lines; FKs on the subtype tables)
+  SALES_ORDER_ITEM        ||--o{ ORDER_ITEM_ASSOCIATION : "associated with"
+  PURCHASE_ORDER_ITEM     ||--o{ ORDER_ITEM_ASSOCIATION : "used to fulfill"
 ```

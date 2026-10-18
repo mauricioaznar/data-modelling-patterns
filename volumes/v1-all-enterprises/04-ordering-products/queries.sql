@@ -845,3 +845,86 @@ select term_type_id, order_id, order_item_id, count(*) as terms,
 from order_term
 group by term_type_id, order_id, order_item_id
 having count(*) > 1;
+
+-- ============================================================
+-- Fig 4.8 — Order item association
+-- ============================================================
+
+-- name: 4.8 — Table 4.10 and ours: each sales line, and the purchase lines that will fill it
+select s.order_id as sales_order, s.order_item_seq_id as sales_line, coalesce(sp.name, s.item_description) as sold,
+       s.quantity as sold_qty,
+       p.order_id as purchase_order, p.order_item_seq_id as purchase_line, coalesce(pp.name, p.item_description) as bought,
+       p.quantity as bought_qty, n.name as supplier
+from order_item_association a
+join order_item s               on s.order_item_id = a.sales_order_item_id
+join order_item p               on p.order_item_id = a.purchase_order_item_id
+left join product sp            on sp.product_id = s.product_id
+left join product pp            on pp.product_id = p.product_id
+join purchase_order po          on po.order_id = p.order_id
+left join party_role r          on r.party_role_id = po.taken_by_party_role_id
+left join party_display_name n  on n.party_id = r.party_id
+order by s.order_id, s.order_item_seq_id, p.order_id, p.order_item_seq_id;
+
+-- name: 4.8 — Sales lines with a purchase behind them, beside their latest recorded status (whether the goods arrived needs Ch 5's shipments)
+with latest as (
+  select distinct on (order_item_id) order_item_id, status_type_id
+  from order_status
+  where order_item_id is not null and order_id is null
+  order by order_item_id, status_datetime desc
+),
+linked as (
+  select sales_order_item_id, count(distinct purchase_order_item_id) as purchase_lines
+  from order_item_association
+  group by sales_order_item_id
+)
+select oi.order_id, oi.order_item_seq_id as line, coalesce(p.name, oi.item_description) as item,
+       coalesce(l.purchase_lines, 0) as purchase_lines_behind_it, t.description as latest_recorded_status
+from sales_order_item s
+join order_item oi       on oi.order_item_id = s.order_item_id
+left join product p      on p.product_id = oi.product_id
+left join linked l       on l.sales_order_item_id = s.order_item_id
+left join latest x       on x.order_item_id = s.order_item_id
+left join status_type t  on t.status_type_id = x.status_type_id
+where l.sales_order_item_id is not null or x.status_type_id = 'ORDER_BACKORDERED'
+order by oi.order_id, oi.order_item_seq_id;
+
+-- name: 4.8 — For review: purchase lines filling several sales lines, and sales lines filled from several purchase lines (no quantity on the link, so the split is unknown)
+select 'one purchase line, several sales lines' as shape, p.order_id, p.order_item_seq_id as line, p.quantity,
+       string_agg(distinct s.order_id || ' line ' || s.order_item_seq_id || ' (' || s.quantity || ')', ', ') as linked_lines
+from order_item_association a
+join order_item p on p.order_item_id = a.purchase_order_item_id
+join order_item s on s.order_item_id = a.sales_order_item_id
+group by p.order_item_id, p.order_id, p.order_item_seq_id, p.quantity
+having count(distinct a.sales_order_item_id) > 1
+union all
+select 'one sales line, several purchase lines', s.order_id, s.order_item_seq_id, s.quantity,
+       string_agg(distinct p.order_id || ' line ' || p.order_item_seq_id || ' (' || p.quantity || ')', ', ')
+from order_item_association a
+join order_item p on p.order_item_id = a.purchase_order_item_id
+join order_item s on s.order_item_id = a.sales_order_item_id
+group by s.order_item_id, s.order_id, s.order_item_seq_id, s.quantity
+having count(distinct a.purchase_order_item_id) > 1
+order by shape, order_id, line;
+
+-- name: 4.8 — Data-quality check: the same sales and purchase lines linked twice (should be empty)
+select sales_order_item_id, purchase_order_item_id, count(*) as links
+from order_item_association
+group by sales_order_item_id, purchase_order_item_id
+having count(*) > 1;
+
+-- name: 4.8 — Data-quality check: a purchase line linked to a sales line for another product (should be empty)
+select a.order_item_association_id, s.order_id as sales_order, s.order_item_seq_id as sales_line, sp.name as sold,
+       p.order_id as purchase_order, p.order_item_seq_id as purchase_line, pp.name as bought
+from order_item_association a
+join order_item s   on s.order_item_id = a.sales_order_item_id
+join order_item p   on p.order_item_id = a.purchase_order_item_id
+join product sp     on sp.product_id = s.product_id
+join product pp     on pp.product_id = p.product_id
+where s.product_id <> p.product_id;
+
+-- name: 4.8 — Data-quality check: lines recorded as backordered with no purchase line behind them (should be empty)
+select s.order_status_id, oi.order_id, oi.order_item_seq_id as line, oi.item_description, s.status_datetime
+from order_status s
+join order_item oi on oi.order_item_id = s.order_item_id
+where s.status_type_id = 'ORDER_BACKORDERED'
+  and not exists (select 1 from order_item_association a where a.sales_order_item_id = s.order_item_id);

@@ -468,3 +468,53 @@ insert into order_term (order_term_id, term_type_id, order_id, order_item_id, te
   (10, 'WARRANTY_MONTHS',            12562, 9,    6);      -- DATA ERROR: the order AND an item (caught by a query)
 
 select setval(pg_get_serial_sequence('order_term', 'order_term_id'), (select max(order_term_id) from order_term));
+
+-- ============================================================
+-- Fig 4.8 — Order item association
+-- ============================================================
+-- Table 4.10's orders, one line each. Products, quantities, dates and
+-- parties are ours: ACME buys 200 pens from ABC Subsidiary, which buys them
+-- from Fantastic Supplies for ABC Retail Store. Roles: 60 ACME placing, 32 ABC
+-- Subsidiary internal, 68 ACME ship-to; 69 ABC Subsidiary placing buyer, 37
+-- Fantastic supplier, 70 ABC Corporation bill-to purchaser, 71 ABC Retail
+-- Store ship-to buyer.
+insert into "order" (order_id, order_kind, order_date, entry_date) values
+  (13480, 'SALES',    '2001-08-20', '2001-08-20'),
+  (23490, 'PURCHASE', '2001-08-21', '2001-08-21');
+
+insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, quantity, unit_price) values
+  (29, 13480, 1, 2, 200, 11.00),
+  (30, 23490, 1, 2, 200, 6.00);
+
+select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max(order_item_id) from order_item));
+
+insert into sales_order (order_id, placed_by_party_role_id, taken_by_party_role_id) values
+  (13480, 60, 32);
+
+insert into sales_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
+  (29, 68, 34);
+
+insert into purchase_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id) values
+  (23490, 69, 37, 70);
+
+insert into purchase_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
+  (30, 71, 36);
+
+insert into order_status (status_type_id, order_id, order_item_id, status_datetime) values
+  ('ORDER_RECEIVED',    13480, null, '2001-08-20 09:00+00'),
+  ('ORDER_BACKORDERED', null,  29,   '2001-08-21 10:00+00');   -- waiting on 23490's line
+
+-- Sales lines: 4 the copier on 12561, 7 its paper for the depot; 9 and 11 the
+-- pens on 12562; 20 the paper on 12566; 29 the pens on 13480. Purchase lines:
+-- 16 the 500 reams on 12564, 17 its 100 pens, 18 its books; 22 the copier on
+-- 12568; 24 the paper on 12570; 30 the pens on 23490.
+insert into order_item_association (sales_order_item_id, purchase_order_item_id) values
+  (29, 30),   -- Table 4.10: 13480 line 1, filled by 23490 line 1
+  (4,  22),   -- 4.4's drop ship, linked at last
+  (7,  16),   -- one sales line, two purchase lines
+  (7,  24),
+  (20, 16),   -- one purchase line, two sales lines
+  (9,  17),
+  (11, 17),
+  (4,  22),   -- DATA ERROR: the same link twice (caught by a query)
+  (9,  18);   -- DATA ERROR: 12564's books "filling" 12562's pens (caught by a query)
