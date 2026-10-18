@@ -9,6 +9,7 @@ The machine currently has Node only; everything runs through PGlite. These tools
 blockers, but each one unlocks something:
 
 - [x] **Python 3** (3.9.6 found 2026-10-11): handy for scripted file edits and data generation, and needed by some tools
+  - [ ] Not on the Git Bash PATH on 2026-10-18 (only the Microsoft Store alias answers `python`); Node did the scripted edits instead. Check where 3.9.6 lives and add it to PATH
 - [ ] **PostgreSQL 16+** (native, including `psql`): inspect the DB interactively and compare behaviour against PGlite
 - [ ] **Docker Desktop**: throwaway Postgres containers, and later the per-chapter app/deploy experiments
 - [ ] **A DB GUI** (DBeaver or pgAdmin): browse tables and relationships visually
