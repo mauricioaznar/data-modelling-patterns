@@ -1195,12 +1195,15 @@ left join order_requirement_commitment c       on c.order_item_id = oi.order_ite
 where rq.requirement_id in (24905, 30005, 50001)
 order by rq.requirement_id, q.request_date, qt.quote_id, oi.order_id;
 
--- name: 4.11 — The product quoted against the product the need names (a quote may offer something else)
+-- name: 4.11 — The product quoted against what the need asks for: the product it names, or else its must-have features (Table 4.15's black pens for a blue need)
 select qt.quote_id, qi.quote_item_seq_id as item, n.name as quoted_by, rq.requirement_id, rq.description as need,
        wanted.name as product_wanted, quoted.name as product_quoted,
-       case when pr.product_id is null            then 'the need names no product'
-            when pr.product_id = qi.product_id    then 'the same'
-            else 'another product' end as comparison
+       case when pr.product_id = qi.product_id    then 'the same product'
+            when pr.product_id is not null        then 'another product'
+            when lacking.features is not null     then 'lacks ' || lacking.features
+            when exists (select 1 from desired_feature d where d.requirement_id = rq.requirement_id)
+                                                  then 'has every must-have feature'
+            else 'the need names no product or feature' end as comparison
 from quote_item qi
 join quote qt                       on qt.quote_id = qi.quote_id
 join party_display_name n           on n.party_id = qt.issued_by_party_id
@@ -1209,6 +1212,17 @@ join requirement rq                 on rq.requirement_id = rr.requirement_id
 left join product_requirement pr    on pr.requirement_id = rq.requirement_id
 left join product wanted            on wanted.product_id = pr.product_id
 join product quoted                 on quoted.product_id = qi.product_id
+left join lateral (
+  select string_agg(f.description, ', ' order by f.description) as features
+  from desired_feature d
+  join product_feature f on f.product_feature_id = d.product_feature_id
+  where d.requirement_id = rq.requirement_id
+    and not d.optional_ind
+    and not exists (select 1 from product_feature_applicability a
+                    where a.product_id = qi.product_id
+                      and a.product_feature_id = d.product_feature_id
+                      and a.from_date <= qt.issue_date and (a.thru_date is null or a.thru_date > qt.issue_date))
+) lacking on true
 order by qt.quote_id, qi.quote_item_seq_id;
 
 -- name: 4.11 — Data-quality check: quote items pricing both a product and a work effort, or neither (should be empty)

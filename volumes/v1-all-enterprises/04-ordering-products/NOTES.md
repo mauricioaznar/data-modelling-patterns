@@ -918,10 +918,17 @@ PARTY                        (from Ch 2)
 19, 2002, to support the repair of PCs, valid until March 19, 2002. 36908 is a product quote
 issued March 12, 2001, a bid on pens and pencils, valid from March 12 to March 30, 2002.
 
+**Table 4.15** (quote items, shared after the figure was built, in our words): 35678's one line
+quotes 70 of "PC Repair" at $75, answering item 1 of the RFP 38967. 36908's two lines quote 50
+of Johnson's fine grade 8½ by 11 bond paper at $3.75 and 40 Johnson black pens at $1.25,
+answering items 1 and 2 of ACME's RFQ 38948.
+
 **The text beside it**, in short: the first is a proposal because it may describe how the PCs
 would be repaired; the second just prices pens and pencils. QUOTE ITEM names its own product,
 although one could reach a product from the request item through its requirement, because
-the product quoted may not be the product asked for.
+the product quoted may not be the product asked for. Quote terms work as order terms: a PC
+repair quote may require the buyer to name a central point of contact, or the price may rise;
+a quote item for furniture may make the buyer pay the actual freight.
 
 **To check against the book**
 - Two arcs, the chapter's first: across QUOTE ITEM's lines to PRODUCT and WORK EFFORT, and
@@ -939,7 +946,16 @@ the product quoted may not be the product asked for.
 - Table 4.14 names no issuer or receiver. Ours: Ridgeway PC Repair proposes to ABC
   Corporation; ABC Subsidiary bids to ACME.
 - 36908's issue date (March 12, 2001) comes a year before it's valid, and the day before
-  ACME's request (38948) it seems to answer. 35678 predates the RFP 38967 (point 22).
+  ACME's request (38948) that Table 4.15 says it answers. 35678 answers the RFP 38967
+  (Table 4.15), which is dated three weeks after it (point 22).
+- Table 4.15's PC repair is a PRODUCT (a service), not a WORK EFFORT: the arc's product
+  branch. Its 70 at $75 is read as 70 hours (29 PCs were asked for), so the new product
+  "PC repair" is sold by the hour.
+- Table 4.15's pens are Johnson black pens, where 38948's item 2 carries 30005, a blue
+  Goldstein Elite pen: the text's point (the product quoted isn't the one asked for), shown
+  in the book's own data. A new catalogue product.
+- Table 4.14 calls 36908 a bid on pens and pencils; Table 4.15 has paper and pens, no
+  pencils. Our pencil line stays, as a third line nobody asked for.
 
 **Discussion**
 - **The problem.** An offer made before an order: these items, at these prices, under these
@@ -949,12 +965,17 @@ the product quoted may not be the product asked for.
   and typed: a proposal (an approach and a price), a product quote (prices for items), or
   another kind.
 - **A quote item prices a product or a piece of work,** never both: the arc. Ridgeway prices
-  the repair of 29 PCs as a planned WORK EFFORT; ABC prices pens.
-- **The quoted product can differ from the one wanted.** Paperline offers recycled paper for
+  PC repair as a service product, by the hour (Table 4.15); Byte Doctors prices the planned
+  WORK EFFORT "Repair 29 PCs" per PC; ABC prices paper and pens.
+- **The quoted product can differ from the one wanted.** ABC Subsidiary quotes black Johnson
+  pens where ACME's need wants a blue pen (Table 4.15); Paperline offers recycled paper for
   Northwind's need of white bond paper. Deriving the product from the request and the
-  requirement would hide that, so QUOTE ITEM names its own. (Ponder 2 of submodel 5.)
+  requirement would hide that, so QUOTE ITEM names its own. A query compares the quoted
+  product with the product the need names, or else with its must-have features ("lacks
+  Blue"). (Ponder 2 of submodel 5.)
 - **Competing answers to one question:** two quote items answer request item 61001/1, and
-  order 12564's line accepts Fantastic's.
+  order 12564's line accepts Fantastic's; two proposals answer the RFP 38967, one pricing a
+  service by the hour, the other a planned job per PC.
 - **The chapter's thread, whole:** requirement (the need) → request item (the question) →
   quote item (an answer, "a response to") → order item ("the acceptance of") → commitment
   back to the requirement (4.9). Northwind's paper for Chatham walks the whole of it in the
@@ -1045,9 +1066,12 @@ the literal drawing. The list moves under the chapter's last figure when that on
     predates both requirements it carries and gives thirteen months to answer. 38967 read as
     an RFP, as Table 4.12 has it (Table 4.13 says RFQ).
 22. **4.11, Table 4.14's dates:** 36908 read as issued March 12, 2002 (as printed, a year
-    before it's valid) and as the answer to ACME's RFQ 38948, although it's valid from the
-    day before that request. 35678 (February 19) predates the RFP 38967, so it's linked to
-    the RFI 23498; if the book means it answers the RFP, its date is the slip.
+    before it's valid). Table 4.15 (shared later) settles which requests the quotes answer:
+    36908 answers ACME's RFQ 38948, 35678 the RFP 38967, so the seed now links them so
+    (35678 had been linked to the RFI 23498). Both requests are dated March 13, 2002, after
+    the quotes that answer them (by a day, by three weeks). Seeded as printed: either the
+    request dates or the quote dates are the slip. A check for quotes issued before the
+    request they answer would flag both book rows, so there is none yet.
 
 ## Design decisions (book → SQL)
 
@@ -1316,13 +1340,20 @@ the literal drawing. The list moves under the chapter's last figure when that on
   query (the arc; seed: a warranty term on Paperline's quote and its item at once).
 - **`quote_role_type`** (preparer, approver, contact), the sixth role-type lookup (point 5).
 - **`work_effort` is Ch 2's,** unchanged: it already has every attribute Fig 4.11 draws. A
-  new planned effort, "Repair 29 PCs", is what Ridgeway's proposal prices.
-- **A new product, a box of pencils** (Ch 3's catalogue, writing instruments), for Table
-  4.14's "pens and pencils".
-- **Seeds:** 35678 (Ridgeway to ABC Corporation, answering the RFI 23498; point 22), 36908 (ABC
-  Subsidiary to ACME: 40 pens answering 38948's item 2, and pencils nobody asked for). Ours:
-  Fantastic's 62001 (500 reams at 30.00 for Northwind's RFQ 61001, accepted by 12564's line
-  1, which the 4.4 seed already had) and Paperline's 62002 (recycled paper, not accepted).
+  new planned effort, "Repair 29 PCs", is what Byte Doctors' proposal prices.
+- **New products in Ch 3's catalogue:** a box of pencils (writing instruments), for Table
+  4.14's "pens and pencils"; Table 4.15's Johnson black pen (features black and Johnson) and
+  PC repair (a service, maintenance, sold by the hour).
+- **Seeds:** Table 4.15's lines on Table 4.14's quotes: 35678 (Ridgeway to ABC Corporation,
+  70 hours of PC repair answering the RFP 38967; point 22) and 36908 (ABC Subsidiary to ACME:
+  50 reams and 40 black pens answering 38948's items 1 and 2, plus our pencils nobody asked
+  for). The text's term on 35678: a central point of contact (a new term type, no value).
+  Ours: Byte Doctors' rival proposal 62003 (the planned job, per PC), Fantastic's 62001 (500
+  reams at 30.00 for Northwind's RFQ 61001, accepted by 12564's line 1, which the 4.4 seed
+  already had) and Paperline's 62002 (recycled paper, not accepted).
+- **The quoted product against the need:** when the requirement names no product, the
+  comparison query lists the must-have desired features (4.9) the quoted product doesn't
+  offer on the quote's date.
 
 ## When NOT to use this
 - **A shop that only sells**, and buys through some other system, gets little from the ORDER

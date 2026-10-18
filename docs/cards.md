@@ -471,7 +471,8 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   with a commitment.
 - **T:** *(the naive-model trap until practice gives yours)* reaching the quoted product
   through request item → requirement → product: the supplier may quote something else
-  (recycled paper). And accepting a quote after it expired.
+  (Table 4.15's black pens for a blue need, recycled paper). And accepting a quote after it
+  expired.
 - **D:** request ← request_item ← requirement_request → requirement; request ←
   responding_party → party, → contact_mechanism; request ← request_role → party; quote →
   party ×2 (issued by, given to); quote ← quote_item → product | work_effort (arc);
