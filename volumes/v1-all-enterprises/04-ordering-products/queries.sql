@@ -1144,3 +1144,87 @@ join party_display_name n on n.party_id = r.party_id
 where r.request_role_type_id = 'ORIGINATOR'
 group by r.request_id
 having count(*) > 1;
+
+-- ============================================================
+-- Fig 4.11 — Quotes
+-- ============================================================
+
+-- name: 4.11 — Quotes as Table 4.14 shows them, with who issued them, to whom, and what each item prices
+select q.quote_id, q.quote_type_id as type, q.issue_date, q.description,
+       q.valid_from_date as valid_from, q.valid_thru_date - 1 as valid_through,
+       ib.name as issued_by, gt.name as given_to,
+       i.quote_item_seq_id as item, coalesce(p.name, w.name) as quoted, i.quantity, i.quote_unit_price
+from quote q
+join party_display_name ib       on ib.party_id = q.issued_by_party_id
+left join party_display_name gt  on gt.party_id = q.given_to_party_id
+left join quote_item i           on i.quote_id = q.quote_id
+left join product p              on p.product_id = i.product_id
+left join work_effort w          on w.work_effort_id = i.work_effort_id
+order by q.quote_id >= 60000, q.issue_date, q.quote_id, i.quote_item_seq_id;
+
+-- name: 4.11 — Competing quotes for each request item, cheapest first, and whether an order line accepted one
+select q.request_id, ri.request_item_seq_id as item, ri.quantity as asked,
+       n.name as quoted_by, coalesce(p.name, w.name) as quoted, qi.quantity, qi.quote_unit_price,
+       exists (select 1 from order_item oi where oi.quote_item_id = qi.quote_item_id) as accepted
+from quote_item qi
+join request_item ri         on ri.request_item_id = qi.request_item_id
+join request q               on q.request_id = ri.request_id
+join quote qt                on qt.quote_id = qi.quote_id
+join party_display_name n    on n.party_id = qt.issued_by_party_id
+left join product p          on p.product_id = qi.product_id
+left join work_effort w      on w.work_effort_id = qi.work_effort_id
+order by q.request_id, ri.request_item_seq_id, qi.quote_unit_price;
+
+-- name: 4.11 — From need to order: each requirement's request, the quotes that answered it, the order line that accepted one, and what it committed back
+select rq.requirement_id, rq.description as need,
+       q.request_type_id || ' ' || q.request_id as asked_on,
+       qt.quote_id || ' from ' || n.name || ' at ' || qi.quote_unit_price as quote,
+       oi.order_id || ' line ' || oi.order_item_seq_id || ' of ' || o.order_date as accepted_by,
+       c.quantity as committed_to_need
+from requirement rq
+join requirement_request rr                    on rr.requirement_id = rq.requirement_id
+join request_item ri                           on ri.request_item_id = rr.request_item_id
+join request q                                 on q.request_id = ri.request_id
+left join quote_item qi                        on qi.request_item_id = ri.request_item_id
+left join quote qt                             on qt.quote_id = qi.quote_id
+left join party_display_name n                 on n.party_id = qt.issued_by_party_id
+left join order_item oi                        on oi.quote_item_id = qi.quote_item_id
+left join "order" o                            on o.order_id = oi.order_id
+left join order_requirement_commitment c       on c.order_item_id = oi.order_item_id
+                                              and c.requirement_id = rq.requirement_id
+where rq.requirement_id in (24905, 30005, 50001)
+order by rq.requirement_id, q.request_date, qt.quote_id, oi.order_id;
+
+-- name: 4.11 — The product quoted against the product the need names (a quote may offer something else)
+select qt.quote_id, qi.quote_item_seq_id as item, n.name as quoted_by, rq.requirement_id, rq.description as need,
+       wanted.name as product_wanted, quoted.name as product_quoted,
+       case when pr.product_id is null            then 'the need names no product'
+            when pr.product_id = qi.product_id    then 'the same'
+            else 'another product' end as comparison
+from quote_item qi
+join quote qt                       on qt.quote_id = qi.quote_id
+join party_display_name n           on n.party_id = qt.issued_by_party_id
+join requirement_request rr         on rr.request_item_id = qi.request_item_id
+join requirement rq                 on rq.requirement_id = rr.requirement_id
+left join product_requirement pr    on pr.requirement_id = rq.requirement_id
+left join product wanted            on wanted.product_id = pr.product_id
+join product quoted                 on quoted.product_id = qi.product_id
+order by qt.quote_id, qi.quote_item_seq_id;
+
+-- name: 4.11 — Data-quality check: quote items pricing both a product and a work effort, or neither (should be empty)
+select quote_item_id, quote_id, quote_item_seq_id, product_id, work_effort_id, comment
+from quote_item
+where (product_id is null) = (work_effort_id is null);
+
+-- name: 4.11 — Data-quality check: quote terms for both a quote and an item, or for neither (should be empty)
+select quote_term_id, term_type_id, quote_id, quote_item_id
+from quote_term
+where (quote_id is null) = (quote_item_id is null);
+
+-- name: 4.11 — Data-quality check: order lines accepting a quote that wasn't valid on the order's date (should be empty)
+select oi.order_id, oi.order_item_seq_id as line, o.order_date, qt.quote_id, qt.valid_from_date, qt.valid_thru_date - 1 as valid_through
+from order_item oi
+join "order" o       on o.order_id = oi.order_id
+join quote_item qi   on qi.quote_item_id = oi.quote_item_id
+join quote qt        on qt.quote_id = qi.quote_id
+where not (o.order_date >= qt.valid_from_date and o.order_date < qt.valid_thru_date);

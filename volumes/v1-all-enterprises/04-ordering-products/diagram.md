@@ -94,4 +94,19 @@ erDiagram
   REQUEST                 ||--o{ RESPONDING_PARTY    : "submitted to"
   PARTY                   ||--o{ RESPONDING_PARTY    : "the recipient of (Ch 2)"
   CONTACT_MECHANISM       |o--o{ RESPONDING_PARTY    : "used to contact (Ch 2)"
+
+  %% Fig 4.11 — Quotes (PROPOSAL, PRODUCT QUOTE, OTHER QUOTE are quote_type rows; a quote item prices a product OR a work effort)
+  QUOTE_TYPE              ||--o{ QUOTE               : "describes"
+  PARTY                   ||--o{ QUOTE               : "the creator of / the receiver of (Ch 2)"
+  QUOTE                   ||--o{ QUOTE_ITEM          : "composed of"
+  PRODUCT                 |o--o{ QUOTE_ITEM          : "quoted via (Ch 3)"
+  WORK_EFFORT             |o--o{ QUOTE_ITEM          : "quoted via (Ch 2)"
+  REQUEST_ITEM            |o--o{ QUOTE_ITEM          : "priced via"
+  QUOTE_ITEM              |o--o{ ORDER_ITEM          : "resulting in"
+  QUOTE                   ||--o{ QUOTE_ROLE          : "involving"
+  PARTY                   ||--o{ QUOTE_ROLE          : "involved in (Ch 2)"
+  QUOTE_ROLE_TYPE         ||--o{ QUOTE_ROLE          : "description for"
+  TERM_TYPE               ||--o{ QUOTE_TERM          : "used in"
+  QUOTE                   |o--o{ QUOTE_TERM          : "subject to"
+  QUOTE_ITEM              |o--o{ QUOTE_TERM          : "subject to"
 ```

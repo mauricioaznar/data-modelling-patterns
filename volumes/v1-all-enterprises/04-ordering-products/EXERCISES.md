@@ -96,6 +96,10 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 1. **[4.10]** A REQUEST ITEM names no product; it reaches its requirements through
    REQUIREMENT REQUEST, a many-to-many. Why no product, and what would break if each request
    item could carry only one requirement?
+2. **[4.11]** QUOTE ITEM names its own product, although you could reach a product from the
+   request item through its requirement. Why keep both paths? Use Paperline's quote.
+3. **[4.11]** Walk Northwind's paper from need to order: which entities and lines does it
+   pass through, and which of those links carry a quantity?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

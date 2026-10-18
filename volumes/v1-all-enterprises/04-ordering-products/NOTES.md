@@ -862,7 +862,108 @@ will answer. DATE SENT records when we sent the request to that party.
 - **No product on the request item:** it asks for what its requirements need, so a request
   can go out before anyone has chosen a product. (Ponder 1 of submodel 5.)
 
-### Points to discuss after the overview (Figs 4.1–4.10)
+### Fig 4.11 — Quotes
+**Transcription** (accepted: ☐; one landscape photo, with Table 4.14; open points under "To
+check against the book")
+
+```
+QUOTE
+  # quote_id
+  * issue_date
+  * valid_from_date
+  * valid_thru_date
+  o description
+  subtypes: PROPOSAL, PRODUCT QUOTE, OTHER QUOTE
+  -> PARTY                   (many "issued by" 1 party; party "the creator of" many)
+  -> PARTY                   (many "given to" 1 party; party "the receiver of" many)
+
+QUOTE ITEM
+  # quote_item_seq_id          (printed "QUOTED ITEM SEQ ID")
+  * quantity
+  * quote_unit_price
+  o estimated_delivery_date
+  o comment
+  -> QUOTE                   (many "part of" 1, bar; quote "composed of" many)
+  -> PRODUCT                 (many "a price quote for" 1; product "quoted via" many)     } arc
+  -> WORK EFFORT             (many "a price quote for" 1; effort "quoted via" many)      }
+  -> REQUEST ITEM            (many "a response to" 1, dashed; item "priced via" many)
+
+ORDER ITEM                   (as 4.2)
+  -> QUOTE ITEM              (many "the acceptance of" 1, dashed; quote item "resulting in" many)
+
+QUOTE ROLE                   (no attributes drawn)
+  -> QUOTE                   (many "for" 1, bar; quote "involving" many)
+  -> PARTY                   (many "of" 1, bar; party "involved in" many)
+  -> QUOTE ROLE TYPE         (many "described by" 1; type "the description for" many)
+
+QUOTE ROLE TYPE              (no attributes drawn)
+
+QUOTE TERM
+  # quote_term_id
+  o term_value
+  -> TERM TYPE               (many "of" 1 type; type "used in" many)
+  -> QUOTE                   (many "a condition for" 1; quote "subject to" many)       } arc
+  -> QUOTE ITEM              (many "a condition for" 1; item "subject to" many)        }
+
+TERM TYPE                    (as 4.7)
+REQUEST ITEM                 (as 4.10)
+PRODUCT                      (from Ch 3)
+WORK EFFORT                  (# work_effort_id, * name, * description, o scheduled start and
+                              completion dates, o total dollars and hours allowed,
+                              o estimated hours: Ch 2's Fig 2.13 entity, Ch 6's later)
+PARTY                        (from Ch 2)
+```
+
+**Table 4.14** (quotes, the book's sample, in our words): 35678 is a proposal issued February
+19, 2002, to support the repair of PCs, valid until March 19, 2002. 36908 is a product quote
+issued March 12, 2001, a bid on pens and pencils, valid from March 12 to March 30, 2002.
+
+**The text beside it**, in short: the first is a proposal because it may describe how the PCs
+would be repaired; the second just prices pens and pencils. QUOTE ITEM names its own product,
+although one could reach a product from the request item through its requirement, because
+the product quoted may not be the product asked for.
+
+**To check against the book**
+- Two arcs, the chapter's first: across QUOTE ITEM's lines to PRODUCT and WORK EFFORT, and
+  across QUOTE TERM's lines to QUOTE and QUOTE ITEM. Silverston means one or the other. That
+  backs our arc-less readings of 4.6's and 4.7's order-or-item lines (points 10, 14).
+- QUOTE TERM draws TERM VALUE optional, where ORDER TERM drew it mandatory (point 13), and
+  reuses 4.7's TERM TYPE (point 15).
+- ORDER ITEM "the acceptance of" one QUOTE ITEM, dashed: an order line needn't come from a
+  quote. QUOTE ITEM "a response to" one REQUEST ITEM, dashed: a quote may come unasked.
+- "Issued by" and "given to" both land on PARTY. "Given to" read as optional (a quote can be
+  published to anyone); "issued by" as mandatory.
+- PROPOSAL, PRODUCT QUOTE and OTHER QUOTE have no attributes: Table 4.14 calls them QUOTE
+  TYPE.
+- WORK EFFORT is drawn with exactly the attributes Ch 2 built for it (Fig 2.13).
+- Table 4.14 names no issuer or receiver. Ours: Ridgeway PC Repair proposes to ABC
+  Corporation; ABC Subsidiary bids to ACME.
+- 36908's issue date (March 12, 2001) comes a year before it's valid, and the day before
+  ACME's request (38948) it seems to answer. 35678 predates the RFP 38967 (point 22).
+
+**Discussion**
+- **The problem.** An offer made before an order: these items, at these prices, under these
+  terms, valid for a while. Kept as a draft order marked "quoted", it mixes an offer with a
+  commitment, and has no room for the competing offers a buyer compares.
+- **QUOTE is an offer, valid between two dates,** issued by one party and given to another,
+  and typed: a proposal (an approach and a price), a product quote (prices for items), or
+  another kind.
+- **A quote item prices a product or a piece of work,** never both: the arc. Ridgeway prices
+  the repair of 29 PCs as a planned WORK EFFORT; ABC prices pens.
+- **The quoted product can differ from the one wanted.** Paperline offers recycled paper for
+  Northwind's need of white bond paper. Deriving the product from the request and the
+  requirement would hide that, so QUOTE ITEM names its own. (Ponder 2 of submodel 5.)
+- **Competing answers to one question:** two quote items answer request item 61001/1, and
+  order 12564's line accepts Fantastic's.
+- **The chapter's thread, whole:** requirement (the need) → request item (the question) →
+  quote item (an answer, "a response to") → order item ("the acceptance of") → commitment
+  back to the requirement (4.9). Northwind's paper for Chatham walks the whole of it in the
+  seed. (Ponder 3 of submodel 5.)
+- **Terms and roles once more:** QUOTE TERM reuses TERM TYPE, on the quote or one item; QUOTE
+  ROLE has ORDER ROLE's shape, a sixth role type list (point 5).
+- **An accepted quote must still be valid** on the order's date: a check.
+
+### Points to discuss after the overview (Figs 4.1–4.11)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing. The list moves under the chapter's last figure when that one arrives.
@@ -914,14 +1015,17 @@ the literal drawing. The list moves under the chapter's last figure when that on
     late corrections; we stay with the book.
 13. **4.7, TERM VALUE optional:** drawn mandatory, but Table 4.9 has a term with no value
     ("no exchanges or refunds"). Built nullable, the table's reading. If every term must carry
-    a value, that one needs a made-up value (1 for yes?), which reads oddly.
+    a value, that one needs a made-up value (1 for yes?), which reads oddly. Fig 4.11 draws
+    QUOTE TERM's value optional.
 14. **4.7, statuses and terms on an order or an item:** no arcs drawn; read as for 4.6's
     adjustments (point 10), one or the other, checked by a data-quality query. Settle the
-    three together.
+    three together. Fig 4.11 draws the arc on QUOTE TERM's same pair of lines, which backs
+    the reading.
 15. **4.7, ORDER STATUS TYPE in Ch 2's `status_type`, TERM TYPE on its own:** order statuses
     joined Ch 2's shared status table, as its notes foresaw, while each role type so far got
     a lookup of its own (point 5). Settle both at once. TERM TYPE is a flat lookup with a
-    general name, ready for other terms.
+    general name, ready for other terms; Fig 4.11 reuses it for QUOTE TERM. By Fig 4.11 there
+    are six role-type lookups (order, order item, requirement, request, quote, and Ch 2's).
 16. **4.8, sales to purchase only:** the lines land on the subtypes, so we link a sales line
     to a purchase line and nothing else. The entity's general name could mean any item to any
     item, with a type (a replacement line, a split line); not built.
@@ -940,6 +1044,10 @@ the literal drawing. The list moves under the chapter's last figure when that on
 21. **4.10, Table 4.12's dates and types:** 23498 read as January 12, 2002; as printed, it
     predates both requirements it carries and gives thirteen months to answer. 38967 read as
     an RFP, as Table 4.12 has it (Table 4.13 says RFQ).
+22. **4.11, Table 4.14's dates:** 36908 read as issued March 12, 2002 (as printed, a year
+    before it's valid) and as the answer to ACME's RFQ 38948, although it's valid from the
+    day before that request. 35678 (February 19) predates the RFP 38967, so it's linked to
+    the RFI 23498; if the book means it answers the RFP, its date is the slip.
 
 ## Design decisions (book → SQL)
 
@@ -1191,6 +1299,31 @@ the literal drawing. The list moves under the chapter's last figure when that on
   Paperline), and its RFP 61002 for the dock door (to Contoso, which manages the Chatham
   warehouse in Ch 2).
 
+### Fig 4.11
+- **PROPOSAL, PRODUCT QUOTE and OTHER QUOTE → rows of a `quote_type` lookup,** as requests'
+  types (Table 4.14's QUOTE TYPE).
+- **`quote` names its two parties in columns,** `issued_by_party_id` (mandatory) and
+  `given_to_party_id` (optional), plain FKs to PARTY as drawn, beside the generic QUOTE ROLE:
+  4.3's specific-plus-generic pairing again. `valid_thru_date` is exclusive, the repo's
+  convention: Table 4.14's "valid until March 19" is stored as March 20.
+- **`quote_item`:** a surrogate key and the seq id; `product_id` and `work_effort_id` both
+  nullable, exactly one set (the arc) a data-quality query (seed: a freight line on
+  Fantastic's quote naming neither); `request_item_id` optional ("a response to").
+- **`order_item.quote_item_id`** is added with `alter table` ("the acceptance of"). An order
+  line accepting a quote outside its validity is a data-quality query (seed: 12570's paper,
+  ordered in 2023, accepting Fantastic's 2025 quote).
+- **`quote_term` reuses `term_type`;** exactly one of quote and quote item is a data-quality
+  query (the arc; seed: a warranty term on Paperline's quote and its item at once).
+- **`quote_role_type`** (preparer, approver, contact), the sixth role-type lookup (point 5).
+- **`work_effort` is Ch 2's,** unchanged: it already has every attribute Fig 4.11 draws. A
+  new planned effort, "Repair 29 PCs", is what Ridgeway's proposal prices.
+- **A new product, a box of pencils** (Ch 3's catalogue, writing instruments), for Table
+  4.14's "pens and pencils".
+- **Seeds:** 35678 (Ridgeway to ABC Corporation, answering the RFI 23498; point 22), 36908 (ABC
+  Subsidiary to ACME: 40 pens answering 38948's item 2, and pencils nobody asked for). Ours:
+  Fantastic's 62001 (500 reams at 30.00 for Northwind's RFQ 61001, accepted by 12564's line
+  1, which the 4.4 seed already had) and Paperline's 62002 (recycled paper, not accepted).
+
 ## When NOT to use this
 - **A shop that only sells**, and buys through some other system, gets little from the ORDER
   supertype. It costs one discriminator, so it's cheap to keep, but don't model purchase
@@ -1220,6 +1353,9 @@ the literal drawing. The list moves under the chapter's last figure when that on
   nothing to link.
 - **Requests (4.10)** when you buy from one supplier at its list price: there is nobody to
   ask. They pay off when several suppliers compete, or customers send formal requests.
+- **Quotes (4.11)** when prices come from a published list and nobody negotiates: Ch 3's
+  price components already answer "what would it cost?". Quotes are for offers made to one
+  party, valid for a while.
 - **Requirements (4.9)** when every need goes straight to an order (a small shop buying for
   itself): requirement rows are overhead. They earn their keep when needs are gathered,
   approved, broken down, or filled by several orders.

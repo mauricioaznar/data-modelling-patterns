@@ -730,3 +730,77 @@ insert into responding_party (request_id, party_id, contact_mechanism_id, date_s
   (61001, 18, 31,   '2025-01-12'),
   (61002, 5,  7,    '2025-02-20'),
   (61001, 42, null, '2025-01-10');   -- DATA ERROR: sent two days before the request's date (caught by a query)
+
+-- ============================================================
+-- Fig 4.11 — Quotes
+-- ============================================================
+insert into quote_type (quote_type_id, description) values
+  ('PROPOSAL',      'Proposal: an approach and a price'),
+  ('PRODUCT_QUOTE', 'Product quote: prices for items'),
+  ('OTHER_QUOTE',   'Other quote');
+
+insert into quote_role_type (quote_role_type_id, description) values
+  ('PREPARER', 'Prepared the quote'),
+  ('APPROVER', 'Approved it'),
+  ('CONTACT',  'Answers questions about it');
+
+-- Pencils, for Table 4.14's "pens and pencils": Ch 3's catalogue had none.
+-- Category 4 is writing instruments.
+insert into product (product_id, product_kind, name, introduction_date, uom_id) values
+  (17, 'GOOD', 'Yellow #2 pencils, box of 12', '1995-01-01', 'BOX');
+
+select setval(pg_get_serial_sequence('product', 'product_id'), (select max(product_id) from product));
+
+insert into good (product_id, good_kind) values
+  (17, 'FINISHED_GOOD');
+
+insert into product_category_classification (product_id, product_category_id, from_date, thru_date, primary_flag, comment) values
+  (17, 4, '1995-01-01', null, true, null);
+
+-- The planned job Ridgeway's proposal prices (Ch 2's work_effort).
+insert into work_effort (work_effort_id, work_effort_type_id, name, description, scheduled_start_date, scheduled_completion_date,
+                         total_dollars_allowed, total_hours_allowed, estimated_hours) values
+  (5, 'PROJECT', 'Repair 29 PCs', 'Diagnose and repair ABC Corporation''s PCs on site', '2002-04-01', '2002-04-30', null, 120, 100);
+
+select setval(pg_get_serial_sequence('work_effort', 'work_effort_id'), (select max(work_effort_id) from work_effort));
+
+-- Table 4.14, with its ids: 36908's issue date read as 2002 (NOTES, point
+-- 22); the issuers and receivers are ours. Then ours, 62001 and 62002. Thru
+-- dates are exclusive: "valid until March 19" is stored as March 20.
+-- Parties: 4 Northwind, 12 ABC Corporation, 13 ABC Subsidiary, 16 ACME, 18
+-- Fantastic Supplies, 42 Paperline, 45 Ridgeway.
+insert into quote (quote_id, quote_type_id, issued_by_party_id, given_to_party_id, issue_date, valid_from_date, valid_thru_date, description) values
+  (35678, 'PROPOSAL',      45, 12, '2002-02-19', '2002-02-19', '2002-03-20', 'Proposal to support the repair of PCs'),
+  (36908, 'PRODUCT_QUOTE', 13, 16, '2002-03-12', '2002-03-12', '2002-03-31', 'Bid on pens and pencils'),
+  (62001, 'PRODUCT_QUOTE', 18, 4,  '2025-01-14', '2025-01-14', '2025-02-15', 'Bond paper at a volume price'),
+  (62002, 'PRODUCT_QUOTE', 42, 4,  '2025-01-15', '2025-01-15', '2025-01-31', 'Recycled bond paper');
+
+select setval(pg_get_serial_sequence('quote', 'quote_id'), (select max(quote_id) from quote));
+
+-- Request items (4.10): 1 23498's PC repair, 4 38948's pens, 7 61001's paper.
+-- Products: 1 Johnson's bond paper, 2 the pen, 12 recycled bond paper, 17 pencils.
+insert into quote_item (quote_item_id, quote_id, quote_item_seq_id, product_id, work_effort_id, request_item_id,
+                        quantity, quote_unit_price, estimated_delivery_date, comment) values
+  (1, 35678, 1, null, 5,    1,    29,  120.00, '2002-04-30', 'Per PC, on site'),
+  (2, 36908, 1, 2,    null, 4,    40,  11.50,  '2002-03-25', null),
+  (3, 36908, 2, 17,   null, null, 20,  1.80,   '2002-03-25', 'Not asked for: offered beside the pens'),
+  (4, 62001, 1, 1,    null, 7,    500, 30.00,  '2025-01-27', 'A volume price: 500 reams, not the 400 asked for'),
+  (5, 62002, 1, 12,   null, 7,    400, 31.50,  '2025-01-24', 'Recycled paper offered for white bond paper'),
+  (6, 62001, 2, null, null, null, 1,   45.00,  null,         'DATA ERROR: freight, naming neither a product nor a work effort (caught by a query)');
+
+select setval(pg_get_serial_sequence('quote_item', 'quote_item_id'), (select max(quote_item_id) from quote_item));
+
+-- Order lines (4.4): 16 12564's 500 reams, 24 12570's 200 reams.
+update order_item set quote_item_id = 4 where order_item_id = 16;   -- 12564 accepts Fantastic's quote
+update order_item set quote_item_id = 4 where order_item_id = 24;   -- DATA ERROR: 12570 (2023) accepting a 2025 quote (caught by a query)
+
+insert into quote_role (quote_id, party_id, quote_role_type_id) values
+  (62001, 3, 'CONTACT'),   -- Chloe, Northwind's buyer, for both answers to her RFQ
+  (62002, 3, 'CONTACT');
+
+-- Items: 4 Fantastic's paper, 5 Paperline's.
+insert into quote_term (term_type_id, quote_id, quote_item_id, term_value) values
+  ('PAYMENT_DUE_DAYS',           62001, null, 30),
+  ('DELIVERY_WITHIN_DAYS',       null,  4,    10),
+  ('NONPERFORMANCE_PENALTY_PCT', 35678, null, 5),
+  ('WARRANTY_MONTHS',            62002, 5,    3);   -- DATA ERROR: the quote AND an item (caught by a query)
