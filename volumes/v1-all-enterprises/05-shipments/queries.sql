@@ -95,3 +95,118 @@ from shipment
 where estimated_ready_date > estimated_ship_date
    or estimated_arrival_date < estimated_ship_date
    or latest_cancel_date > estimated_ship_date;
+
+-- ============================================================
+-- Fig 5.2 — Shipping detail
+-- ============================================================
+
+-- name: 5.2 — Shipment 9000's items, as Table 5.2 shows them
+select si.shipment_id, si.shipment_item_seq_id as item, si.quantity, p.name as good
+from shipment_item si
+join product p on p.product_id = si.product_id
+where si.shipment_id = 9000
+order by si.shipment_item_seq_id;
+
+-- name: 5.2 — The status history of shipments 9000 and 4800, as Table 5.3 shows it
+select s.shipment_id, t.description as status, s.status_datetime::date as status_date
+from shipment_status s
+join status_type t on t.status_type_id = s.status_type_id
+where s.shipment_id in (9000, 4800)
+order by s.shipment_id = 4800, s.status_datetime;
+
+-- name: 5.2 — Where each shipment stands now: its latest status, or none recorded
+select sh.shipment_id, st.description as shipment_type,
+       coalesce(t.description, '(none recorded)') as current_status, l.status_datetime as since
+from shipment sh
+join shipment_type st        on st.shipment_type_id = sh.shipment_type_id
+left join lateral (
+  select x.status_type_id, x.status_datetime
+  from shipment_status x
+  where x.shipment_id = sh.shipment_id
+  order by x.status_datetime desc
+  limit 1
+) l on true
+left join status_type t      on t.status_type_id = l.status_type_id
+order by sh.shipment_id;
+
+-- name: 5.2 — Planned against actual: did each shipment leave and arrive when its header said it would?
+-- The plan is on the header, the facts in the history; arriving means
+-- delivered or received, whichever came first.
+with actual as (
+  select shipment_id,
+         min(status_datetime) filter (where status_type_id = 'SHIPMENT_SHIPPED')                           as shipped_at,
+         min(status_datetime) filter (where status_type_id in ('SHIPMENT_DELIVERED', 'SHIPMENT_RECEIVED')) as arrived_at,
+         bool_or(status_type_id = 'SHIPMENT_CANCELLED')                                                   as cancelled
+  from shipment_status
+  group by shipment_id
+)
+select s.shipment_id, s.estimated_ship_date, a.shipped_at::date as shipped_on,
+       a.shipped_at::date - s.estimated_ship_date as days_late_leaving,
+       s.estimated_arrival_date, a.arrived_at::date as arrived_on,
+       a.arrived_at::date - s.estimated_arrival_date as days_late_arriving,
+       case when a.cancelled           then 'cancelled'
+            when a.shipped_at is null  then 'not shipped yet'
+            when a.arrived_at is null  then 'on its way'
+            else 'arrived' end as outcome
+from shipment s
+join actual a on a.shipment_id = s.shipment_id
+order by s.estimated_ship_date;
+
+-- name: 5.2 — Returns and what they answer: each line sent in response to another, with both shipments
+select r.shipment_id, rt.description as shipment_type, r.shipment_item_seq_id as line, p.name as good, r.quantity,
+       o.shipment_id as answers_shipment, ot.description as answers_type, o.shipment_item_seq_id as answers_line,
+       o.quantity as of_quantity
+from shipment_item r
+join shipment_item o         on o.shipment_item_id = r.in_response_to_shipment_item_id
+join shipment rs             on rs.shipment_id = r.shipment_id
+join shipment_type rt        on rt.shipment_type_id = rs.shipment_type_id
+join shipment os             on os.shipment_id = o.shipment_id
+join shipment_type ot        on ot.shipment_type_id = os.shipment_type_id
+left join product p          on p.product_id = r.product_id
+order by r.shipment_id, r.shipment_item_seq_id;
+
+-- name: 5.2 — Data-quality check: two lines with the same line number on one shipment (should be empty)
+select shipment_id, shipment_item_seq_id, count(*) as lines
+from shipment_item
+group by shipment_id, shipment_item_seq_id
+having count(*) > 1;
+
+-- name: 5.2 — Data-quality check: lines with neither a good nor a contents description (should be empty)
+select shipment_item_id, shipment_id, shipment_item_seq_id, quantity
+from shipment_item
+where product_id is null and shipment_contents_description is null;
+
+-- name: 5.2 — Data-quality check: shipment statuses that aren't shipment statuses (should be empty)
+select s.shipment_status_id, s.shipment_id, s.status_type_id, t.parent_type_id
+from shipment_status s
+join status_type t on t.status_type_id = s.status_type_id
+where t.parent_type_id is distinct from 'SHIPMENT_STATUS';
+
+-- name: 5.2 — Data-quality check: one status type twice on a shipment, against the book's identifier (should be empty)
+select shipment_id, status_type_id, count(*) as times,
+       string_agg(status_datetime::text, ', ' order by status_datetime) as at
+from shipment_status
+group by shipment_id, status_type_id
+having count(*) > 1;
+
+-- name: 5.2 — Data-quality check: events out of order: a later step dated before an earlier one, or anything after a cancellation (should be empty)
+with step as (
+  select s.*, array_position(array['SHIPMENT_SCHEDULED', 'SHIPMENT_SHIPPED', 'SHIPMENT_IN_ROUTE',
+                                   'SHIPMENT_DELIVERED', 'SHIPMENT_RECEIVED'], s.status_type_id) as n
+  from shipment_status s
+)
+select a.shipment_id, a.status_type_id as earlier_step, a.status_datetime as dated,
+       b.status_type_id as later_step, b.status_datetime as but_dated
+from step a
+join step b on b.shipment_id = a.shipment_id and b.n > a.n and b.status_datetime < a.status_datetime
+union all
+select c.shipment_id, c.status_type_id, c.status_datetime, x.status_type_id, x.status_datetime
+from shipment_status c
+join shipment_status x on x.shipment_id = c.shipment_id and x.status_datetime > c.status_datetime
+where c.status_type_id = 'SHIPMENT_CANCELLED';
+
+-- name: 5.2 — Data-quality check: lines answering a line of their own shipment (should be empty)
+select r.shipment_item_id, r.shipment_id, r.shipment_item_seq_id as line, o.shipment_item_seq_id as answers_line
+from shipment_item r
+join shipment_item o on o.shipment_item_id = r.in_response_to_shipment_item_id
+where o.shipment_id = r.shipment_id;

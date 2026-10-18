@@ -43,6 +43,15 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 2. **[5.1]** A customer shipment and a purchase return both leave one of our organizations
    for an outside party. If the direction is the same, what in the data tells them apart, and
    why keep them as two types?
+3. **[5.2]** The estimated ship and arrival dates sit on SHIPMENT; when it really shipped and
+   arrived sits in SHIPMENT STATUS. Why not an `actual_ship_date` column beside the estimate?
+   What does the history answer that the column couldn't?
+4. **[5.2]** SHIPMENT STATUS is identified by its shipment and its status type, where Ch 4's
+   ORDER STATUS has an id of its own. What can a shipment's history not record because of
+   that, and would you keep the book's identifier?
+5. **[5.2]** Ch 4 let a status sit on the whole order or on one item. A shipment's status sits
+   only on the shipment. When would a status per shipment item be missed, and what would you
+   reach for instead?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

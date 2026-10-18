@@ -27,4 +27,18 @@ erDiagram
   POSTAL_ADDRESS            |o--o{ SHIPMENT          : "the destination of (Ch 2)"
   CONTACT_MECHANISM         |o--o{ SHIPMENT          : "used to inquire about (Ch 2)"
   TELECOMMUNICATIONS_NUMBER |o--o{ SHIPMENT          : "the receiving contact number for (Ch 2)"
+
+  %% Fig 5.2 — Shipping detail
+  SHIPMENT_ITEM {
+    int     shipment_item_id PK
+    int     shipment_id FK
+    int     shipment_item_seq_id "line number"
+    int     product_id FK "a good, or null"
+    numeric quantity
+  }
+  SHIPMENT                  ||--o{ SHIPMENT_ITEM     : "composed of"
+  GOOD                      |o--o{ SHIPMENT_ITEM     : "shipped via (Ch 3)"
+  SHIPMENT_ITEM             |o--o{ SHIPMENT_ITEM     : "generating (in response to)"
+  SHIPMENT                  ||--o{ SHIPMENT_STATUS   : "tracked using"
+  STATUS_TYPE               ||--o{ SHIPMENT_STATUS   : "used to define (Ch 2, SHIPMENT_STATUS group)"
 ```

@@ -112,7 +112,83 @@ July (a drop shipment). The table has no customer return.
   called off. Only the actual cost is a fact. When it really shipped and arrived goes into
   Fig 5.2's status history.
 
-### Points to discuss after the overview (Figs 5.1–5.1 so far)
+### Fig 5.2 — Shipping detail
+**Transcription** (accepted: ☐; one photo, with Tables 5.2 and 5.3 and the text between
+them; open points under "To check against the book")
+
+```
+SHIPMENT ITEM
+  # shipment_item_seq_id
+  * quantity
+  o shipment_contents_description
+  -> SHIPMENT                (many "part of" 1 shipment, bar: part of the identifier;
+                              shipment "composed of" many)
+  -> GOOD                    (many "a shipment of" 1 good; good "shipped via" many)
+  -> SHIPMENT ITEM           (many "in response to" 1 item; item "generating" many;
+                              dashed at both ends)
+
+SHIPMENT STATUS              (no identifier of its own: both lines carry a bar)
+  * status_date
+  -> SHIPMENT                (many "the history for" 1 shipment, bar; shipment "tracked
+                              using" many)
+  -> SHIPMENT STATUS TYPE    (many "defined using" 1 type, bar; type "used to define" many)
+
+SHIPMENT STATUS TYPE         (no attributes drawn)
+SHIPMENT                     (as 5.1: the same attributes and subtypes)
+GOOD                         (Ch 3)
+```
+
+**Table 5.2** (shipment items, the book's sample, in our words): shipment 9000, the customer
+shipment to ACME, carries three lines: 1,000 Jones #2 pencils, 1,000 Goldstein Elite pens and
+100 boxes of HD diskettes. The column is headed "inventory item", though the text beside it
+says the inventory items may not be known when a shipment is scheduled, and that they reach
+the shipment item only through entities shown later in the chapter (shipment receipt and
+item issuance).
+
+**Table 5.3** (shipment statuses, in our words): 9000 was scheduled on March 4, 2001 (the day
+it was first recorded), shipped on March 7 and received the same day. Drop shipment 4800 was
+scheduled on July 9 and cancelled on July 10, both printed with the year 2002.
+
+**The text beside them**, in short: possible statuses are scheduled, shipped, in route,
+delivered and cancelled. The estimated ship and arrival dates stay on SHIPMENT; SHIPMENT
+STATUS records the dates (and times, when needed) things actually happened.
+
+**To check against the book**
+- The GOOD line read as optional at the item end: an item names a good or describes its
+  contents (a sample, documents, display stands) in its contents description (point 5).
+- "In response to" is dashed at both ends: an item may answer one other item, and an item
+  may be answered by many (point 10).
+- SHIPMENT STATUS has no identifier attribute: its two barred lines identify it, so a
+  shipment has at most one status of each type (point 6).
+- SHIPMENT STATUS TYPE drawn alone with no attributes: read as another group in Ch 2's
+  STATUS TYPE, as Ch 4 did for order statuses (point 7).
+- Table 5.3 dates 4800's statuses in 2002, while Table 5.1 expects it to ship on July 12,
+  2001: read as 2001 (point 8).
+- Table 5.3 says "received" where the text lists "delivered": both kept (point 9).
+- Table 5.2's "inventory item" column holds products: read as the good.
+
+**Discussion**
+- **Header + items again.** The shipment is the truck; its items are what's on it, numbered
+  within it (the bar on "part of"). An item is a good and a quantity, not an order line: one
+  shipment line can carry goods for several order lines, which Fig 5.3 records.
+- **What isn't a catalogue good** still travels: the contents description says what it is.
+- **"In response to" covers returns and replacements with one line.** A customer return's
+  line answers the line of the customer shipment it came from; a replacement line could
+  answer the return. The shipment's type says which case it is. Ours: 9600 returns 50 of
+  9000's pens; 1578 returns 100 of 1146's pencils.
+- **The plan on the header, the facts in a history.** Comparing the estimated ship date with
+  the "shipped" status answers "did it leave on time?", and the estimated arrival with
+  "delivered" or "received" answers "did it arrive on time?" The current status is the
+  latest row. (Ponder 3.)
+- **One status of each type per shipment.** The two bars make shipment + type the
+  identifier: a shipment is shipped once, received once. Ch 4's ORDER STATUS had an id of its
+  own and could repeat a status. A truck sent back to the depot and out again can't record
+  "in route" twice here. (Ponder 4.)
+- **Status on the shipment only, never on one item,** unlike Ch 4's order or item status.
+  The items travel together; what was received or rejected line by line is for the receipt
+  entities the text promises. (Ponder 5.)
+
+### Points to discuss after the overview (Figs 5.1–5.2 so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing. The list moves under the chapter's last figure as figures arrive.
@@ -130,6 +206,23 @@ the literal drawing. The list moves under the chapter's last figure as figures a
 4. **Table 5.1, 4800's drop ship:** ACME, our customer everywhere else, ships to Sellers
    Assistance. Read as a drop ship ABC arranged, with ACME as the supplier this time.
    Nothing records that hat, since the shipment points at parties, not roles.
+5. **5.2, the GOOD line optional:** an item names a good or describes what it carries. An
+   item with neither is a data-quality query. If the line is drawn mandatory, the contents
+   description is only a note beside the good.
+6. **5.2, SHIPMENT STATUS identified by shipment + type:** one row per status type, built as
+   a surrogate key plus a data-quality query, as for Ch 4's identifiers. It can't record a
+   status twice (out for delivery, back, out again). Was that Silverston's intention, or are
+   the bars a slip, since ORDER STATUS has an id of its own?
+7. **5.2, status types in Ch 2's `status_type`:** a SHIPMENT_STATUS group beside Ch 4's
+   ORDER_STATUS. Settle with Ch 4's point 15 (shared status table vs a lookup per kind).
+8. **Table 5.3, 4800's year:** printed 2002, read as 2001: Table 5.1 expects the shipment to
+   leave on July 12, 2001, three days after it was scheduled.
+9. **Table 5.3, received or delivered:** the text lists "delivered", the table uses
+   "received". Both kept as types: delivered when the carrier hands it over, received when
+   the receiver takes it in. If Silverston meant one thing, one goes.
+10. **5.2, what "in response to" may join:** read as an item answering one item on another
+    shipment (a return, a replacement). Nothing drawn says which kinds may answer which;
+    the only check is that an item doesn't answer an item of its own shipment.
 
 ## Design decisions (book → SQL)
 
@@ -161,6 +254,32 @@ the literal drawing. The list moves under the chapter's last figure as figures a
   Street (General Goods) and 400 Benny Street (Sellers Assistance), with cities of ours;
   ACME's receiving dock phone and ABC Subsidiary's shipping desk e-mail. The estimated
   ready dates, costs and handling instructions are ours.
+
+### Fig 5.2
+- **`shipment_item` has a surrogate key and the line number** `shipment_item_seq_id`. The
+  line number's uniqueness within its shipment (the bar) is a data-quality query (seed: 1149
+  has two lines numbered 1).
+- **`product_id` references `good`,** Ch 3's subtype table, since the line lands on GOOD; a
+  service can't be shipped. Nullable (point 5): an item with neither a good nor a contents
+  description is a data-quality query (seed: 1578's line 2).
+- **`quantity` is `not null` and positive,** in the good's unit of measure.
+- **`in_response_to_shipment_item_id`,** a nullable self-reference. An item answering an item
+  of its own shipment is a data-quality query (point 10; seed: 9600's line 2).
+- **`shipment_status` has a surrogate key** (point 6): one status type twice on a shipment
+  is a data-quality query (seed: 9200 shipped twice, the second keyed a few hours later).
+- **SHIPMENT STATUS TYPE → a SHIPMENT_STATUS group in Ch 2's `status_type`** (point 7), as
+  Ch 4's order statuses: scheduled, shipped, in route, delivered, received and cancelled. A
+  status from another group is a data-quality query (seed: Ch 4's ORDER_SHIPPED on 1149).
+- **`status_datetime` is a `timestamptz`** (STATUS DATE in the book), as `order_status`: the
+  text allows times. The current status is the latest row.
+- **The events in order** is a data-quality query: a later step (shipped, in route,
+  delivered, received) dated before an earlier one, or anything after a cancellation (seed:
+  1146 received the day before it shipped).
+- **Seed:** Table 5.2's lines on 9000, and Table 5.5's (shared with Fig 5.3) on 9200 and 9400;
+  Table 5.3's statuses on 9000 and 4800 (read as 2001, point 8). The other lines and
+  statuses are ours. New to Ch 3's catalogue: the Jones #2 pencil and the standard eraser,
+  sold each; the HD diskettes are Ch 3's box of 3½-inch diskettes (1.44 MB), as Ch 4 read
+  them.
 
 ## When NOT to use this
 - **A shop that ships each order once, whole, to one address** can keep a ship date and a
