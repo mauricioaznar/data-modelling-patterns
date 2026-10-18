@@ -42,7 +42,9 @@ report instead of skipping it silently.
 ## 4. The architecture figure (no SQL)
 - Transcription (entities and lines), "What it adds or settles", a `**How it flows**` of
   about ten lines (hubs, how each submodel hands over to the next, what plugs in from earlier
-  chapters, which alternates win) and its points to discuss. Commit.
+  chapters, which alternates win) and its points to discuss.
+- Rewrite the chapter's section in the volume's `MAP.md` from that How it flows, mark it ✓,
+  and fix any hub-table line it contradicts. Commit.
 
 ## 5. Doc and cards, for each submodel whose figures are now built
 1. Design reference doc (load the docs skill first): the entry's five sections (questions,

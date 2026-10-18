@@ -102,6 +102,10 @@ and any decisions made.
   reference entry (draft), Core patterns gains Ch 4 examples on seven rows and a new pattern
   (amendment kept beside the original), a question index row, roadmap "6 submodels so far".
   Card 15; Anki export 25 cards.
+- `volumes/v1-all-enterprises/MAP.md`: a one-page map of how Vol 1's chapters connect (the
+  chain from need to books, the shapes that repeat, a section per chapter, the hub entities
+  and which chapters hang lines on them). Ch 2, Ch 3 and Ch 4 up to Fig 4.13 come from the
+  repo (✓); Ch 4's rest and Ch 5–9 are Claude's recall, marked ~ and unverified.
 
 **Decisions**
 - A card joins the morning study loop at its chapter's overview, not when its figures are
@@ -132,6 +136,10 @@ and any decisions made.
   them); "owner" of a part; Table 4.12's 23498 read as 2002 and 38967 as an RFP; Table 4.14's
   36908 read as issued in 2002.
 - Submodel 6 is *agreements* (Figs 4.12–4.13); later agreement figures may join it.
+- Cross-chapter context comes from the short volume map, not from drafting all eight
+  chapters ahead (the user's call). CLAUDE.md sends sessions to it for cross-chapter
+  questions; `/figures` rewrites a chapter's section from its How it flows at the
+  architecture figure. Nothing is built from a ~ line.
 - Readings left for the overview (NOTES, points 23–28): Table 4.16's 10002 linked to Ch 2's
   only ACME customer relationship (ABC Subsidiary's) though it names ABC Corporation; the
   agreement subtypes as type rows; an agreement starting while its relationship is current;

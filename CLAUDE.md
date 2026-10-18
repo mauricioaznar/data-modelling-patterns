@@ -130,6 +130,9 @@ the user, tease with nicknames, so the sessions stay fun.
   chapter's `STATUS.md` to pick up where we left off.
 - **Keep context small:** read files in slices (the section you need, found with grep), not
   whole. Later chapters reach earlier ones through `NOTES.md`, not schema or seed.
+- **Cross-chapter questions:** read the volume's `MAP.md` first (e.g.
+  `volumes/v1-all-enterprises/MAP.md`), then only the slices it points to. Its `~` lines are
+  Claude's recall, unverified: never build from them.
 - **`TODO.md`:** tick items as they are done and add new ones as they come up (chapters, open
   decisions, follow-ups). Keep the README progress table in sync when a chapter's status changes.
 - **Missing tools:** when a task would need a tool that isn't installed (Python, Postgres, Docker,
