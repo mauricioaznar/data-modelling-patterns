@@ -315,6 +315,33 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   which would take the assemblies and leave the component link only the packages.
 </details>
 
+### Card 10 · V1 Ch 4 · Orders, items and order parties (Figs 4.1–4.3)
+- **Cue:** "What was ordered, which way, at what price, and who placed, took, pays and receives it?"
+- **Hook:** one order pad, two desks *(Claude's, drafted when the figures landed)*
+- **Mantra:** One order for buying and selling; items name a product or feature; roles name
+  placer, taker, bill-to, ship-to, and anyone else.
+
+<details><summary>Key</summary>
+
+- **S:** `"order"` (the header: order date, entry date; `order_kind` SALES or PURCHASE) ·
+  `order_item` (one line, numbered within its order: quantity and the unit price agreed that
+  day; for a product **or** a feature, the feature's line "ordered for" the product's line) ·
+  `sales_order_item` (the customer's PO number per line, and the ship-to role and address) ·
+  `sales_order` (placed by, taken by, bill-to: party roles; placed using, taken via, billed
+  to: contact mechanisms) · `order_role` + `order_role_type` (anyone else on the order: a
+  salesperson with a percent share, an approver).
+- **W:** Fig 4.1's twin models: sales order + customer and purchase order + supplier, copies of
+  each other. Every rule and report written twice, a party that buys and sells is two unrelated
+  rows, one party per order, and no place for a feature or a ship-to per line.
+- **T:** *(the naive-model trap until practice gives yours)* pricing an old order from today's
+  price list: the item keeps the price agreed that day, because price components change. And
+  pointing an order at a PARTY: it loses which hat the party wore (placer or bill-to).
+- **D:** order ← item (part of) → product | feature; item → item (ordered for); sales_order
+  (= order) → party_role ×3 and → contact_mechanism ×3; sales_order_item (= item) →
+  party_role (ship-to), → contact_mechanism (ship-to); order ← order_role → party, →
+  order_role_type. Not built: 4.1's twin model.
+</details>
+
 ---
 
 ## Deck: architecture

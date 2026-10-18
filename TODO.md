@@ -49,7 +49,7 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [ ] Submodel 3: communication events and case (reinforce case + work effort, scenario, doc entry)
   - [ ] Confirm PERSON NAME → PERSON NAME TYPE optionality against the book
   - [ ] Try enforcing non-overlapping from/thru periods (exclusion constraint with `btree_gist`; check PGlite support)
-  - [ ] Refactor `role_type` into a ROLE TYPE supertype with a PARTY ROLE TYPE subtype once another role-type subtype appears (see NOTES, Fig 2.4)
+  - [ ] Refactor `role_type` into a ROLE TYPE supertype with a PARTY ROLE TYPE subtype once another role-type subtype appears (see NOTES, Fig 2.4). Triggered 2026-10-18: Ch 4's ORDER ROLE TYPE (built as its own lookup; Ch 4 NOTES, point 5, decides at its overview)
 - [ ] Ch 03: Products *(Figs 3.1–3.6 built and confirmed by 2026-10-11; submodel 1 exam done 2026-10-12)*
   - [ ] Submodel 1: product definition, categories, identification (Figs 3.1–3.3): exam done 2026-10-12; reinforce 2026-10-14: classification 2 → 3 and market interest neighbourhood done (both await the user's OK to close); paused by the user's choice to build mental models for submodels 2–3 first; still to do: rollup, good/service, identification neighbourhood, scenario, doc entry
   - [ ] Submodel 2: product features (Fig 3.4): walk-through and questions 2026-10-14, all three rows at 3; parked before the neighbourhood question (asked, unanswered); still to do: neighbourhood + OK to close, scenario, doc entry
@@ -72,7 +72,12 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [x] Cards: a pattern card for P8 · catalogue vs physical instance (new in the doc's Core patterns) (2026-10-16)
   - [ ] Align the doc's Core patterns rows with cards P1–P8 at the overview
   - [ ] Ch 3 overview: the user's feedback on the points to discuss, the doc drafts and the cards; refactor from it; card pass (pattern cards, `npm run cards:anki`); then practice resumes
-- [ ] Ch 04: Ordering Products
+- [ ] Ch 04: Ordering Products *(Figs 4.1–4.3 shared and built 2026-10-18)*
+  - [x] Figs 4.1–4.3 (2026-10-18): 4.1 transcribed, not built (the book's straw man); 4.2 and 4.3 built; ponders 1–3; doc draft and card 10 for submodel 1
+  - [ ] Share the rest of Ch 4's figures
+  - [ ] Submodel 1: orders, items and order parties (Figs 4.1–4.3 so far): if the next figures (purchase order parties, say) join it, its `Figs` grow in STATUS.md and on card 10, and Anki sees a new note (delete the old one)
+  - [ ] Ch 4 overview: the five points to discuss in NOTES (4.1 not built, product or feature on an item, optional party lines and the bill-to fallback, ORDER ROLE's identifier, ORDER ROLE TYPE vs Ch 2's ROLE TYPE)
+  - [ ] Pattern cards for the two patterns new to Core patterns (specific lines beside a generic role; snapshot of an agreed value), at the Ch 4 card pass
 - [ ] Ch 05: Shipments
   - [ ] Check SHIPMENT RECEIPT and ITEM ISSUANCE link to INVENTORY ITEM (recalled 2026-10-15); add the qoh = balance data-quality query (Ch 3 NOTES, Fig 3.6 vocabulary)
 - [ ] Ch 06: Work Effort

@@ -3,6 +3,45 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-18
+
+**Built**
+- Ch 4 (Ordering Products) started from the template, with its first three figures (photos):
+  4.1 standard order model, 4.2 orders and order items, 4.3 sales order parties and contact
+  mechanisms. All transcribed into NOTES, each with its "To check against the book" list.
+- Fig 4.1 transcribed, not built: the book's straw man (twin sales and purchase models), which
+  4.2 replaces.
+- Fig 4.2 built: `"order"` (quoted, a reserved word) with `order_kind`, `order_item` (line
+  number, agreed unit price, for a product or a feature, "ordered for" another item) and
+  `sales_order_item` (the customer's PO number). Seed: Table 4.2's order 12560 and seven more.
+  Queries: the order as a tree, agreed vs list price, one query for both directions, and six
+  data-quality checks, each catching a deliberate bad row.
+- Fig 4.3 built: `sales_order` (placed by, taken by, bill-to as party roles; placed using,
+  taken via, billed to as contact mechanisms), ship-to on `sales_order_item`, and `order_role`
+  with `order_role_type` and percent shares. A new PLACING_CUSTOMER role type, Contoso's St.
+  Louis depot, a `contact_mechanism_display_name` helper view. Queries: who placed, took and
+  pays (the placer when no bill-to), where each item ships, salespeople's credit, every party on
+  an order, and five data-quality checks.
+- Ponders 1–3; ER diagram; design reference entry *Orders, items and order parties* (draft),
+  Core patterns gains a Ch 4 column and two patterns (specific lines beside a generic role;
+  snapshot of an agreed value), a question index row, roadmap Ch 4 In progress. Card 10; Anki
+  export 20 cards.
+- The data explorer now reads a quoted table name (`create table "order"`).
+
+**Decisions**
+- Submodel 1 is *orders, items and order parties* (Figs 4.1–4.3 so far); later figures on the
+  same questions join it.
+- Readings left for the Ch 4 overview (NOTES, points 1–5): 4.1 not built; an item names a
+  product or a feature, not both (no arc drawn); every party line optional, with the bill-to
+  falling back to the placer; ORDER ROLE identified by order + party + type; ORDER ROLE TYPE
+  kept as its own lookup, though it triggers TODO's ROLE TYPE refactor.
+
+**Next**
+- Share the rest of Ch 4's figures.
+- Re-import `docs/cards-anki.txt` in Anki (card 10 is new).
+- Still open from 2026-10-17: the associations walk-through (substitute direction), the pricing
+  column review, and the Ch 3 overview discussion.
+
 ## 2026-10-17
 
 **Built**
