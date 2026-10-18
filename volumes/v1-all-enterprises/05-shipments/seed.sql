@@ -176,3 +176,115 @@ insert into shipment_status (shipment_status_id, shipment_id, status_type_id, st
   (27, 9600, 'SHIPMENT_RECEIVED',  '2001-03-19 10:00+00');
 
 select setval(pg_get_serial_sequence('shipment_status', 'shipment_status_id'), (select max(shipment_status_id) from shipment_status));
+
+-- ============================================================
+-- Fig 5.3 — Shipment-to-order relationship
+-- ============================================================
+-- New Ch 2 roles for purchase order 300 (Ch 4's buyer-side roles).
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (75, 12, 'SHIP_TO_BUYER', '1998-03-04', null),   -- ABC Corporation receives what ABC buys
+  (76, 49, 'SUPPLIER',      '2000-01-01', null);   -- General Goods
+
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+-- Table 5.4's orders 100 and 200 (dates ours), our purchase order 300 behind
+-- shipments 1146 and 1149, and our sales order 400, which carries mistakes.
+-- Roles: 60 ACME placing, 67 ACME bill-to, 68 ACME ship-to, 32 ABC
+-- Subsidiary internal, 69 ABC Subsidiary placing buyer, 70 ABC Corporation
+-- bill-to purchaser, 75 its ship-to buyer role, 76 General Goods supplier.
+-- Mechanisms: 32 234 Stretch Street, 33 100 Main Street, 34 2300 Drident
+-- Avenue, 41 300 Jennifer Street.
+insert into "order" (order_id, order_kind, order_date, entry_date) values
+  (100, 'SALES',    '2001-03-01', '2001-03-01'),
+  (200, 'SALES',    '2001-03-05', '2001-03-05'),
+  (300, 'PURCHASE', '2001-03-10', '2001-03-10'),
+  (400, 'SALES',    '2001-03-20', '2001-03-20');
+
+insert into sales_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id,
+                         placed_using_contact_mechanism_id, taken_via_contact_mechanism_id, bill_to_contact_mechanism_id) values
+  (100, 60, 32, 67, 32, 33, 32),
+  (200, 60, 32, 67, 32, 33, 32),
+  (400, 60, 32, 67, 32, 33, 32);
+
+insert into purchase_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id,
+                            placed_using_contact_mechanism_id, taken_via_contact_mechanism_id, bill_to_contact_mechanism_id) values
+  (300, 69, 76, 70, 33, 41, 33);
+
+-- Table 5.4's lines, the prices ours. Each pen line gets a blue feature line
+-- under it, for Table 5.7 (NOTES, point 14). Goods: 2 pen, 3 diskettes, 20
+-- pencil, 21 eraser; feature 3 blue.
+insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, product_feature_id, ordered_for_order_item_id,
+                        quantity, unit_price, comment) values
+  (35, 100, 1, 20,   null, null, 1500, 0.25,  null),
+  (36, 100, 2, 2,    null, null, 2500, 12.00, null),
+  (37, 100, 3, 21,   null, null, 350,  0.40,  null),
+  (38, 100, 4, null, 3,    36,   2500, 0.00,  'Blue: Table 5.7'),
+  (39, 200, 1, 2,    null, null, 300,  12.00, null),
+  (40, 200, 2, 3,    null, null, 200,  7.00,  null),
+  (41, 200, 3, null, 3,    39,   300,  0.00,  'Blue: Table 5.7'),
+  (42, 300, 1, 20,   null, null, 2000, 0.10,  null),
+  (43, 300, 2, 21,   null, null, 500,  0.20,  null),
+  (44, 400, 1, 21,   null, null, 200,  0.40,  null),
+  (45, 400, 2, 20,   null, null, 100,  0.25,  'For ACME''s delivery address, not its head office'),
+  (46, 400, 3, 3,    null, null, 50,   7.00,  null);
+
+select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max(order_item_id) from order_item));
+
+-- Everything to ACME's head office, except order 400's pencils. A feature
+-- line ships with its product line (no row of its own).
+insert into sales_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
+  (35, 68, 32), (36, 68, 32), (37, 68, 32), (38, null, null),
+  (39, 68, 32), (40, 68, 32), (41, null, null),
+  (44, 68, 32), (45, 68, 34), (46, 68, 32);
+
+insert into purchase_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
+  (42, 75, 33),
+  (43, 75, 33);
+
+-- Ours: customer shipment 9500 to ACME, the one carrying the mistakes below.
+insert into shipment (shipment_id, shipment_type_id, estimated_ship_date, estimated_arrival_date,
+                      shipped_from_party_id, shipped_from_contact_mechanism_id, shipped_to_party_id, shipped_to_contact_mechanism_id,
+                      inquiry_contact_mechanism_id) values
+  (9500, 'CUSTOMER_SHIPMENT', '2001-03-28', '2001-03-30', 13, 40, 16, 32, 44);
+
+insert into shipment_item (shipment_item_id, shipment_id, shipment_item_seq_id, product_id, quantity) values
+  (17, 9500, 1, 21, 150),
+  (18, 9500, 2, 20, 100),
+  (19, 9500, 3, 20, 50),
+  (20, 9500, 4, 21, 60);
+
+select setval(pg_get_serial_sequence('shipment_item', 'shipment_item_id'), (select max(shipment_item_id) from shipment_item));
+
+insert into shipment_status (shipment_status_id, shipment_id, status_type_id, status_datetime) values
+  (28, 9500, 'SHIPMENT_SCHEDULED', '2001-03-26 09:00+00'),
+  (29, 9500, 'SHIPMENT_SHIPPED',   '2001-03-28 08:00+00');
+
+select setval(pg_get_serial_sequence('shipment_status', 'shipment_status_id'), (select max(shipment_status_id) from shipment_status));
+
+-- Table 5.6, then ours. Order lines: 35-37 order 100, 39-40 order 200, 42-43
+-- purchase order 300, 44-46 order 400. Shipment lines: 1-3 on 9000, 4-6 on
+-- 9200, 7 on 9400, 8 on 1146, 9-10 on 1149, 17-20 on 9500.
+insert into order_shipment (order_shipment_id, order_item_id, shipment_item_id, quantity) values
+  (1,  35, 1,  1000),   -- order 100's pencils, part one ...
+  (2,  35, 7,  500),    --   ... and the rest, on 9400
+  (3,  36, 2,  700),    -- 9000's pen line fills order 100 ...
+  (4,  37, 4,  350),
+  (5,  39, 2,  300),    --   ... and order 200 at once
+  (6,  40, 3,  100),
+  (7,  40, 5,  100),
+  (8,  42, 8,  1200),   -- ours from here: purchase order 300 delivered in two
+  (9,  42, 9,  800),
+  (10, 43, 10, 500),
+  (11, 44, 17, 200),    -- DATA ERROR: 200 drawn on a line of 150 erasers (caught by a query)
+  (12, 45, 18, 100),    -- DATA ERROR: the line ships to 2300 Drident Avenue, 9500 goes to 234 Stretch Street (caught by a query)
+  (13, 46, 19, 50),     -- DATA ERROR: diskettes filled by a line of pencils (caught by a query)
+  (14, 43, 20, 60);     -- DATA ERROR: a purchase line filled by a customer shipment (caught by two queries: direction and destination)
+
+select setval(pg_get_serial_sequence('order_shipment', 'order_shipment_id'), (select max(order_shipment_id) from order_shipment));
+
+-- Table 5.7: 9000's pen line went out black (feature 4). Then a mistake.
+insert into shipment_item_feature (shipment_item_feature_id, shipment_item_id, product_feature_id) values
+  (1, 2, 4),
+  (2, 2, 4);   -- DATA ERROR: the same feature twice on the line (caught by a query)
+
+select setval(pg_get_serial_sequence('shipment_item_feature', 'shipment_item_feature_id'), (select max(shipment_item_feature_id) from shipment_item_feature));

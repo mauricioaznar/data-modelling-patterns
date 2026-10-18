@@ -210,3 +210,176 @@ select r.shipment_item_id, r.shipment_id, r.shipment_item_seq_id as line, o.ship
 from shipment_item r
 join shipment_item o on o.shipment_item_id = r.in_response_to_shipment_item_id
 where o.shipment_id = r.shipment_id;
+
+-- ============================================================
+-- Fig 5.3 — Shipment-to-order relationship
+-- ============================================================
+
+-- name: 5.3 — Order lines against shipment lines, as Table 5.6 shows them
+select oi.order_id, oi.order_item_seq_id as order_line, si.shipment_id, si.shipment_item_seq_id as shipment_line,
+       os.quantity as quantity_shipped
+from order_shipment os
+join order_item oi     on oi.order_item_id = os.order_item_id
+join shipment_item si  on si.shipment_item_id = os.shipment_item_id
+where oi.order_id in (100, 200)
+order by oi.order_id, oi.order_item_seq_id, si.shipment_id;
+
+-- name: 5.3 — How each order line was filled: ordered, shipped, still to ship, and on which shipments
+-- "Shipped in full" is a sum, not a status. Feature lines ship with their
+-- product line, so they're left out.
+select oi.order_id, o.order_kind, oi.order_item_seq_id as line, p.name as product, oi.quantity as ordered,
+       coalesce(sum(os.quantity), 0) as shipped,
+       oi.quantity - coalesce(sum(os.quantity), 0) as to_ship,
+       string_agg(si.shipment_id || ' (' || os.quantity || ')', ', ' order by si.shipment_id) as shipments,
+       case when coalesce(sum(os.quantity), 0) = 0 then 'not shipped'
+            when sum(os.quantity) < oi.quantity    then 'partly shipped'
+            when sum(os.quantity) = oi.quantity    then 'shipped in full'
+            else 'shipped beyond the order: review' end as state
+from order_item oi
+join "order" o               on o.order_id = oi.order_id
+join product p               on p.product_id = oi.product_id
+left join order_shipment os  on os.order_item_id = oi.order_item_id
+left join shipment_item si   on si.shipment_item_id = os.shipment_item_id
+where oi.order_id in (100, 200, 300, 400)
+group by oi.order_item_id, oi.order_id, o.order_kind, oi.order_item_seq_id, p.name, oi.quantity
+order by oi.order_id, oi.order_item_seq_id;
+
+-- name: 5.3 — Shipment lines that fill lines of more than one order (one line of pens, two orders)
+select si.shipment_id, si.shipment_item_seq_id as line, p.name as good, si.quantity,
+       count(distinct oi.order_id) as orders,
+       string_agg('order ' || oi.order_id || ' line ' || oi.order_item_seq_id || ' (' || os.quantity || ')', ', '
+                  order by oi.order_id) as order_lines
+from shipment_item si
+join order_shipment os  on os.shipment_item_id = si.shipment_item_id
+join order_item oi      on oi.order_item_id = os.order_item_id
+join product p          on p.product_id = si.product_id
+group by si.shipment_item_id, si.shipment_id, si.shipment_item_seq_id, p.name, si.quantity
+having count(distinct oi.order_id) > 1;
+
+-- name: 5.3 — Which orders each shipment fills, worked out through its lines (no line joins an order to a shipment)
+select sh.shipment_id, st.description as shipment_type,
+       string_agg(distinct oi.order_id::text, ', ' order by oi.order_id::text) as orders
+from shipment sh
+join shipment_type st   on st.shipment_type_id = sh.shipment_type_id
+join shipment_item si   on si.shipment_id = sh.shipment_id
+join order_shipment os  on os.shipment_item_id = si.shipment_item_id
+join order_item oi      on oi.order_item_id = os.order_item_id
+group by sh.shipment_id, st.description
+order by sh.shipment_id;
+
+-- name: 5.3 — For review: shipment lines no order line accounts for in full (returns and transfers fill no order; 9200's line 3 is Table 5.5's own)
+select si.shipment_id, st.description as shipment_type, si.shipment_item_seq_id as line,
+       coalesce(p.name, si.shipment_contents_description) as contents, si.quantity,
+       coalesce(sum(os.quantity), 0) as claimed_by_orders,
+       case when sh.shipment_type_id in ('CUSTOMER_RETURN', 'PURCHASE_RETURN', 'TRANSFER') then 'no order expected'
+            else 'review' end as note
+from shipment_item si
+join shipment sh             on sh.shipment_id = si.shipment_id
+join shipment_type st        on st.shipment_type_id = sh.shipment_type_id
+left join product p          on p.product_id = si.product_id
+left join order_shipment os  on os.shipment_item_id = si.shipment_item_id
+group by si.shipment_item_id, si.shipment_id, st.description, sh.shipment_type_id, si.shipment_item_seq_id,
+         p.name, si.shipment_contents_description, si.quantity
+having coalesce(sum(os.quantity), 0) < si.quantity
+order by si.shipment_id, si.shipment_item_seq_id;
+
+-- name: 5.3 — Ordered features against shipped features, as Table 5.7 shows them (blue ordered, black shipped)
+-- What was ordered: the feature lines under the order line (Ch 4). What went
+-- out: the shipment line's features. ORDER SHIPMENT sets them side by side.
+with ordered as (
+  select f.ordered_for_order_item_id as order_item_id,
+         string_agg(t.description || ' ' || lower(pf.description), ', ' order by pf.description) as features
+  from order_item f
+  join product_feature pf       on pf.product_feature_id = f.product_feature_id
+  join product_feature_type t   on t.product_feature_type_id = pf.product_feature_type_id
+  where f.ordered_for_order_item_id is not null
+  group by f.ordered_for_order_item_id
+),
+shipped as (
+  select sf.shipment_item_id,
+         string_agg(distinct t.description || ' ' || lower(pf.description), ', ') as features
+  from shipment_item_feature sf
+  join product_feature pf       on pf.product_feature_id = sf.product_feature_id
+  join product_feature_type t   on t.product_feature_type_id = pf.product_feature_type_id
+  group by sf.shipment_item_id
+)
+select oi.order_id, oi.order_item_seq_id as order_line, o.features as ordered_features, oi.quantity,
+       si.shipment_id, si.shipment_item_seq_id as shipment_line, si.quantity as quantity_shipped,
+       s.features as shipped_features,
+       case when o.features is not distinct from s.features then 'as ordered' else 'differs' end as outcome
+from order_shipment os
+join order_item oi       on oi.order_item_id = os.order_item_id
+join shipment_item si    on si.shipment_item_id = os.shipment_item_id
+left join ordered o      on o.order_item_id = oi.order_item_id
+left join shipped s      on s.shipment_item_id = si.shipment_item_id
+where o.features is not null or s.features is not null
+order by oi.order_id, oi.order_item_seq_id;
+
+-- name: 5.3 — Data-quality check: the same pair twice, in order_shipment or shipment_item_feature (should be empty)
+select 'order_shipment' as table_name, order_item_id as first_id, shipment_item_id as second_id, count(*) as times
+from order_shipment
+group by order_item_id, shipment_item_id
+having count(*) > 1
+union all
+select 'shipment_item_feature', shipment_item_id, product_feature_id, count(*)
+from shipment_item_feature
+group by shipment_item_id, product_feature_id
+having count(*) > 1;
+
+-- name: 5.3 — Data-quality check: order lines filled by a shipment line of another good (should be empty)
+-- A feature line's product is its product line's.
+select os.order_shipment_id, oi.order_id, oi.order_item_seq_id as order_line, op.name as ordered,
+       si.shipment_id, si.shipment_item_seq_id as shipment_line, sp.name as shipped
+from order_shipment os
+join order_item oi           on oi.order_item_id = os.order_item_id
+left join order_item parent  on parent.order_item_id = oi.ordered_for_order_item_id
+join shipment_item si        on si.shipment_item_id = os.shipment_item_id
+left join product op         on op.product_id = coalesce(oi.product_id, parent.product_id)
+left join product sp         on sp.product_id = si.product_id
+where coalesce(oi.product_id, parent.product_id) is distinct from si.product_id;
+
+-- name: 5.3 — Data-quality check: shipment lines drawn on by orders for more than they carry (should be empty)
+select si.shipment_id, si.shipment_item_seq_id as line, si.quantity as carries, sum(os.quantity) as drawn_by_orders
+from shipment_item si
+join order_shipment os on os.shipment_item_id = si.shipment_item_id
+group by si.shipment_item_id, si.shipment_id, si.shipment_item_seq_id, si.quantity
+having sum(os.quantity) > si.quantity;
+
+-- name: 5.3 — Data-quality check: order lines filled by the wrong kind of shipment: sales on customer shipments, purchases on purchase shipments, either on a drop ship (should be empty)
+select os.order_shipment_id, o.order_id, o.order_kind, si.shipment_id, st.description as shipment_type
+from order_shipment os
+join order_item oi      on oi.order_item_id = os.order_item_id
+join "order" o          on o.order_id = oi.order_id
+join shipment_item si   on si.shipment_item_id = os.shipment_item_id
+join shipment sh        on sh.shipment_id = si.shipment_id
+join shipment_type st   on st.shipment_type_id = sh.shipment_type_id
+where not ((o.order_kind = 'SALES'    and sh.shipment_type_id in ('CUSTOMER_SHIPMENT', 'DROP_SHIPMENT'))
+        or (o.order_kind = 'PURCHASE' and sh.shipment_type_id in ('PURCHASE_SHIPMENT', 'DROP_SHIPMENT')));
+
+-- name: 5.3 — Data-quality check: order lines filled by a shipment bound for somewhere else than the line's ship-to (should be empty)
+-- The line's ship-to: 4.3's or 4.4's column, a feature line falling back to
+-- its product line, or 4.5's generic SHIPPING row.
+with line_ship_to as (
+  select oi.order_item_id,
+         coalesce(s.ship_to_contact_mechanism_id, ps.ship_to_contact_mechanism_id,
+                  p.ship_to_contact_mechanism_id, pp.ship_to_contact_mechanism_id,
+                  (select min(g.contact_mechanism_id)
+                   from order_item_contact_mechanism g
+                   where g.order_item_id in (oi.order_item_id, oi.ordered_for_order_item_id)
+                     and g.contact_mechanism_purpose_type_id = 'SHIPPING')) as contact_mechanism_id
+  from order_item oi
+  left join sales_order_item s      on s.order_item_id = oi.order_item_id
+  left join sales_order_item ps     on ps.order_item_id = oi.ordered_for_order_item_id
+  left join purchase_order_item p   on p.order_item_id = oi.order_item_id
+  left join purchase_order_item pp  on pp.order_item_id = oi.ordered_for_order_item_id
+)
+select os.order_shipment_id, oi.order_id, oi.order_item_seq_id as order_line, la.display_name as line_ships_to,
+       sh.shipment_id, sa.display_name as shipment_goes_to
+from order_shipment os
+join order_item oi                          on oi.order_item_id = os.order_item_id
+join line_ship_to l                         on l.order_item_id = oi.order_item_id
+join shipment_item si                       on si.shipment_item_id = os.shipment_item_id
+join shipment sh                            on sh.shipment_id = si.shipment_id
+join contact_mechanism_display_name la      on la.contact_mechanism_id = l.contact_mechanism_id
+join contact_mechanism_display_name sa      on sa.contact_mechanism_id = sh.shipped_to_contact_mechanism_id
+where l.contact_mechanism_id <> sh.shipped_to_contact_mechanism_id;

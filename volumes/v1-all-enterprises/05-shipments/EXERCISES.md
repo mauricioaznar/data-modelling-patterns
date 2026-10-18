@@ -11,6 +11,7 @@ every row scores 3+ and its scenario holds up.
 
 **Submodels:**
 1. **Shipments, items and status** (Figs 5.1–5.2). ~3 h
+2. **Shipments and orders** (Fig 5.3). ~3 h
 
 ## Progress
 
@@ -52,6 +53,19 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 5. **[5.2]** Ch 4 let a status sit on the whole order or on one item. A shipment's status sits
    only on the shipment. When would a status per shipment item be missed, and what would you
    reach for instead?
+
+### Submodel 2: shipments and orders
+1. **[5.3]** ORDER SHIPMENT joins an order *item* to a shipment *item*, with a quantity. Why
+   not a line from ORDER to SHIPMENT, or a foreign key from SHIPMENT ITEM to ORDER ITEM? Use
+   9000's pen line and order 100's pencil line to show what each would lose.
+2. **[5.3]** Table 5.5's 9200 carries 1,500 pencils that no line of Table 5.6 claims. Is that
+   an error? Name two kinds of shipment line that rightly fill no order line, and say how the
+   data tells them apart from a mistake.
+3. **[5.3]** Blue pens were ordered and black ones shipped. The book records the shipped
+   features on the shipment line, not on ORDER SHIPMENT. What can each place say that the
+   other can't, when one shipment line fills two orders?
+4. **[5.3]** A drop shipment fills two order lines at once. Which ones, whose are they, and
+   why can't a customer shipment do the same?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

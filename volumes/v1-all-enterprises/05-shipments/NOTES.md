@@ -19,6 +19,10 @@ an item-to-item link carrying its own quantity.
    many, from whom and where to whom and where, of which kind (customer, purchase, return,
    transfer, drop ship), when it was expected and what actually happened?
 
+2. **Shipments and orders** (Fig 5.3): which order lines does each shipment line fill, and
+   how much of each; is an order line shipped in full; and did what went out match what was
+   ordered (the good, its features, the destination)?
+
 Later figures join a submodel when they answer the same questions, or start one.
 
 ## Figures
@@ -188,7 +192,110 @@ STATUS records the dates (and times, when needed) things actually happened.
   The items travel together; what was received or rejected line by line is for the receipt
   entities the text promises. (Ponder 5.)
 
-### Points to discuss after the overview (Figs 5.1–5.2 so far)
+### Fig 5.3 — Shipment-to-order relationship
+**Transcription** (accepted: ☐; one photo, with Tables 5.4–5.7 on three more and the text
+between them; open points under "To check against the book")
+
+```
+ORDER SHIPMENT               (no identifier of its own: both lines carry a bar)
+  * quantity
+  -> ORDER ITEM              (many "the shipment of" 1 order item, bar; order item
+                              "shipped via" many)
+  -> SHIPMENT ITEM           (many "shipped via" 1 shipment item, bar; shipment item
+                              "the shipment of" many)
+
+SHIPMENT ITEM FEATURE        (no attributes; both lines carry a bar)
+  -> SHIPMENT ITEM           (many "for" 1 shipment item, bar; item "shipped with" many)
+  -> PRODUCT FEATURE         (many "of" 1 feature, bar; feature "shipped via" many)
+
+SHIPMENT ITEM                (as 5.2: # shipment_item_seq_id, * quantity,
+                              o shipment_contents_description)
+  -> GOOD                    (many "a shipment of" 1 good; good "shipped via" many)
+
+ORDER ITEM                   (as Ch 4: # order_item_seq_id, o quantity, o unit_price,
+                              o estimated_delivery_date, o shipping_instructions,
+                              o item_description; subtypes PURCHASE ORDER ITEM and SALES
+                              ORDER ITEM (o corresponding_po_id))
+  -> PRODUCT                 (many "for" 1 product; product "ordered via" many)
+  -> PRODUCT FEATURE         (many "for" 1 feature; feature "ordered via" many)
+
+PRODUCT                      (Ch 3: # product_id, * name, o introduction_date,
+                              o sales_discontinuation_date, o support_discontinuation_date,
+                              o comment; subtypes GOOD, SERVICE)
+PRODUCT FEATURE              (Ch 3: # product_feature_id, * description; subtypes PRODUCT
+                              QUALITY, COLOR, DIMENSION (* number_specified), SIZE, BRAND,
+                              SOFTWARE, HARDWARE, BILLING and OTHER FEATURE)
+```
+
+**Table 5.4** (order items, the book's sample, in our words): order 100 asks for 1,500 Jones
+#2 pencils, 2,500 Goldstein Elite pens and 350 standard erasers; order 200 for 300 Goldstein
+Elite pens and 200 boxes of HD diskettes.
+
+**Table 5.5** (shipment items, in our words): 9000 carries 1,000 pencils, 1,000 pens and 100
+diskettes (Table 5.2's lines); 9200 carries 350 erasers, 100 diskettes and, as the skewed
+photo reads, a third line of 1,500 pencils; 9400 carries 500 pencils.
+
+**Table 5.6** (order shipments, in our words): order 100's pencil line ships 1,000 on 9000
+and the other 500 on 9400, so it is filled in full over two shipments. Its pens ship 700 on
+9000, its erasers 350 on 9200. Order 200's pens ship 300 on 9000 (with order 100's 700,
+that is 9000's whole line of 1,000), its diskettes 100 on 9000 and 100 on 9200.
+
+**Table 5.7** (features, in our words): both pen lines were ordered in blue (order 100's
+2,500 and order 200's 300), and 9000's pen line of 1,000 went out black. The text gives two
+readings: a mistake, or a deliberate substitute the customer accepted because blue was out
+of stock.
+
+**The text beside them**, in short: one order line can be spread over several shipments, and
+one shipment line can deliver lines of several orders. Combining two orders on one line
+assumes rules elsewhere make sure both go to the same place and are for the same product.
+The link is drawn to the order item, not the order (the photo cuts off the reason). An
+alternative stores the shipped features on ORDER SHIPMENT; differences could also be worked
+out from the inventory items behind a shipment line, but that fails for a shipment only
+scheduled, with no stock tied to it yet. The example uses customer shipments only, to keep
+it simple.
+
+**To check against the book**
+- The four labels on ORDER SHIPMENT's two lines are hard to pair in the photo. Read the
+  natural way: an order shipment is the shipment of one order item, shipped via one
+  shipment item; each of those has many.
+- Both ORDER SHIPMENT lines carry a bar: order item + shipment item identify it (point 11).
+  SHIPMENT ITEM FEATURE likewise: shipment item + feature.
+- Table 5.5 is photographed at an angle; its rows read as above, which leaves 9200's third
+  line out of Table 5.6 (point 13).
+- Table 5.7's "order item feature" read as Ch 4's feature line ordered for the pen line,
+  not as a column on the pen line (point 14; Ch 4's point 2).
+- Table 5.7's shipped quantity, 1,000, is 9000's pen line, printed once for both order lines.
+- ORDER ITEM is drawn without its order and its "ordered for" line: read as abbreviation,
+  Ch 4's model unchanged.
+
+**Discussion**
+- **The hand-over is line to line, with its own quantity.** An ORDER SHIPMENT row says "this
+  much of this order line went out on this shipment line". That holds both splits: an order
+  line spread over shipments (order 100's pencils on 9000 and 9400) and a shipment line
+  covering several orders (9000's pens, 700 + 300). A link between order and shipment could
+  say neither how much nor which line, and a single "shipment line → order line" foreign key
+  would forbid the second split. Ch 4's ORDER REQUIREMENT COMMITMENT had the same shape.
+  (Ponder 1 of submodel 2.)
+- **"Shipped in full" is now a sum,** not a status: the order shipments of a line against its
+  quantity. Ch 4's text said shipped could be worked out from shipments; this is where. An
+  order line that ships more than ordered is shown for review, since some businesses allow
+  a margin.
+- **The rules the text leaves to "processes" become checks:** a shipment line fills order
+  lines for its own good, bound for its own destination, and is never drawn on beyond its
+  quantity. And by the types' meaning, sales lines fill on customer shipments, purchase lines
+  on purchase shipments, either on a drop ship, which fills a purchase line (from our
+  supplier) and a sales line (to our customer) at once (point 15).
+- **What was shipped can differ from what was ordered.** The order line's features say what
+  the customer asked for; the shipment line's features say what went out. Comparing the two
+  through ORDER SHIPMENT finds blue ordered and black shipped. The book keeps shipped
+  features on the shipment line, so one line of black pens answers both blue orders, and
+  weighs storing them on ORDER SHIPMENT instead (point 16; ponder 3 of submodel 2).
+- **Some shipment lines fill no order at all:** returns answer shipment lines (5.2), a
+  transfer moves our own stock, a sample goes free. So a shipment line without an order
+  shipment isn't an error by itself; 9200's 1,500 pencils, which no order claims, is shown
+  for review.
+
+### Points to discuss after the overview (Figs 5.1–5.3 so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing. The list moves under the chapter's last figure as figures arrive.
@@ -223,6 +330,27 @@ the literal drawing. The list moves under the chapter's last figure as figures a
 10. **5.2, what "in response to" may join:** read as an item answering one item on another
     shipment (a return, a replacement). Nothing drawn says which kinds may answer which;
     the only check is that an item doesn't answer an item of its own shipment.
+11. **5.3, ORDER SHIPMENT identified by order item + shipment item:** built as a surrogate
+    key plus a data-quality query (the pair twice), as elsewhere.
+12. **5.3, the text's "same place, same product" as checks:** the book leaves them to
+    business processes; we check them in the data (the line's ship-to against the
+    shipment's destination, the line's product against the shipment line's good). Should
+    they stay checks, or is a mismatch sometimes legitimate (a substitute product, a
+    redirected truck)?
+13. **Table 5.5's 9200 line 3:** read from a skewed photo as 1,500 pencils on 9200 and 500 on
+    9400. Table 5.6 claims 9400's 500 but nothing of 9200's 1,500. A slip in the book, or a
+    line meant to fill no order? Seeded as read; a review query shows it unclaimed.
+14. **Table 5.7, ordered features as Ch 4's feature lines:** orders 100 and 200 get a blue
+    line under their pen lines (lines 4 and 3), which Table 5.4 doesn't list. If Ch 4's point
+    2 settles that a feature may sit on its product's own line, these become columns there.
+15. **5.3, which shipments fill which order lines:** sales lines on customer shipments,
+    purchase lines on purchase shipments, either kind on a drop shipment; returns and
+    transfers fill none. Ours, from what the types mean, built as a data-quality query. The
+    text only says the example sticks to customer shipments.
+16. **5.3, shipped features on the shipment line** (as drawn), not on ORDER SHIPMENT (the
+    text's alternative). Kept as drawn: one line of black pens answers both blue orders the
+    same way. On ORDER SHIPMENT, each order line could get its own answer (black for one,
+    blue for the other) on one shipment line, at the cost of repeating them.
 
 ## Design decisions (book → SQL)
 
@@ -281,11 +409,43 @@ the literal drawing. The list moves under the chapter's last figure as figures a
   sold each; the HD diskettes are Ch 3's box of 3½-inch diskettes (1.44 MB), as Ch 4 read
   them.
 
+### Fig 5.3
+- **`order_shipment`: a surrogate key, plain FKs to Ch 4's `order_item` and to
+  `shipment_item`, and a `quantity` (`not null`, positive).** The pair twice is a
+  data-quality query shared with `shipment_item_feature` (point 11).
+- **`shipment_item_feature`: a surrogate key, the shipment line and Ch 3's feature.** No
+  attributes, as drawn (seed: 9000's pen line black twice).
+- **Quantity:** the order shipments drawing on a shipment line add up to no more than it
+  carries (data-quality query; seed: 9500's 150 erasers allocated 200). An order line
+  shipped beyond its quantity is shown by a review query, not a check: some businesses
+  accept a margin.
+- **Product:** an order line's product (a feature line's is its product line's) must be the
+  shipment line's good (data-quality query, point 12; seed: order 400's diskettes on 9500's
+  pencil line).
+- **Destination:** an order line's ship-to (4.3's or 4.4's column, a feature line falling
+  back to its product line, or 4.5's generic SHIPPING row) must be the shipment's shipped-to
+  address (data-quality query, point 12; seed: order 400's pencils for 2300 Drident Avenue
+  on 9500, bound for 234 Stretch Street).
+- **Direction:** sales lines on customer shipments, purchase lines on purchase shipments,
+  either on a drop shipment (data-quality query, point 15; seed: purchase order 300's
+  erasers on customer shipment 9500).
+- **Seed:** Tables 5.4, 5.6 and 5.7 as orders 100 and 200 (ACME's, taken by ABC Subsidiary;
+  dates and prices ours), each pen line with a blue feature line under it (point 14). Ours:
+  purchase order 300 (ABC Subsidiary buys pencils and erasers from General Goods for ABC
+  Corporation, delivered by 1146 and 1149), sales order 400 and customer shipment 9500,
+  which carry the four mistakes. New Ch 2 roles: General Goods as SUPPLIER, ABC Corporation
+  as SHIP_TO_BUYER.
+
 ## When NOT to use this
 - **A shop that ships each order once, whole, to one address** can keep a ship date and a
   tracking number on the order. The separate shipment pays off when shipments and orders
   stop matching one to one, or when goods move with no order (returns, transfers).
 - **The direction subtypes** matter when the business ships both ways and between its own
   sites. A seller that only ships out needs no type at all.
+- **ORDER SHIPMENT** earns its place when lines split or combine. If every order line always
+  ships whole, on one shipment line of its own, a foreign key from the shipment line to the
+  order line says the same with one table less.
+- **The shipped features** matter where substitutes happen and get billed or returned. A
+  warehouse that never ships anything but what was ordered can drop SHIPMENT ITEM FEATURE.
 
 ## Open questions

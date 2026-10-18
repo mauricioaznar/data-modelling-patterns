@@ -41,4 +41,16 @@ erDiagram
   SHIPMENT_ITEM             |o--o{ SHIPMENT_ITEM     : "generating (in response to)"
   SHIPMENT                  ||--o{ SHIPMENT_STATUS   : "tracked using"
   STATUS_TYPE               ||--o{ SHIPMENT_STATUS   : "used to define (Ch 2, SHIPMENT_STATUS group)"
+
+  %% Fig 5.3 — Shipment-to-order relationship
+  ORDER_SHIPMENT {
+    int     order_shipment_id PK
+    int     order_item_id FK
+    int     shipment_item_id FK
+    numeric quantity
+  }
+  ORDER_ITEM                ||--o{ ORDER_SHIPMENT        : "shipped via (Ch 4)"
+  SHIPMENT_ITEM             ||--o{ ORDER_SHIPMENT        : "the shipment of"
+  SHIPMENT_ITEM             ||--o{ SHIPMENT_ITEM_FEATURE : "shipped with"
+  PRODUCT_FEATURE           ||--o{ SHIPMENT_ITEM_FEATURE : "shipped via (Ch 3)"
 ```
