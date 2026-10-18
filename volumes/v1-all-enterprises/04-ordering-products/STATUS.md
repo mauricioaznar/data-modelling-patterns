@@ -15,6 +15,7 @@ Architecture figure:
 | 2 | Order adjustments | 4.6 | 2026-10-18 | | | |
 | 3 | Order status, terms and item associations | 4.7–4.8 | | | | |
 | 4 | Requirements | 4.9 | | | | |
+| 5 | Requests and quotes | 4.10 | | | | |
 | A | Architecture | | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 4.1–4.3)`; the `A` row's matches the

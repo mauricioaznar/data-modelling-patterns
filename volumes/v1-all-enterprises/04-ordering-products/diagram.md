@@ -82,4 +82,16 @@ erDiagram
   REQUIREMENT_ROLE_TYPE   ||--o{ REQUIREMENT_ROLE    : "used to define"
   ORDER_ITEM              ||--o{ ORDER_REQUIREMENT_COMMITMENT : "the fulfiller of"
   REQUIREMENT             ||--o{ ORDER_REQUIREMENT_COMMITMENT : "committed by"
+
+  %% Fig 4.10 — Requests (RFI, RFP, RFQ are request_type rows)
+  REQUEST_TYPE            ||--o{ REQUEST             : "describes"
+  REQUEST                 ||--o{ REQUEST_ITEM        : "composed of"
+  REQUEST_ITEM            ||--o{ REQUIREMENT_REQUEST : "the method to communicate"
+  REQUIREMENT             ||--o{ REQUIREMENT_REQUEST : "communicated via"
+  REQUEST                 ||--o{ REQUEST_ROLE        : "involving"
+  PARTY                   ||--o{ REQUEST_ROLE        : "involved in (Ch 2)"
+  REQUEST_ROLE_TYPE       ||--o{ REQUEST_ROLE        : "description for"
+  REQUEST                 ||--o{ RESPONDING_PARTY    : "submitted to"
+  PARTY                   ||--o{ RESPONDING_PARTY    : "the recipient of (Ch 2)"
+  CONTACT_MECHANISM       |o--o{ RESPONDING_PARTY    : "used to contact (Ch 2)"
 ```

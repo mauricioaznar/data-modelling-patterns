@@ -631,3 +631,102 @@ insert into order_requirement_commitment (order_item_id, requirement_id, quantit
   (16, 50001, 400),   -- 400 of 12564's 500 reams; the rest is stock
   (4,  50002, 1),     -- Contoso's copier
   (29, 30005, 40);    -- DATA ERROR: 40 more pens for a need of 40, with 4 already committed (caught by a query)
+
+-- ============================================================
+-- Fig 4.10 — Requests
+-- ============================================================
+insert into request_type (request_type_id, description) values
+  ('RFI', 'Request for information'),
+  ('RFP', 'Request for proposal'),
+  ('RFQ', 'Request for quote');
+
+insert into request_role_type (request_role_type_id, description) values
+  ('ORIGINATOR', 'Sent the request'),
+  ('CONTACT',    'Answers questions about it'),
+  ('APPROVER',   'Approved sending it');
+
+-- Two PC repair vendors (ours), and ABC Subsidiary's supplies@ABC.com (Table
+-- 4.5), where ACME's request arrives.
+insert into party (party_id, party_kind) values
+  (45, 'ORGANIZATION'),   -- Ridgeway PC Repair
+  (46, 'ORGANIZATION');   -- Byte Doctors
+
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into organization (party_id, organization_type_id, name) values
+  (45, 'CORPORATION', 'Ridgeway PC Repair'),
+  (46, 'CORPORATION', 'Byte Doctors');
+
+insert into contact_mechanism (contact_mechanism_id, contact_mechanism_kind, contact_mechanism_type_id) values
+  (37, 'ELECTRONIC_ADDRESS', 'EMAIL'),
+  (38, 'ELECTRONIC_ADDRESS', 'EMAIL'),
+  (39, 'ELECTRONIC_ADDRESS', 'EMAIL');
+
+select setval(pg_get_serial_sequence('contact_mechanism', 'contact_mechanism_id'), (select max(contact_mechanism_id) from contact_mechanism));
+
+insert into electronic_address (contact_mechanism_id, electronic_address_string) values
+  (37, 'bids@ridgeway.example'),
+  (38, 'sales@bytedoctors.example'),
+  (39, 'supplies@ABC.com');
+
+insert into party_contact_mechanism (party_contact_mechanism_id, party_id, contact_mechanism_id, from_date, thru_date, non_solicitation_ind, role_type_id, comment) values
+  (38, 45, 37, '2000-01-01', null, false, null,                    null),
+  (39, 46, 38, '2000-01-01', null, false, null,                    null),
+  (40, 13, 39, '1999-01-01', null, false, 'INTERNAL_ORGANIZATION', 'Orders and requests from customers');
+
+select setval(pg_get_serial_sequence('party_contact_mechanism', 'party_contact_mechanism_id'), (select max(party_contact_mechanism_id) from party_contact_mechanism));
+
+-- Tables 4.12 and 4.13, with their ids: 23498 dated 2002 and 38967 an RFP
+-- (NOTES, point 21). Then ours, 61001 and 61002.
+insert into request (request_id, request_type_id, request_date, response_required_date, description) values
+  (23498, 'RFI', '2002-01-12', '2002-02-10', 'Information on PC repair vendors'),
+  (38967, 'RFP', '2002-03-13', '2002-04-23', 'Quotes from vendors on repairing PCs'),
+  (38948, 'RFQ', '2002-03-13', '2002-03-21', 'A quote on office supplies'),
+  (61001, 'RFQ', '2025-01-12', '2025-01-17', 'Copier paper for the Chatham warehouse'),
+  (61002, 'RFP', '2025-02-20', '2025-03-10', 'Repair of the Chatham loading dock door');
+
+select setval(pg_get_serial_sequence('request', 'request_id'), (select max(request_id) from request));
+
+-- The required-by dates and amounts are ours.
+insert into request_item (request_item_id, request_id, request_item_seq_id, required_by_date, quantity, maximum_amount, description) values
+  (1, 23498, 1, '2002-06-30', 29,   null,    'PC repair'),
+  (2, 38967, 1, '2002-06-30', 29,   null,    'PC repair'),
+  (3, 38948, 1, '2002-04-15', 50,   null,    null),
+  (4, 38948, 2, '2002-04-15', 40,   null,    null),
+  (5, 38948, 3, '2002-04-15', 20,   null,    null),
+  (6, 38948, 4, '2002-04-15', 200,  null,    null),
+  (7, 61001, 1, '2025-01-31', 400,  12800.00, null),
+  (8, 61002, 1, '2025-03-15', null, 1200.00, 'Repair or replace the dock door');
+
+select setval(pg_get_serial_sequence('request_item', 'request_item_id'), (select max(request_item_id) from request_item));
+
+insert into requirement_request (request_item_id, requirement_id) values
+  (1, 24905), (1, 34988),   -- 14 + 15 PCs = 29
+  (2, 24905), (2, 34988),
+  (3, 30004), (4, 30005), (5, 30006), (6, 30007),
+  (7, 50001),
+  (8, 50003),               -- DATA ERROR: the RFP went out before the requirement was created (caught by a query)
+  (6, 30007);               -- DATA ERROR: the diskettes entered twice (caught by a query)
+
+-- Parties: 3 Chloe, 4 Northwind, 12 ABC Corporation, 16 ACME.
+insert into request_role (request_id, party_id, request_role_type_id) values
+  (23498, 12, 'ORIGINATOR'),   -- Table 4.12's originators
+  (38967, 12, 'ORIGINATOR'),
+  (38948, 16, 'ORIGINATOR'),
+  (61001, 4,  'ORIGINATOR'),
+  (61001, 3,  'CONTACT'),
+  (61002, 4,  'ORIGINATOR'),
+  (61001, 3,  'ORIGINATOR');   -- DATA ERROR: a second originator (caught by a query)
+
+-- Parties: 5 Contoso, 13 ABC Subsidiary, 18 Fantastic Supplies, 42
+-- Paperline, 45 Ridgeway, 46 Byte Doctors. Mechanisms: 7 Contoso's sales
+-- inbox, 31 Fantastic's order desk, 37-39 above.
+insert into responding_party (request_id, party_id, contact_mechanism_id, date_sent) values
+  (23498, 45, 37,   '2002-01-14'),   -- ABC's requests go out to two vendors
+  (23498, 46, 38,   '2002-01-14'),
+  (38967, 45, 37,   '2002-03-14'),
+  (38967, 46, 38,   '2002-03-14'),
+  (38948, 13, 39,   null),           -- ACME's request comes in: one responding party, us
+  (61001, 18, 31,   '2025-01-12'),
+  (61002, 5,  7,    '2025-02-20'),
+  (61001, 42, null, '2025-01-10');   -- DATA ERROR: sent two days before the request's date (caught by a query)

@@ -26,6 +26,10 @@ lookup into the price list), and roles instead of party columns.
 4. **Requirements** (Fig 4.9): what is needed, by whom, by when and where, broken down how,
    and which order lines commit to filling it, for how much?
 
+5. **Requests and quotes** (Figs 4.10–4.11): whom did we ask (or who asked us) for
+   information, proposals or prices, about which needs, what did each answer quote, and
+   which quote became an order?
+
 More submodels follow as the rest of the chapter's figures arrive. Figures that answer the
 same questions as an existing submodel join it (4.4 and 4.5 joined submodel 1), and its
 `Figs` grow.
@@ -768,7 +772,97 @@ FACILITY                     (from Ch 2, Fig 2.11: # facility_id, * description,
 - **The flow so far:** a requirement (the need) → an order line commits to it → shipments
   and invoices (Ch 5, Ch 7) follow the order.
 
-### Points to discuss after the overview (Figs 4.1–4.9)
+### Fig 4.10 — Requests
+**Transcription** (accepted: ☐; one landscape photo, with Tables 4.12 and 4.13; open points
+under "To check against the book")
+
+```
+REQUEST
+  # request_id
+  * request_date
+  * response_required_date
+  * description
+  subtypes: RFP, RFI, RFQ
+
+REQUEST ITEM
+  # request_item_seq_id
+  * required_by_date
+  o quantity
+  o maximum_amount
+  o description
+  -> REQUEST                 (many "part of" 1, bar; request "composed of" many)
+
+REQUIREMENT REQUEST          (no attributes drawn)
+  -> REQUEST ITEM            (many "communicated via" 1, bar; item "the method to communicate" many)
+  -> REQUIREMENT             (many "associated to" 1, bar; requirement "communicated via" many)
+
+REQUEST ROLE                 (no attributes drawn)
+  -> REQUEST                 (many "for" 1, bar; request "involving" many)
+  -> PARTY                   (many "of" 1, bar; party "involved in" many)
+  -> REQUEST ROLE TYPE       (many "described by" 1; type "the description for" many)
+
+REQUEST ROLE TYPE            (no attributes drawn)
+
+RESPONDING PARTY
+  # responding_party_seq_id
+  o date_sent
+  -> REQUEST                 (many "for" 1, bar; request "submitted to" many)
+  -> PARTY                   (many "of" 1, bar; party "the recipient of" many)
+  -> CONTACT MECHANISM       (many "sent to" 1; mechanism "used to contact" many)
+
+REQUIREMENT                  (as 4.9, both subtype sets redrawn; "part of" itself)
+PARTY, CONTACT MECHANISM     (from Ch 2)
+```
+
+**Tables 4.12 and 4.13** (requests and their items, the book's samples, in our words):
+- 23498: ABC Corporation's RFI of January 12, 2001, answer due February 10, 2002, asking about
+  PC repair vendors. One item: 29 PCs, carrying requirements 24905 and 34988 (14 + 15).
+- 38967: ABC Corporation's RFP of March 13, 2002, answer due April 23, 2002, asking vendors to
+  quote for repairing the PCs. One item: 29 PCs, the same two requirements. Table 4.13 calls
+  it an RFQ.
+- 38948: ACME's RFQ of March 13, 2002, answer due March 21, 2002, asking for a quote on office
+  supplies. Four items: 50, 40, 20 and 200, one for each of requirements 30004 to 30007.
+
+**The text beside it**, in short: RESPONDING PARTY matters mostly for requests we send out.
+One we receive usually has one responding party, the part of the enterprise that got it and
+will answer. DATE SENT records when we sent the request to that party.
+
+**To check against the book**
+- REQUIREMENT REQUEST's labels read as: a requirement request is "associated to" one
+  requirement and "communicated via" one request item; bars on both, so it's identified by
+  the pair.
+- REQUEST ROLE and RESPONDING PARTY read with bars on their REQUEST and PARTY lines;
+  RESPONDING PARTY's own seq id numbers the recipients within the request.
+- RFP, RFI and RFQ have no attributes or lines: Table 4.12 calls them REQUEST TYPE.
+- REQUEST ITEM has no line to PRODUCT: what it asks for comes from the requirements it
+  carries (and its description).
+- Table 4.12 dates 23498 January 12, 2001, with an answer due thirteen months later, and
+  before both requirements it carries (April and June 2001). Read as January 12, 2002 (point
+  21).
+- Table 4.13 calls 38967 an RFQ; Table 4.12 an RFP, and Table 4.14's proposal answers a
+  request about PC repair. Read as an RFP (point 21).
+- Table 4.12's REQUEST ORIGINATOR read as a REQUEST ROLE of type originator.
+- REQUEST ITEM's REQUIRED BY DATE is drawn mandatory, but Table 4.13 gives none. Kept
+  mandatory; the seed's dates are ours.
+
+**Discussion**
+- **The problem.** Before an order there is often a round of asking: who can do this, how
+  would they do it, at what price? Kept as e-mails, the questions lose their link to the
+  needs behind them and to the answers that come back.
+- **A request, typed by what it asks for:** an RFI asks who can supply something and how, an
+  RFP asks for a proposal (an approach and a price), an RFQ asks for prices on known items.
+- **Items reach back to the needs.** REQUIREMENT REQUEST is a many-to-many: one request item
+  can carry two requirements (14 + 15 PCs = 29), and one requirement can go out on several
+  requests (24905 on the RFI, then on the RFP).
+- **Both directions again.** ABC Corporation sends its requests out to PC repair vendors;
+  ACME sends one in to us. RESPONDING PARTY lists who a request went to, when and through
+  which contact mechanism; an incoming request has one, the part of us that answers it.
+- **Roles:** REQUEST ROLE (the originator, a contact, an approver), a party and a type, no
+  dates: ORDER ROLE's shape (4.3), and a fifth role type list (point 5).
+- **No product on the request item:** it asks for what its requirements need, so a request
+  can go out before anyone has chosen a product. (Ponder 1 of submodel 5.)
+
+### Points to discuss after the overview (Figs 4.1–4.10)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing. The list moves under the chapter's last figure when that one arrives.
@@ -843,6 +937,9 @@ the literal drawing. The list moves under the chapter's last figure when that on
 20. **4.9, who owns a part:** 30003 is ACME's, its parts ABC Subsidiary's. Read as "owner"
     meaning who answers for the requirement: ABC Subsidiary breaks ACME's need into lines it
     will fill. If "owner" means whose need it is, the parts should be ACME's too.
+21. **4.10, Table 4.12's dates and types:** 23498 read as January 12, 2002; as printed, it
+    predates both requirements it carries and gives thirteen months to answer. 38967 read as
+    an RFP, as Table 4.12 has it (Table 4.13 says RFQ).
 
 ## Design decisions (book → SQL)
 
@@ -1071,6 +1168,29 @@ the literal drawing. The list moves under the chapter's last figure when that on
   warehouse, Contoso's copier, the dock door, Contoso's red pens.
 - **A new Ch 3 feature, "Formatted"** (OTHER), for the diskettes of 30007.
 
+### Fig 4.10
+- **RFI, RFP and RFQ → rows of a `request_type` lookup:** they have no attributes or lines of
+  their own, and Table 4.12 calls the column REQUEST TYPE.
+- **`request` keeps the book's id;** a check keeps the answer date on or after the request
+  date. **`request_item`** has a surrogate key and the seq id as a plain column;
+  `required_by_date` is mandatory, as drawn (the seed's dates are ours).
+- **`requirement_request` and `responding_party`** have surrogate keys. Their identifiers
+  (the same requirement twice on an item, the same party twice on a request) share one
+  data-quality query (seed: 38948's diskettes entered twice).
+- **A requirement sent out before it existed** is a data-quality query (seed: Northwind's RFP
+  for the dock door, dated before the requirement). It's also the evidence for point 21:
+  Table 4.12's 23498, as printed, would be caught.
+- **A request sent to a party before the request's own date** is a data-quality query (seed:
+  Northwind's RFQ to Paperline). An incoming request's responding party (us) has no date sent.
+- **`request_role_type`** (originator, contact, approver) is the fifth role-type lookup (point
+  5). Two originators on one request is a data-quality query (seed: Chloe entered as
+  originator beside Northwind on 61001).
+- **New parties, ours:** two PC repair vendors, Ridgeway PC Repair and Byte Doctors, with
+  e-mail addresses; ABC Subsidiary gets Table 4.5's supplies@ABC.com, where ACME's RFQ
+  arrives. Our requests: Northwind's RFQ 61001 for 50001's paper (to Fantastic Supplies and
+  Paperline), and its RFP 61002 for the dock door (to Contoso, which manages the Chatham
+  warehouse in Ch 2).
+
 ## When NOT to use this
 - **A shop that only sells**, and buys through some other system, gets little from the ORDER
   supertype. It costs one discriminator, so it's cheap to keep, but don't model purchase
@@ -1098,6 +1218,8 @@ the literal drawing. The list moves under the chapter's last figure when that on
 - **Order item association (4.8)** when the business never buys to fill a particular sale (it
   sells from stock and restocks by reorder level, Ch 3's reorder guideline): there is
   nothing to link.
+- **Requests (4.10)** when you buy from one supplier at its list price: there is nobody to
+  ask. They pay off when several suppliers compete, or customers send formal requests.
 - **Requirements (4.9)** when every need goes straight to an order (a small shop buying for
   itself): requirement rows are overhead. They earn their keep when needs are gathered,
   approved, broken down, or filled by several orders.

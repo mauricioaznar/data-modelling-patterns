@@ -1070,3 +1070,77 @@ join party_display_name nb      on nb.party_id = b.party_id
 where a.requirement_role_type_id = 'OWNER' and b.requirement_role_type_id = 'OWNER'
   and a.from_date < coalesce(b.thru_date, 'infinity'::date)
   and b.from_date < coalesce(a.thru_date, 'infinity'::date);
+
+-- ============================================================
+-- Fig 4.10 — Requests
+-- ============================================================
+
+-- name: 4.10 — Requests as Tables 4.12 and 4.13 show them: originator, type, dates, and each item with the requirements it carries
+select q.request_id,
+       (select string_agg(n.name, ' + ')
+        from request_role r
+        join party_display_name n on n.party_id = r.party_id
+        where r.request_id = q.request_id and r.request_role_type_id = 'ORIGINATOR') as originator,
+       q.request_type_id as type, q.request_date, q.response_required_date as answer_by, q.description,
+       i.request_item_seq_id as item, i.quantity,
+       string_agg(rq.requirement_id || ' ' || rq.description, '; ' order by rq.requirement_id) as requirements
+from request q
+join request_item i              on i.request_id = q.request_id
+left join requirement_request rr on rr.request_item_id = i.request_item_id
+left join requirement rq         on rq.requirement_id = rr.requirement_id
+group by q.request_id, q.request_type_id, q.request_date, q.response_required_date, q.description,
+         i.request_item_id, i.request_item_seq_id, i.quantity
+order by q.request_id >= 60000, q.request_date, q.request_id, i.request_item_seq_id;
+
+-- name: 4.10 — Who each request went to, when, and through which contact mechanism (a request we receive has one responding party: us)
+select q.request_id, q.request_type_id as type, n.name as sent_to, d.display_name as via, p.date_sent
+from responding_party p
+join request q                                   on q.request_id = p.request_id
+join party_display_name n                        on n.party_id = p.party_id
+left join contact_mechanism_display_name d       on d.contact_mechanism_id = p.contact_mechanism_id
+order by q.request_id >= 60000, q.request_date, q.request_id, n.name;
+
+-- name: 4.10 — Each requirement's requests in date order (24905 went out on the RFI, then the RFP)
+select rq.requirement_id, rq.description,
+       string_agg(q.request_type_id || ' ' || q.request_id || ' of ' || q.request_date, ' → '
+                  order by q.request_date, q.request_id) as requests
+from requirement rq
+join requirement_request rr  on rr.requirement_id = rq.requirement_id
+join request_item i          on i.request_item_id = rr.request_item_id
+join request q               on q.request_id = i.request_id
+group by rq.requirement_id, rq.description
+order by rq.requirement_id;
+
+-- name: 4.10 — Data-quality check: the same requirement twice on a request item, or the same party twice on a request (should be empty)
+select 'requirement on an item' as what, request_item_id as on_id, requirement_id as twice, count(*) as rows
+from requirement_request
+group by request_item_id, requirement_id
+having count(*) > 1
+union all
+select 'responding party on a request', request_id, party_id, count(*)
+from responding_party
+group by request_id, party_id
+having count(*) > 1;
+
+-- name: 4.10 — Data-quality check: requirements sent out on a request dated before they were created (should be empty)
+select q.request_id, q.request_type_id, q.request_date, rq.requirement_id, rq.description, rq.requirement_creation_date
+from requirement_request rr
+join request_item i on i.request_item_id = rr.request_item_id
+join request q      on q.request_id = i.request_id
+join requirement rq on rq.requirement_id = rr.requirement_id
+where q.request_date < rq.requirement_creation_date;
+
+-- name: 4.10 — Data-quality check: requests sent to a party before the request's own date (should be empty)
+select p.request_id, q.request_date, n.name as sent_to, p.date_sent
+from responding_party p
+join request q            on q.request_id = p.request_id
+join party_display_name n on n.party_id = p.party_id
+where p.date_sent < q.request_date;
+
+-- name: 4.10 — Data-quality check: requests with more than one originator (should be empty)
+select r.request_id, string_agg(n.name, ' + ' order by n.name) as originators
+from request_role r
+join party_display_name n on n.party_id = r.party_id
+where r.request_role_type_id = 'ORIGINATOR'
+group by r.request_id
+having count(*) > 1;

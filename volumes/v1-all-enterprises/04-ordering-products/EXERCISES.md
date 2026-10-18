@@ -14,7 +14,8 @@ every row scores 3+ and its scenario holds up.
 2. **Order adjustments** (Fig 4.6). ~3 h
 3. **Order status, terms and item associations** (Figs 4.7–4.8). ~3 h
 4. **Requirements** (Fig 4.9). ~3 h
-5. *(to come: the rest of Ch 4's figures.)*
+5. **Requests and quotes** (Figs 4.10–4.11). ~3 h
+6. *(to come: the rest of Ch 4's figures.)*
 
 ## Progress
 
@@ -90,6 +91,11 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    doesn't. Why does the commitment need one?
 4. **[4.9]** REQUIREMENT has two sets of subtypes (customer or internal; product or work).
    How did we build two independent sets, and what would one four-way list get wrong?
+
+### Submodel 5: requests and quotes
+1. **[4.10]** A REQUEST ITEM names no product; it reaches its requirements through
+   REQUIREMENT REQUEST, a many-to-many. Why no product, and what would break if each request
+   item could carry only one requirement?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
