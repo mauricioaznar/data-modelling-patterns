@@ -203,3 +203,71 @@ insert into purchase_order_item (order_item_id, ship_to_party_role_id, ship_to_c
   (23, null, null),
   (24, 65,   14),
   (21, null, null);   -- DATA ERROR: the same clerk's mistake, on 12567's item (caught by a query)
+
+-- ============================================================
+-- Fig 4.5 — Generic order roles and contact mechanisms
+-- ============================================================
+-- Direction-neutral jobs: the order's kind says which side is ours (NOTES, point 9).
+insert into order_role_type (order_role_type_id, description) values
+  ('PLACED_BY', 'Placed the order: the customer on a sale, our buyer on a purchase'),
+  ('TAKEN_BY',  'Took the order: our organization on a sale, the supplier on a purchase'),
+  ('BILL_TO',   'Gets the bill');
+
+insert into order_item_role_type (order_item_role_type_id, description) values
+  ('SHIP_TO',   'Receives the item'),
+  ('END_USER',  'Will use the item'),
+  ('INSTALLER', 'Installs the item on site');
+
+-- Ch 2's purposes, plus three an order needs. BILLING and SHIPPING are reused.
+insert into contact_mechanism_purpose_type (contact_mechanism_purpose_type_id, description) values
+  ('ORDER_PLACING',    'Where an order is placed from'),
+  ('ORDER_TAKING',     'Where an order is taken'),
+  ('DELIVERY_CONTACT', 'Who to call about a delivery');
+
+-- Order 12571, recorded the generic way only: Ana orders a book and pens for
+-- the García-López household, which pays; the book is a gift for Kiri. Its
+-- sales_order row has every column empty, so the 4.3 subtype check holds.
+insert into "order" (order_id, order_kind, order_date, entry_date) values
+  (12571, 'SALES', '2025-07-01', '2025-07-01');
+
+select setval(pg_get_serial_sequence('"order"', 'order_id'), (select max(order_id) from "order"));
+
+insert into sales_order (order_id) values (12571);
+
+insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, quantity, unit_price) values
+  (25, 12571, 1, 7, 1, 45.00),   -- the Data Model Resource Book
+  (26, 12571, 2, 2, 2, 2.50);    -- two pens
+
+select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max(order_item_id) from order_item));
+
+insert into sales_order_item (order_item_id) values (25), (26);
+
+-- Parties: 1 Ana, 3 Chloe, 4 Northwind, 8 the García-López family, 10 Kiri.
+insert into order_role (order_id, party_id, order_role_type_id, percent_contribution) values
+  (12571, 1, 'PLACED_BY',   null),
+  (12571, 4, 'TAKEN_BY',    null),
+  (12571, 8, 'BILL_TO',     null),
+  (12571, 3, 'SALESPERSON', 100),
+  (12571, 1, 'BILL_TO',     null),   -- DATA ERROR: a second bill-to; a column would have held one (caught by a query)
+  (12561, 2, 'BILL_TO',     null);   -- DATA ERROR: 12561 already has a bill-to column (Contoso) (caught by a query)
+
+-- Contact mechanisms: 5 Kiri's phone, 6 Ana's e-mail, 8 our website,
+-- 11 the family's house at 742 Evergreen Terrace.
+insert into order_contact_mechanism (order_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values
+  (12571, 6,  'ORDER_PLACING'),
+  (12571, 8,  'ORDER_TAKING'),
+  (12571, 11, 'BILLING'),
+  (12571, 11, 'BILLING');   -- DATA ERROR: the same row twice (caught by a query)
+
+-- Item roles: what the columns of 4.3 had no place for. 4 is 12561's copier,
+-- recorded the specific way; its installer is a generic row beside it.
+insert into order_item_role (order_item_id, party_id, order_item_role_type_id) values
+  (25, 1,  'SHIP_TO'),
+  (25, 10, 'END_USER'),    -- the book is Kiri's
+  (26, 1,  'SHIP_TO'),
+  (4,  1,  'INSTALLER');   -- Ana, a contractor, installs the copier
+
+insert into order_item_contact_mechanism (order_item_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values
+  (25, 11, 'SHIPPING'),
+  (25, 5,  'DELIVERY_CONTACT'),   -- the courier calls Kiri
+  (26, 11, 'SHIPPING');

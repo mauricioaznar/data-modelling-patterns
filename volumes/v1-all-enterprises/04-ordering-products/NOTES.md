@@ -12,7 +12,7 @@ for things that share their structure, the order item as a snapshot of what was 
 lookup into the price list), and roles instead of party columns.
 
 ## Submodels (proposed 2026-10-18, from the figures shared so far)
-1. **Orders, items and order parties** (Figs 4.1–4.4): what was ordered, in which direction
+1. **Orders, items and order parties** (Figs 4.1–4.5): what was ordered, in which direction
    (sales or purchase), at what price, and who placed, took, pays for and receives it?
 
 More submodels follow as the rest of the chapter's figures arrive. If the next figures
@@ -310,7 +310,78 @@ CONTACT MECHANISM            (from Ch 2, Fig 2.9)
   that purchase line to the sales line it fills.
 - **ORDER ROLE is drawn again,** unchanged: purchase orders have approvers too (12564's).
 
-### Points to discuss after the overview (Figs 4.1–4.4)
+### Fig 4.5 — Generic order roles and contact mechanisms
+**Transcription** (accepted: ☐; one upright photo; open points under "To check against the
+book")
+
+```
+ORDER                        (as 4.2; subtypes SALES ORDER, PURCHASE ORDER, no lines of their own)
+  -> ORDER ITEM              (order "composed of" many; item "part of" 1, bar)
+
+ORDER ITEM                   (as 4.2, drawn without the product and feature lines)
+  subtypes SALES ORDER ITEM (o corresponding_po_id), PURCHASE ORDER ITEM (o item_description)
+
+ORDER ROLE
+  o percent_contribution
+  -> ORDER                   (many to 1 order; order "involving" many)
+  -> PARTY                   (many "assigned to" 1 party; party "involved in" many)
+  -> ORDER ROLE TYPE         (many "described by" 1 type, bar; type "the description for" many)
+
+ORDER ITEM ROLE              (no attributes drawn)
+  -> ORDER ITEM              (many "of" 1 item, bar; item "involving" many)
+  -> PARTY                   (many "assigned to" 1 party, bar; party "involved in" many)
+  -> ORDER ITEM ROLE TYPE    (many "described by" 1 type, bar; type "the description for" many)
+
+ORDER CONTACT MECHANISM      (no attributes drawn)
+  -> ORDER                   (many "used with" 1 order, bar; order "having" many)
+  -> CONTACT MECHANISM       (many "assigned to" 1, bar; mechanism "used in" many)
+  -> CONTACT MECHANISM PURPOSE TYPE (many "used for" 1, bar; type "for" many)
+
+ORDER ITEM CONTACT MECHANISM (no attributes drawn)
+  -> ORDER ITEM              (many "used with" 1 item, bar; item "having" many)
+  -> CONTACT MECHANISM       (many "assigned to" 1, bar; mechanism "used in" many)
+  -> CONTACT MECHANISM PURPOSE TYPE (many "used for" 1, bar; type "for" many)
+
+ORDER ROLE TYPE, ORDER ITEM ROLE TYPE   (no attributes drawn)
+CONTACT MECHANISM PURPOSE TYPE          (from Ch 2, Fig 2.10)
+  # contact_mechanism_purpose_type_id
+  * description
+CONTACT MECHANISM, PARTY                (from Ch 2)
+```
+
+**To check against the book**
+- ORDER ROLE's label at its ORDER end isn't visible; read as 4.3's "of", with its bar.
+- Bars read on all three lines of ORDER ITEM ROLE and of both contact mechanism entities
+  (the marks are small). ORDER ROLE's party line: unclear, as in 4.3 (point 4).
+- CONTACT MECHANISM PURPOSE TYPE read as Ch 2's entity, reused: same name, same attributes.
+- SALES ORDER and PURCHASE ORDER have no lines here: read as 4.5 *replacing* the specific
+  lines of 4.3 and 4.4, the alternate the text offers when the roles may change.
+- PURCHASE ORDER ITEM is again drawn with ITEM DESCRIPTION (point 6).
+
+**Discussion**
+- **One shape for every party and every mechanism, in both directions.** On the order, ORDER
+  ROLE (a party and a type) and ORDER CONTACT MECHANISM (a mechanism and a purpose); on the
+  item, ORDER ITEM ROLE and ORDER ITEM CONTACT MECHANISM. The twelve party and mechanism
+  columns of 4.3 and 4.4 become four tables that sales and purchase orders share: a placer is
+  a placer either way, and the order's kind says which side is ours.
+- **What it gains.** A new kind of order party or mechanism is a row, not a column: the book on
+  order 12571 is a gift for Kiri (an item's *end user*), Ana installs 12561's copier (an
+  *installer*), and the courier calls Kiri's number (a *delivery contact*). The twin checks of
+  4.3 and 4.4 collapse into one.
+- **What it loses.** A column holds one value and a typed FK; rows hold any number. "One
+  bill-to per order" becomes a check (seed: 12571 billed to the family *and* to Ana). And ORDER
+  ROLE names a PARTY, not a PARTY ROLE: whether the party was a customer at the time is no
+  longer asked. Every report turns rows back into columns.
+- **The purposes are Ch 2's.** CONTACT MECHANISM PURPOSE TYPE already says why a party has a
+  mechanism (billing, shipping); the order reuses the list and adds order placing, order
+  taking and delivery contact.
+- **Each row is identified by its three parents** (the bars): a party can hold two roles on one
+  item, but not the same one twice.
+- **When not to:** an order system whose parties never change shape is easier to read, check
+  and query with 4.3's columns. 4.5 earns its keep when new order parties keep arriving, or
+  when sales and purchase orders must be handled by the same code.
+
+### Points to discuss after the overview (Figs 4.1–4.5)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing. The list moves under the chapter's last figure when that one arrives.
@@ -338,6 +409,14 @@ the literal drawing. The list moves under the chapter's last figure when that on
 7. **4.4, whose buyer roles:** PLACING BUYER, BILL TO PURCHASER and SHIP TO BUYER are grouped
    under a new BUYER type, the mirror of CUSTOMER. Nothing drawn says they must be roles of
    our own organizations (or their employees), so nothing checks it. Should something?
+8. **4.5 built beside 4.3 and 4.4:** read as an alternate (the text offers it for when roles
+   change), and built next to them, as Ch 2 kept Figs 2.5 and 2.6a: order 12571 uses only
+   the generic tables, the others the columns, plus generic rows for jobs no column holds. If
+   the chapter's overall figure keeps one version, the other becomes comparison only.
+9. **4.5, direction-neutral role types:** our new ORDER ROLE TYPE rows (PLACED_BY, TAKEN_BY,
+   BILL_TO) serve both directions, and the order's kind says which side is ours. Silverston
+   may mean one type per hat (placing customer, supplier, bill-to purchaser…), which keeps
+   the role names of 4.3 and 4.4 but doubles the list.
 
 ## Design decisions (book → SQL)
 
@@ -436,6 +515,28 @@ the literal drawing. The list moves under the chapter's last figure when that on
   the ship-to pair.
 - **Fantastic Supplies gets an order-desk e-mail** (contact mechanism 31), where our purchase
   orders are taken.
+
+### Fig 4.5
+- **Four new tables, each with a surrogate key:** `order_item_role`, `order_item_role_type`,
+  `order_contact_mechanism`, `order_item_contact_mechanism`. ORDER ROLE and ORDER ROLE TYPE
+  are 4.3's tables. Each identifier (three parents) is a data-quality query (seed: the
+  family's billing address entered twice on 12571).
+- **Built beside 4.3 and 4.4** (point 8). Order 12571 has its `sales_order` row with every
+  column empty, and its `sales_order_item` rows, so the earlier subtype checks still hold. A
+  data-quality query stops one order naming the same job both ways (seed: a BILL_TO order role
+  for Ben on 12561, which already has a bill-to column), and the "who pays" query reads
+  whichever model holds the answer.
+- **`order_role_type` gains PLACED_BY, TAKEN_BY and BILL_TO,** direction-neutral (point 9).
+  **`order_item_role_type`** is a lookup of its own (SHIP_TO, END_USER, INSTALLER): the third
+  role-type table, after Ch 2's `role_type` and 4.3's, and more weight for TODO's ROLE TYPE
+  refactor (point 5).
+- **`contact_mechanism_purpose_type` is Ch 2's table,** not a copy. It gains ORDER_PLACING,
+  ORDER_TAKING and DELIVERY_CONTACT; BILLING and SHIPPING are reused.
+- **"One per order" is a data-quality query:** one placer, taker and bill-to per order, one
+  placing, taking and billing mechanism, and one ship-to party and address per item (seed:
+  12571 billed to the family and to Ana).
+- **No fallback to the parent item** for a feature's ship-to here: 12571 has no feature items.
+  The rule from 4.3 (a feature ships with its item) would carry over unchanged.
 
 ## When NOT to use this
 - **A shop that only sells**, and buys through some other system, gets little from the ORDER

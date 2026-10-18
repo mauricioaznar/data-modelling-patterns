@@ -36,4 +36,15 @@ erDiagram
   CONTACT_MECHANISM       ||--o{ PURCHASE_ORDER      : "placed using / taken via / billed to (Ch 2)"
   PARTY_ROLE              ||--o{ PURCHASE_ORDER_ITEM : "requested ship-to"
   CONTACT_MECHANISM       ||--o{ PURCHASE_ORDER_ITEM : "shipping location for"
+
+  %% Fig 4.5 — Generic order roles and contact mechanisms (built beside 4.3 and 4.4)
+  ORDER_ITEM              ||--o{ ORDER_ITEM_ROLE              : "involving"
+  PARTY                   ||--o{ ORDER_ITEM_ROLE              : "involved in (Ch 2)"
+  ORDER_ITEM_ROLE_TYPE    ||--o{ ORDER_ITEM_ROLE              : "description for"
+  ORDER                   ||--o{ ORDER_CONTACT_MECHANISM      : "having"
+  CONTACT_MECHANISM       ||--o{ ORDER_CONTACT_MECHANISM      : "used in (Ch 2)"
+  CONTACT_MECHANISM_PURPOSE_TYPE ||--o{ ORDER_CONTACT_MECHANISM : "for (Ch 2)"
+  ORDER_ITEM              ||--o{ ORDER_ITEM_CONTACT_MECHANISM : "having"
+  CONTACT_MECHANISM       ||--o{ ORDER_ITEM_CONTACT_MECHANISM : "used in (Ch 2)"
+  CONTACT_MECHANISM_PURPOSE_TYPE ||--o{ ORDER_ITEM_CONTACT_MECHANISM : "for (Ch 2)"
 ```

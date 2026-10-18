@@ -11,7 +11,7 @@ Architecture figure:
 ## Submodels
 | # | Submodel | Figs | Doc draft | Overview | Practice | Doc done |
 |---|---|---|---|---|---|---|
-| 1 | Orders, items and order parties | 4.1–4.4 | 2026-10-18 | | | |
+| 1 | Orders, items and order parties | 4.1–4.5 | 2026-10-18 | | | |
 | A | Architecture | | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 4.1–4.3)`; the `A` row's matches the

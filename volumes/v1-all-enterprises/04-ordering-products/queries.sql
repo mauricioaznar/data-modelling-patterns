@@ -413,3 +413,164 @@ join "order" o      on o.order_id = l.order_id
 join party_role r   on r.party_role_id = l.party_role_id
 where not (r.from_date <= o.order_date and (r.thru_date is null or r.thru_date > o.order_date))
 order by l.order_id;
+
+-- ============================================================
+-- Fig 4.5 — Generic order roles and contact mechanisms
+-- ============================================================
+
+-- name: 4.5 — Order 12571 from the generic tables: every party and contact mechanism, on the order and on its items
+select level, line, what, who_or_where
+from (
+  select 'order' as level, null::integer as line, 'role: ' || r.order_role_type_id as what, n.name as who_or_where
+  from order_role r
+  join party_display_name n on n.party_id = r.party_id
+  where r.order_id = 12571
+  union all
+  select 'order', null, 'mechanism: ' || m.contact_mechanism_purpose_type_id, d.display_name
+  from order_contact_mechanism m
+  join contact_mechanism_display_name d on d.contact_mechanism_id = m.contact_mechanism_id
+  where m.order_id = 12571
+  union all
+  select 'item', oi.order_item_seq_id, 'role: ' || r.order_item_role_type_id, n.name
+  from order_item_role r
+  join order_item oi            on oi.order_item_id = r.order_item_id
+  join party_display_name n     on n.party_id = r.party_id
+  where oi.order_id = 12571
+  union all
+  select 'item', oi.order_item_seq_id, 'mechanism: ' || m.contact_mechanism_purpose_type_id, d.display_name
+  from order_item_contact_mechanism m
+  join order_item oi                     on oi.order_item_id = m.order_item_id
+  join contact_mechanism_display_name d  on d.contact_mechanism_id = m.contact_mechanism_id
+  where oi.order_id = 12571
+) x
+order by level desc, line nulls first, what, who_or_where;
+
+-- name: 4.5 — Who pays for each order, whichever model holds it (the bill-to column, else a BILL_TO order role, else the placer)
+-- With both models loaded, every report reads both. On 12561 the column wins and
+-- the conflicting order role is silently ignored: the data-quality check below catches it.
+with specific as (
+  select order_id, placed_by_party_role_id, bill_to_party_role_id from sales_order
+  union all
+  select order_id, placed_by_party_role_id, bill_to_party_role_id from purchase_order
+),
+generic as (
+  select r.order_id,
+         string_agg(n.name, ' + ' order by n.name) filter (where r.order_role_type_id = 'BILL_TO')   as bill_to,
+         string_agg(n.name, ' + ' order by n.name) filter (where r.order_role_type_id = 'PLACED_BY') as placed_by
+  from order_role r
+  join party_display_name n on n.party_id = r.party_id
+  group by r.order_id
+)
+select o.order_id, o.order_kind,
+       coalesce(bt.name, g.bill_to, pl.name, g.placed_by) as pays,
+       case when bt.name is not null      then 'bill-to column (4.3, 4.4)'
+            when g.bill_to is not null    then 'BILL_TO order role (4.5)'
+            when pl.name is not null      then 'no bill-to: the placer (column)'
+            when g.placed_by is not null  then 'no bill-to: the placer (order role)'
+            else 'nobody named' end as from_where
+from "order" o
+left join specific s               on s.order_id = o.order_id
+left join party_role r1            on r1.party_role_id = s.bill_to_party_role_id
+left join party_display_name bt    on bt.party_id = r1.party_id
+left join party_role r2            on r2.party_role_id = s.placed_by_party_role_id
+left join party_display_name pl    on pl.party_id = r2.party_id
+left join generic g                on g.order_id = o.order_id
+order by o.order_id;
+
+-- name: 4.5 — Item parties no column of 4.3 could hold: end users and installers
+select oi.order_id, oi.order_item_seq_id as line, coalesce(p.name, oi.item_description) as item,
+       r.order_item_role_type_id as role, n.name as party
+from order_item_role r
+join order_item oi             on oi.order_item_id = r.order_item_id
+join party_display_name n      on n.party_id = r.party_id
+left join product p            on p.product_id = oi.product_id
+where r.order_item_role_type_id <> 'SHIP_TO'
+order by oi.order_id, oi.order_item_seq_id;
+
+-- name: 4.5 — Data-quality check: the same row twice in a generic table (should be empty)
+-- Each table's identifier is its three parents (a bar on every line). ORDER
+-- ROLE's is 4.3's check.
+select 'order_item_role' as in_table, order_item_id as of_id, party_id::text as who_or_where, order_item_role_type_id as type, count(*) as rows
+from order_item_role group by order_item_id, party_id, order_item_role_type_id having count(*) > 1
+union all
+select 'order_contact_mechanism', order_id, contact_mechanism_id::text, contact_mechanism_purpose_type_id, count(*)
+from order_contact_mechanism group by order_id, contact_mechanism_id, contact_mechanism_purpose_type_id having count(*) > 1
+union all
+select 'order_item_contact_mechanism', order_item_id, contact_mechanism_id::text, contact_mechanism_purpose_type_id, count(*)
+from order_item_contact_mechanism group by order_item_id, contact_mechanism_id, contact_mechanism_purpose_type_id having count(*) > 1;
+
+-- name: 4.5 — Data-quality check: more than one of a job the columns held once, per order or per item (should be empty)
+-- Counts distinct parties and mechanisms: a row entered twice is the check above's.
+select 'order ' || order_id as of_what, order_role_type_id as job, count(distinct party_id) as how_many
+from order_role
+where order_role_type_id in ('PLACED_BY', 'TAKEN_BY', 'BILL_TO')
+group by order_id, order_role_type_id having count(distinct party_id) > 1
+union all
+select 'order ' || order_id, contact_mechanism_purpose_type_id, count(distinct contact_mechanism_id)
+from order_contact_mechanism
+where contact_mechanism_purpose_type_id in ('ORDER_PLACING', 'ORDER_TAKING', 'BILLING')
+group by order_id, contact_mechanism_purpose_type_id having count(distinct contact_mechanism_id) > 1
+union all
+select 'item ' || order_item_id, order_item_role_type_id, count(distinct party_id)
+from order_item_role
+where order_item_role_type_id = 'SHIP_TO'
+group by order_item_id, order_item_role_type_id having count(distinct party_id) > 1
+union all
+select 'item ' || order_item_id, contact_mechanism_purpose_type_id, count(distinct contact_mechanism_id)
+from order_item_contact_mechanism
+where contact_mechanism_purpose_type_id = 'SHIPPING'
+group by order_item_id, contact_mechanism_purpose_type_id having count(distinct contact_mechanism_id) > 1;
+
+-- name: 4.5 — Data-quality check: one job named in both models on the same order or item (should be empty)
+with specific as (
+  select so.order_id, null::integer as order_item_id, v.job
+  from sales_order so
+  cross join lateral (values ('placed by',    so.placed_by_party_role_id),
+                             ('taken by',     so.taken_by_party_role_id),
+                             ('bill-to',      so.bill_to_party_role_id),
+                             ('placed using', so.placed_using_contact_mechanism_id),
+                             ('taken via',    so.taken_via_contact_mechanism_id),
+                             ('billed to',    so.bill_to_contact_mechanism_id)) as v(job, id)
+  where v.id is not null
+  union all
+  select po.order_id, null, v.job
+  from purchase_order po
+  cross join lateral (values ('placed by',    po.placed_by_party_role_id),
+                             ('taken by',     po.taken_by_party_role_id),
+                             ('bill-to',      po.bill_to_party_role_id),
+                             ('placed using', po.placed_using_contact_mechanism_id),
+                             ('taken via',    po.taken_via_contact_mechanism_id),
+                             ('billed to',    po.bill_to_contact_mechanism_id)) as v(job, id)
+  where v.id is not null
+  union all
+  select oi.order_id, oi.order_item_id, v.job
+  from order_item oi
+  left join sales_order_item s      on s.order_item_id = oi.order_item_id
+  left join purchase_order_item p   on p.order_item_id = oi.order_item_id
+  cross join lateral (values ('ship-to',    coalesce(s.ship_to_party_role_id, p.ship_to_party_role_id)),
+                             ('shipped to', coalesce(s.ship_to_contact_mechanism_id, p.ship_to_contact_mechanism_id))) as v(job, id)
+  where v.id is not null
+),
+generic as (
+  select order_id, null::integer as order_item_id,
+         case order_role_type_id when 'PLACED_BY' then 'placed by' when 'TAKEN_BY' then 'taken by' when 'BILL_TO' then 'bill-to' end as job
+  from order_role
+  union all
+  select order_id, null,
+         case contact_mechanism_purpose_type_id when 'ORDER_PLACING' then 'placed using' when 'ORDER_TAKING' then 'taken via' when 'BILLING' then 'billed to' end
+  from order_contact_mechanism
+  union all
+  select oi.order_id, r.order_item_id, case r.order_item_role_type_id when 'SHIP_TO' then 'ship-to' end
+  from order_item_role r
+  join order_item oi on oi.order_item_id = r.order_item_id
+  union all
+  select oi.order_id, m.order_item_id, case m.contact_mechanism_purpose_type_id when 'SHIPPING' then 'shipped to' end
+  from order_item_contact_mechanism m
+  join order_item oi on oi.order_item_id = m.order_item_id
+)
+select distinct s.order_id, s.order_item_id, s.job
+from specific s
+join generic g on g.order_id = s.order_id
+              and g.order_item_id is not distinct from s.order_item_id
+              and g.job = s.job
+order by s.order_id, s.order_item_id, s.job;

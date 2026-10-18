@@ -10,7 +10,7 @@ The sections below are a menu of formats, not a list to complete. A submodel is 
 every row scores 3+ and its scenario holds up.
 
 **Submodels:**
-1. **Orders, items and order parties** (Figs 4.1–4.4). ~3 h
+1. **Orders, items and order parties** (Figs 4.1–4.5). ~3 h
 2. *(to come: the rest of Ch 4's figures.)*
 
 ## Progress
@@ -50,6 +50,9 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 4. **[4.4]** `purchase_order` has the same six party lines as `sales_order`, and every party
    check is written twice. Which Fig 4.1 problem is back, one level down? Why might Silverston
    still draw the lines on each subtype rather than once on ORDER?
+5. **[4.5]** Fig 4.5 turns every party and contact mechanism line into a typed row. Name two
+   rules that 4.3's columns enforced for free and the rows don't, and describe a business
+   for which you'd still choose 4.5.
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
