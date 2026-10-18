@@ -483,6 +483,40 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
+### Card 15 · V1 Ch 4 · Agreements (Figs 4.12–4.13)
+- **Cue:** "Which standing agreements do we have, with whom, and which of their clauses apply to this order line?"
+- **Hook:** a signed binder, its clauses tabbed by customer, product and region, addenda
+  stapled at the back *(Claude's, drafted when the figures landed)*
+- **Mantra:** Agreements name parties by role, maybe a relationship; items nest, apply by
+  organization, product, place; addenda amend, never overwrite.
+
+<details><summary>Key</summary>
+
+- **S:** `agreement` + `agreement_type` (a hierarchy: PRODUCT over SALES and PURCHASE,
+  EMPLOYMENT, OTHER over partnership; signed on a date, in force from and thru) ·
+  `agreement.party_relationship_id` (optional: the relationship it formalizes) ·
+  `agreement_role` + `agreement_role_type` (any number of parties in typed roles) ·
+  `agreement_item` + `agreement_item_type` (section, pricing program, exhibit,
+  sub-agreement; numbered; part of another item) · `agreement_organization_applicability`,
+  `agreement_product_applicability`, `agreement_geographical_applicability` (what a clause
+  is limited to; none of a kind = no limit) · `addendum` (on the agreement **or** one item;
+  created and effective dates).
+- **W:** contracts as files in a folder, or contract columns on the customer: one contract
+  per customer, two parties at most, no clause-level scope, and changes typed over what was
+  signed.
+- **T:** *(the naive-model trap until practice gives yours)* keeping only the party
+  relationship: Table 4.16's three partners fit no single relationship. And editing a
+  clause's text in place instead of adding an addendum.
+- **D:** agreement → agreement_type (→ parent type); agreement → party_relationship
+  (optional, Ch 2) → party_role ×2 → party; agreement ← agreement_role → party, →
+  agreement_role_type; agreement ← agreement_item → agreement_item_type, → agreement_item
+  (part of, same agreement); agreement_item ← organization | product | geographical
+  applicability → organization | product | geographic_boundary; addendum → agreement |
+  agreement_item (arc). The rule: the relationship's two ends play roles in the agreement.
+</details>
+
+---
+
 ## Deck: architecture
 
 One card per chapter, from its architecture figure (the last, overall one): how the chapter's

@@ -16,7 +16,7 @@ Architecture figure:
 | 3 | Order status, terms and item associations | 4.7–4.8 | 2026-10-18 | | | |
 | 4 | Requirements | 4.9 | 2026-10-18 | | | |
 | 5 | Requests and quotes | 4.10–4.11 | 2026-10-18 | | | |
-| 6 | Agreements | 4.12–4.13 | | | | |
+| 6 | Agreements | 4.12–4.13 | 2026-10-18 | | | |
 | A | Architecture | | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 4.1–4.3)`; the `A` row's matches the
@@ -37,6 +37,8 @@ architecture card's `(Fig N.M)`.
 | 4.9 | built | 4 | ✓ | ✓ | ✓ | ✓ | – |
 | 4.10 | built | 5 | ✓ | ✓ | ✓ | ✓ | – |
 | 4.11 | built | 5 | ✓ | ✓ | ✓ | ✓ | – |
+| 4.12 | built | 6 | ✓ | ✓ | ✓ | ✓ | – |
+| 4.13 | built | 6 | ✓ | ✓ | ✓ | ✓ | – |
 
 | # | Submodel | Figures built | Card | Ponders |
 |---|---|---|---|---|
@@ -45,6 +47,7 @@ architecture card's `(Fig N.M)`.
 | 3 | Order status, terms and item associations | ✓ | Card 12 | 4 |
 | 4 | Requirements | ✓ | Card 13 | 4 |
 | 5 | Requests and quotes | ✓ | Card 14 | 3 |
+| 6 | Agreements | ✓ | Card 15 | 5 |
 
 Last check: 0 ✗ · 1 !
 <!-- check:end -->

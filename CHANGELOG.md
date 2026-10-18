@@ -80,6 +80,28 @@ and any decisions made.
   *Requirements*, *Requests and quotes*), Core patterns gains Ch 4 examples on seven rows and
   a new pattern (status history), three question index rows, roadmap "5 submodels so far".
   Cards 12–14; Anki export 24 cards.
+- Table 4.15 (photo, shared after Fig 4.11 was built): the book's quote lines. 35678 quotes
+  70 hours of PC repair for the RFP 38967 (relinked from the RFI); 36908 quotes paper and
+  Johnson black pens for ACME's RFQ, where the need wants a blue pen. New products PC repair
+  (a service, by the hour) and Johnson black pen; Byte Doctors' rival proposal keeps the
+  work-effort branch of the arc; the text's central-contact term. The comparison query now
+  lists the must-have features a quoted product lacks ("lacks Blue"). Card 14's trap gains
+  the pens.
+- Figs 4.12–4.13 (photos, with Table 4.16), each transcribed with its "To check" list:
+  - 4.12 built: `agreement` with an `agreement_type` hierarchy (PRODUCT over SALES and
+    PURCHASE, EMPLOYMENT, OTHER over partnership), an optional link to Ch 2's party
+    relationship, `agreement_role` (+ type, the seventh role-type lookup). Table 4.16 seeded,
+    with William Jones (ABC Corporation's employee since 1990) and XYZ Corporation;
+    Northwind's 2025 sales agreement with Contoso. Three checks, one flagging the book's
+    10002 against Ch 2's customer relationship.
+  - 4.13 built: `agreement_item` (+ type; nested within one agreement), `addendum` (the
+    agreement or one item, the arc), organization, product and geographical applicability.
+    Contoso's 70001 outlined with three pricing programs and a sub-agreement; a query finds
+    the pricing programs that apply to each sales order line; three checks.
+- Submodel 6, *agreements* (Figs 4.12–4.13): ponders 1–5, ER diagram extended, design
+  reference entry (draft), Core patterns gains Ch 4 examples on seven rows and a new pattern
+  (amendment kept beside the original), a question index row, roadmap "6 submodels so far".
+  Card 15; Anki export 25 cards.
 
 **Decisions**
 - A card joins the morning study loop at its chapter's overview, not when its figures are
@@ -109,10 +131,18 @@ and any decisions made.
   optional; Table 4.11's "2002" dates read as 2001 and 34988 beside 24905 (Table 4.13 pairs
   them); "owner" of a part; Table 4.12's 23498 read as 2002 and 38967 as an RFP; Table 4.14's
   36908 read as issued in 2002.
+- Submodel 6 is *agreements* (Figs 4.12–4.13); later agreement figures may join it.
+- Readings left for the overview (NOTES, points 23–28): Table 4.16's 10002 linked to Ch 2's
+  only ACME customer relationship (ABC Subsidiary's) though it names ABC Corporation; the
+  agreement subtypes as type rows; an agreement starting while its relationship is current;
+  applicability with nothing of a kind meaning no limit; the addendum's arc and dates; an
+  item nested only within its own agreement. Point 22 revised by Table 4.15: both quotes
+  predate the requests they answer.
 
 **Next**
-- Share the rest of Ch 4's figures (agreements and the overall figure, presumably).
-- Re-import `docs/cards-anki.txt` in Anki (cards 11–14 are new; card 10's note id changed
+- Share the rest of Ch 4's figures (the agreement figures after 4.13 and the overall figure,
+  presumably).
+- Re-import `docs/cards-anki.txt` in Anki (cards 11–15 are new; card 10's note id changed
   with its figures, so delete the old card 10 note), then the one-time deck setup and moves
   in TODO.md (Cards).
 - Still open from 2026-10-17: the associations walk-through (substitute direction), the pricing

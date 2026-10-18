@@ -29,7 +29,7 @@ volumes. Vol 2's industry models can therefore extend Vol 1's `party` directly.
 |-----|----|---------|--------|
 | 1 | 02 | [People and Organizations](volumes/v1-all-enterprises/02-people-and-organizations/NOTES.md) | practice in progress (3 submodels) |
 | 1 | 03 | [Products](volumes/v1-all-enterprises/03-products/NOTES.md) | every figure built (3.9b and 3.10a alternates; 3.11 is the architecture figure, no SQL); doc drafts and cards for all 5 submodels; overview next, then practice |
-| 1 | 04 | [Ordering Products](volumes/v1-all-enterprises/04-ordering-products/NOTES.md) | Figs 4.1–4.11 in (4.1 not built); submodels 1–5 drafted and carded; more figures to come |
+| 1 | 04 | [Ordering Products](volumes/v1-all-enterprises/04-ordering-products/NOTES.md) | Figs 4.1–4.13 in (4.1 not built); submodels 1–6 drafted and carded; more figures to come |
 
 Each chapter folder contains:
 
