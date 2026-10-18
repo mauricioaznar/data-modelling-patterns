@@ -38,6 +38,12 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 `### Submodel N: name` headings, numbered as in STATUS.md, so `npm run check` can count them.
 
 ### Submodel 1: orders, items and order parties
+1. **[4.2]** ORDER ITEM keeps its own UNIT PRICE, though Ch 3's price components can work out
+   a price. Why store it, and what would go wrong if an item only pointed at the price
+   components that priced it?
+2. **[4.2]** The copier's duplex unit is an ORDER ITEM of its own, "ordered for" the copier's
+   item, not a column or a list on the copier's item. What does that buy, and which rules must
+   then hold that no foreign key checks?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

@@ -65,7 +65,7 @@ function readFigures() {
         if (rule.test(lines[i - 1] ?? '') && rule.test(lines[i + 1] ?? '') && line.startsWith('-- ')) {
           figure = line.slice(3).trim();
         }
-        const m = /^create\s+(?:or\s+replace\s+)?(?:table|view)\s+(\w+)/i.exec(line);
+        const m = /^create\s+(?:or\s+replace\s+)?(?:table|view)\s+"?(\w+)"?/i.exec(line);   // "order" is quoted
         if (m) map.set(`${volume.schema}.${m[1]}`, { chapter: `${volume.schema}/${chapter.dir}`, figure });
       });
     }

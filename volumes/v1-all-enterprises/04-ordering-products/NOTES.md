@@ -81,6 +81,73 @@ quantity and unit price, which is what a line item holds although the figure dra
   - *Nothing below a line.* A copier ordered with a duplex unit has no way to say the duplex
     unit belongs to the copier's line.
 
+### Fig 4.2 — Orders and order items
+**Transcription** (accepted: ☐; open points under "To check against the book")
+
+```
+ORDER
+  # order_id
+  * order_date
+  o entry_date
+  subtypes: SALES ORDER, PURCHASE ORDER
+
+ORDER ITEM
+  # order_item_seq_id
+  o quantity
+  o unit_price
+  o estimated_delivery_date
+  o shipping_instructions
+  o item_description
+  o comment
+  subtypes: PURCHASE ORDER ITEM, SALES ORDER ITEM (o corresponding_po_id)
+  -> ORDER            (many "part of" 1 order, bar: part of the identifier;
+                       order "composed of" many)
+  -> PRODUCT          (many "for" 1 product, optional; product "ordered via" many)
+  -> PRODUCT FEATURE  (many "for" 1 feature, optional; feature "ordered via" many)
+  -> ORDER ITEM       (recursive, optional both ways: an item "ordered for" one other item;
+                       an item "ordered with" many)
+
+PRODUCT               (from Ch 3, Fig 3.1, with the same attributes)
+PRODUCT FEATURE       (from Ch 3, Fig 3.4, with its subtypes: product quality, color,
+                       dimension (* number_specified), size, brand, software feature,
+                       hardware feature, billing feature, other feature)
+```
+
+**To check against the book**
+- No arc drawn across the two "for" lines (product, feature). Read as Silverston's intention
+  all the same: an item names a product *or* a feature, and a feature's item is "ordered for"
+  the product's item. An item may name neither when its description says what it is (a
+  one-off). Points to discuss, point 2.
+- The recursive line: read as each item "ordered for" at most one other item, and an item
+  "ordered with" many (the copier's item has its options under it). Dashed at both ends.
+- Both "for" lines read as dashed at the item end too, which is what lets an item name only
+  one of them.
+- CORRESPONDING PO ID read as the customer's own purchase order number for that line.
+- The ORDER and ORDER ITEM subtypes read as exclusive (drawn as boxes inside the supertype).
+
+**Discussion**
+- **One ORDER for both directions.** What sales and purchase orders share (a date, items,
+  products, quantities, prices) lives once; the subtype says which way the goods go. "Every
+  order for the pen" is now one query, and a rule about items is written once.
+- **An item is numbered within its order** (the bar on "part of"): line 1, 2, 3 of order
+  12560, as on the paper form.
+- **The unit price is a snapshot, not a lookup.** Ch 3's price components are rules that say
+  what we *would* charge under which conditions; the order item records what was *agreed*
+  that day. Price lists change and orders mustn't, and a negotiated price follows no rule.
+  The "agreed vs list" query shows the two side by side. (Ponder 1.)
+- **A feature gets its own item,** "ordered for" the product's item. The copier's duplex unit
+  and stapling finisher each have their own quantity and price, and the order reads as a
+  tree: the copier, with its options under it. A pen in blue is a pen item with a Blue item
+  under it, at no extra charge. (Ponder 2.)
+- **The description** covers what isn't in the catalogue (an engraved pen set made once for
+  one customer) and lets a line print differently from the product's name. Our reading: the
+  figure only shows the attribute.
+- **Per item, not per order:** the estimated delivery date and the shipping instructions,
+  because lines can arrive separately; and the customer's PO number, because one sales order
+  can fill lines from several of the customer's purchase orders.
+- **From Ch 3:** PRODUCT and PRODUCT FEATURE; and PRODUCT FEATURE APPLICABILITY (3.4), which
+  says which features a product can take, so a feature item has a rule to respect.
+
 ### Points to discuss after the overview (Figs 4.1–4.3)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -89,6 +156,10 @@ the literal drawing. The list moves under the chapter's last figure when that on
 1. **4.1, not built:** read as the book's straw man, which 4.2 replaces, so it gets no SQL
    (STATUS.md lists it as not built). If you'd rather see its failures in data, as with Fig
    2.2a's `person_flat`, we build it at the overview.
+2. **4.2, product or feature:** no arc is drawn, yet read as "an item names a product or a
+   feature, not both; a feature's item is ordered for a product's item, on the same order,
+   and the feature must apply to that product; an item with neither carries a description".
+   Built as data-quality queries, not constraints, so the reading is easy to change.
 
 ## Design decisions (book → SQL)
 
@@ -99,6 +170,38 @@ the literal drawing. The list moves under the chapter's last figure when that on
   order for the pen, both directions" from one table. Unlike Fig 2.2a's flat person (built as
   `person_flat`), 4.1 has almost no attributes, so its seed would show little. Points to
   discuss, point 1.
+
+### Fig 4.2
+- **ORDER is a reserved word,** so the table is `"order"`, quoted. Only the table name needs
+  the quotes (`from "order" o`); `order_id`, `order_date` and `order_item` are plain.
+- **SALES ORDER and PURCHASE ORDER → `order_kind`** (SALES / PURCHASE), as `product_kind` in
+  Ch 3: no attributes of their own here. SALES ORDER gets a subtype table in 4.3, when it gets
+  relationships of its own.
+- **ORDER ITEM keeps a surrogate `order_item_id`** and the book's identifier as a plain
+  `order_item_seq_id` column (the line number). Two lines with one number on an order is a
+  data-quality query (seed: purchase order 12564's two line 2s).
+- **No `order_item_kind`:** an item's kind is its order's kind, so a second discriminator would
+  store one fact twice. SALES ORDER ITEM has an attribute, so it gets a subtype table
+  (`sales_order_item`); PURCHASE ORDER ITEM has none and gets no table. A data-quality query
+  checks both ways: every sales item has its row, and no row sits on another order (seed: a
+  row on the purchase order's paper line).
+- **`product_id` and `product_feature_id` are both nullable,** and point 2's reading is three
+  data-quality queries: both or nothing (seed: the copier's scan-to-email line naming the
+  copier too), ordered for an item on another order (seed: a Black line on Ben's order pointing
+  at 12562's pen), and the feature not applying to the parent's product on the order date
+  (seed: a red pen in 2025; red was dropped in 2020).
+- **`ordered_for_order_item_id`** for the recursive line, named after the "ordered for" end. A
+  check stops an item being ordered for itself; longer loops are possible, so the tree query
+  carries a depth guard.
+- **Quantity and unit price:** a check keeps the quantity positive and the price not negative
+  (a selectable colour is 0.00). The quantity is in the product's unit of measure (Ch 3). The
+  book gives the price no currency; ours are USD, as Ch 3 did for order values.
+- **Products not on sale on the order date** are a data-quality query on sales orders only
+  (seed: two diskette boxes in 2024; their sales stopped in 2006). A purchase order may buy what
+  we no longer sell.
+- **Order 12560 is Table 4.2's order,** with its prices, which aren't our Ch 3 list (the pen
+  lists at 2.50, the book's order has 12.00). The "agreed vs list" query keeps that on purpose:
+  the order keeps what was agreed.
 
 ## When NOT to use this
 <!-- Filled as the figures land. -->
