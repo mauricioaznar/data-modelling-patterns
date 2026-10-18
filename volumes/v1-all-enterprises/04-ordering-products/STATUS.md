@@ -17,8 +17,8 @@ Architecture figure: 4.17
 | 4 | Requirements | 4.9 | 2026-10-18 | | | |
 | 5 | Requests and quotes | 4.10–4.11 | 2026-10-18 | | | |
 | 6 | Agreements | 4.12–4.13 | 2026-10-18 | | | |
-| 7 | Agreement terms and pricing | 4.14–4.16 | | | | |
-| A | Architecture | 4.17 | | | – | – |
+| 7 | Agreement terms and pricing | 4.14–4.16 | 2026-10-18 | | | |
+| A | Architecture | 4.17 | 2026-10-18 | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 4.1–4.3)`; the `A` row's matches the
 architecture card's `(Fig N.M)`.
@@ -53,8 +53,8 @@ architecture card's `(Fig N.M)`.
 | 4 | Requirements | ✓ | Card 13 | 4 |
 | 5 | Requests and quotes | ✓ | Card 14 | 3 |
 | 6 | Agreements | ✓ | Card 15 | 5 |
-| 7 | Agreement terms and pricing | ✓ | ✗ | 5 |
-| A | Architecture | – | ✗ | – |
+| 7 | Agreement terms and pricing | ✓ | Card 16 | 5 |
+| A | Architecture | – | Architecture | – |
 
-Last check: 4 ✗ · 0 !
+Last check: 0 ✗ · 0 !
 <!-- check:end -->

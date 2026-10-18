@@ -517,6 +517,37 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
+### Card 16 · V1 Ch 4 · Agreement terms and pricing (Figs 4.14–4.16)
+- **Cue:** "Under which terms and at which prices did we agree, and which of them govern this order line?"
+- **Hook:** the contract's price sheet held up against each order line, and a tally counter
+  clicking toward the cap *(Claude's, drafted when the figures landed)*
+- **Mantra:** Terms on agreement or item, dated inside it; agreed prices are program price
+  components; orders find agreements by rule.
+
+<details><summary>Key</summary>
+
+- **S:** `agreement_term` (on the agreement **or** one item; a value, from and thru dates
+  inside the agreement's) · `term_type` (a hierarchy: LEGAL, FINANCIAL, INCENTIVE, THRESHOLD,
+  OTHER at the top; shared with order and quote terms) · `agreement_pricing_program` (a
+  subtype table of `agreement_item`) · `price_component.agreement_item_id` (null = a list
+  price) · the view `order_item_agreement_item` (which items govern a sales line).
+- **W:** conditions buried in the contract's text, or a column per kind (`max_quantity`,
+  `exclusive_flag`); agreed prices in a `contract_price` table that repeats every pricing
+  condition; an `agreement_id` typed on the order.
+- **T:** *(the naive-model trap until practice gives yours)* storing `agreement_id` on the
+  order: several items govern one line at once (a price program here, an exclusivity there),
+  and a typed key goes stale or is keyed wrong. And recording a cap that no query adds up.
+- **D:** agreement_term → term_type (→ its kind), → agreement | agreement_item (arc);
+  agreement_item ← agreement_pricing_program ← price_component (Ch 3's conditions: region,
+  quantity break), its product inside the program's applicability; order_item ⇢
+  agreement_item, derived: the agreement in force on the order date, the customer in an
+  agreement_role, the item's applicability matching (organization, product, ship-to
+  boundary). Checks: dates inside the agreement's; the charged price against the agreement
+  price; a running total past a threshold.
+</details>
+
+---
+
 ## Deck: architecture
 
 One card per chapter, from its architecture figure (the last, overall one): how the chapter's
@@ -588,6 +619,37 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
   quantity break, order value); product | feature ← estimated_product_cost; product ←
   product_association → product. Bold = from Ch 2. Kept: 3.10a's good subtypes, not 3.10b's
   PART.
+</details>
+
+### Architecture · V1 Ch 4 · Ordering products (Fig 4.17)
+- **Cue:** "Everything about what was needed, asked, offered, agreed and ordered, in one picture."
+- **Hook:** a conveyor belt (need, ask, offer) feeding the orders drawer; the contracts drawer
+  beside it, tied by a rulebook, not a string *(Claude's, drafted when the figure landed)*
+- **Mantra:** Need, ask, offer, order: item to item. Orders and agreements, both header and
+  items, meet by rule, never by key.
+
+<details><summary>Key</summary>
+
+- **S:** `order` + `order_item` (sales or purchase; each line a snapshot of product or
+  feature and agreed price) · `agreement` + `agreement_item` (nested; roles, terms, pricing
+  programs) · the chain `requirement` → `requirement_request` → `request_item` →
+  `quote_item` → `order_item`, with `order_requirement_commitment` back to the need.
+- **W:** a need is asked about (request), answered (quote) and accepted (order item), and
+  the commitment says how much of it an order fills. Around the order, each on the order or
+  one item: roles, contact mechanisms by purpose, statuses, terms, adjustments. Around the
+  agreement: roles, the relationship it formalizes, terms, and prices on its pricing
+  programs. An agreement governs an order line by rule (its dates, its parties, its items'
+  applicability), with no key.
+- **T:** *(the naive-model trap until practice gives yours)* twin sales and purchase models
+  (4.1), a column per order party, and an `agreement_id` on the order.
+- **D:** requirement (part of) ← requirement_request → request_item → request; quote_item →
+  request_item, → quote (← quote_term); order_item → quote_item (acceptance), → order, →
+  **product** | **product_feature**; order ← order_role → **party**; order | order_item ←
+  status, term, adjustment, contact mechanism (by **contact_mechanism_purpose_type**);
+  order_requirement_commitment → order_item, requirement; agreement ← agreement_role →
+  **party**, → **party_relationship**; agreement ← agreement_item (nested) ← agreement_term,
+  ← **price_component**; order_item ⇢ agreement_item (derived). Bold = from Ch 2 and Ch 3.
+  Kept: 4.2's one ORDER over 4.1's twins, 4.5's generic parties over 4.3's columns.
 </details>
 
 ---
