@@ -1320,6 +1320,63 @@ whose advantage is reusing the pricing structure.
 - **The cost:** every query that reads PRICE COMPONENT as "the price list" now has to say
   "with no program", Ch 3's included (point 35).
 
+### Fig 4.16 — Relationship of agreement to order
+**Transcription** (accepted: ☐; one photo, with the section's opening text; open points
+under "To check against the book")
+
+```
+ORDER ITEM                   (as 4.2: # order_item_seq_id, o quantity, o unit_price,
+                              o estimated_delivery_date, o shipping_instructions,
+                              o item_description, o comment; subtypes SALES ORDER ITEM
+                              (o corresponding_po_id), PURCHASE ORDER ITEM)
+  -> ORDER                   (many "part of" 1, bar; order "composed of" many)
+  -> PRODUCT                 (many "for" 1, dashed; product "ordered via" many)
+  -> PRODUCT FEATURE         (many "for" 1, dashed; feature "ordered via" many)
+ORDER                        (# order_id, * order_date, o entry_date)
+PRODUCT                      (# product_id, * name, o introduction_date,
+                              o sales_discontinuation_date, o support_discontinuation_date,
+                              o comment)
+PRODUCT FEATURE              (# product_feature_id, * description)
+PRICE COMPONENT              (# price_component_id, * from_date, o thru_date, o price,
+                              o percent, o comment)
+  -> PRODUCT                 ("a price defined for"; "priced by")
+  -> PRODUCT FEATURE         ("a price defined for"; "priced by")
+  -> AGREEMENT PRICING PROGRAM ("specified for"; "priced using")
+AGREEMENT ITEM               (# agreement_item_seq_id, * agreement_text, o agreement_image;
+                              subtype AGREEMENT PRICING PROGRAM)
+  -> AGREEMENT               (many "part of" 1, bar; agreement "composed of" many)
+AGREEMENT                    (# agreement_id, * agreement_date, * from_date, * thru_date,
+                              * description, o text)
+
+No line joins ORDER or ORDER ITEM to AGREEMENT or AGREEMENT ITEM.
+```
+
+**The text beside it**, in short: usually there is no direct relationship between an order
+and an agreement, because an agreement's terms and prices are business rules the order is
+processed under. The figure is another view of structures already shown, to make plain how
+an order reaches its agreement: through the products (and features) both of them price.
+
+**To check against the book**
+- Nothing new is drawn: read as a view to be built as queries, not tables (point 37).
+- The path is read as more than the product: the agreement in force on the order's date,
+  the order's customer among its parties, and the item's applicability (4.13) matching the
+  line's party, product and ship-to address. The figure draws only the product legs.
+- "In most cases" leaves room for an order that does name its agreement (a call-off against
+  a blanket contract, say). Not built.
+- AGREEMENT's THRU DATE is drawn mandatory again (point 32).
+
+**Discussion**
+- **The problem.** An `agreement_id` on the order looks simpler, but an order is often
+  governed by several agreements at once (a price program here, an exclusivity there), the
+  clerk may pick the wrong one or none, and an agreement signed after the order was keyed
+  would never reach it. (Ponder 4 of submodel 7.)
+- **Derive, don't store:** the order line keeps what was agreed for it (its unit price, a
+  snapshot, 4.2), and the agreement says what it should have been. Comparing the two is the
+  point: a price check and a threshold count, each a query. (Ponder 5 of submodel 7.)
+- **When to store it after all:** when the business really does order against one named
+  contract (blanket orders, call-offs), or when deriving it is too slow; then the stored
+  link needs a check that it still agrees with the derivation.
+
 ### Points to discuss after the overview (Figs 4.1–4.13)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -1805,6 +1862,31 @@ the literal drawing. The list moves under the chapter's last figure when that on
   past. So 70001's paper and copier programs stay unpriced: a component with no condition
   but the program would collide with the list price in Ch 3's overlap check.
 
+### Fig 4.16
+- **No table: a view, `order_item_agreement_item`,** the agreement items governing each
+  sales order line. It is 4.13's applicability query for every item type, not only pricing
+  programs: the agreement in force on the order date, the placing or bill-to party in one of
+  its roles, and each kind of limit the item has matching (none of a kind = no limit, point
+  26). Sales lines with a product only; a purchase line would match the supplier's side
+  instead, and features are left out (point 37).
+- **The agreement price of a line,** in a query: the most specific applicable base price
+  among its programs' components (region by the ship-to address at any depth, quantity
+  break by the line's quantity), less discounts, plus surcharges, as Ch 3's price-a-line
+  does. Components with conditions the order can't answer here (party type, category, order
+  value, sale type) are left out; ours use none.
+- **Two data-quality queries:** lines charged other than their agreement price, and lines
+  past a threshold (a running total over the term's dates, the text's reading that the
+  item's prices hold only up to the cap; point 33).
+- **Seeds, ours:** ACME's three 2002 orders under 10002, taken by ABC Corporation: 12572
+  (600 reams to Drident Avenue at the western 7.50), 12573 (400 reams to the head office at
+  7.00, the eastern price, a bad row; and 50 boxes of diskettes, which item 2 governs with
+  its exclusivity and no price), 12574 (300 reams in September, past the 1,000-ream cap, a
+  bad row).
+- **The price check found a slip of our own:** 12562's blue pens, shipped to Contoso in St.
+  Louis in March 2025, went at the 2.50 list price, while 70001's pens program (4.13) says
+  2.25 delivered in Missouri. The row stays as 4.2 seeded it; the 4.16 seed section lists it
+  among the check's catches.
+
 ## When NOT to use this
 - **A shop that only sells**, and buys through some other system, gets little from the ORDER
   supertype. It costs one discriminator, so it's cheap to keep, but don't model purchase
@@ -1849,5 +1931,8 @@ the literal drawing. The list moves under the chapter's last figure when that on
 - **Agreement pricing (4.15)** when an agreement only ever grants a flat percentage off the
   list: one term (a discount percent) says it. Price components per program pay off when
   agreed prices vary by region, quantity or period, as list prices do.
+- **Deriving the agreement (4.16)** when every order is placed against one named contract
+  (blanket orders, call-offs): then the order should name it, and the derivation becomes a
+  check on that link.
 
 ## Open questions

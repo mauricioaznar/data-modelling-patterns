@@ -1061,3 +1061,39 @@ insert into price_component (price_component_id, price_component_type_id, charge
   (31, 'BASE_PRICE', null, '2002-01-01', '2002-12-31', 6.50, null, 'USD', 3, null, 12, null, null, null, null, null, null, null, null, 'DATA ERROR: the diskettes priced on the paper program (caught by a query)', 9);
 
 select setval(pg_get_serial_sequence('price_component', 'price_component_id'), (select max(price_component_id) from price_component));
+
+-- ============================================================
+-- Fig 4.16 — Relationship of agreement to order
+-- ============================================================
+-- No book table: ACME's 2002 orders under 10002 are ours, taken by ABC
+-- Corporation (the agreement's supplier). Roles (Ch 2 and 4.3): 60 ACME
+-- placing, 67 ACME bill-to, 68 ACME ship-to, 73 ABC Corporation internal.
+-- Mechanisms: 32 ACME's head office, 34 2300 Drident Avenue, both in St.
+-- Louis, so the western price applies.
+-- The price check also catches a line seeded long before: 12562's blue pens
+-- (item 9), shipped to Contoso in St. Louis at the 2.50 list price, while
+-- 70001's pens program says 2.25 delivered in Missouri.
+insert into "order" (order_id, order_kind, order_date, entry_date) values
+  (12572, 'SALES', '2002-02-04', '2002-02-04'),
+  (12573, 'SALES', '2002-04-15', '2002-04-15'),
+  (12574, 'SALES', '2002-09-16', '2002-09-16');
+
+insert into sales_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id,
+                         placed_using_contact_mechanism_id, taken_via_contact_mechanism_id, bill_to_contact_mechanism_id) values
+  (12572, 60, 73, 67, 32, null, 32),
+  (12573, 60, 73, 67, 32, null, 32),
+  (12574, 60, 73, 67, 32, null, 32);
+
+insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, quantity, unit_price, comment) values
+  (31, 12572, 1, 1, 600, 7.50, null),
+  (32, 12573, 1, 1, 400, 7.00, 'DATA ERROR: the eastern price on a St. Louis delivery (caught by a query)'),
+  (33, 12573, 2, 3, 50,  7.00, 'Diskettes: item 2 governs them (only from this supplier), at no agreed price'),
+  (34, 12574, 1, 1, 300, 7.50, 'DATA ERROR: past 2002''s 1,000-ream cap, still at the agreed price (caught by a query)');
+
+select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max(order_item_id) from order_item));
+
+insert into sales_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
+  (31, 68, 34),
+  (32, 68, 32),
+  (33, 68, 32),
+  (34, 68, 34);

@@ -1540,3 +1540,189 @@ join product pr       on pr.product_id = pc.product_id
 where exists (select 1 from agreement_product_applicability x where x.agreement_item_id = i.agreement_item_id)
   and not exists (select 1 from agreement_product_applicability x
                   where x.agreement_item_id = i.agreement_item_id and x.product_id = pc.product_id);
+
+-- ============================================================
+-- Fig 4.16 — Relationship of agreement to order
+-- ============================================================
+
+-- name: 4.16 — The agreement items governing each sales order line (the view), with what they bring: terms in force, and prices
+select o.order_id, oi.order_item_seq_id as line, o.order_date, pr.name as product, ship.display_name as ship_to,
+       v.agreement_id || '/' || i.agreement_item_seq_id || ' ' || i.agreement_text as agreement_item,
+       i.agreement_item_type_id as type,
+       (select string_agg(t.description || coalesce(' ' || tm.term_value, ''), '; ' order by t.description)
+          from agreement_term tm join term_type t on t.term_type_id = tm.term_type_id
+         where tm.agreement_item_id = i.agreement_item_id
+           and tm.from_date <= o.order_date and (tm.thru_date is null or tm.thru_date > o.order_date)) as item_terms,
+       (select string_agg(t.description || coalesce(' ' || tm.term_value, ''), '; ' order by t.description)
+          from agreement_term tm join term_type t on t.term_type_id = tm.term_type_id
+         where tm.agreement_id = v.agreement_id
+           and tm.from_date <= o.order_date and (tm.thru_date is null or tm.thru_date > o.order_date)) as agreement_terms,
+       (select count(*) from price_component pc where pc.agreement_item_id = i.agreement_item_id) as prices
+from order_item_agreement_item v
+join order_item oi                            on oi.order_item_id = v.order_item_id
+join "order" o                                on o.order_id = oi.order_id
+join product pr                               on pr.product_id = oi.product_id
+join agreement_item i                         on i.agreement_item_id = v.agreement_item_id
+left join sales_order_item soi                on soi.order_item_id = oi.order_item_id
+left join contact_mechanism_display_name ship on ship.contact_mechanism_id = soi.ship_to_contact_mechanism_id
+where exists (select 1 from agreement_term tm where tm.agreement_item_id = i.agreement_item_id)
+   or exists (select 1 from agreement_pricing_program p where p.agreement_item_id = i.agreement_item_id)
+order by o.order_date, o.order_id, oi.order_item_seq_id, v.agreement_id, i.agreement_item_seq_id;
+
+-- name: 4.16 — Each line a pricing program governs: its agreement price against the price charged
+-- Ch 3's rule on the programs' components: the most specific applicable base
+-- price (then the lowest), less discounts, plus surcharges, per unit.
+-- Components with conditions this query can't answer (party type, category,
+-- order value, sale type) are left out; ours use none.
+with line as (
+  select oi.order_item_id, oi.order_id, oi.order_item_seq_id, o.order_date, oi.product_id, oi.quantity, oi.unit_price,
+         soi.ship_to_contact_mechanism_id
+  from order_item oi
+  join "order" o                 on o.order_id = oi.order_id
+  left join sales_order_item soi on soi.order_item_id = oi.order_item_id
+),
+applicable as (
+  select l.order_item_id, pc.price_component_id, pc.price_component_type_id, pc.price, pc.percent,
+         pc.geographic_boundary_id, pc.quantity_break_id
+  from line l
+  join order_item_agreement_item v on v.order_item_id = l.order_item_id
+  join price_component pc          on pc.agreement_item_id = v.agreement_item_id
+  where pc.from_date <= l.order_date and (pc.thru_date is null or pc.thru_date > l.order_date)
+    and (pc.product_id is null or pc.product_id = l.product_id)
+    and pc.product_feature_id is null
+    and num_nonnulls(pc.party_type_id, pc.product_category_id, pc.order_value_id, pc.sale_type_id) = 0
+    and (pc.geographic_boundary_id is null or pc.geographic_boundary_id in (
+          select ga.ancestor_id
+          from postal_address_boundary pb
+          join geographic_boundary_ancestor ga on ga.geographic_boundary_id = pb.geographic_boundary_id
+          where pb.contact_mechanism_id = l.ship_to_contact_mechanism_id))
+    and (pc.quantity_break_id is null or exists (
+          select 1 from quantity_break q
+          where q.quantity_break_id = pc.quantity_break_id
+            and q.from_quantity <= l.quantity and (q.thru_quantity is null or q.thru_quantity > l.quantity)))
+),
+base as (
+  select distinct on (order_item_id) order_item_id, price
+  from applicable
+  where price_component_type_id = 'BASE_PRICE'
+  order by order_item_id, num_nonnulls(geographic_boundary_id, quantity_break_id) desc, price
+),
+agreed as (
+  select b.order_item_id,
+         b.price
+         - coalesce(sum(coalesce(a.price, round(b.price * a.percent / 100, 2))) filter (where a.price_component_type_id = 'DISCOUNT'), 0)
+         + coalesce(sum(coalesce(a.price, round(b.price * a.percent / 100, 2))) filter (where a.price_component_type_id = 'SURCHARGE'), 0)
+           as agreement_price
+  from base b
+  left join applicable a on a.order_item_id = b.order_item_id and a.price_component_type_id in ('DISCOUNT', 'SURCHARGE')
+  group by b.order_item_id, b.price
+)
+select l.order_id, l.order_item_seq_id as line, l.order_date, pr.name as product, l.quantity,
+       l.unit_price as charged, g.agreement_price,
+       case when l.unit_price = g.agreement_price then 'as agreed' else 'differs' end as note
+from agreed g
+join line l     on l.order_item_id = g.order_item_id
+join product pr on pr.product_id = l.product_id
+order by l.order_date, l.order_id, l.order_item_seq_id;
+
+-- name: 4.16 — Thresholds: how much of each cap the lines it governs have used, within the term's dates
+-- A term on one item counts the lines that item governs; a term on the whole
+-- agreement would count every line any of its items governs, once.
+with gov as (
+  select tm.agreement_term_id, coalesce(tm.agreement_id, i.agreement_id) as agreement_id, i.agreement_item_seq_id,
+         t.description as term, tm.term_value, tm.from_date, tm.thru_date,
+         case tm.term_type_id when 'QUANTITY_NOT_TO_EXCEED' then oi.quantity
+                              when 'DOLLARS_NOT_TO_EXCEED'  then oi.quantity * oi.unit_price end as used
+  from agreement_term tm
+  join term_type t           on t.term_type_id = tm.term_type_id and t.parent_type_id = 'THRESHOLD'
+  left join agreement_item i on i.agreement_item_id = tm.agreement_item_id
+  join lateral (select distinct v.order_item_id
+                from order_item_agreement_item v
+                where v.agreement_item_id = tm.agreement_item_id or v.agreement_id = tm.agreement_id) g on true
+  join order_item oi on oi.order_item_id = g.order_item_id
+  join "order" o     on o.order_id = oi.order_id
+  where o.order_date >= tm.from_date and (tm.thru_date is null or o.order_date < tm.thru_date)
+)
+select agreement_id, agreement_item_seq_id as item, term, term_value as cap,
+       from_date, thru_date - 1 as last_day, count(*) as lines, sum(used) as used, term_value - sum(used) as left_over
+from gov
+group by agreement_term_id, agreement_id, agreement_item_seq_id, term, term_value, from_date, thru_date
+order by agreement_id, item, term;
+
+-- name: 4.16 — Data-quality check: governed lines charged other than their agreement price (should be empty)
+with line as (
+  select oi.order_item_id, oi.order_id, oi.order_item_seq_id, o.order_date, oi.product_id, oi.quantity, oi.unit_price,
+         soi.ship_to_contact_mechanism_id
+  from order_item oi
+  join "order" o                 on o.order_id = oi.order_id
+  left join sales_order_item soi on soi.order_item_id = oi.order_item_id
+),
+applicable as (
+  select l.order_item_id, pc.price_component_id, pc.price_component_type_id, pc.price, pc.percent,
+         pc.geographic_boundary_id, pc.quantity_break_id
+  from line l
+  join order_item_agreement_item v on v.order_item_id = l.order_item_id
+  join price_component pc          on pc.agreement_item_id = v.agreement_item_id
+  where pc.from_date <= l.order_date and (pc.thru_date is null or pc.thru_date > l.order_date)
+    and (pc.product_id is null or pc.product_id = l.product_id)
+    and pc.product_feature_id is null
+    and num_nonnulls(pc.party_type_id, pc.product_category_id, pc.order_value_id, pc.sale_type_id) = 0
+    and (pc.geographic_boundary_id is null or pc.geographic_boundary_id in (
+          select ga.ancestor_id
+          from postal_address_boundary pb
+          join geographic_boundary_ancestor ga on ga.geographic_boundary_id = pb.geographic_boundary_id
+          where pb.contact_mechanism_id = l.ship_to_contact_mechanism_id))
+    and (pc.quantity_break_id is null or exists (
+          select 1 from quantity_break q
+          where q.quantity_break_id = pc.quantity_break_id
+            and q.from_quantity <= l.quantity and (q.thru_quantity is null or q.thru_quantity > l.quantity)))
+),
+base as (
+  select distinct on (order_item_id) order_item_id, price
+  from applicable
+  where price_component_type_id = 'BASE_PRICE'
+  order by order_item_id, num_nonnulls(geographic_boundary_id, quantity_break_id) desc, price
+),
+agreed as (
+  select b.order_item_id,
+         b.price
+         - coalesce(sum(coalesce(a.price, round(b.price * a.percent / 100, 2))) filter (where a.price_component_type_id = 'DISCOUNT'), 0)
+         + coalesce(sum(coalesce(a.price, round(b.price * a.percent / 100, 2))) filter (where a.price_component_type_id = 'SURCHARGE'), 0)
+           as agreement_price
+  from base b
+  left join applicable a on a.order_item_id = b.order_item_id and a.price_component_type_id in ('DISCOUNT', 'SURCHARGE')
+  group by b.order_item_id, b.price
+)
+select l.order_id, l.order_item_seq_id as line, l.order_date, pr.name as product,
+       l.unit_price as charged, g.agreement_price
+from agreed g
+join line l     on l.order_item_id = g.order_item_id
+join product pr on pr.product_id = l.product_id
+where l.unit_price <> g.agreement_price
+order by l.order_date, l.order_id, l.order_item_seq_id;
+
+-- name: 4.16 — Data-quality check: lines that take a threshold past its cap, by running total over the term's dates (should be empty)
+with gov as (
+  select tm.agreement_term_id, coalesce(tm.agreement_id, i.agreement_id) as agreement_id, i.agreement_item_seq_id,
+         t.description as term, tm.term_value, o.order_id, oi.order_item_seq_id, o.order_date,
+         case tm.term_type_id when 'QUANTITY_NOT_TO_EXCEED' then oi.quantity
+                              when 'DOLLARS_NOT_TO_EXCEED'  then oi.quantity * oi.unit_price end as used
+  from agreement_term tm
+  join term_type t           on t.term_type_id = tm.term_type_id and t.parent_type_id = 'THRESHOLD'
+  left join agreement_item i on i.agreement_item_id = tm.agreement_item_id
+  join lateral (select distinct v.order_item_id
+                from order_item_agreement_item v
+                where v.agreement_item_id = tm.agreement_item_id or v.agreement_id = tm.agreement_id) g on true
+  join order_item oi on oi.order_item_id = g.order_item_id
+  join "order" o     on o.order_id = oi.order_id
+  where o.order_date >= tm.from_date and (tm.thru_date is null or o.order_date < tm.thru_date)
+),
+run as (
+  select g.*, sum(used) over (partition by agreement_term_id order by order_date, order_id, order_item_seq_id) as running
+  from gov g
+)
+select agreement_id, agreement_item_seq_id as item, term, term_value as cap,
+       order_id, order_item_seq_id as line, order_date, used, running
+from run
+where running > term_value
+order by agreement_id, item, term, order_date;

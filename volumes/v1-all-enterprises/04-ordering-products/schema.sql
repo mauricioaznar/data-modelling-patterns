@@ -651,3 +651,45 @@ create table agreement_pricing_program (
 -- (NOTES, point 35).
 alter table price_component
   add column agreement_item_id integer references agreement_pricing_program;   -- "specified for" / "priced using"
+
+-- ============================================================
+-- Fig 4.16 — Relationship of agreement to order
+-- ============================================================
+-- No table: the figure draws no line between ORDER and AGREEMENT, because an
+-- agreement's terms and prices are rules an order is processed under, not a
+-- reference the order holds. The link is derived, so it is a view: the
+-- agreement items governing each sales order line. 4.13's applicability
+-- query, for every item type: the agreement is in force on the order date,
+-- the order's placing or bill-to party plays a role in it, and each kind of
+-- limit the item has matches the line (the party, the product, the ship-to
+-- address at any depth of boundaries); none of a kind = no limit (NOTES,
+-- point 26). Sales lines with a product only (point 37).
+create view order_item_agreement_item as
+with line as (
+  select oi.order_item_id, o.order_date, oi.product_id, soi.ship_to_contact_mechanism_id,
+         array_remove(array[pl.party_id, bt.party_id], null) as customer_parties
+  from order_item oi
+  join "order" o                 on o.order_id = oi.order_id
+  join sales_order so            on so.order_id = oi.order_id
+  left join sales_order_item soi on soi.order_item_id = oi.order_item_id
+  left join party_role pl        on pl.party_role_id = so.placed_by_party_role_id
+  left join party_role bt        on bt.party_role_id = so.bill_to_party_role_id
+  where oi.product_id is not null
+)
+select l.order_item_id, i.agreement_item_id, i.agreement_id
+from line l
+join agreement a      on a.from_date <= l.order_date and (a.thru_date is null or a.thru_date > l.order_date)
+join agreement_item i on i.agreement_id = a.agreement_id
+where exists (select 1 from agreement_role r
+              where r.agreement_id = a.agreement_id and r.party_id = any (l.customer_parties))
+  and (not exists (select 1 from agreement_organization_applicability x where x.agreement_item_id = i.agreement_item_id)
+       or exists (select 1 from agreement_organization_applicability x
+                  where x.agreement_item_id = i.agreement_item_id and x.party_id = any (l.customer_parties)))
+  and (not exists (select 1 from agreement_product_applicability x where x.agreement_item_id = i.agreement_item_id)
+       or exists (select 1 from agreement_product_applicability x
+                  where x.agreement_item_id = i.agreement_item_id and x.product_id = l.product_id))
+  and (not exists (select 1 from agreement_geographical_applicability x where x.agreement_item_id = i.agreement_item_id)
+       or exists (select 1 from agreement_geographical_applicability x
+                  join postal_address_boundary pb      on pb.contact_mechanism_id = l.ship_to_contact_mechanism_id
+                  join geographic_boundary_ancestor ga on ga.geographic_boundary_id = pb.geographic_boundary_id
+                  where x.agreement_item_id = i.agreement_item_id and ga.ancestor_id = x.geographic_boundary_id));

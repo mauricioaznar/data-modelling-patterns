@@ -132,6 +132,12 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 3. **[4.15]** An agreed price is a Ch 3 PRICE COMPONENT with one more line, not an AGREEMENT
    PRICE entity of its own. What does reusing PRICE COMPONENT buy, and what must every query
    that reads "the price list" now do differently?
+4. **[4.16]** No line joins ORDER to AGREEMENT. How does an order line find the agreement items
+   that govern it, and why might Silverston prefer that to an `agreement_id` on the order?
+   When would you store the link anyway?
+5. **[4.16]** The order line keeps its own unit price (4.2) although the agreement says what
+   it should be. Why keep both? Use 12573's paper and 12562's pens: what does comparing
+   them catch that neither catches alone?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

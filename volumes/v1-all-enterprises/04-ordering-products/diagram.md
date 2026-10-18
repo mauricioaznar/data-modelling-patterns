@@ -140,4 +140,6 @@ erDiagram
   %% Fig 4.15 — Agreement pricing (AGREEMENT PRICING PROGRAM is a subtype table of agreement_item; a price with no program is a list price)
   AGREEMENT_ITEM          ||--o| AGREEMENT_PRICING_PROGRAM : "subtype (typed PRICING_PROGRAM)"
   AGREEMENT_PRICING_PROGRAM |o--o{ PRICE_COMPONENT   : "priced using (Ch 3)"
+
+  %% Fig 4.16 — Relationship of agreement to order: no table and no line. The view order_item_agreement_item derives which agreement items govern each sales line (agreement in force, customer in a role, applicability matching)
 ```
