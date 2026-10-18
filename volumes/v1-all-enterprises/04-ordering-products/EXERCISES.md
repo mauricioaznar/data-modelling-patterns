@@ -13,7 +13,8 @@ every row scores 3+ and its scenario holds up.
 1. **Orders, items and order parties** (Figs 4.1–4.5). ~3 h
 2. **Order adjustments** (Fig 4.6). ~3 h
 3. **Order status, terms and item associations** (Figs 4.7–4.8). ~3 h
-4. *(to come: the rest of Ch 4's figures.)*
+4. **Requirements** (Fig 4.9). ~3 h
+5. *(to come: the rest of Ch 4's figures.)*
 
 ## Progress
 
@@ -78,6 +79,17 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 4. **[4.8]** ORDER ITEM ASSOCIATION has no quantity. 12564's 100 pens fill a 30-pen and a
    20-pen sales line. What can't the model tell you, and what would you add to fix it? Why
    might Silverston have left it out?
+
+### Submodel 4: requirements
+1. **[4.9]** A requirement is a need before any order. Why not record it as a draft order
+   instead? Name two things REQUIREMENT holds that an order item can't.
+2. **[4.9]** Table 4.11 names no product on any requirement, only desired features. Why might
+   a need be described by features rather than by a product, and how would you find the
+   products that could fill it?
+3. **[4.9]** ORDER REQUIREMENT COMMITMENT carries a quantity; 4.8's ORDER ITEM ASSOCIATION
+   doesn't. Why does the commitment need one?
+4. **[4.9]** REQUIREMENT has two sets of subtypes (customer or internal; product or work).
+   How did we build two independent sets, and what would one four-way list get wrong?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

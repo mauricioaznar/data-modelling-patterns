@@ -928,3 +928,145 @@ from order_status s
 join order_item oi on oi.order_item_id = s.order_item_id
 where s.status_type_id = 'ORDER_BACKORDERED'
   and not exists (select 1 from order_item_association a where a.sales_order_item_id = s.order_item_id);
+
+-- ============================================================
+-- Fig 4.9 — Requirements
+-- ============================================================
+
+-- name: 4.9 — Every requirement, Table 4.11's first: owner on the creation date, parent, quantity, product and desired features
+select r.requirement_id, r.requirement_creation_date as created,
+       (select string_agg(n.name, ' + ')
+        from requirement_role o
+        join party_display_name n on n.party_id = o.party_id
+        where o.requirement_id = r.requirement_id and o.requirement_role_type_id = 'OWNER'
+          and o.from_date <= r.requirement_creation_date
+          and (o.thru_date is null or o.thru_date > r.requirement_creation_date)) as owner,
+       r.description, r.part_of_requirement_id as part_of, r.quantity, p.name as product,
+       string_agg(f.description || coalesce(' ' || f.number_specified || ' ' || f.uom_id, '')
+                  || case when d.optional_ind then ' (optional)' else '' end,
+                  ', ' order by d.desired_feature_id) as desired_features
+from requirement r
+left join product_requirement pr  on pr.requirement_id = r.requirement_id
+left join product p               on p.product_id = pr.product_id
+left join desired_feature d       on d.requirement_id = r.requirement_id
+left join product_feature f       on f.product_feature_id = d.product_feature_id
+group by r.requirement_id, r.requirement_creation_date, r.description, r.part_of_requirement_id, r.quantity, p.name
+order by r.requirement_id >= 50000, r.requirement_id;
+
+-- name: 4.9 — Requirement trees: each requirement under the one it's part of, with whose need and what kind
+with recursive tree (requirement_id, depth, path) as (
+  select requirement_id, 0, array[requirement_id]
+  from requirement
+  where part_of_requirement_id is null
+  union all
+  select r.requirement_id, t.depth + 1, t.path || r.requirement_id
+  from requirement r
+  join tree t on r.part_of_requirement_id = t.requirement_id
+  where t.depth < 10
+)
+select repeat('    ', t.depth) || r.requirement_id || ' ' || r.description as requirement,
+       r.requirement_origin as whose_need, r.requirement_kind as kind, r.quantity
+from tree t
+join requirement r on r.requirement_id = t.requirement_id
+order by t.path;
+
+-- name: 4.9 — Catalogue products that could fill each product requirement: every must-have feature offered on the creation date
+with need as (
+  select d.requirement_id, d.product_feature_id, r.requirement_creation_date as on_date
+  from desired_feature d
+  join requirement r on r.requirement_id = d.requirement_id
+  where not d.optional_ind
+),
+must as (
+  select requirement_id, count(*) as must_haves
+  from need
+  group by requirement_id
+),
+offer as (
+  select n.requirement_id, a.product_id, count(*) as met
+  from need n
+  join product_feature_applicability a
+    on a.product_feature_id = n.product_feature_id
+   and a.from_date <= n.on_date and (a.thru_date is null or a.thru_date > n.on_date)
+  group by n.requirement_id, a.product_id
+)
+select r.requirement_id, r.description, m.must_haves, p.name as product_named,
+       coalesce(string_agg(c.name, '; ' order by c.name) filter (where o.met = m.must_haves),
+                '(no product offers them all)') as candidates
+from must m
+join requirement r               on r.requirement_id = m.requirement_id
+left join product_requirement pr on pr.requirement_id = r.requirement_id
+left join product p              on p.product_id = pr.product_id
+left join offer o                on o.requirement_id = m.requirement_id
+left join product c              on c.product_id = o.product_id
+group by r.requirement_id, r.description, m.must_haves, p.name
+order by r.requirement_id;
+
+-- name: 4.9 — Each requirement against its commitments: needed, committed, left, by which order lines, and its latest status
+with committed as (
+  select c.requirement_id, sum(c.quantity) as committed,
+         string_agg(oi.order_id || ' line ' || oi.order_item_seq_id || ' (' || c.quantity || ')', ', '
+                    order by oi.order_id, oi.order_item_seq_id) as order_lines
+  from order_requirement_commitment c
+  join order_item oi on oi.order_item_id = c.order_item_id
+  group by c.requirement_id
+),
+latest as (
+  select distinct on (requirement_id) requirement_id, status_type_id
+  from requirement_status
+  order by requirement_id, status_date desc, requirement_status_id desc
+)
+select r.requirement_id, r.description, r.quantity as needed, c.committed,
+       r.quantity - coalesce(c.committed, 0) as left_to_commit, c.order_lines, t.description as latest_status
+from requirement r
+left join committed c   on c.requirement_id = r.requirement_id
+left join latest l      on l.requirement_id = r.requirement_id
+left join status_type t on t.status_type_id = l.status_type_id
+where c.requirement_id is not null or l.requirement_id is not null
+order by r.requirement_id;
+
+-- name: 4.9 — Data-quality check: requirement_kind and the product_requirement subtype table disagree (should be empty)
+select r.requirement_id, r.description, r.requirement_kind, (p.requirement_id is not null) as has_product_requirement_row
+from requirement r
+left join product_requirement p on p.requirement_id = r.requirement_id
+where (r.requirement_kind = 'PRODUCT') <> (p.requirement_id is not null);
+
+-- name: 4.9 — Data-quality check: commitments beyond the requirement's quantity (should be empty)
+select r.requirement_id, r.description, r.quantity as needed, sum(c.quantity) as committed
+from requirement r
+join order_requirement_commitment c on c.requirement_id = r.requirement_id
+group by r.requirement_id, r.description, r.quantity
+having sum(c.quantity) > r.quantity;
+
+-- name: 4.9 — Data-quality check: desired features the requirement's product doesn't offer on the creation date (should be empty)
+select r.requirement_id, r.description, p.name as product, f.description as feature, r.requirement_creation_date
+from desired_feature d
+join product_requirement pr on pr.requirement_id = d.requirement_id
+join requirement r          on r.requirement_id = d.requirement_id
+join product p              on p.product_id = pr.product_id
+join product_feature f      on f.product_feature_id = d.product_feature_id
+where not exists (
+  select 1
+  from product_feature_applicability a
+  where a.product_id = pr.product_id
+    and a.product_feature_id = d.product_feature_id
+    and a.from_date <= r.requirement_creation_date
+    and (a.thru_date is null or a.thru_date > r.requirement_creation_date)
+);
+
+-- name: 4.9 — Data-quality check: requirements using a status that isn't a requirement status (should be empty)
+select s.requirement_status_id, s.requirement_id, s.status_type_id, t.parent_type_id
+from requirement_status s
+join status_type t on t.status_type_id = s.status_type_id
+where t.parent_type_id is distinct from 'REQUIREMENT_STATUS';
+
+-- name: 4.9 — Data-quality check: two owners of one requirement at the same time (should be empty)
+select a.requirement_id, na.name as owner, nb.name as other_owner, greatest(a.from_date, b.from_date) as overlap_from
+from requirement_role a
+join requirement_role b         on b.requirement_id = a.requirement_id
+                               and b.requirement_role_id > a.requirement_role_id
+join party_display_name na      on na.party_id = a.party_id
+join party_display_name nb      on nb.party_id = b.party_id
+where a.requirement_role_type_id = 'OWNER' and b.requirement_role_type_id = 'OWNER'
+  and a.from_date < coalesce(b.thru_date, 'infinity'::date)
+  and b.from_date < coalesce(a.thru_date, 'infinity'::date);

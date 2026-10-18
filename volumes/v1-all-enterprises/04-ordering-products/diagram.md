@@ -67,4 +67,19 @@ erDiagram
   %% Fig 4.8 — Order item association (a sales line filled by purchase lines; FKs on the subtype tables)
   SALES_ORDER_ITEM        ||--o{ ORDER_ITEM_ASSOCIATION : "associated with"
   PURCHASE_ORDER_ITEM     ||--o{ ORDER_ITEM_ASSOCIATION : "used to fulfill"
+
+  %% Fig 4.9 — Requirements (origin CUSTOMER/INTERNAL and kind PRODUCT/WORK are columns on REQUIREMENT)
+  REQUIREMENT             |o--o{ REQUIREMENT         : "composed of"
+  FACILITY                |o--o{ REQUIREMENT         : "in need of (Ch 2)"
+  REQUIREMENT             ||--o| PRODUCT_REQUIREMENT : "subtype (kind PRODUCT)"
+  PRODUCT                 |o--o{ PRODUCT_REQUIREMENT : "asked for via (Ch 3)"
+  PRODUCT_REQUIREMENT     ||--o{ DESIRED_FEATURE     : "specifying"
+  PRODUCT_FEATURE         ||--o{ DESIRED_FEATURE     : "description for (Ch 3)"
+  REQUIREMENT             ||--o{ REQUIREMENT_STATUS  : "in a state of"
+  STATUS_TYPE             ||--o{ REQUIREMENT_STATUS  : "used to define (Ch 2, REQUIREMENT_STATUS group)"
+  REQUIREMENT             ||--o{ REQUIREMENT_ROLE    : "associated with"
+  PARTY                   ||--o{ REQUIREMENT_ROLE    : "assigned to (Ch 2)"
+  REQUIREMENT_ROLE_TYPE   ||--o{ REQUIREMENT_ROLE    : "used to define"
+  ORDER_ITEM              ||--o{ ORDER_REQUIREMENT_COMMITMENT : "the fulfiller of"
+  REQUIREMENT             ||--o{ ORDER_REQUIREMENT_COMMITMENT : "committed by"
 ```

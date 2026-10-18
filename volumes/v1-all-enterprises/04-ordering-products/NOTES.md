@@ -23,6 +23,9 @@ lookup into the price list), and roles instead of party columns.
    of its lines stand, under which agreed conditions, and which purchase line will fill a
    sales line we can't fill from stock?
 
+4. **Requirements** (Fig 4.9): what is needed, by whom, by when and where, broken down how,
+   and which order lines commit to filling it, for how much?
+
 More submodels follow as the rest of the chapter's figures arrive. Figures that answer the
 same questions as an existing submodel join it (4.4 and 4.5 joined submodel 1), and its
 `Figs` grow.
@@ -642,7 +645,130 @@ lines from different suppliers: many to many, hence the association.
   association can't say, and Fig 4.9's ORDER REQUIREMENT COMMITMENT, which links an order line
   to a need, carries a quantity where this one doesn't. (Ponder 4.)
 
-### Points to discuss after the overview (Figs 4.1–4.8)
+### Fig 4.9 — Requirements
+**Transcription** (accepted: ☐; one landscape photo, with Table 4.11 in two photos; open
+points under "To check against the book")
+
+```
+REQUIREMENT
+  # requirement_id
+  * description
+  o requirement_creation_date
+  o required_by_date
+  o estimated_budget
+  o quantity
+  o reason
+  subtypes, two sets: CUSTOMER REQUIREMENT, INTERNAL REQUIREMENT
+                      PRODUCT REQUIREMENT, WORK REQUIREMENT
+  -> REQUIREMENT             (recursive: many "part of" 1; one "composed of" many)
+  -> FACILITY                (many "needed at" 1 facility; facility "in need of" many)
+
+PRODUCT REQUIREMENT
+  -> PRODUCT                 (many "requesting" 1 product; product "asked for via" many)
+
+DESIRED FEATURE
+  # desired_feature_id
+  o optional_ind
+  -> PRODUCT REQUIREMENT     (many "part of" 1, bar; requirement "specifying" many)
+  -> PRODUCT FEATURE         (many "described by" 1 feature; feature "the description for" many)
+
+REQUIREMENT STATUS
+  * status_date
+  -> REQUIREMENT             (many "a status for" 1; requirement "in a state of" many)
+  -> REQUIREMENT STATUS TYPE (many "defined by" 1 type; type "used to define" many)
+
+REQUIREMENT STATUS TYPE      (no attributes drawn)
+
+REQUIREMENT ROLE
+  # from_date
+  o thru_date
+  -> REQUIREMENT             (many "related to" 1; requirement "associated with" many)
+  -> PARTY                   (many "for" 1 party; party "assigned to" many)
+  -> REQUIREMENT ROLE TYPE   (many "defined by" 1 type; type "used to define" many)
+
+REQUIREMENT ROLE TYPE
+  # role_type_code
+  * description
+
+ORDER REQUIREMENT COMMITMENT
+  * quantity
+  -> ORDER ITEM              (many "a usage of" 1 item; item "the fulfiller of" many)
+  -> REQUIREMENT             (many "the commitment of" 1; requirement "committed by" many)
+
+ORDER ITEM                   (as 4.2; subtypes PURCHASE ORDER ITEM (o item_description) and
+                              SALES ORDER ITEM (o corresponding_po_id))
+PRODUCT                      (from Ch 3, Fig 3.1)
+PRODUCT FEATURE              (from Ch 3, Fig 3.4)
+PARTY                        (from Ch 2)
+FACILITY                     (from Ch 2, Fig 2.11: # facility_id, * description, o square_footage)
+```
+
+**Table 4.11** (requirements, the book's sample, in our words):
+- 24905, ABC Corporation's, April 13, 2001: repair 14 PCs.
+- 43005, ABC Subsidiary's, May 16, 2002: the office cleaned on a regular basis, with two
+  parts of the same day and owner, 43006 (a cleaning service) and 43007 (cleaning supplies).
+- 30003, ACME's, May 15, 2001: office supplies. Its parts are ABC Subsidiary's, dated May 16,
+  2002: 50 reams of bond paper (8½ by 11 inches, fine grade), 40 Goldstein Elite pens (blue),
+  20 reams of copier paper (8½ by 11 inches, white), 200 diskettes (3½-inch, high density,
+  formatted).
+- 34988, ABC Corporation's, June 20, 2001: repair 15 PCs, listed as part of 30003.
+- The PRODUCT column is empty on every row; the desired features say what's wanted.
+
+**To check against the book**
+- Two subtype sets, drawn as two boxes inside REQUIREMENT: whose need it is (customer or
+  internal) and what's needed (a product or work). Fig 4.10 redraws them the same way, so the
+  reading is firm: a requirement is one of each pair.
+- The PRODUCT line read as leaving PRODUCT REQUIREMENT, and optional: Table 4.11 names no
+  product (point 18).
+- DESIRED FEATURE "part of" PRODUCT REQUIREMENT with a bar; the "specifying" end dashed.
+- REQUIREMENT ROLE's lines paired from their labels: "related to" ↔ "associated with"
+  (REQUIREMENT), "for" ↔ "assigned to" (PARTY). The photo is small, but either way both are
+  plain FKs. Its identifier read as its three parents plus the from date.
+- REQUIREMENT STATUS draws only a mandatory STATUS DATE (a date, where 4.7's order status has
+  a datetime) and no id of its own: identified by its requirement, its type and the date.
+- REQUIREMENT ROLE TYPE's identifier is drawn as ROLE TYPE CODE: read as the same kind of key
+  as every other type's id.
+- Table 4.11's "May 16 2002" rows are parts of requirements created in 2001, and ACME's request
+  for quotes on them (Table 4.13) is dated March 2002. Read as misprints for May 16, 2001
+  (point 19).
+- Table 4.11 puts 34988 (repair 15 PCs, ABC Corporation's) under 30003 (ACME's office
+  supplies). Table 4.13 asks vendors about 24905 and 34988 together (29 PCs = 14 + 15), so
+  34988 is read as 24905's sibling, with no parent (point 19).
+- "ACME Corporation" read as Ch 2's ACME Company; "high density" as the diskettes' 1.44 MB
+  capacity; "formatted" is a feature Ch 3 lacks, added.
+
+**Discussion**
+- **The problem.** A need exists before any order: a department wants paper, a customer wants
+  a copier with a duplex unit, an office needs cleaning. Jumping straight to a draft order
+  loses the need itself (by when, for how much, why, who asked), and one need may take
+  several orders while one order line may serve several needs.
+- **REQUIREMENT is the need, in the asker's terms:** a description, a quantity, a date it's
+  needed by, a budget, a reason, and where (a Ch 2 facility: the Chatham warehouse needs its
+  dock door fixed).
+- **Two ways to split it.** Whose need: a customer's (we sell to fill it) or our own (we buy
+  or do the work). What's needed: a product, or work (Ch 6's work efforts will fill those).
+  Each pair is exclusive, but the pairs are independent: a customer's work requirement is
+  fine. Built as two discriminator columns. (Ponder 4.)
+- **Features instead of a product.** "50 reams, 8½ by 11 inches, fine grade" is a need;
+  choosing Johnson's bond paper is a buying decision. DESIRED FEATURE reuses Ch 3's PRODUCT
+  FEATURE, each a must-have or optional, so a query can list the catalogue products that meet
+  a need through Ch 3's feature applicability. (Ponder 2.)
+- **Needs break down,** like Ch 3's categories: office supplies into paper, pens and
+  diskettes; office cleaning into a service and supplies.
+- **Who's involved:** REQUIREMENT ROLE (owner, requester, approver), dated, because a
+  requirement can outlive the people around it. 4.3's ORDER ROLE has no dates. Another role
+  type lookup (point 5).
+- **Status history:** REQUIREMENT STATUS, dated, as 4.7's order status, in the same shared
+  status table.
+- **ORDER REQUIREMENT COMMITMENT: which order lines fill which needs, and how much.** 12560's
+  10 reams fill 10 of ACME's 50; A2395's cleaning fills ABC Subsidiary's need for a cleaning
+  service. A need is often filled in parts, so the commitment carries a quantity, which 4.8's
+  association lacks. A customer's need is usually filled by a sales line, our own by a
+  purchase line. (Ponder 3.)
+- **The flow so far:** a requirement (the need) → an order line commits to it → shipments
+  and invoices (Ch 5, Ch 7) follow the order.
+
+### Points to discuss after the overview (Figs 4.1–4.9)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing. The list moves under the chapter's last figure when that one arrives.
@@ -708,6 +834,15 @@ the literal drawing. The list moves under the chapter's last figure when that on
 17. **4.8, no quantity:** built without one, as drawn. When a purchase line fills several
     sales lines, or a sales line draws on several purchase lines, the split is unknown. A
     quantity on the association would fix it.
+18. **4.9, the product line:** read as leaving PRODUCT REQUIREMENT and optional, since Table
+    4.11 names no product and its desired features say what's wanted. If it leaves
+    REQUIREMENT instead, a work requirement could name a product too (the PC to repair).
+19. **4.9, Table 4.11's dates and 34988:** "May 16 2002" read as 2001 (parts made the day
+    after their parent, and before the 2002 request for quotes on them). 34988 seeded with no
+    parent, beside 24905, as Table 4.13 pairs them; Table 4.11 has it under ACME's 30003.
+20. **4.9, who owns a part:** 30003 is ACME's, its parts ABC Subsidiary's. Read as "owner"
+    meaning who answers for the requirement: ABC Subsidiary breaks ACME's need into lines it
+    will fill. If "owner" means whose need it is, the parts should be ACME's too.
 
 ## Design decisions (book → SQL)
 
@@ -905,6 +1040,37 @@ the literal drawing. The list moves under the chapter's last figure when that on
 - **No quantity** (point 17): the queries show both sides' quantities and flag where the
   split is unknown.
 
+### Fig 4.9
+- **Two discriminators on `requirement`:** `requirement_origin` (CUSTOMER / INTERNAL) and
+  `requirement_kind` (PRODUCT / WORK). Neither subtype set has attributes.
+- **PRODUCT REQUIREMENT gets a subtype table,** `product_requirement` (sharing the PK), since
+  it has relationships of its own (the product, desired features), as SALES ORDER did in 4.3.
+  `product_id` is nullable (point 18). A data-quality query checks the kind and the table
+  agree (seed: Northwind's dock-door repair, a WORK requirement, with a product row). WORK
+  REQUIREMENT gets nothing until Ch 6.
+- **`part_of_requirement_id` and `facility_id` are plain FKs;** a check stops a requirement
+  being part of itself, and the tree query carries a depth guard.
+- **`desired_feature.optional_ind` is `boolean not null default false`:** drawn optional, but
+  a missing answer means a must-have. A desired feature the requirement's product doesn't
+  offer on the creation date is a data-quality query (seed: Contoso wants the pen in red,
+  dropped in 2020). Requirements with no product are matched to the catalogue by a query.
+- **REQUIREMENT STATUS TYPE → a REQUIREMENT_STATUS group in Ch 2's `status_type`,** as 4.7's
+  order statuses (point 15). `status_date` is a date, as drawn; a surrogate key stands in for
+  the identifier. A data-quality query checks the group (seed: an order status on the
+  dock-door repair).
+- **`requirement_role_type` is a lookup of its own,** the fourth role-type table (point 5):
+  owner, requester, approver. `requirement_role` is dated (exclusive thru date). Two owners
+  at once is a data-quality query (seed: Contoso's copier also owned by Ben).
+- **`order_requirement_commitment`:** a surrogate key, the order item, the requirement and a
+  mandatory positive quantity. Commitments beyond the requirement's quantity are a
+  data-quality query (seed: 13480's pens committing 40 more to ACME's 40 blue pens). Which
+  direction of order fills which origin of need isn't checked: we may buy to fill a
+  customer's need (4.8).
+- **Table 4.11 keeps its ids;** "May 16 2002" stored as 2001-05-16 and 34988 with no parent
+  (point 19). Our own requirements are 50001–50004: Northwind's paper for the Chatham
+  warehouse, Contoso's copier, the dock door, Contoso's red pens.
+- **A new Ch 3 feature, "Formatted"** (OTHER), for the diskettes of 30007.
+
 ## When NOT to use this
 - **A shop that only sells**, and buys through some other system, gets little from the ORDER
   supertype. It costs one discriminator, so it's cheap to keep, but don't model purchase
@@ -932,5 +1098,8 @@ the literal drawing. The list moves under the chapter's last figure when that on
 - **Order item association (4.8)** when the business never buys to fill a particular sale (it
   sells from stock and restocks by reorder level, Ch 3's reorder guideline): there is
   nothing to link.
+- **Requirements (4.9)** when every need goes straight to an order (a small shop buying for
+  itself): requirement rows are overhead. They earn their keep when needs are gathered,
+  approved, broken down, or filled by several orders.
 
 ## Open questions

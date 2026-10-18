@@ -518,3 +518,116 @@ insert into order_item_association (sales_order_item_id, purchase_order_item_id)
   (11, 17),
   (4,  22),   -- DATA ERROR: the same link twice (caught by a query)
   (9,  18);   -- DATA ERROR: 12564's books "filling" 12562's pens (caught by a query)
+
+-- ============================================================
+-- Fig 4.9 — Requirements
+-- ============================================================
+-- Table 4.11's diskettes are "formatted", a feature Ch 3 didn't have.
+insert into product_feature (product_feature_id, product_feature_type_id, description) values
+  (24, 'OTHER', 'Formatted');
+
+select setval(pg_get_serial_sequence('product_feature', 'product_feature_id'), (select max(product_feature_id) from product_feature));
+
+insert into status_type (status_type_id, parent_type_id, description) values
+  ('REQUIREMENT_STATUS',    null,                 'Requirement status'),
+  ('REQUIREMENT_CREATED',   'REQUIREMENT_STATUS', 'Created'),
+  ('REQUIREMENT_APPROVED',  'REQUIREMENT_STATUS', 'Approved'),
+  ('REQUIREMENT_FULFILLED', 'REQUIREMENT_STATUS', 'Fulfilled'),
+  ('REQUIREMENT_CANCELLED', 'REQUIREMENT_STATUS', 'Cancelled');
+
+insert into requirement_role_type (requirement_role_type_id, description) values
+  ('OWNER',     'Owner: answers for the requirement'),
+  ('REQUESTER', 'Asked for it'),
+  ('APPROVER',  'Approved it');
+
+-- Table 4.11, with its ids. "May 16 2002" read as 2001, and 34988 seeded with
+-- no parent, beside 24905 (NOTES, point 19). Then ours, 50001-50004.
+-- Facilities (Ch 2): 5 the Chatham warehouse, 6 Contoso's Market St North
+-- building.
+insert into requirement (requirement_id, requirement_origin, requirement_kind, description, requirement_creation_date,
+                         required_by_date, estimated_budget, quantity, reason, part_of_requirement_id, facility_id) values
+  (24905, 'INTERNAL', 'WORK',    'Repair 14 PCs',                              '2001-04-13', null,         null,  14,   null,                              null,  null),
+  (43005, 'INTERNAL', 'WORK',    'Have the office cleaned on a regular basis', '2001-05-16', null,         null,  null, null,                              null,  null),
+  (43006, 'INTERNAL', 'PRODUCT', 'Cleaning service',                           '2001-05-16', null,         null,  null, null,                              43005, null),
+  (43007, 'INTERNAL', 'PRODUCT', 'Cleaning supplies',                          '2001-05-16', null,         null,  null, null,                              43005, null),
+  (30003, 'CUSTOMER', 'PRODUCT', 'Office supplies',                            '2001-05-15', null,         null,  null, null,                              null,  null),
+  (30004, 'CUSTOMER', 'PRODUCT', 'Reams of bond paper',                        '2001-05-16', null,         null,  50,   null,                              30003, null),
+  (30005, 'CUSTOMER', 'PRODUCT', 'Goldstein Elite pen',                        '2001-05-16', null,         null,  40,   null,                              30003, null),
+  (30006, 'CUSTOMER', 'PRODUCT', 'Reams of copier paper',                      '2001-05-16', null,         null,  20,   null,                              30003, null),
+  (30007, 'CUSTOMER', 'PRODUCT', 'Diskettes',                                  '2001-05-16', null,         null,  200,  null,                              30003, null),
+  (34988, 'INTERNAL', 'WORK',    'Repair 15 PCs',                              '2001-06-20', null,         null,  15,   null,                              null,  null),
+  (50001, 'INTERNAL', 'PRODUCT', 'Copier paper for the Chatham warehouse',     '2025-01-10', '2025-01-31', 16000, 400,  'Stock for the first quarter',     null,  5),
+  (50002, 'CUSTOMER', 'PRODUCT', 'A copier for the Market St office',          '2025-01-28', '2025-02-28', 4500,  1,    'The old copier is beyond repair', null,  6),
+  (50003, 'INTERNAL', 'WORK',    'Repair the loading dock door',               '2025-03-01', '2025-03-15', 1200,  null, 'It sticks half open',             null,  5),
+  (50004, 'CUSTOMER', 'PRODUCT', 'Red pens for the sales team',                '2025-03-01', null,         null,  50,   null,                              null,  6);
+
+select setval(pg_get_serial_sequence('requirement', 'requirement_id'), (select max(requirement_id) from requirement));
+
+-- Products (Ch 3): 1 Johnson's bond paper, 2 the Goldstein pen, 6 the copier.
+insert into product_requirement (requirement_id, product_id) values
+  (43006, null), (43007, null),
+  (30003, null), (30004, null), (30005, null), (30006, null), (30007, null),   -- Table 4.11 names no product
+  (50001, 1),
+  (50002, 6),
+  (50004, 2),
+  (50003, null);   -- DATA ERROR: a WORK requirement with a product row (caught by a query)
+
+-- Features (Ch 3): 1 Fine grade, 2 White, 3 Blue, 5 Red, 6 Width 8.5 in,
+-- 7 Length 11 in, 8 Basis weight 20 lb, 11 3½-inch, 12 Capacity 1.44 MB,
+-- 13 Duplex unit, 14 Stapling finisher, 18 Scan-to-email, 24 Formatted.
+insert into desired_feature (requirement_id, product_feature_id, optional_ind) values
+  (30004, 6,  false), (30004, 7,  false), (30004, 1,  false),   -- 8½ by 11 inches, fine grade
+  (30005, 3,  false),                                           -- blue
+  (30006, 6,  false), (30006, 7,  false), (30006, 2,  false),   -- 8½ by 11 inches, white
+  (30007, 11, false), (30007, 12, false), (30007, 24, false),   -- 3½-inch, high density, formatted
+  (50001, 2,  false), (50001, 8,  true),                        -- white; 20 lb if possible
+  (50002, 13, false), (50002, 14, true),  (50002, 18, true),    -- a duplex unit; a finisher and scan-to-email are nice to have
+  (50004, 5,  false);                                           -- DATA ERROR: red was dropped for the pen in 2020 (caught by a query)
+
+insert into requirement_status (requirement_id, status_type_id, status_date) values
+  (30003, 'REQUIREMENT_CREATED',   '2001-05-15'),
+  (30004, 'REQUIREMENT_APPROVED',  '2001-05-17'),
+  (43005, 'REQUIREMENT_CREATED',   '2001-05-16'),
+  (43005, 'REQUIREMENT_APPROVED',  '2001-05-20'),
+  (50001, 'REQUIREMENT_CREATED',   '2025-01-10'),
+  (50001, 'REQUIREMENT_APPROVED',  '2025-01-15'),
+  (50001, 'REQUIREMENT_FULFILLED', '2025-02-03'),
+  (50002, 'REQUIREMENT_CREATED',   '2025-01-28'),
+  (50002, 'REQUIREMENT_FULFILLED', '2025-02-21'),
+  (50003, 'REQUIREMENT_CREATED',   '2025-03-01'),
+  (50004, 'REQUIREMENT_CANCELLED', '2025-03-02'),
+  (50003, 'ORDER_APPROVED',        '2025-03-02');   -- DATA ERROR: an order status on a requirement (caught by a query)
+
+-- Parties (Ch 2): 2 Ben, 3 Chloe, 4 Northwind, 5 Contoso, 12 ABC Corporation,
+-- 13 ABC Subsidiary, 16 ACME.
+insert into requirement_role (requirement_id, party_id, requirement_role_type_id, from_date, thru_date) values
+  (24905, 12, 'OWNER',     '2001-04-13', null),   -- Table 4.11's owners
+  (43005, 13, 'OWNER',     '2001-05-16', null),
+  (43006, 13, 'OWNER',     '2001-05-16', null),
+  (43007, 13, 'OWNER',     '2001-05-16', null),
+  (30003, 16, 'OWNER',     '2001-05-15', null),
+  (30004, 13, 'OWNER',     '2001-05-16', null),
+  (30005, 13, 'OWNER',     '2001-05-16', null),
+  (30006, 13, 'OWNER',     '2001-05-16', null),
+  (30007, 13, 'OWNER',     '2001-05-16', null),
+  (34988, 12, 'OWNER',     '2001-06-20', null),
+  (43005, 12, 'APPROVER',  '2001-05-20', null),   -- ours from here
+  (50001, 4,  'OWNER',     '2025-01-10', null),
+  (50001, 3,  'REQUESTER', '2025-01-10', null),
+  (50002, 5,  'OWNER',     '2025-01-28', null),
+  (50002, 2,  'REQUESTER', '2025-01-28', null),   -- Ben asks for it
+  (50003, 4,  'OWNER',     '2025-03-01', null),
+  (50004, 5,  'OWNER',     '2025-03-01', null),
+  (50002, 2,  'OWNER',     '2025-02-01', null);   -- DATA ERROR: a second owner while Contoso still owns it (caught by a query)
+
+-- Order items: 1-3 12560's paper, pens and diskettes; 27-28 A2395's cleaning
+-- and kit; 16 12564's 500 reams; 4 12561's copier; 29 13480's 200 pens.
+insert into order_requirement_commitment (order_item_id, requirement_id, quantity) values
+  (1,  30004, 10),    -- 10 of ACME's 50 reams
+  (2,  30005, 4),     -- 4 of its 40 pens
+  (3,  30007, 6),     -- 6 of its 200 diskettes
+  (27, 43006, 12),    -- A2395's 12 hours of cleaning
+  (28, 43007, 1),
+  (16, 50001, 400),   -- 400 of 12564's 500 reams; the rest is stock
+  (4,  50002, 1),     -- Contoso's copier
+  (29, 30005, 40);    -- DATA ERROR: 40 more pens for a need of 40, with 4 already committed (caught by a query)
