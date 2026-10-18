@@ -1,0 +1,3 @@
+-- Vol 1, Chapter 4: Ordering Products
+-- Built up one figure at a time; each section is headed by the figure it implements.
+-- Fig 4.1 (the standard order model) is not built: Fig 4.2 replaces it (NOTES).

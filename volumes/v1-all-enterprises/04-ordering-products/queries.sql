@@ -1,0 +1,2 @@
+-- Each query starts with "-- name: <the business question>".
+-- Run with: npm run queries -- v1/04
