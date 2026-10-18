@@ -19,6 +19,10 @@ lookup into the price list), and roles instead of party columns.
    price (discounts, surcharges, sales tax, freight, fees), on the whole order or on one
    line, and which tax rate applies where?
 
+3. **Order status, terms and item associations** (Figs 4.7–4.8): where does an order or one
+   of its lines stand, under which agreed conditions, and which purchase line will fill a
+   sales line we can't fill from stock?
+
 More submodels follow as the rest of the chapter's figures arrive. Figures that answer the
 same questions as an existing submodel join it (4.4 and 4.5 joined submodel 1), and its
 `Figs` grow.
@@ -510,7 +514,85 @@ ORDER, ORDER ITEM            (as 4.2; item subtypes SALES ORDER ITEM (o correspo
 - **Rules vs facts, as in 4.2.** Ch 3's price components say what we *would* charge (a
   discount for big orders); adjustments say what *was* charged on this order.
 
-### Points to discuss after the overview (Figs 4.1–4.6)
+### Fig 4.7 — Order status and terms
+**Transcription** (accepted: ☐; one landscape photo, with Table 4.9; open points under "To
+check against the book")
+
+```
+ORDER STATUS
+  # order_status_id
+  * status_datetime
+  -> ORDER                   (many "a status for" 1 order; order "in the state of" many)
+  -> ORDER ITEM              (many "a status for" 1 item; item "in the state of" many)
+  -> ORDER STATUS TYPE       (many "described by" 1 type; type "the description for" many)
+
+ORDER STATUS TYPE            (no attributes drawn)
+
+ORDER TERM
+  # order_term_id
+  * term_value
+  -> ORDER                   (many "a condition for" 1 order; order "subject to" many)
+  -> ORDER ITEM              (many "a condition for" 1 item; item "subject to" many)
+  -> TERM TYPE               (many "described by" 1 type; type "the description for" many)
+
+TERM TYPE
+  # term_type_id
+  * description
+
+ORDER, ORDER ITEM            (as 4.2; ORDER's subtypes SALES ORDER and PURCHASE ORDER; ORDER
+                              ITEM's SALES ORDER ITEM (o corresponding_po_id) and PURCHASE
+                              ORDER ITEM (o item_description); order "composed of" items, bar)
+```
+
+**Table 4.9** (order terms, the book's sample, in our words): order 12560 has two terms on
+the whole order, a 25% cancellation charge and 10 days in which it may be cancelled without
+one. Its line 2, the Goldstein pen, has "no exchanges or refunds once delivered", with no
+value. A2395's line 1, the cleaning service, has a 5% penalty the supplier pays if it fails
+to perform, and 30 days in which delivery must happen.
+
+**The text beside it**, in short: shipped, completed and invoiced can be worked out from the
+shipments and invoices tied to the order, and backordered from the item association of Fig
+4.8; a physical design may still list them as status types, for easy reporting.
+
+**To check against the book**
+- TERM VALUE drawn mandatory, yet Table 4.9's "no exchanges or refunds" has no value. Read as
+  optional, the table's intention (point 13).
+- No arc across the two "a status for" lines, nor across the two "a condition for" lines.
+  Read as 4.6's adjustment: a status or a term is for the whole order or for one item, not
+  both (point 14). Both lines read as optional at the status and term end.
+- ORDER STATUS TYPE drawn alone with no attributes: read as another subtype of Ch 2's STATUS
+  TYPE (Fig 2.7 drew it as a supertype for this), so its rows join the shared `status_type`
+  (point 15).
+- TERM TYPE has no ORDER in its name: read as a list meant to be shared by other kinds of
+  terms later, so it gets a general name (point 15).
+- No bars seen on the status and term lines: each has an id of its own, as drawn.
+
+**Discussion**
+- **Where an order stands is a history, not a column.** ORDER STATUS is one row per change,
+  with the time it happened: received, approved, backordered, shipped, completed. The current
+  status is the latest row, and the history answers "when was it approved?". Compare Ch 2's
+  relationship status (Fig 2.7): one value, no past.
+- **On the order or on one item.** Lines move separately: 12561's paper shipped on the 12th
+  while the copier waited on a purchase until the 21st. An order status speaks for the whole
+  order, an item status for one line.
+- **Some statuses repeat facts kept elsewhere.** Shipped, invoiced and backordered follow
+  from shipments (Ch 5), invoices (Ch 7) and the item association (4.8). Storing them is a
+  convenience that can contradict the facts, the price Ch 2 paid for a relationship status
+  beside its dates. A 4.8 query works out "a purchase stands behind this line" and catches a
+  recorded backorder that no purchase line backs. (Ponder 2.)
+- **Terms: the conditions agreed for this order.** A cancellation charge, a window to cancel
+  for free, no refunds on one line, a penalty if the supplier fails to deliver. Each is a
+  typed row with a number, on the order or on one item: the shape of 4.6's adjustments.
+- **The value means something only through its type.** 25 is a percentage because the type
+  says "percentage cancellation charge"; 10 is a number of days. Nothing stores the unit, so a
+  query that works out a deadline has to know which types hold days. Some terms need no
+  value at all. (Ponder 3.)
+- **Terms, adjustments and price components differ.** An adjustment (4.6) changes what this
+  order costs; a term says what is allowed or owed if something happens (a cancellation, a
+  late delivery); a price component (Ch 3) is a rule for prices in general.
+- **Both directions:** A2395's nonperformance penalty binds the supplier on a purchase order.
+
+### Points to discuss after the overview (Figs 4.1–4.7)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing. The list moves under the chapter's last figure when that one arrives.
@@ -560,6 +642,16 @@ the literal drawing. The list moves under the chapter's last figure when that on
 12. **4.6, SALES TAX LOOKUP with no dates and no line to the adjustment:** read as a reference
     table the order copies its rate from (the snapshot again). Dates would keep old rates for
     late corrections; we stay with the book.
+13. **4.7, TERM VALUE optional:** drawn mandatory, but Table 4.9 has a term with no value
+    ("no exchanges or refunds"). Built nullable, the table's reading. If every term must carry
+    a value, that one needs a made-up value (1 for yes?), which reads oddly.
+14. **4.7, statuses and terms on an order or an item:** no arcs drawn; read as for 4.6's
+    adjustments (point 10), one or the other, checked by a data-quality query. Settle the
+    three together.
+15. **4.7, ORDER STATUS TYPE in Ch 2's `status_type`, TERM TYPE on its own:** order statuses
+    joined Ch 2's shared status table, as its notes foresaw, while each role type so far got
+    a lookup of its own (point 5). Settle both at once. TERM TYPE is a flat lookup with a
+    general name, ready for other terms.
 
 ## Design decisions (book → SQL)
 
@@ -719,6 +811,29 @@ the literal drawing. The list moves under the chapter's last figure when that on
   `product_category_ancestor`) beats the general one. The query sets it against the rate
   charged (seed: 12561's paper charged the general rate, where Missouri taxes paper lower).
 
+### Fig 4.7
+- **ORDER STATUS TYPE → an ORDER_STATUS group in Ch 2's shared `status_type`,** like the
+  relationship, event and case statuses (point 15). A data-quality query checks an order
+  status comes from the group (seed: 12566 given Ch 2's CASE_OPEN).
+- **`order_status` and `order_term` keep the book's own ids** (surrogate keys) and have
+  nullable `order_id` and `order_item_id`. Exactly one of them is a data-quality query shared
+  by both tables (point 14; seed: an approval for 12562 and its line 1 at once, and a warranty
+  term the same way).
+- **`status_datetime` is a `timestamptz`,** the chapter's first time of day: statuses change
+  within a day. The current status is the latest row. A status dated before its order was
+  placed is a data-quality query (seed: 12565 "received" two weeks before its order date).
+- **Our order statuses:** received, approved and cancelled (facts nothing else records), and
+  backordered, shipped, invoiced and completed (derivable once shipments and invoices exist;
+  stored, as the book allows). A backorder no purchase line backs is caught in 4.8.
+- **`term_type` is a flat lookup** with Table 4.9's five types and two of ours (payment due
+  within so many days, months of warranty). Ids name the unit (`_PCT`, `_DAYS`, `_MONTHS`),
+  since the value doesn't carry one.
+- **`term_value` is a nullable `numeric`** (point 13): Table 4.9's values are numbers or
+  nothing. One term type twice on the same order or item is a data-quality query (seed: 12561
+  due in 30 days and in 45).
+- **Table 4.9's terms are seeded as given:** 12560's two order terms and its pen line's, and
+  A2395's two on its cleaning line (order 2395, item 27).
+
 ## When NOT to use this
 - **A shop that only sells**, and buys through some other system, gets little from the ORDER
   supertype. It costs one discriminator, so it's cheap to keep, but don't model purchase
@@ -738,5 +853,10 @@ the literal drawing. The list moves under the chapter's last figure when that on
 - **Order adjustments (4.6)** when the only change to a price is one flat tax rate: a tax
   column (or a computed total) is plainer. Go to rows when discounts, fees and tax start to
   stack, or apply to single lines.
+- **Status history (4.7)** when nobody ever asks when an order changed state and its lines
+  never move separately: a `status` column on the order is enough.
+- **Order terms (4.7)** when every order runs on the same standard terms: keep those once (in
+  an agreement, or the terms printed on the form). Term rows are for what was negotiated for
+  this order or this line.
 
 ## Open questions

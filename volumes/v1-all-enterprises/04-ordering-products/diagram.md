@@ -55,4 +55,12 @@ erDiagram
   ORDER_ADJUSTMENT_TYPE   |o--o{ ORDER_ADJUSTMENT_TYPE : "parent of (the six subtypes on top)"
   GEOGRAPHIC_BOUNDARY     ||--o{ SALES_TAX_LOOKUP    : "taxed via (Ch 2)"
   PRODUCT_CATEGORY        |o--o{ SALES_TAX_LOOKUP    : "a consideration for (Ch 3)"
+
+  %% Fig 4.7 — Order status and terms (each for the order OR one item: a data-quality query)
+  ORDER                   |o--o{ ORDER_STATUS        : "in the state of"
+  ORDER_ITEM              |o--o{ ORDER_STATUS        : "in the state of"
+  STATUS_TYPE             ||--o{ ORDER_STATUS        : "description for (Ch 2, ORDER_STATUS group)"
+  ORDER                   |o--o{ ORDER_TERM          : "subject to"
+  ORDER_ITEM              |o--o{ ORDER_TERM          : "subject to"
+  TERM_TYPE               ||--o{ ORDER_TERM          : "description for"
 ```

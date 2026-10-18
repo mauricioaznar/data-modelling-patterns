@@ -735,3 +735,113 @@ from sales_tax_lookup t
 join geographic_boundary g on g.geographic_boundary_id = t.geographic_boundary_id
 group by t.geographic_boundary_id, g.name, t.product_category_id
 having count(*) > 1;
+
+-- ============================================================
+-- Fig 4.7 — Order status and terms
+-- ============================================================
+
+-- name: 4.7 — Where each order stands: its latest order status, and each line's latest status of its own
+with latest_order as (
+  select distinct on (order_id) order_id, status_type_id, status_datetime
+  from order_status
+  where order_id is not null and order_item_id is null
+  order by order_id, status_datetime desc
+),
+latest_item as (
+  select distinct on (order_item_id) order_item_id, status_type_id
+  from order_status
+  where order_item_id is not null and order_id is null
+  order by order_item_id, status_datetime desc
+)
+select o.order_id, o.order_kind, ot.description as order_status, lo.status_datetime as since,
+       string_agg('line ' || oi.order_item_seq_id || ': ' || it.description, '; ' order by oi.order_item_seq_id) as line_statuses
+from "order" o
+left join latest_order lo    on lo.order_id = o.order_id
+left join status_type ot     on ot.status_type_id = lo.status_type_id
+left join order_item oi      on oi.order_id = o.order_id
+left join latest_item li     on li.order_item_id = oi.order_item_id
+left join status_type it     on it.status_type_id = li.status_type_id
+group by o.order_id, o.order_kind, ot.description, lo.status_datetime
+order by o.order_id;
+
+-- name: 4.7 — Order 12561's history: order and line statuses in one timeline
+select s.status_datetime,
+       coalesce('line ' || oi.order_item_seq_id || ' (' || coalesce(p.name, f.description, oi.item_description) || ')',
+                'the order') as status_of,
+       t.description as status
+from order_status s
+join status_type t            on t.status_type_id = s.status_type_id
+left join order_item oi       on oi.order_item_id = s.order_item_id
+left join product p           on p.product_id = oi.product_id
+left join product_feature f   on f.product_feature_id = oi.product_feature_id
+where coalesce(s.order_id, oi.order_id) = 12561
+order by s.status_datetime;
+
+-- name: 4.7 — The terms of orders 12560 and A2395 (2395), as Table 4.9 shows them
+select coalesce(t.order_id, oi.order_id) as order_id, oi.order_item_seq_id as line,
+       coalesce(p.name, oi.item_description) as product, t.term_value as value, tt.description as term_type
+from order_term t
+join term_type tt         on tt.term_type_id = t.term_type_id
+left join order_item oi   on oi.order_item_id = t.order_item_id
+left join product p       on p.product_id = oi.product_id
+where coalesce(t.order_id, oi.order_id) in (12560, 2395)
+order by coalesce(t.order_id, oi.order_id) = 2395, oi.order_item_seq_id nulls first, t.order_term_id;
+
+-- name: 4.7 — Cancelling for free: each order's penalty-free window from its terms, and what cancelling after it costs
+-- The values mean days or a percentage only through their type, so the query
+-- has to know which type holds which.
+with lines as (
+  select order_id, sum(quantity * unit_price) as lines_value
+  from order_item
+  group by order_id
+),
+cancelled as (
+  select order_id, min(status_datetime)::date as cancelled_on
+  from order_status
+  where status_type_id = 'ORDER_CANCELLED' and order_id is not null
+  group by order_id
+)
+select o.order_id, o.order_date, w.term_value as free_days,
+       o.order_date + w.term_value::int as free_until,
+       c.term_value as charge_pct,
+       round(l.lines_value * c.term_value / 100, 2) as charge_after,
+       x.cancelled_on,
+       case when x.cancelled_on is null                               then 'not cancelled'
+            when x.cancelled_on <= o.order_date + w.term_value::int  then 'cancelled in time: no charge'
+            when c.term_value is null                                then 'cancelled late, but no charge was agreed'
+            else 'cancelled late: the charge is due' end as outcome
+from "order" o
+join order_term w        on w.order_id = o.order_id and w.term_type_id = 'PENALTY_FREE_CANCEL_DAYS'
+left join order_term c   on c.order_id = o.order_id and c.term_type_id = 'CANCELLATION_CHARGE_PCT'
+join lines l             on l.order_id = o.order_id
+left join cancelled x    on x.order_id = o.order_id
+order by o.order_id;
+
+-- name: 4.7 — Data-quality check: statuses or terms for both an order and an item, or for neither (should be empty)
+select 'status' as row_kind, order_status_id as id, order_id, order_item_id
+from order_status
+where (order_id is null) = (order_item_id is null)
+union all
+select 'term', order_term_id, order_id, order_item_id
+from order_term
+where (order_id is null) = (order_item_id is null);
+
+-- name: 4.7 — Data-quality check: order statuses that aren't order statuses (should be empty)
+select s.order_status_id, s.order_id, s.order_item_id, s.status_type_id, t.parent_type_id
+from order_status s
+join status_type t on t.status_type_id = s.status_type_id
+where t.parent_type_id is distinct from 'ORDER_STATUS';
+
+-- name: 4.7 — Data-quality check: statuses dated before their order was placed (should be empty)
+select s.order_status_id, o.order_id, o.order_date, s.status_type_id, s.status_datetime
+from order_status s
+left join order_item oi on oi.order_item_id = s.order_item_id
+join "order" o          on o.order_id = coalesce(s.order_id, oi.order_id)
+where s.status_datetime::date < o.order_date;
+
+-- name: 4.7 — Data-quality check: one term type twice on the same order or item (should be empty)
+select term_type_id, order_id, order_item_id, count(*) as terms,
+       string_agg(coalesce(term_value::text, 'no value'), ', ' order by order_term_id) as term_values
+from order_term
+group by term_type_id, order_id, order_item_id
+having count(*) > 1;

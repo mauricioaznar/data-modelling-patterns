@@ -399,3 +399,72 @@ insert into sales_tax_lookup (sales_tax_lookup_id, geographic_boundary_id, produ
   (7, 11, null, 4.50);    -- DATA ERROR: a second general rate for Missouri (caught by a query)
 
 select setval(pg_get_serial_sequence('sales_tax_lookup', 'sales_tax_lookup_id'), (select max(sales_tax_lookup_id) from sales_tax_lookup));
+
+-- ============================================================
+-- Fig 4.7 — Order status and terms
+-- ============================================================
+-- Order statuses, a new group in Ch 2's shared status_type. Backordered,
+-- shipped and invoiced could be worked out from the item association (4.8),
+-- shipments (Ch 5) and invoices (Ch 7); stored anyway, as the book allows,
+-- and checked against the facts where the facts exist.
+insert into status_type (status_type_id, parent_type_id, description) values
+  ('ORDER_STATUS',      null,           'Order status'),
+  ('ORDER_RECEIVED',    'ORDER_STATUS', 'Received'),
+  ('ORDER_APPROVED',    'ORDER_STATUS', 'Approved'),
+  ('ORDER_BACKORDERED', 'ORDER_STATUS', 'Backordered'),
+  ('ORDER_SHIPPED',     'ORDER_STATUS', 'Shipped'),
+  ('ORDER_INVOICED',    'ORDER_STATUS', 'Invoiced'),
+  ('ORDER_COMPLETED',   'ORDER_STATUS', 'Completed'),
+  ('ORDER_CANCELLED',   'ORDER_STATUS', 'Cancelled');
+
+-- Items: 4 the copier on 12561, 7 its paper for the depot; 9 the blue pens on
+-- 12562; 13 Ben's engraved pen set on 12563.
+insert into order_status (order_status_id, status_type_id, order_id, order_item_id, status_datetime) values
+  (1,  'ORDER_RECEIVED',    12560, null, '2001-06-08 10:00+00'),
+  (2,  'ORDER_APPROVED',    12560, null, '2001-06-08 15:30+00'),
+  (3,  'ORDER_SHIPPED',     12560, null, '2001-06-12 09:00+00'),
+  (4,  'ORDER_RECEIVED',    12561, null, '2025-02-10 09:15+00'),
+  (5,  'ORDER_APPROVED',    12561, null, '2025-02-10 11:00+00'),
+  (6,  'ORDER_BACKORDERED', null,  4,    '2025-02-11 08:30+00'),   -- the copier waits on purchase order 12568 (linked in 4.8)
+  (7,  'ORDER_SHIPPED',     null,  7,    '2025-02-12 14:00+00'),   -- the paper leaves first
+  (8,  'ORDER_SHIPPED',     null,  4,    '2025-02-21 16:00+00'),   -- the copier, drop-shipped
+  (9,  'ORDER_COMPLETED',   12561, null, '2025-02-25 12:00+00'),
+  (10, 'ORDER_RECEIVED',    12562, null, '2025-03-03 16:40+00'),
+  (11, 'ORDER_RECEIVED',    12567, null, '2025-05-02 10:00+00'),
+  (12, 'ORDER_CANCELLED',   12567, null, '2025-05-07 09:00+00'),
+  (13, 'ORDER_APPROVED',    12564, null, '2025-01-20 13:00+00'),   -- a purchase order: Chloe approved it
+  (14, 'ORDER_COMPLETED',   12564, null, '2025-02-03 17:00+00'),
+  (15, 'ORDER_APPROVED',    2395,  null, '2001-07-09 11:00+00'),
+  (16, 'ORDER_BACKORDERED', null,  13,   '2024-11-06 09:00+00'),   -- DATA ERROR: no purchase line behind it (caught by a 4.8 query)
+  (17, 'ORDER_APPROVED',    12562, 9,    '2025-03-04 08:00+00'),   -- DATA ERROR: the order AND an item (caught by a query)
+  (18, 'CASE_OPEN',         12566, null, '2025-04-01 10:00+00'),   -- DATA ERROR: a case status on an order (caught by a query)
+  (19, 'ORDER_RECEIVED',    12565, null, '2023-03-01 10:00+00');   -- DATA ERROR: received two weeks before the order date (caught by a query)
+
+select setval(pg_get_serial_sequence('order_status', 'order_status_id'), (select max(order_status_id) from order_status));
+
+-- Table 4.9's five types, then two of ours. The ids name the unit, since
+-- the value doesn't carry one.
+insert into term_type (term_type_id, description) values
+  ('CANCELLATION_CHARGE_PCT',    'Percentage cancellation charge'),
+  ('PENALTY_FREE_CANCEL_DAYS',   'Days within which the order may be cancelled without a penalty'),
+  ('NO_EXCHANGE_OR_REFUND',      'No exchanges or refunds once delivered'),
+  ('NONPERFORMANCE_PENALTY_PCT', 'Percentage penalty the supplier pays for nonperformance'),
+  ('DELIVERY_WITHIN_DAYS',       'Days within which delivery must occur'),
+  ('PAYMENT_DUE_DAYS',           'Days within which the invoice must be paid'),
+  ('WARRANTY_MONTHS',            'Months of warranty');
+
+-- Items: 2 the pen line on 12560; 27 A2395's cleaning line; 4 the copier on
+-- 12561; 9 the blue pens on 12562.
+insert into order_term (order_term_id, term_type_id, order_id, order_item_id, term_value) values
+  (1,  'CANCELLATION_CHARGE_PCT',    12560, null, 25),     -- Table 4.9
+  (2,  'PENALTY_FREE_CANCEL_DAYS',   12560, null, 10),
+  (3,  'NO_EXCHANGE_OR_REFUND',      null,  2,    null),   -- the type says it all
+  (4,  'NONPERFORMANCE_PENALTY_PCT', null,  27,   5),
+  (5,  'DELIVERY_WITHIN_DAYS',       null,  27,   30),
+  (6,  'PAYMENT_DUE_DAYS',           12561, null, 30),     -- ours from here
+  (7,  'WARRANTY_MONTHS',            null,  4,    12),
+  (8,  'PENALTY_FREE_CANCEL_DAYS',   12567, null, 3),      -- the order cancelled above, a day late
+  (9,  'PAYMENT_DUE_DAYS',           12561, null, 45),     -- DATA ERROR: a second payment term on 12561 (caught by a query)
+  (10, 'WARRANTY_MONTHS',            12562, 9,    6);      -- DATA ERROR: the order AND an item (caught by a query)
+
+select setval(pg_get_serial_sequence('order_term', 'order_term_id'), (select max(order_term_id) from order_term));

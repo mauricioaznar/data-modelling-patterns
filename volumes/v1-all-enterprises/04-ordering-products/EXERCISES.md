@@ -12,7 +12,8 @@ every row scores 3+ and its scenario holds up.
 **Submodels:**
 1. **Orders, items and order parties** (Figs 4.1–4.5). ~3 h
 2. **Order adjustments** (Fig 4.6). ~3 h
-3. *(to come: the rest of Ch 4's figures.)*
+3. **Order status, terms and item associations** (Figs 4.7–4.8). ~3 h
+4. *(to come: the rest of Ch 4's figures.)*
 
 ## Progress
 
@@ -63,6 +64,17 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    get its rate, and why copy the rate instead of pointing at the lookup row?
 3. **[4.6]** A 10% volume discount on a line could be a lower unit price or an adjustment.
    When would you use each, and what does each make easy or hard to report?
+
+### Submodel 3: order status, terms and item associations
+1. **[4.7]** ORDER STATUS is a dated row per change, on the order or on one item, not a
+   `status` column on the order. What does each of those two choices buy, and how do you find
+   an order's current status?
+2. **[4.7]** Shipped, invoiced and backordered can be worked out from other facts, yet the
+   book lets you store them as status types. What can go wrong once you store them, and how
+   would you catch it?
+3. **[4.7]** An ORDER TERM's value is a bare number: 25 means a percentage, 10 a number of
+   days, only through the TERM TYPE. What does a query that works out a cancellation deadline
+   have to know, and what would you add if terms needed units or text?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
