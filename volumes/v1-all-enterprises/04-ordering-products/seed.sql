@@ -12,7 +12,7 @@
 -- Fig 4.2 — Orders and order items
 -- ============================================================
 insert into "order" (order_id, order_kind, order_date, entry_date) values
-  (12560, 'SALES',    '2001-04-12', '2001-04-12'),   -- Table 4.2's order
+  (12560, 'SALES',    '2001-06-08', '2001-06-08'),   -- Tables 4.2 and 4.3's order
   (12561, 'SALES',    '2025-02-10', '2025-02-10'),   -- a copier with options, and paper
   (12562, 'SALES',    '2025-03-03', '2025-03-04'),   -- pens in two colours
   (12563, 'SALES',    '2024-11-05', '2024-11-05'),   -- Ben's own order
@@ -78,7 +78,9 @@ insert into role_type (role_type_id, parent_type_id, applies_to_kind, descriptio
 insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
   (60, 16, 'PLACING_CUSTOMER', '1999-01-01', null),   -- ACME Company
   (61, 5,  'PLACING_CUSTOMER', '2021-04-01', null),   -- Contoso, our customer since 2021
-  (62, 2,  'PLACING_CUSTOMER', '2023-06-01', null);   -- Ben, once he stopped being a prospect
+  (62, 2,  'PLACING_CUSTOMER', '2023-06-01', null),   -- Ben, once he stopped being a prospect
+  (67, 16, 'BILL_TO_CUSTOMER', '1999-01-01', null),   -- ACME, for Table 4.5 (added after 4.4's 63-66)
+  (68, 16, 'SHIP_TO_CUSTOMER', '1999-01-01', null);
 
 select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
 
@@ -86,25 +88,40 @@ select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max
 -- sales inbox (Ben reads it as Contoso's contact), 8 Northwind's website,
 -- 14 Northwind's Chatham warehouse, 15 Contoso's office at 1 Market St.
 -- New: Contoso's St. Louis depot, for deliveries only.
+-- Table 4.5's addresses for order 12560 (the cities are ours): 32 ACME's
+-- head office, 33 ABC's at 100 Main Street, 34 ACME's delivery address.
 insert into contact_mechanism (contact_mechanism_id, contact_mechanism_kind, contact_mechanism_type_id) values
-  (30, 'POSTAL_ADDRESS', 'POSTAL_ADDRESS');
+  (30, 'POSTAL_ADDRESS', 'POSTAL_ADDRESS'),
+  (32, 'POSTAL_ADDRESS', 'POSTAL_ADDRESS'),
+  (33, 'POSTAL_ADDRESS', 'POSTAL_ADDRESS'),
+  (34, 'POSTAL_ADDRESS', 'POSTAL_ADDRESS');
 
 select setval(pg_get_serial_sequence('contact_mechanism', 'contact_mechanism_id'), (select max(contact_mechanism_id) from contact_mechanism));
 
 insert into postal_address (contact_mechanism_id, address1, address2, directions) values
-  (30, '800 Riverfront Ave', 'Dock 3', 'Trucks use the river gate');
+  (30, '800 Riverfront Ave',  'Dock 3', 'Trucks use the river gate'),
+  (32, '234 Stretch Street',  null,     null),
+  (33, '100 Main Street',     null,     null),
+  (34, '2300 Drident Avenue', null,     null);
 
 insert into postal_address_boundary (contact_mechanism_id, geographic_boundary_id) values
-  (30, 18), (30, 17), (30, 11), (30, 6);   -- St. Louis MO 63101, US
+  (30, 18), (30, 17), (30, 11), (30, 6),   -- St. Louis MO 63101, US
+  (32, 17), (32, 11), (32, 6),             -- St. Louis MO, US
+  (33, 13), (33, 12), (33, 10), (33, 6),   -- Springfield, Sangamon County, IL, US
+  (34, 17), (34, 11), (34, 6);
 
 insert into party_contact_mechanism (party_contact_mechanism_id, party_id, contact_mechanism_id, from_date, thru_date, non_solicitation_ind, role_type_id, comment) values
-  (30, 5, 30, '2022-01-01', null, true, 'SHIP_TO_CUSTOMER', 'St. Louis depot: deliveries only, no sales mail');
+  (30, 5,  30, '2022-01-01', null, true,  'SHIP_TO_CUSTOMER',      'St. Louis depot: deliveries only, no sales mail'),
+  (32, 16, 32, '1999-01-01', null, false, 'BILL_TO_CUSTOMER',      'Head office'),
+  (33, 13, 33, '1999-01-01', null, false, 'INTERNAL_ORGANIZATION', null),
+  (34, 12, 33, '1998-03-04', null, false, null,                    'Shared with ABC Subsidiary'),
+  (35, 16, 34, '1999-01-01', null, false, 'SHIP_TO_CUSTOMER',      'Deliveries');
 
 select setval(pg_get_serial_sequence('party_contact_mechanism', 'party_contact_mechanism_id'), (select max(party_contact_mechanism_id) from party_contact_mechanism));
 
 insert into sales_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id,
                          placed_using_contact_mechanism_id, taken_via_contact_mechanism_id, bill_to_contact_mechanism_id) values
-  (12560, 60, 32, null, null, null, null),   -- ACME to ABC Subsidiary (the book's cast), nothing on file: no bill-to, so ACME pays
+  (12560, 60, 32, 67,   32,   33,   32),     -- Table 4.5: ACME places it from its head office, ABC Subsidiary takes it, ACME pays
   (12561, 61, 1,  6,    7,    8,    15),     -- Contoso orders from its sales inbox on our website; bill to 1 Market St
   (12562, 62, 1,  6,    7,    2,    15),     -- Ben places it for Contoso, which pays: four parties, four jobs
   (12563, 62, 1,  null, null, 1,    null),   -- Ben's own order, by phone: no bill-to, so Ben pays
@@ -113,6 +130,8 @@ insert into sales_order (order_id, placed_by_party_role_id, taken_by_party_role_
   -- 12567: no row at all. DATA ERROR: a sales order without its sales_order row (caught by a query)
 
 -- Ship-to per item. Feature items (5, 6, 8, 10, 12) ship with their product's item.
+update sales_order_item set ship_to_party_role_id = 68, ship_to_contact_mechanism_id = 34 where order_item_id in (1, 2);   -- Table 4.5: 12560's paper and pens to Drident Avenue
+update sales_order_item set ship_to_party_role_id = 68, ship_to_contact_mechanism_id = 32 where order_item_id = 3;         --   and its diskettes to the head office
 update sales_order_item set ship_to_party_role_id = 7, ship_to_contact_mechanism_id = 15 where order_item_id in (4, 9, 20);   -- Contoso's office
 update sales_order_item set ship_to_party_role_id = 7, ship_to_contact_mechanism_id = 30 where order_item_id = 7;             -- the paper goes to the depot
 update sales_order_item set ship_to_party_role_id = 7, ship_to_contact_mechanism_id = 14 where order_item_id = 11;            -- Contoso collects the red pens at our Chatham warehouse (on the review list)
@@ -194,6 +213,60 @@ insert into purchase_order (order_id, placed_by_party_role_id, taken_by_party_ro
   (12570, 66, 37, 64,   null, 31, 13),     -- DATA ERROR: Chloe's buyer role starts 2023-09-01, after this order (caught by a query)
   (12567, null, null, null, null, null, null);   -- DATA ERROR: sales order 12567 keyed on the purchase form (caught by a query)
 
+-- Table 4.7's A2395, stored as 2395 (our keys are numbers). ABC buys office
+-- cleaning from a new supplier, for one of its stores.
+insert into party (party_id, party_kind) values
+  (43, 'ORGANIZATION'),   -- Ace Cleaning Service
+  (44, 'ORGANIZATION');   -- ABC Retail Store
+
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into organization (party_id, organization_type_id, name) values
+  (43, 'CORPORATION',    'Ace Cleaning Service'),
+  (44, 'OTHER_INFORMAL', 'ABC Retail Store');   -- a store of ABC's, not a legal entity
+
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (69, 13, 'PLACING_BUYER',     '1999-01-01', null),   -- ABC Subsidiary
+  (70, 12, 'BILL_TO_PURCHASER', '1998-03-04', null),   -- ABC Corporation
+  (71, 44, 'SHIP_TO_BUYER',     '2000-01-01', null),   -- ABC Retail Store
+  (72, 43, 'SUPPLIER',          '2001-01-01', null);   -- Ace Cleaning Service
+
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+insert into contact_mechanism (contact_mechanism_id, contact_mechanism_kind, contact_mechanism_type_id) values
+  (35, 'POSTAL_ADDRESS', 'POSTAL_ADDRESS'),
+  (36, 'POSTAL_ADDRESS', 'POSTAL_ADDRESS');
+
+select setval(pg_get_serial_sequence('contact_mechanism', 'contact_mechanism_id'), (select max(contact_mechanism_id) from contact_mechanism));
+
+insert into postal_address (contact_mechanism_id, address1, address2, directions) values
+  (35, '3590 Cottage Avenue', null, null),
+  (36, '2345 Johnson Blvd',   null, null);
+
+insert into postal_address_boundary (contact_mechanism_id, geographic_boundary_id) values
+  (35, 13), (35, 12), (35, 10), (35, 6),   -- Springfield IL, US (ours)
+  (36, 14), (36, 12), (36, 10), (36, 6);   -- Chatham IL, US (ours)
+
+insert into party_contact_mechanism (party_contact_mechanism_id, party_id, contact_mechanism_id, from_date, thru_date, non_solicitation_ind, role_type_id, comment) values
+  (36, 43, 35, '2001-01-01', null, false, 'SUPPLIER',      null),
+  (37, 44, 36, '2000-01-01', null, false, 'SHIP_TO_BUYER', 'The store');
+
+select setval(pg_get_serial_sequence('party_contact_mechanism', 'party_contact_mechanism_id'), (select max(party_contact_mechanism_id) from party_contact_mechanism));
+
+insert into "order" (order_id, order_kind, order_date, entry_date) values
+  (2395, 'PURCHASE', '2001-07-09', '2001-07-09');   -- Tables 4.3 and 4.7's A2395
+
+-- Table 4.3's lines, with no product: our catalogue sells neither.
+insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, quantity, unit_price, item_description) values
+  (27, 2395, 1, null, 12, 15.00, 'Hourly office cleaning service'),
+  (28, 2395, 2, null, 1,  10.00, 'Basic cleaning supplies kit');
+
+select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max(order_item_id) from order_item));
+
+insert into purchase_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id,
+                            placed_using_contact_mechanism_id, taken_via_contact_mechanism_id, bill_to_contact_mechanism_id) values
+  (2395, 69, 72, 70, 33, 35, 33);   -- ABC Subsidiary places it, Ace takes it, ABC Corporation pays
+
 -- Ship-to per item. The freight line (23) is a service: no ship-to.
 insert into purchase_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
   (16, 65,   14),     -- paper to the Chatham warehouse
@@ -202,6 +275,8 @@ insert into purchase_order_item (order_item_id, ship_to_party_role_id, ship_to_c
   (22, 65,   15),     -- a drop ship: our ship-to role, Contoso's address (labelled by a query)
   (23, null, null),
   (24, 65,   14),
+  (27, 71,   36),     -- A2395: the cleaning, and the kit, at ABC Retail Store
+  (28, 71,   36),
   (21, null, null);   -- DATA ERROR: the same clerk's mistake, on 12567's item (caught by a query)
 
 -- ============================================================

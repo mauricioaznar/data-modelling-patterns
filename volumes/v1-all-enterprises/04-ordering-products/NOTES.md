@@ -117,11 +117,31 @@ PRODUCT FEATURE       (from Ch 3, Fig 3.4, with its subtypes: product quality, c
                        hardware feature, billing feature, other feature)
 ```
 
+**Tables 4.3 and 4.4** (the book's samples, in our words; shared after the figure was built)
+- *Table 4.3, sales and purchase orders:* 12560 is a sales order of June 8, 2001, with Table
+  4.2's three lines. 23000 is a sales order of September 5, 2001: ten "George's Elite pens" at
+  11.00. A2395 is a purchase order of July 9, 2001: twelve hours of an hourly office cleaning
+  service at 15.00, and one basic cleaning supplies kit at 10.00.
+- *Table 4.4, features on items:* 12560 again, numbered 1 to 5 this time. Line 1 is the bond
+  paper. Lines 2 and 3 are features ordered for line 1: a gray colour at no price, and an extra
+  glossy finish (product quality) at 2.00. Line 4 is the Goldstein pen with blue beside it,
+  and line 5 the diskettes. A2395's line 1, the cleaning service, carries a billing feature
+  (charged automatically to a credit card).
+
 **To check against the book**
 - No arc drawn across the two "for" lines (product, feature). Read as Silverston's intention
   all the same: an item names a product *or* a feature, and a feature's item is "ordered for"
   the product's item. An item may name neither when its description says what it is (a
   one-off). Points to discuss, point 2.
+- Table 4.4, as photographed, puts the pen's blue and A2395's billing feature on the
+  product's own line, while the paper's gray and glossy finish get lines of their own. If
+  that's what the book means, an item may name a product *and* one feature, and our "both or
+  nothing" check flags two of the book's rows. The photo is curved, so the row lines are
+  uncertain. Point 2 now carries this.
+- Table 4.4 numbers 12560's lines 1 to 5, where Tables 4.2 and 4.3 have 1 to 3. Read as a
+  separate illustration of feature items, not the same order's later state. The seed keeps
+  Table 4.2's three lines.
+- Table 4.3's "George's Elite pen" read as a misprint for the Goldstein Elite pen.
 - The recursive line: read as each item "ordered for" at most one other item, and an item
   "ordered with" many (the copier's item has its options under it). Dashed at both ends.
 - Both "for" lines read as dashed at the item end too, which is what lets an item name only
@@ -197,7 +217,29 @@ CONTACT MECHANISM            (from Ch 2, Fig 2.9)
   # contact_mechanism_id
 ```
 
+**Tables 4.5 and 4.6** (the book's samples, in our words; shared after the figure was built)
+- *Table 4.5, order roles and contact mechanisms:* ACME Company places 12560 from 234 Stretch
+  Street, ABC Subsidiary takes it at 100 Main Street, and ACME is billed at 234 Stretch
+  Street. Lines 1 and 2 ship to ACME at 2300 Drident Avenue, line 3 to 234 Stretch Street.
+  Jones Corporation places 23000 from 900 Washington Blvd; ABC Subsidiary takes it through
+  supplies@ABC.com; Smith Corporation is billed at 900 Washington Blvd; the line ships to
+  Jones at 2300 Drident Avenue. 24830 is placed from Bob Ford's e-mail address, taken through
+  supplies@ABC.com, and billed and shipped to Bob Ford at 2930 Briarwood Avenue. A2395 is
+  listed too (see Table 4.7 under Fig 4.4).
+- *Table 4.6, other order roles:* five people on 12560: two salespeople at 50% each, a
+  processor, a reviewer and an authorizer.
+
 **To check against the book**
+- Table 4.5 confirms our readings: a bill-to that isn't the placer (Smith pays for Jones's
+  order), a ship-to per line (12560's lines go to two addresses), and contact mechanisms of
+  any kind (an order placed from an e-mail address, taken through an e-mail inbox).
+- Table 4.5 lists A2395, a purchase order, under the sales roles' headings. Read as the
+  book's slip: Table 4.7 gives it again with the buyer's role names.
+- 23000 ships to 2300 Drident Avenue, ACME's delivery address on 12560. Read as a copy slip
+  in the table, or a shared site; nothing in the model forbids it, and our "for review" query
+  would list it.
+- Table 4.6's processor and authorizer are ORDER ROLE TYPEs we don't seed (ours: entered by,
+  approver, reviewer). Its 50/50 salespeople are the PERCENT CONTRIBUTION we read.
 - Optionality: the photos don't show solid vs dashed reliably. Every line from SALES ORDER
   and SALES ORDER ITEM read as optional at the order end (points to discuss, point 3); the
   role and mechanism ends as optional (a role needn't be on any order).
@@ -279,7 +321,14 @@ PARTY                        (from Ch 2; subtypes ORGANIZATION, PERSON)
 CONTACT MECHANISM            (from Ch 2, Fig 2.9)
 ```
 
+**Table 4.7** (the book's sample, in our words; shared after the figure was built): purchase
+order A2395 is placed by ABC Subsidiary from 100 Main Street, taken by Ace Cleaning Service
+at 3590 Cottage Avenue, and billed to ABC Corporation at 100 Main Street. Both lines ship to
+ABC Retail Store at 2345 Johnson Blvd.
+
 **To check against the book**
+- Table 4.7's buyer roles are all played by ABC's own organizations (the parent, the
+  subsidiary, a store): evidence for point 7, that buyer roles belong to the enterprise.
 - Fig 4.3 turned over: the same six lines on the order and two on the item, with the
   purchase side's role names. Optionality read as in 4.3 (every line optional).
 - PURCHASE ORDER ITEM is drawn with its own ITEM DESCRIPTION, while ORDER ITEM keeps one
@@ -472,7 +521,10 @@ the literal drawing. The list moves under the chapter's last figure when that on
 2. **4.2, product or feature:** no arc is drawn, yet read as "an item names a product or a
    feature, not both; a feature's item is ordered for a product's item, on the same order,
    and the feature must apply to that product; an item with neither carries a description".
-   Built as data-quality queries, not constraints, so the reading is easy to change.
+   Built as data-quality queries, not constraints, so the reading is easy to change. Table
+   4.4 (shared later) seems to put a feature on the product's own line twice (the pen's blue,
+   A2395's billing feature), beside feature lines of their own: if so, the book allows both
+   shapes, and the "both or nothing" check should only flag "nothing".
 3. **4.3 and 4.4, optionality of the party lines:** all seven on each side read as optional, so the columns are
    nullable. When no bill-to is given, the queries bill the placing customer. That fallback
    is ours, not the book's: is the bill-to meant to be mandatory instead?
@@ -488,7 +540,8 @@ the literal drawing. The list moves under the chapter's last figure when that on
    it moves to `purchase_order_item`.
 7. **4.4, whose buyer roles:** PLACING BUYER, BILL TO PURCHASER and SHIP TO BUYER are grouped
    under a new BUYER type, the mirror of CUSTOMER. Nothing drawn says they must be roles of
-   our own organizations (or their employees), so nothing checks it. Should something?
+   our own organizations (or their employees), so nothing checks it. Should something? Table
+   4.7 (shared later) gives every buyer role to one of ABC's own organizations.
 8. **4.5 built beside 4.3 and 4.4:** read as an alternate (the text offers it for when roles
    change), and built next to them, as Ch 2 kept Figs 2.5 and 2.6a: order 12571 uses only
    the generic tables, the others the columns, plus generic rows for jobs no column holds. If
@@ -548,7 +601,8 @@ the literal drawing. The list moves under the chapter's last figure when that on
   we no longer sell.
 - **Order 12560 is Table 4.2's order,** with its prices, which aren't our Ch 3 list (the pen
   lists at 2.50, the book's order has 12.00). The "agreed vs list" query keeps that on purpose:
-  the order keeps what was agreed.
+  the order keeps what was agreed. Its date is Table 4.3's (June 8, 2001). Table 4.3's 23000
+  isn't seeded; A2395 is (Fig 4.4), because Tables 4.9 and 4.11 build on it.
 
 ### Fig 4.3
 - **SALES ORDER becomes a subtype table** (`sales_order`, sharing `order_id`), now that it has
@@ -578,6 +632,12 @@ the literal drawing. The list moves under the chapter's last figure when that on
   each share between 0 and 100.
 - **`order_role_type` is a lookup of its own** (point 5): SALESPERSON, ENTERED_BY, APPROVER,
   REVIEWER, our examples.
+- **12560's parties are Table 4.5's:** ACME places it from 234 Stretch Street and is billed
+  there, ABC Subsidiary takes it at 100 Main Street, and its lines ship to 2300 Drident
+  Avenue (1, 2) and 234 Stretch Street (3). ACME gets bill-to and ship-to roles, and the
+  three addresses go on file (the cities are ours: St. Louis for ACME, Springfield for ABC).
+  Table 4.5's 23000 and 24830 and Table 4.6's five people aren't seeded: they'd add parties
+  that show nothing new.
 - **`contact_mechanism_display_name`**, a helper view (no book entity): one line of text per
   contact mechanism, so the queries can show addresses and numbers. Its name follows
   `party_display_name`, which also lets the explorer label contact mechanism ids.
@@ -605,6 +665,11 @@ the literal drawing. The list moves under the chapter's last figure when that on
   the ship-to pair.
 - **Fantastic Supplies gets an order-desk e-mail** (contact mechanism 31), where our purchase
   orders are taken.
+- **A2395 is Table 4.7's purchase order,** stored as `order_id` 2395 (our keys are numbers).
+  New parties: Ace Cleaning Service (the supplier) and ABC Retail Store (where both lines
+  ship; an informal organization, a store of ABC's). ABC Subsidiary places it, ABC
+  Corporation pays. Its two lines are Table 4.3's, with no product: our catalogue sells
+  neither a cleaning service nor a cleaning kit, so each line's description says what it is.
 
 ### Fig 4.5
 - **Four new tables, each with a surrogate key:** `order_item_role`, `order_item_role_type`,
