@@ -27,18 +27,42 @@ and any decisions made.
   snapshot of an agreed value), a question index row, roadmap Ch 4 In progress. Card 10; Anki
   export 20 cards.
 - The data explorer now reads a quoted table name (`create table "order"`).
+- Figs 4.4–4.6 (photos), each transcribed with its "To check against the book" list:
+  - 4.4 built: `purchase_order` and `purchase_order_item`, the mirror of 4.3; role types
+    PLACING_BUYER, BILL_TO_PURCHASER and SHIP_TO_BUYER under a new BUYER grouping; three more
+    purchase orders (a drop ship, a wrong hat, a role not yet current) and the clerk's mistake
+    on 12567. Queries: who placed, took and pays; where purchase items ship (a drop ship
+    labelled); Contoso's orders both ways; four data-quality checks, 4.3's copied.
+  - 4.5 built beside 4.3 and 4.4: `order_item_role` (+ type), `order_contact_mechanism` and
+    `order_item_contact_mechanism` on Ch 2's purpose types; order 12571 recorded the generic
+    way only. Queries: an order from the generic tables, who pays from whichever model holds
+    it, item parties no column could hold, and three checks (duplicates, one per order, one
+    job in both models).
+  - 4.6 built: `order_adjustment` (+ type, the six subtypes on top) and `sales_tax_lookup`.
+    Queries: order 12561's bill, every order's value after adjustments, the tax rate per line
+    from ship-to boundaries and product categories against the rate charged, four checks.
+- Ponders 4–5 (submodel 1) and 1–3 (submodel 2); ER diagram extended. Design reference:
+  submodel 1's entry revised for 4.4–4.5, a new *Order adjustments* entry (draft), Core
+  patterns gains Ch 4 examples on six rows and a new pattern (typed rows instead of columns),
+  a question index row, roadmap "2 submodels so far". Card 10 now Figs 4.1–4.5, card 11 new;
+  Anki export 21 cards.
 
 **Decisions**
-- Submodel 1 is *orders, items and order parties* (Figs 4.1–4.3 so far); later figures on the
-  same questions join it.
-- Readings left for the Ch 4 overview (NOTES, points 1–5): 4.1 not built; an item names a
+- Submodel 1 is *orders, items and order parties* (Figs 4.1–4.5): 4.4 and 4.5 answer its
+  questions. Submodel 2 is *order adjustments* (Fig 4.6).
+- Readings left for the Ch 4 overview (NOTES, points 1–12): 4.1 not built; an item names a
   product or a feature, not both (no arc drawn); every party line optional, with the bill-to
   falling back to the placer; ORDER ROLE identified by order + party + type; ORDER ROLE TYPE
-  kept as its own lookup, though it triggers TODO's ROLE TYPE refactor.
+  kept as its own lookup, though it triggers TODO's ROLE TYPE refactor; PURCHASE ORDER ITEM's
+  ITEM DESCRIPTION read as ORDER ITEM's; buyer roles not checked as ours; 4.5 built beside
+  4.3/4.4 (like Ch 2's 2.5 and 2.6a); direction-neutral order role types; an adjustment for
+  the order or one item, not both; a percentage of the value before any adjustment; the tax
+  lookup kept without dates.
 
 **Next**
 - Share the rest of Ch 4's figures.
-- Re-import `docs/cards-anki.txt` in Anki (card 10 is new).
+- Re-import `docs/cards-anki.txt` in Anki (card 11 is new; card 10's note id changed with its
+  figures, so delete the old card 10 note).
 - Still open from 2026-10-17: the associations walk-through (substitute direction), the pricing
   column review, and the Ch 3 overview discussion.
 

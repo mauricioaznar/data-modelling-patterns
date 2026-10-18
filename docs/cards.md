@@ -315,7 +315,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   which would take the assemblies and leave the component link only the packages.
 </details>
 
-### Card 10 · V1 Ch 4 · Orders, items and order parties (Figs 4.1–4.3)
+### Card 10 · V1 Ch 4 · Orders, items and order parties (Figs 4.1–4.5)
 - **Cue:** "What was ordered, which way, at what price, and who placed, took, pays and receives it?"
 - **Hook:** one order pad, two desks *(Claude's, drafted when the figures landed)*
 - **Mantra:** One order for buying and selling; items name a product or feature; roles name
@@ -326,20 +326,51 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **S:** `"order"` (the header: order date, entry date; `order_kind` SALES or PURCHASE) ·
   `order_item` (one line, numbered within its order: quantity and the unit price agreed that
   day; for a product **or** a feature, the feature's line "ordered for" the product's line) ·
-  `sales_order_item` (the customer's PO number per line, and the ship-to role and address) ·
   `sales_order` (placed by, taken by, bill-to: party roles; placed using, taken via, billed
-  to: contact mechanisms) · `order_role` + `order_role_type` (anyone else on the order: a
-  salesperson with a percent share, an approver).
+  to: contact mechanisms) and `sales_order_item` (the customer's PO number, the ship-to role
+  and address) · `purchase_order` and `purchase_order_item`, the mirror (placing buyer,
+  supplier, bill-to purchaser, ship-to buyer) · `order_role` + `order_role_type` (anyone else
+  on the order: a salesperson with a percent share, an approver) · the generic alternate
+  (4.5): `order_item_role`, `order_contact_mechanism`, `order_item_contact_mechanism` (a party
+  or a mechanism plus a type or purpose, on the order or one line).
 - **W:** Fig 4.1's twin models: sales order + customer and purchase order + supplier, copies of
   each other. Every rule and report written twice, a party that buys and sells is two unrelated
-  rows, one party per order, and no place for a feature or a ship-to per line.
+  rows, one party per order, and no place for a feature or a ship-to per line. (4.4's mirrored
+  party columns bring a little of it back; 4.5 is the way out.)
 - **T:** *(the naive-model trap until practice gives yours)* pricing an old order from today's
   price list: the item keeps the price agreed that day, because price components change. And
   pointing an order at a PARTY: it loses which hat the party wore (placer or bill-to).
 - **D:** order ← item (part of) → product | feature; item → item (ordered for); sales_order
-  (= order) → party_role ×3 and → contact_mechanism ×3; sales_order_item (= item) →
-  party_role (ship-to), → contact_mechanism (ship-to); order ← order_role → party, →
-  order_role_type. Not built: 4.1's twin model.
+  and purchase_order (= order) → party_role ×3 and → contact_mechanism ×3; sales_order_item
+  and purchase_order_item (= item) → party_role (ship-to), → contact_mechanism (ship-to);
+  order ← order_role → party, → order_role_type. 4.5: item ← order_item_role → party, →
+  order_item_role_type; order ← order_contact_mechanism and item ← order_item_contact_mechanism
+  → contact_mechanism, → contact_mechanism_purpose_type (Ch 2). Not built: 4.1's twin model.
+</details>
+
+---
+
+### Card 11 · V1 Ch 4 · Order adjustments (Fig 4.6)
+- **Cue:** "What changes an order's price besides quantity × unit price, and which tax rate applies where?"
+- **Hook:** a receipt covered in stickers *(Claude's, drafted when the figures landed)*
+- **Mantra:** Every price change is a typed row, on the order or one line; tax rate copied
+  from place and category.
+
+<details><summary>Key</summary>
+
+- **S:** `order_adjustment` (an amount **or** a percentage, stored positive; for the whole
+  order **or** one item) · `order_adjustment_type` (the book's six subtypes on top: discount,
+  surcharge, sales tax, shipping and handling, fee, miscellaneous; finer types under them) ·
+  `sales_tax_lookup` (a rate per geographic boundary, optionally per product category).
+- **W:** a column per charge on the order (`discount`, `tax`, `freight`): every new kind of
+  charge is a schema change, two discounts don't fit, and a discount on one line has nowhere
+  to go.
+- **T:** *(the naive-model trap until practice gives yours)* pointing the tax adjustment at
+  the lookup row instead of copying its rate: a rate change rewrites old orders. And
+  forgetting the sign: a discount stored like a charge adds to the bill.
+- **D:** order ← adjustment → item (one or the other); adjustment → adjustment_type (→ its
+  parent type); sales_tax_lookup → geographic_boundary (Ch 2), → product_category (Ch 3). No
+  line from the lookup to the adjustment: the rate is copied.
 </details>
 
 ---

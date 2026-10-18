@@ -12,7 +12,7 @@ Architecture figure:
 | # | Submodel | Figs | Doc draft | Overview | Practice | Doc done |
 |---|---|---|---|---|---|---|
 | 1 | Orders, items and order parties | 4.1–4.5 | 2026-10-18 | | | |
-| 2 | Order adjustments | 4.6 | | | | |
+| 2 | Order adjustments | 4.6 | 2026-10-18 | | | |
 | A | Architecture | | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 4.1–4.3)`; the `A` row's matches the
@@ -25,10 +25,14 @@ architecture card's `(Fig N.M)`.
 | 4.1 | not built | 1 | ✓ | – | – | – | – |
 | 4.2 | built | 1 | ✓ | ✓ | ✓ | ✓ | – |
 | 4.3 | built | 1 | ✓ | ✓ | ✓ | ✓ | – |
+| 4.4 | built | 1 | ✓ | ✓ | ✓ | ✓ | – |
+| 4.5 | built | 1 | ✓ | ✓ | ✓ | ✓ | – |
+| 4.6 | built | 2 | ✓ | ✓ | ✓ | ✓ | – |
 
 | # | Submodel | Figures built | Card | Ponders |
 |---|---|---|---|---|
-| 1 | Orders, items and order parties | ✓ | Card 10 | 3 |
+| 1 | Orders, items and order parties | ✓ | Card 10 | 5 |
+| 2 | Order adjustments | ✓ | Card 11 | 3 |
 
 Last check: 0 ✗ · 1 !
 <!-- check:end -->
