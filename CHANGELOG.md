@@ -106,6 +106,30 @@ and any decisions made.
   chain from need to books, the shapes that repeat, a section per chapter, the hub entities
   and which chapters hang lines on them). Ch 2, Ch 3 and Ch 4 up to Fig 4.13 come from the
   repo (✓); Ch 4's rest and Ch 5–9 are Claude's recall, marked ~ and unverified.
+- Figs 4.14–4.17 (photos, with Tables 4.17–4.19; Fig 4.11 and Tables 4.13–4.14 came again
+  and match what was built), each transcribed with its "To check" list:
+  - Table 4.17 re-seeds 10002's items: item 1 the Johnson bond paper (a pricing program),
+    item 2 the diskettes (a section), each limited to its product.
+  - 4.14 built: `term_type` becomes a hierarchy under the five term subtypes (legal,
+    financial, incentive, threshold, other), with the order and quote term types filed under
+    them; `agreement_term` on the agreement or one item, with its own dates. Table 4.18
+    seeded, with a new 23884 (Ridgeway's PC repair for ABC Corporation, ours). Two checks;
+    one flags the book's own quantity cap, a day past its agreement.
+  - 4.15 built: `agreement_pricing_program` as a subtype table, `price_component.agreement_item_id`
+    (null = a list price); Table 4.19 on 10002's paper with new Eastern and Western regions
+    (the Mississippi split), Contoso's pens at 2.25 in Missouri. Three checks. Ch 3's query
+    output is unchanged (compared before and after).
+  - 4.16 built as the view `order_item_agreement_item` (which agreement items govern each
+    sales line), ACME's three 2002 orders under 10002, and queries for each line's terms,
+    agreement price and caps used. Two checks: the price check also caught our own 12562
+    pens, sold at list in St. Louis though 70001 says 2.25.
+  - 4.17, the overall order model, is the architecture figure: How it flows, points 29–40
+    (the list now sits under it), MAP.md's Ch 4 section rewritten and marked whole.
+- Submodel 7, *agreement terms and pricing* (Figs 4.14–4.16): ponders 1–5, ER diagram
+  extended, design reference entry (draft) and the Ch 4 architecture entry; Core patterns
+  gains three patterns (one more optional line, not a parallel entity; child dates inside
+  the parent's; derived link instead of a foreign key) and Ch 4 examples on five rows;
+  question index and roadmap. Card 16 and the Ch 4 architecture card; Anki export 27 cards.
 
 **Decisions**
 - A card joins the morning study loop at its chapter's overview, not when its figures are
@@ -146,13 +170,24 @@ and any decisions made.
   applicability with nothing of a kind meaning no limit; the addendum's arc and dates; an
   item nested only within its own agreement. Point 22 revised by Table 4.15: both quotes
   predate the requests they answer.
+- Figs 4.14–4.16 are submodel 7, not part of submodel 6: a different question (what was
+  agreed and how it reaches an order), card 15's Anki id stays stable, and submodel 6's five
+  ponders were taken (point 29 offers the merge).
+- Readings left for the overview (NOTES, points 30–40): the term kinds as TERM TYPE's top
+  rows; Table 4.18's dates (23884's none, 10002's cap a day past its agreement); AGREEMENT's
+  thru date kept optional; a cap read as cumulative, beside a discount at the same 1,000
+  reams; the pricing program as a subtype table, PARTY TYPE kept though not drawn; Ch 3's
+  queries reading agreement prices as list prices; Table 4.19's regions split at the
+  Mississippi; the order-to-agreement view for sales lines only; 4.17 keeps 4.5's generic
+  order parties (answering point 8); the commitment drawn to ORDER; what 4.17 leaves out.
+- A child's null thru date runs with its agreement, for terms and agreement prices alike.
 
 **Next**
-- Share the rest of Ch 4's figures (the agreement figures after 4.13 and the overall figure,
-  presumably).
-- Re-import `docs/cards-anki.txt` in Anki (cards 11–15 are new; card 10's note id changed
-  with its figures, so delete the old card 10 note), then the one-time deck setup and moves
-  in TODO.md (Cards).
+- The Ch 4 overview: the 40 points, the seven doc drafts, the architecture entry and the
+  cards (`/overview`).
+- Re-import `docs/cards-anki.txt` in Anki (cards 11–16 and the Ch 4 architecture card are
+  new; card 10's note id changed with its figures, so delete the old card 10 note), then the
+  one-time deck setup and moves in TODO.md (Cards).
 - Still open from 2026-10-17: the associations walk-through (substitute direction), the pricing
   column review, and the Ch 3 overview discussion.
 
