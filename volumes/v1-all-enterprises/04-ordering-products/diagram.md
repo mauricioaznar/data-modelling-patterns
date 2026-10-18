@@ -130,4 +130,10 @@ erDiagram
   PRODUCT                 ||--o{ AGREEMENT_PRODUCT_APPLICABILITY      : "used to define (Ch 3)"
   AGREEMENT_ITEM          ||--o{ AGREEMENT_GEOGRAPHICAL_APPLICABILITY : "specified for"
   GEOGRAPHIC_BOUNDARY     ||--o{ AGREEMENT_GEOGRAPHICAL_APPLICABILITY : "used to define (Ch 2)"
+
+  %% Fig 4.14 — Agreement terms (LEGAL, FINANCIAL, INCENTIVE, THRESHOLD, OTHER are the top rows of term_type; a term is on the agreement OR one item)
+  TERM_TYPE               |o--o{ TERM_TYPE           : "parent of"
+  TERM_TYPE               ||--o{ AGREEMENT_TERM      : "used as part of"
+  AGREEMENT               |o--o{ AGREEMENT_TERM      : "further defined by"
+  AGREEMENT_ITEM          |o--o{ AGREEMENT_TERM      : "further defined by"
 ```

@@ -35,6 +35,11 @@ lookup into the price list), and roles instead of party columns.
    (sections, pricing programs, exhibits) apply to which organizations, products and places,
    as amended by which addenda?
 
+7. **Agreement terms and pricing** (Figs 4.14–4.16): under which terms (legal, financial,
+   incentives, thresholds) and at which prices did we agree to trade, on the whole agreement
+   or one item, in force when, and which of them govern a given order line, when no line
+   joins an order to its agreement? (Split from submodel 6: point 29.)
+
 More submodels follow as the rest of the chapter's figures arrive. Figures that answer the
 same questions as an existing submodel join it (4.4 and 4.5 joined submodel 1), and its
 `Figs` grow.
@@ -1111,9 +1116,20 @@ PRODUCT                      (# product_id, * description; Ch 3)
 GEOGRAPHIC BOUNDARY          (# geo_id, * name; Ch 2)
 ```
 
-No table or text came with this figure.
+No table or text came with this figure. Table 4.17 came later, with Fig 4.14's photos:
+
+**Table 4.17** (agreement items, the book's sample, in our words): agreement 10002 has two
+items, each governing the terms for buying one product: item 1 Johnson's fine grade 8½ by 11
+blue bond paper, item 2 Jerry's box of 3½-inch diskettes.
 
 **To check against the book**
+- Table 4.17's PRODUCT column is read as each item's product applicability (one row each),
+  which backs our reading of applicability. Item 1 is typed a pricing program (Table 4.19
+  prices it), item 2 a section (Table 4.18 gives it a term, no prices). The seed's two
+  made-up items for 10002 were replaced by these.
+- "Blue" bond paper: Ch 3's product 1 is Johnson's fine grade bond paper, white as standard,
+  and blue isn't among its features. Read as product 1, with the colour kept in the item's
+  text only.
 - AGREEMENT ITEM's "part of" loop is dashed at both ends: an item may sit inside another
   item, and may hold others. Read as inside the same agreement (a check).
 - The arc across ADDENDUM's two lines: an addendum changes the whole agreement or one item,
@@ -1126,7 +1142,7 @@ No table or text came with this figure.
 - AGREEMENT IMAGE is optional: read as a reference to a scanned page or a drawing, stored as
   text.
 - PRODUCT is drawn with DESCRIPTION only, as a reminder; Ch 3's PRODUCT is unchanged.
-- PRICING PROGRAM has no lines here; its prices presumably come in a later figure.
+- PRICING PROGRAM has no lines here; its prices come in Fig 4.15.
 
 **Discussion**
 - **The problem.** An agreement's text as one block can't say which clause covers which
@@ -1141,6 +1157,85 @@ No table or text came with this figure.
 - **ADDENDUM keeps changes beside the text they change,** dated (created, effective), for the
   whole agreement or one item: the arc. What was signed stays readable, and so does when it
   changed. (Ponder 4 of submodel 6.)
+
+### Fig 4.14 — Agreement terms
+**Transcription** (accepted: ☐; one photo, with Tables 4.17 and 4.18 and the text around
+them; open points under "To check against the book")
+
+```
+AGREEMENT TERM
+  # agreement_term_id
+  * from_date
+  o thru_date
+  o term_value
+  subtypes: LEGAL TERM, FINANCIAL TERM, INCENTIVE, THRESHOLD, OTHER AGREEMENT TERM
+  -> AGREEMENT ITEM          (many "associated with" 1; item "further defined by" many)   } arc
+  -> AGREEMENT               (many "associated with" 1; agreement "further defined by" many) }
+  -> TERM TYPE               (many "described by" 1; type "used as part of" many)
+
+TERM TYPE
+  # term_type_code
+  * description
+
+AGREEMENT ITEM               (# agreement_item_seq_id; as 4.13)
+  -> AGREEMENT               (many "part of" 1, bar; agreement "composed of" many)
+AGREEMENT                    (as 4.12: # agreement_id, * agreement_date, * from_date,
+                              * thru_date, * description, o text; subtypes PRODUCT AGREEMENT
+                              over SALES and PURCHASE, EMPLOYMENT, OTHER)
+```
+
+**Table 4.18** (agreement terms, the book's sample, in our words):
+- 23884, on the whole agreement: an exclusive arrangement, the supplier may not supply
+  similar services to the customer's competitors for so many days after the contract ends.
+  Value 60. No dates.
+- 10002, item 1 (the Johnson bond paper): quantity not to exceed 1,000, January 1 to
+  December 31, 2002; dollars not to exceed $10,000, January 1 to June 30, 2002.
+- 10002, item 2 (the diskettes): the customer buys them only from this supplier, January 1
+  to December 30, 2002. No value.
+
+**The text beside it**, in short: an agreement and each of its items may have terms, each
+with its value and the dates it holds, typed by TERM TYPE. A simple agreement without items
+takes its terms directly. The kinds listed: legal and financial terms, incentives,
+thresholds, renewal and termination clauses, indemnification, non-competition, exclusivity.
+The text under the figure (partly in the photo) reads 10002's caps as limits on the item:
+its terms hold only for the first 1,000 reams.
+
+**To check against the book**
+- The curved arc across the two "associated with" lines: a term belongs to the whole
+  agreement or to one item, never both. Read as exactly one, as QUOTE TERM's arc (4.11).
+- TERM TYPE is keyed TERM TYPE CODE here, TERM TYPE ID in 4.11: read as the same entity.
+- The five subtypes have no attributes, and TERM TYPE is drawn beside them, the same shape
+  as AGREEMENT's subtypes and type (4.12). Read the same way: the subtypes become the top
+  rows of one type hierarchy (point 30).
+- AGREEMENT's THRU DATE is drawn mandatory here and in 4.16, optional in 4.12. Kept
+  optional: William's 86749 has no end (point 32).
+- 23884 isn't in Table 4.16, so its kind, parties and dates aren't given. Ours: ABC
+  Corporation buys PC repair from Ridgeway PC Repair (its Fig 4.11 proposal won), March 2002
+  to March 2003, a purchase agreement.
+- 23884's term has no dates though FROM DATE is drawn mandatory: seeded with the
+  agreement's starting date (point 31).
+- 10002's quantity cap runs to December 31, a day past the agreement's December 30 (and past
+  the diskettes term, which stops on the 30th). Seeded as printed; the check flags it
+  (point 31).
+- A threshold read as cumulative: every order line the item governs within the term's
+  dates counts toward it, not one order at a time (point 33).
+- TERM VALUE "$10,000" is a bare number; the type (dollars not to exceed) gives the unit,
+  as for order terms (4.7).
+
+**Discussion**
+- **The problem.** Conditions buried in the agreement's text can't be checked against
+  orders, and a column per kind of condition (`max_quantity`, `exclusive_flag`,
+  `noncompete_days`) grows with every contract the lawyers write.
+- **AGREEMENT TERM is the third term table,** after ORDER TERM (4.7) and QUOTE TERM (4.11),
+  with the same shape: a typed value on the header or one item, the arc. What's new is its
+  own dates: a dollar cap for the first half-year only, inside a year-long agreement.
+  (Ponder 1 of submodel 7.)
+- **The subtypes are kinds of term,** legal, financial, incentive, threshold and other, so
+  they sit at the top of TERM TYPE, shared by order, quote and agreement terms. (Ponder 2 of
+  submodel 7.)
+- **Thresholds are where terms meet orders:** a cap is only worth recording if something
+  adds up the order lines it covers. That needs the path from order line to agreement item,
+  Fig 4.16's view.
 
 ### Points to discuss after the overview (Figs 4.1–4.13)
 The readings below stand, and the SQL follows them. We look at each once the chapter
@@ -1582,11 +1677,31 @@ the literal drawing. The list moves under the chapter's last figure when that on
   order's placing or bill-to party in a role, and each kind of limit it has matches the
   placing or bill-to party, the line's product, and the ship-to address (through Ch 2's
   `postal_address_boundary` and `geographic_boundary_ancestor`, at any depth).
-- **Seeds, all ours** (no table came with the figure): 70001's outline (scope, pricing with
+- **Seeds, ours** (no table came with the figure): 70001's outline (scope, pricing with
   three programs, an exhibit with an image reference, a consignment sub-agreement with its
-  own section), two items for 10002, a section each for 86749 and 489589, and four addenda
-  (Contoso's paper price lowered from March, the agreement extended to a new office, and the
-  two bad rows).
+  own section), a section each for 86749 and 489589, and four addenda (Contoso's paper price
+  lowered from March, the agreement extended to a new office, and the two bad rows).
+  10002's two items follow Table 4.17 (shared with Fig 4.14): the paper as a pricing
+  program, the diskettes as a section, each limited to its product.
+
+### Fig 4.14
+- **AGREEMENT TERM's five subtypes → the top rows of `term_type`,** which gains
+  `parent_type_id` and becomes a hierarchy, as `agreement_type` (4.12). The order and quote
+  term types of 4.7 and 4.11 are filed under them (our filing: cancellation and payment terms
+  as financial, refunds, warranties and cancelling windows as legal, delivery and the
+  central contact as other). A recursive query lists each term with its kind (point 30).
+- **`agreement_term`:** a surrogate key, the dates, a nullable `numeric` value, and nullable
+  `agreement_id` and `agreement_item_id`; exactly one set (the arc) is a data-quality query
+  (seed: a delivery term on 70001 and its pens program at once).
+- **A term dated outside its agreement** is a data-quality query: from before the agreement
+  starts, or past its end (a null thru date means "for as long as the agreement"). It flags
+  Table 4.18's own quantity cap (point 31) and our termination clause on 489589, which
+  outlives the partnership by a year.
+- **Table 4.18's terms are seeded as given,** with new term types (no compete for so many
+  days, quantity and dollars not to exceed, buy only from this supplier). 23884 is new and
+  ours: a purchase agreement, Ridgeway supplying PC repair to ABC Corporation, March 2002 to
+  March 2003. Ours on 70001: payment due in 30 days (financial) and a 2% year-end rebate (an
+  incentive).
 
 ## When NOT to use this
 - **A shop that only sells**, and buys through some other system, gets little from the ORDER
@@ -1626,5 +1741,8 @@ the literal drawing. The list moves under the chapter's last figure when that on
 - **Agreements (4.12)** when every customer buys on the same published terms: there is
   nothing negotiated to record. A contract file attached to the customer is enough until
   agreements need dates, several parties, or their clauses must drive prices and checks.
+- **Agreement terms (4.14)** when nobody checks orders against the contract: the signed
+  text is enough. Term rows pay off when something adds up the orders under a cap, or
+  enforces an exclusivity or a payment term.
 
 ## Open questions

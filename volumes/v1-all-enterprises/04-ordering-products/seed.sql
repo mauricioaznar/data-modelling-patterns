@@ -923,9 +923,10 @@ insert into agreement_item_type (agreement_item_type_id, description) values
   ('EXHIBIT',         'Agreement exhibit'),
   ('SUB_AGREEMENT',   'Sub-agreement');
 
--- No book table for this figure: all items are ours. Contoso's 70001 gets a
--- full outline (sections, three pricing programs under "Pricing", an exhibit,
--- a sub-agreement with a section of its own); the book's agreements a few.
+-- 10002's two items are Table 4.17's (shared with Fig 4.14): the paper, priced
+-- in Fig 4.15, and the diskettes, which only get a term. The rest are ours:
+-- Contoso's 70001 gets a full outline (sections, three pricing programs under
+-- "Pricing", an exhibit, a sub-agreement with a section of its own).
 insert into agreement_item (agreement_item_id, agreement_id, agreement_item_seq_id, agreement_item_type_id, agreement_text, agreement_image, part_of_agreement_item_id) values
   (1,  70001,  1, 'SECTION',         'Scope: the office supplies Northwind sells Contoso in 2025', null, null),
   (2,  70001,  2, 'SECTION',         'Pricing',                                                    null, null),
@@ -935,26 +936,27 @@ insert into agreement_item (agreement_item_id, agreement_id, agreement_item_seq_
   (6,  70001,  6, 'EXHIBIT',         'Exhibit A: the 2025 price list',                             'exhibits/70001-a.pdf', null),
   (7,  70001,  7, 'SUB_AGREEMENT',   'Consignment stock at Contoso''s St. Louis depot',            null, null),
   (8,  70001,  8, 'SECTION',         'Stock is counted on the first working day of each month',    null, 7),
-  (9,  10002,  1, 'SECTION',         'Prices for inventory items',                                 null, null),
-  (10, 10002,  2, 'PRICING_PROGRAM', 'Bond paper by the ream, in volume tiers',                    null, 9),
+  (9,  10002,  1, 'PRICING_PROGRAM', 'Johnson fine grade 8½ by 11 blue bond paper',                null, null),   -- Table 4.17
+  (10, 10002,  2, 'SECTION',         'Jerry''s box of 3½-inch diskettes',                           null, null),
   (11, 86749,  1, 'SECTION',         'Position: entry-level information systems programmer',       null, null),
-  (12, 86749,  2, 'SECTION',         'Salary reviewed every year',                                 null, 9),      -- DATA ERROR: inside 10002's section (caught by a query)
+  (12, 86749,  2, 'SECTION',         'Salary reviewed every year',                                 null, 9),      -- DATA ERROR: inside 10002's paper item (caught by a query)
   (13, 489589, 1, 'SECTION',         'Profits shared equally among the three partners',            null, null);
 
 select setval(pg_get_serial_sequence('agreement_item', 'agreement_item_id'), (select max(agreement_item_id) from agreement_item));
 
--- Parties: 5 Contoso, 16 ACME. Products: 1 bond paper, 2 the pen, 6 the
--- copier. Boundaries: 11 Missouri, 17 St. Louis.
+-- Parties: 5 Contoso, 16 ACME. Products: 1 bond paper, 2 the pen, 3 the
+-- diskettes, 6 the copier. Boundaries: 11 Missouri, 17 St. Louis.
 insert into agreement_organization_applicability (agreement_item_id, party_id) values
   (3,  5),
   (7,  5),
-  (10, 16);
+  (9,  16);
 
 insert into agreement_product_applicability (agreement_item_id, product_id) values
   (3,  1),
   (4,  6),
   (5,  2),
-  (10, 1);
+  (9,  1),    -- Table 4.17's products
+  (10, 3);
 
 insert into agreement_geographical_applicability (agreement_item_id, geographic_boundary_id) values
   (5, 11),   -- the pens: Missouri deliveries only, so the line shipped to Chatham, Illinois, misses it
@@ -967,3 +969,56 @@ insert into addendum (addendum_id, agreement_id, agreement_item_id, addendum_cre
   (4, 489589, null, '2001-08-20', '2001-09-01', 'XYZ''s share raised to 40%');      -- DATA ERROR: effective after the partnership ended (caught by a query)
 
 select setval(pg_get_serial_sequence('addendum', 'addendum_id'), (select max(addendum_id) from addendum));
+
+-- ============================================================
+-- Fig 4.14 — Agreement terms
+-- ============================================================
+-- AGREEMENT TERM's five subtypes become term_type's top rows, and every term
+-- type so far is filed under one (the filing of 4.7's and 4.11's is ours).
+insert into term_type (term_type_id, parent_type_id, description) values
+  ('LEGAL_TERM',           null, 'Legal term'),
+  ('FINANCIAL_TERM',       null, 'Financial term'),
+  ('INCENTIVE',            null, 'Incentive'),
+  ('THRESHOLD',            null, 'Threshold'),
+  ('OTHER_AGREEMENT_TERM', null, 'Other term');
+
+update term_type set parent_type_id = 'FINANCIAL_TERM'
+ where term_type_id in ('CANCELLATION_CHARGE_PCT', 'NONPERFORMANCE_PENALTY_PCT', 'PAYMENT_DUE_DAYS');
+update term_type set parent_type_id = 'LEGAL_TERM'
+ where term_type_id in ('PENALTY_FREE_CANCEL_DAYS', 'NO_EXCHANGE_OR_REFUND', 'WARRANTY_MONTHS');
+update term_type set parent_type_id = 'OTHER_AGREEMENT_TERM'
+ where term_type_id in ('DELIVERY_WITHIN_DAYS', 'CENTRAL_CONTACT_REQUIRED');
+
+-- Table 4.18's types, then ours. Ids name the unit, as in 4.7.
+insert into term_type (term_type_id, parent_type_id, description) values
+  ('NO_COMPETE_AFTER_END_DAYS', 'LEGAL_TERM',     'Days after the contract ends during which the supplier may not serve the customer''s competitors'),
+  ('QUANTITY_NOT_TO_EXCEED',    'THRESHOLD',      'Quantity not to exceed'),
+  ('DOLLARS_NOT_TO_EXCEED',     'THRESHOLD',      'Dollars not to exceed'),
+  ('EXCLUSIVE_SUPPLIER',        'LEGAL_TERM',     'The customer buys only from this supplier'),
+  ('YEAR_END_REBATE_PCT',       'INCENTIVE',      'Percentage rebated on the year''s purchases'),          -- ours
+  ('TERMINATION_NOTICE_DAYS',   'LEGAL_TERM',     'Days of notice a party gives to leave the agreement');  -- ours
+
+-- Table 4.18's 23884 isn't in Table 4.16: ours, ABC Corporation buying PC
+-- repair from Ridgeway PC Repair after its Fig 4.11 proposal (35678).
+-- Parties: 12 ABC Corporation, 45 Ridgeway PC Repair.
+insert into agreement (agreement_id, agreement_type_id, party_relationship_id, agreement_date, from_date, thru_date, description, text) values
+  (23884, 'PURCHASE_AGREEMENT', null, '2002-02-25', '2002-03-01', '2003-03-01', 'PC repair for ABC Corporation''s offices', null);
+
+insert into agreement_role (agreement_id, party_id, agreement_role_type_id) values
+  (23884, 45, 'SUPPLIER'),
+  (23884, 12, 'CUSTOMER');
+
+-- Items: 5 70001's pens program, 9 10002's paper, 10 10002's diskettes.
+-- Thru dates are exclusive: Table 4.18's "December 31, 2002" is stored as
+-- January 1, 2003.
+insert into agreement_term (agreement_term_id, term_type_id, agreement_id, agreement_item_id, term_value, from_date, thru_date) values
+  (1, 'NO_COMPETE_AFTER_END_DAYS', 23884,  null, 60,    '2002-03-01', null),           -- Table 4.18 gives no dates: the agreement's start
+  (2, 'QUANTITY_NOT_TO_EXCEED',    null,   9,    1000,  '2002-01-01', '2003-01-01'),   -- Table 4.18, as printed: a day past 10002's end (caught by a query; point 31)
+  (3, 'DOLLARS_NOT_TO_EXCEED',     null,   9,    10000, '2002-01-01', '2002-07-01'),
+  (4, 'EXCLUSIVE_SUPPLIER',        null,   10,   null,  '2002-01-01', '2002-12-31'),
+  (5, 'PAYMENT_DUE_DAYS',          70001,  null, 30,    '2025-01-01', null),
+  (6, 'YEAR_END_REBATE_PCT',       70001,  null, 2,     '2025-01-01', null),
+  (7, 'TERMINATION_NOTICE_DAYS',   489589, null, 30,    '2000-06-01', '2002-06-02'),   -- DATA ERROR: outlives the partnership by a year (caught by a query)
+  (8, 'DELIVERY_WITHIN_DAYS',      70001,  5,    2,     '2025-01-01', null);           -- DATA ERROR: the agreement AND an item (caught by a query)
+
+select setval(pg_get_serial_sequence('agreement_term', 'agreement_term_id'), (select max(agreement_term_id) from agreement_term));

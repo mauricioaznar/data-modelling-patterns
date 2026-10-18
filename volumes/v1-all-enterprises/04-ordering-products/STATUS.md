@@ -17,6 +17,7 @@ Architecture figure:
 | 4 | Requirements | 4.9 | 2026-10-18 | | | |
 | 5 | Requests and quotes | 4.10–4.11 | 2026-10-18 | | | |
 | 6 | Agreements | 4.12–4.13 | 2026-10-18 | | | |
+| 7 | Agreement terms and pricing | 4.14–4.16 | | | | |
 | A | Architecture | | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 4.1–4.3)`; the `A` row's matches the

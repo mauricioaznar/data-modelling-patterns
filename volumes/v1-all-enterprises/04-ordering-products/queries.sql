@@ -1417,3 +1417,55 @@ left join agreement_item i on i.agreement_item_id = ad.agreement_item_id
 join agreement a           on a.agreement_id = coalesce(ad.agreement_id, i.agreement_id)
 where ad.addendum_effective_date is not null
   and not (ad.addendum_effective_date >= a.from_date and (a.thru_date is null or ad.addendum_effective_date < a.thru_date));
+
+-- ============================================================
+-- Fig 4.14 — Agreement terms
+-- ============================================================
+
+-- name: 4.14 — Each agreement's terms: on the whole agreement or one item, with their kind (the top of TERM TYPE), value and dates
+select a.agreement_id, at.description as agreement_type,
+       coalesce('item ' || i.agreement_item_seq_id || ': ' || i.agreement_text, '(the whole agreement)') as applies_to,
+       coalesce(k.description, '(no kind)') as kind, t.description as term, tm.term_value,
+       tm.from_date, tm.thru_date - 1 as last_day
+from agreement_term tm
+join term_type t           on t.term_type_id = tm.term_type_id
+left join term_type k      on k.term_type_id = t.parent_type_id
+left join agreement_item i on i.agreement_item_id = tm.agreement_item_id
+join agreement a           on a.agreement_id = coalesce(tm.agreement_id, i.agreement_id)
+join agreement_type at     on at.agreement_type_id = a.agreement_type_id
+order by a.agreement_id between 70000 and 79999, a.agreement_id, i.agreement_item_seq_id nulls first, tm.from_date;
+
+-- name: 4.14 — One TERM TYPE for orders, quotes and agreements: each kind, its types, and how often each is used where
+with recursive kind as (
+  select term_type_id, term_type_id as kind_id, 0 as depth
+  from term_type where parent_type_id is null
+  union all
+  select t.term_type_id, k.kind_id, k.depth + 1
+  from term_type t join kind k on k.term_type_id = t.parent_type_id
+)
+select kt.description as kind, t.description as term_type,
+       (select count(*) from order_term x     where x.term_type_id = t.term_type_id) as order_terms,
+       (select count(*) from quote_term x     where x.term_type_id = t.term_type_id) as quote_terms,
+       (select count(*) from agreement_term x where x.term_type_id = t.term_type_id) as agreement_terms
+from kind k
+join term_type t  on t.term_type_id = k.term_type_id
+join term_type kt on kt.term_type_id = k.kind_id
+where k.depth > 0
+order by kt.description, t.description;
+
+-- name: 4.14 — Data-quality check: agreement terms on both the agreement and an item, or on neither (should be empty)
+select agreement_term_id, term_type_id, agreement_id, agreement_item_id, term_value
+from agreement_term
+where (agreement_id is null) = (agreement_item_id is null);
+
+-- name: 4.14 — Data-quality check: agreement terms dated outside their agreement (should be empty; a null thru date runs with the agreement)
+select tm.agreement_term_id, a.agreement_id, t.description as term,
+       a.from_date as agreement_from, a.thru_date - 1 as agreement_last_day,
+       tm.from_date as term_from, tm.thru_date - 1 as term_last_day
+from agreement_term tm
+join term_type t           on t.term_type_id = tm.term_type_id
+left join agreement_item i on i.agreement_item_id = tm.agreement_item_id
+join agreement a           on a.agreement_id = coalesce(tm.agreement_id, i.agreement_id)
+where tm.from_date < a.from_date
+   or (a.thru_date is not null and tm.from_date >= a.thru_date)
+   or (a.thru_date is not null and tm.thru_date > a.thru_date);

@@ -16,7 +16,10 @@ every row scores 3+ and its scenario holds up.
 4. **Requirements** (Fig 4.9). ~3 h
 5. **Requests and quotes** (Figs 4.10–4.11). ~3 h
 6. **Agreements** (Figs 4.12–4.13). ~3 h
-7. *(to come: the rest of Ch 4's figures.)*
+7. **Agreement terms and pricing** (Figs 4.14–4.16). ~3 h
+
+Fig 4.17, the overall order model, is the architecture figure: no practice of its own, it
+gets the architecture card.
 
 ## Progress
 
@@ -118,6 +121,14 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 5. **[4.13]** A SUB AGREEMENT is an item of its agreement, not an AGREEMENT of its own under a
    parent. What can't it have that way (its own parties, its own dates), and when would you
    make it a full agreement instead?
+
+### Submodel 7: agreement terms and pricing
+1. **[4.14]** An AGREEMENT TERM has dates of its own, inside an agreement that already has
+   dates. Why? Use Table 4.18's two caps on the paper, and say what a term with no dates
+   would have to mean.
+2. **[4.14]** Order, quote and agreement terms now share one TERM TYPE, with the five
+   agreement-term subtypes at its top. What does sharing the list buy, and what goes wrong
+   if each term table keeps its own?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
