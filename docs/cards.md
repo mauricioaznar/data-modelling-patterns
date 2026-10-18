@@ -393,6 +393,95 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
+### Card 12 · V1 Ch 4 · Order status, terms and item associations (Figs 4.7–4.8)
+- **Cue:** "Where does an order or a line stand, under which agreed terms, and which purchase will fill a sales line?"
+- **Hook:** a parcel tracker with fine print *(Claude's, drafted when the figures landed)*
+- **Mantra:** Status rows stack in time, terms carry typed numbers, on order or line; purchase
+  lines fill sales lines.
+
+<details><summary>Key</summary>
+
+- **S:** `order_status` (a status from Ch 2's shared `status_type`, ORDER_STATUS group, and a
+  datetime; for the order **or** one line; the latest row is the current status) ·
+  `order_term` + `term_type` (a condition agreed for the order **or** one line, with an
+  optional number whose meaning, a percentage or days, comes from the type) ·
+  `order_item_association` (a sales line filled by a purchase line, many to many; its FKs
+  point at `sales_order_item` and `purchase_order_item`, so the direction is built in).
+- **W:** one `status` column on the order forgets when each state was reached, and can't say
+  the paper shipped while the copier waited. A column per condition (`cancel_fee`,
+  `refund_days`) for every new term. And with no link from a sale to the purchase that fills
+  it, nobody knows which customers wait on a late delivery.
+- **T:** *(the naive-model trap until practice gives yours)* storing "backordered" or
+  "shipped" and trusting it: those follow from the association, shipments and invoices, and a
+  stored copy can contradict them. And reading a term's value without its type: 10 of what?
+- **D:** order ← status → item (one or the other); status → status_type (Ch 2, ORDER_STATUS
+  group); order ← term → item (one or the other); term → term_type; sales_order_item ←
+  association → purchase_order_item. No quantity on the association.
+</details>
+
+---
+
+### Card 13 · V1 Ch 4 · Requirements (Fig 4.9)
+- **Cue:** "What is needed, by whom, by when, and which order lines commit to filling it?"
+- **Hook:** a shopping list in pencil *(Claude's, drafted when the figures landed)*
+- **Mantra:** A need, split by whose and what, wants features, not products; order lines
+  commit to it in quantities.
+
+<details><summary>Key</summary>
+
+- **S:** `requirement` (the need: description, required-by date, budget, quantity, reason;
+  `requirement_origin` CUSTOMER or INTERNAL and `requirement_kind` PRODUCT or WORK, two
+  independent sets; part of another requirement; needed at a facility) ·
+  `product_requirement` (an optional product) + `desired_feature` (a Ch 3 feature, must-have
+  or optional) · `order_requirement_commitment` (an order line committed to a need, with a
+  quantity) · `requirement_role` + type (owner, requester, approver; dated) ·
+  `requirement_status` (REQUIREMENT_STATUS group in Ch 2's `status_type`, dated).
+- **W:** jumping straight to a draft order loses the need itself (by when, for how much,
+  why, who asked). One need often takes several orders, and a need is described before any
+  product is chosen.
+- **T:** *(the naive-model trap until practice gives yours)* naming a product on the need too
+  early: "50 reams, 8½ by 11, fine grade" is the need, choosing Johnson's is buying. And one
+  four-way subtype list (customer, internal, product, work), which can't hold a customer's
+  work requirement.
+- **D:** requirement → requirement (part of); requirement → facility (Ch 2);
+  product_requirement (= requirement) → product (Ch 3, optional); product_requirement ←
+  desired_feature → product_feature (Ch 3); requirement ← commitment → order_item;
+  requirement ← role → party, → role type; requirement ← status → status_type (Ch 2).
+</details>
+
+---
+
+### Card 14 · V1 Ch 4 · Requests and quotes (Figs 4.10–4.11)
+- **Cue:** "Whom did we ask for information, proposals or prices, what did they quote, and which quote became an order?"
+- **Hook:** sealed bids on the table *(Claude's, drafted when the figures landed)*
+- **Mantra:** Request items carry needs, no product; quote items price product or work,
+  answer them; order lines accept.
+
+<details><summary>Key</summary>
+
+- **S:** `request` + `request_type` (RFI, RFP, RFQ; request date, answer-by date) ·
+  `request_item` (required-by date, quantity, maximum amount; no product) ·
+  `requirement_request` (which needs an item carries, many to many) · `responding_party`
+  (to whom, through which contact mechanism, when) · `request_role` · `quote` + `quote_type`
+  (issued by, given to, valid from and thru) · `quote_item` (prices a product **or** a work
+  effort; may answer a request item; accepted through `order_item.quote_item_id`) ·
+  `quote_term` (on 4.7's `term_type`) · `quote_role`.
+- **W:** requests and quotes kept as e-mails, or as draft orders marked "quoted": no link from
+  the question to the needs behind it, no room for competing offers, and an offer mixed up
+  with a commitment.
+- **T:** *(the naive-model trap until practice gives yours)* reaching the quoted product
+  through request item → requirement → product: the supplier may quote something else
+  (recycled paper). And accepting a quote after it expired.
+- **D:** request ← request_item ← requirement_request → requirement; request ←
+  responding_party → party, → contact_mechanism; request ← request_role → party; quote →
+  party ×2 (issued by, given to); quote ← quote_item → product | work_effort (arc);
+  quote_item → request_item (a response to); order_item → quote_item (the acceptance of);
+  quote ← quote_term → quote_item (arc), → term_type; quote ← quote_role → party. The chain:
+  requirement → request item → quote item → order item → commitment back to the requirement.
+</details>
+
+---
+
 ## Deck: architecture
 
 One card per chapter, from its architecture figure (the last, overall one): how the chapter's

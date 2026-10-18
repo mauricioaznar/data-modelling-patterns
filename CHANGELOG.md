@@ -51,6 +51,35 @@ and any decisions made.
   is ticked), gets a `dm::status::…` tag, and goes to *Drafts* or *Settled* under Submodels or
   Architecture. Today: 4 settled (Ch 2's submodels), 9 drafts. STATUS.md parsing moved from
   `check.js` to a shared `scripts/status.js`.
+- Tables 4.3–4.7 (photos, shared after their figures were built): noted under Figs 4.2–4.4.
+  Order 12560 gets Table 4.3's date (June 8, 2001) and Table 4.5's parties and addresses;
+  purchase order A2395 is seeded as 2395 (Ace Cleaning Service, ABC Retail Store). Table 4.4
+  seems to put a feature on its product's own line (point 2); Table 4.7's buyer roles are all
+  ABC's (point 7).
+- Figs 4.7–4.11 (photos, with Tables 4.9–4.14), each transcribed with its "To check" list:
+  - 4.7 built: `order_status` (a dated history, the ORDER_STATUS group in Ch 2's
+    `status_type`) and `order_term` on a general `term_type`, each for the order or one
+    line; Table 4.9's terms; a cancellation-window query; four checks.
+  - 4.8 built: `order_item_association`, FKs on the two item subtypes; Table 4.10's orders
+    13480 and 23490; 4.4's drop ship linked; backorders derived beside the status recorded;
+    three checks.
+  - 4.9 built: `requirement` with two discriminators (customer or internal; product or work),
+    `product_requirement`, `desired_feature` on Ch 3's features, dated `requirement_role`,
+    `requirement_status`, `order_requirement_commitment` with a quantity; Table 4.11 seeded;
+    a query matching needs to catalogue products by feature; five checks. A new Ch 3 feature,
+    "Formatted".
+  - 4.10 built: `request` (RFI, RFP, RFQ as `request_type` rows), `request_item`,
+    `requirement_request`, `request_role`, `responding_party`; Tables 4.12–4.13; two PC
+    repair vendors; four checks.
+  - 4.11 built: `quote` (issuer and receiver columns, `quote_type` rows), `quote_item`
+    (product or work effort under the drawn arc, answering a request item, accepted through
+    `order_item.quote_item_id`), `quote_role`, `quote_term` on `term_type`; Table 4.14; a
+    box of pencils added to Ch 3's catalogue; the need-to-order trail; three checks.
+- Ponders: submodel 3 has 4, submodel 4 has 4, submodel 5 has 3; ER diagram extended. Design
+  reference: three draft entries (*Order status, terms and item associations*,
+  *Requirements*, *Requests and quotes*), Core patterns gains Ch 4 examples on seven rows and
+  a new pattern (status history), three question index rows, roadmap "5 submodels so far".
+  Cards 12–14; Anki export 24 cards.
 
 **Decisions**
 - A card joins the morning study loop at its chapter's overview, not when its figures are
@@ -69,12 +98,23 @@ and any decisions made.
   4.3/4.4 (like Ch 2's 2.5 and 2.6a); direction-neutral order role types; an adjustment for
   the order or one item, not both; a percentage of the value before any adjustment; the tax
   lookup kept without dates.
+- Submodel 3 is *order status, terms and item associations* (Figs 4.7–4.8; 4.7's text derives
+  "backordered" from 4.8). Submodel 4 is *requirements* (Fig 4.9). Submodel 5 is *requests
+  and quotes* (Figs 4.10–4.11).
+- Statuses join Ch 2's shared `status_type` as groups, as Ch 2 foresaw, while each role type
+  stays its own lookup (six now): both settle at the overview (points 5, 15).
+- Readings left for the overview (NOTES, points 13–22): TERM VALUE optional; status and term
+  for the order or one line (Fig 4.11's drawn arcs back it); TERM TYPE shared; the
+  association sales-to-purchase only and without a quantity; the requirement's product line
+  optional; Table 4.11's "2002" dates read as 2001 and 34988 beside 24905 (Table 4.13 pairs
+  them); "owner" of a part; Table 4.12's 23498 read as 2002 and 38967 as an RFP; Table 4.14's
+  36908 read as issued in 2002.
 
 **Next**
-- Share the rest of Ch 4's figures.
-- Re-import `docs/cards-anki.txt` in Anki (card 11 is new; card 10's note id changed with its
-  figures, so delete the old card 10 note), then the one-time deck setup and moves in TODO.md
-  (Cards).
+- Share the rest of Ch 4's figures (agreements and the overall figure, presumably).
+- Re-import `docs/cards-anki.txt` in Anki (cards 11–14 are new; card 10's note id changed
+  with its figures, so delete the old card 10 note), then the one-time deck setup and moves
+  in TODO.md (Cards).
 - Still open from 2026-10-17: the associations walk-through (substitute direction), the pricing
   column review, and the Ch 3 overview discussion.
 

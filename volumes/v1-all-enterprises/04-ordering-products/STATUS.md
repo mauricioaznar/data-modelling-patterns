@@ -13,9 +13,9 @@ Architecture figure:
 |---|---|---|---|---|---|---|
 | 1 | Orders, items and order parties | 4.1–4.5 | 2026-10-18 | | | |
 | 2 | Order adjustments | 4.6 | 2026-10-18 | | | |
-| 3 | Order status, terms and item associations | 4.7–4.8 | | | | |
-| 4 | Requirements | 4.9 | | | | |
-| 5 | Requests and quotes | 4.10–4.11 | | | | |
+| 3 | Order status, terms and item associations | 4.7–4.8 | 2026-10-18 | | | |
+| 4 | Requirements | 4.9 | 2026-10-18 | | | |
+| 5 | Requests and quotes | 4.10–4.11 | 2026-10-18 | | | |
 | A | Architecture | | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 4.1–4.3)`; the `A` row's matches the
@@ -32,12 +32,18 @@ architecture card's `(Fig N.M)`.
 | 4.5 | built | 1 | ✓ | ✓ | ✓ | ✓ | – |
 | 4.6 | built | 2 | ✓ | ✓ | ✓ | ✓ | – |
 | 4.7 | built | 3 | ✓ | ✓ | ✓ | ✓ | – |
+| 4.8 | built | 3 | ✓ | ✓ | ✓ | ✓ | – |
+| 4.9 | built | 4 | ✓ | ✓ | ✓ | ✓ | – |
+| 4.10 | built | 5 | ✓ | ✓ | ✓ | ✓ | – |
+| 4.11 | built | 5 | ✓ | ✓ | ✓ | ✓ | – |
 
 | # | Submodel | Figures built | Card | Ponders |
 |---|---|---|---|---|
 | 1 | Orders, items and order parties | ✓ | Card 10 | 5 |
 | 2 | Order adjustments | ✓ | Card 11 | 3 |
-| 3 | Order status, terms and item associations | ✓ | ✗ | 3 |
+| 3 | Order status, terms and item associations | ✓ | Card 12 | 4 |
+| 4 | Requirements | ✓ | Card 13 | 4 |
+| 5 | Requests and quotes | ✓ | Card 14 | 3 |
 
-Last check: 2 ✗ · 1 !
+Last check: 0 ✗ · 1 !
 <!-- check:end -->
