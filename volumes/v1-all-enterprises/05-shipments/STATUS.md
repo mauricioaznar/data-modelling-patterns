@@ -22,10 +22,13 @@ architecture card's `(Fig N.M)`.
 | Fig | Kind | Submodel | Transcribed | schema | seed | queries | How it flows |
 |---|---|---|---|---|---|---|---|
 | 5.1 | built | 1 | ✓ | ✓ | ✓ | ✓ | – |
+| 5.2 | built | 1 | ✓ | ✓ | ✓ | ✓ | – |
+| 5.3 | built | 2 | ✓ | ✓ | ✓ | ✓ | – |
 
 | # | Submodel | Figures built | Card | Ponders |
 |---|---|---|---|---|
-| 1 | Shipments, items and status | ✓ | ✗ | 2 |
+| 1 | Shipments, items and status | ✓ | Card 17 | 5 |
+| 2 | Shipments and orders | ✓ | Card 18 | 4 |
 
-Last check: 2 ✗ · 1 !
+Last check: 0 ✗ · 1 !
 <!-- check:end -->

@@ -130,6 +130,32 @@ and any decisions made.
   gains three patterns (one more optional line, not a parallel entity; child dates inside
   the parent's; derived link instead of a foreign key) and Ch 4 examples on five rows;
   question index and roadmap. Card 16 and the Ch 4 architecture card; Anki export 27 cards.
+- The Ch 4 overview started (`/overview`, preconditions clean): point 1 asked, then paused
+  when Ch 5's first photos arrived. Fig 4.17 was sent again; it matches the transcription.
+- Ch 5 (Shipments) started from the template, with Figs 5.1–5.3 and Tables 5.1–5.7 (photos),
+  each transcribed with its "To check against the book" list:
+  - 5.1 built: `shipment` (the plan's dates and costs, sender and receiver parties, postal
+    addresses, an inquiry mechanism and a receiving number), `shipment_type` as a hierarchy
+    with ours/theirs flags, and the view `shipment_end` (whose ends are ours, from Ch 2's
+    INTERNAL_ORGANIZATION roles). Table 5.1's eight shipments, General Goods and three
+    addresses, our customer return 9600. Four checks: a grouping type, a "transfer" to ACME,
+    an address not on file, a plan arriving before it ships.
+  - 5.2 built: `shipment_item` (a good or a described content, numbered, in response to
+    another line) and `shipment_status` (a SHIPMENT_STATUS group in Ch 2's `status_type`).
+    Tables 5.2 and 5.3, Table 5.5's lines, the Jones pencil and the standard eraser. Queries
+    for the current status, planned against actual, and returns. Six checks.
+  - 5.3 built: `order_shipment` (Ch 4's order lines to shipment lines, with a quantity) and
+    `shipment_item_feature`. Tables 5.4–5.7 as ACME's orders 100 and 200 (blue feature lines,
+    9000's pens shipped black); ours: purchase order 300, sales order 400, shipment 9500.
+    Queries for how each line was filled, lines shared by two orders, orders per shipment
+    (derived), unclaimed shipment lines, ordered against shipped features. Five checks.
+  - Ch 2–4's data-quality checks catch the same rows as before (compared before and after
+    each figure); only their informational queries grew.
+- Ponders 1–5 (submodel 1) and 1–4 (submodel 2); ER diagram. Design reference: entries
+  *Shipments, items and status* and *Shipments and orders* (drafts), Core patterns gains a
+  Ch 5 column (examples on ten rows) and two patterns (item-to-item hand-over with its own
+  quantity; plan beside the facts), question index rows, roadmap Ch 5 In progress. Cards 17
+  and 18; Anki export 29 cards.
 
 **Decisions**
 - A card joins the morning study loop at its chapter's overview, not when its figures are
@@ -181,11 +207,21 @@ and any decisions made.
   Mississippi; the order-to-agreement view for sales lines only; 4.17 keeps 4.5's generic
   order parties (answering point 8); the commitment drawn to ORDER; what 4.17 leaves out.
 - A child's null thru date runs with its agreement, for terms and agreement prices alike.
+- Ch 5's submodels, proposed from Figs 5.1–5.3: *shipments, items and status* (5.1–5.2) and
+  *shipments and orders* (5.3, a different question: what a shipment fills). Later figures
+  join one or start another.
+- Readings left for the overview (Ch 5 NOTES, points 1–16), among them: the shipment
+  subtypes as a type hierarchy, with the direction stored as two flags of ours and checked
+  against INTERNAL_ORGANIZATION roles; SHIPMENT STATUS kept to one row per type (the book's
+  two bars); Table 5.3's 4800 read as 2001; Table 5.5's 9200 line 3 left unclaimed, as
+  printed; the text's "same place, same product" built as checks; sales lines on customer
+  shipments, purchase lines on purchase shipments, either on a drop ship.
 
 **Next**
-- The Ch 4 overview: the 40 points, the seven doc drafts, the architecture entry and the
-  cards (`/overview`).
-- Re-import `docs/cards-anki.txt` in Anki (cards 11–16 and the Ch 4 architecture card are
+- More Ch 5 figures (`/figures`), up to the chapter's overall figure.
+- The Ch 4 overview, from point 1 (keep Fig 4.1 unbuilt?): the 40 points, the seven doc
+  drafts, the architecture entry and the cards (`/overview`).
+- Re-import `docs/cards-anki.txt` in Anki (cards 11–18 and the Ch 4 architecture card are
   new; card 10's note id changed with its figures, so delete the old card 10 note), then the
   one-time deck setup and moves in TODO.md (Cards).
 - Still open from 2026-10-17: the associations walk-through (substitute direction), the pricing
