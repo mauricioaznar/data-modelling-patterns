@@ -4,13 +4,29 @@ A solo routine for every morning, separate from the deep-dive sessions. The deep
 understanding; this keeps it from fading. No Claude needed, about 30 minutes, pen and paper.
 
 **Anki:** `npm run cards:anki` writes `docs/cards-anki.txt`; import it with File → Import.
-It fills three subdecks, *Data Models::Submodels*, *Data Models::Architecture* and
-*Data Models::Patterns*. This file stays the source of truth: edit here, rerun, re-import. Each
-note's id comes from the volume, chapter and figures in its heading (an architecture card's
-from its volume and chapter, a pattern's from its number), so renumbering or rewording a card
-updates its note; keep those stable. A re-import updates a note's text but never moves its card
-to another deck: after changing a deck in the script, move the cards with Browse → Change Deck.
-Anki's scheduling replaces the boxes below; still write S · W · T · D on paper before you flip.
+This file stays the source of truth: edit here, rerun, re-import. Each note's id comes from
+the volume, chapter and figures in its heading (an architecture card's from its volume and
+chapter, a pattern's from its number), so renumbering or rewording a card updates its note;
+keep those stable. Anki's scheduling replaces the boxes below; still write S · W · T · D on
+paper before you flip.
+
+**Decks and status** (the user's call, 2026-10-18). Submodel and architecture cards each
+split into *Drafts* and *Settled*; patterns stay in *Data Models::Patterns*:
+
+| Status (tag) | Comes from the chapter's STATUS.md | Deck |
+|---|---|---|
+| `dm::status::draft` | Overview not ticked yet | *Data Models::Submodels::Drafts* or *::Architecture::Drafts* |
+| `dm::status::reviewed` | Overview ticked (or `–`: built before overviews existed) | *…::Settled* |
+| `dm::status::done` | Doc done ticked (practice closed); not for architecture cards | *…::Settled* |
+
+- **Drafts are for looking up, not studying.** Give both Drafts subdecks an options preset
+  with *New cards/day* 0 and *Maximum reviews/day* 0: you can browse them, but studying
+  *Data Models* never serves them.
+- **A re-import updates a note's text and tags but never moves its card**: Anki's deck
+  column only places new cards. So when an overview settles a chapter, move its cards by
+  hand, once per kind: Browse, search `"deck:Data Models::Submodels::Drafts" tag:v1::ch03`
+  (with the chapter's tag), select all, Change Deck to *Data Models::Submodels::Settled*;
+  then the same with *Architecture*.
 
 ## The idea: compress, then decompress
 
@@ -82,9 +98,11 @@ Grade each card after opening the key:
 | 3 | week | holding |
 | 4 | 2 weeks | solid; most of the deck should end up here |
 
-New cards start in box 1. A card enters the deck **when its figures are built**, not after its
-practice ends, so nothing waits weeks to be revised. Its Trap starts as the naive-model
-mistake and becomes one of yours when practice ends.
+New cards start in box 1. Claude drafts a card when its figures are built, but it enters the
+deck **at its chapter's overview**, once your feedback has confirmed it (the user's call,
+2026-10-18): before that, it's Claude's reading, there to look up but not to drill. Overviews
+should follow a chapter's last figure within days, so nothing waits weeks to be revised. Its
+Trap starts as the naive-model mistake and becomes one of yours when practice ends.
 
 ---
 

@@ -52,7 +52,7 @@ report instead of skipping it silently.
 2. Card in `docs/cards.md`, headed `### Card N · VN Ch N · name (Figs …)` with the
    same `Figs` as STATUS.md: hook, mantra (about 20 words at most), key in S · W · T · D (the
    Trap is the naive-model trap until practice). Keep cards in chapter order. Then
-   `npm run cards:anki`.
+   `npm run cards:anki`: the new card lands in Anki's Drafts, to look up until the overview.
 3. Tick `Doc draft` in STATUS.md with today's date.
 4. The architecture figure: its "Ch N architecture" entry in the doc, and its card in
    `docs/cards.md` under *Deck: architecture*, headed `### Architecture · VN Ch N · name

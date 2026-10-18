@@ -4,9 +4,14 @@
 // its volume and chapter (architecture), or its pattern number, so renumbering or
 // rewording a card updates the note and keeps its review history instead of adding
 // a duplicate.
-import { readFileSync } from 'node:fs';
+// A submodel or architecture card's status (draft, reviewed, done) comes from its row in
+// the chapter's STATUS.md and sets its tag and its deck: drafts are for looking up, and a
+// card joins the study loop in Settled at its chapter's overview (the user's call, 2026-10-18).
+import { readFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { listVolumes, listChapters } from './db.js';
+import { parseStatus, sameFigs, cardStatus } from './status.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 export const CARDS_MD = join(ROOT, 'docs', 'cards.md');
@@ -14,6 +19,18 @@ export const CARDS_ANKI = join(ROOT, 'docs', 'cards-anki.txt');
 
 // Windows checkouts (core.autocrlf) have CRLF; the regexes below expect LF.
 export const readCards = () => readFileSync(CARDS_MD, 'utf8').replace(/\r\n/g, '\n');
+
+// Every Submodels-table row of every chapter's STATUS.md, with its volume and chapter.
+export function readStatusRows() {
+  return listVolumes().flatMap((volume) =>
+    listChapters(volume).flatMap((chapter) => {
+      const path = join(chapter.path, 'STATUS.md');
+      if (!existsSync(path)) return [];
+      const { rows } = parseStatus(readFileSync(path, 'utf8').replace(/\r\n/g, '\n'));
+      return rows.map((row) => ({ volume: Number(volume.schema.slice(1)), chapter: Number(chapter.number), row }));
+    }),
+  );
+}
 
 // "### Card 9 · V1 Ch 3 · Product associations and parts (Figs 3.9–3.10)"
 export function parseCardHeadings(src) {
@@ -57,7 +74,7 @@ const field = (block, label) => {
 };
 
 // The Anki import file for a cards.md source: { text, count }.
-export function buildAnki(src) {
+export function buildAnki(src, statusRows = readStatusRows()) {
   const rows = [];
 
   // Submodel and architecture cards share a shape; each block runs to the next heading.
@@ -75,12 +92,18 @@ export function buildAnki(src) {
       .join('<br><br>');
     const [, volume, ch] = title.match(/V(\d+) Ch (\d+)/);
     const chapter = ch.padStart(2, '0');
-    const figs = title.match(/\(Figs? ([^)]+)\)/)[1].replace(/–/g, '-').replace(/,\s*/g, '_');
+    const figList = title.match(/\(Figs? ([^)]+)\)/)[1];
+    const figs = figList.replace(/–/g, '-').replace(/,\s*/g, '_');
+    const statusRow = statusRows.find((s) =>
+      s.volume === Number(volume) && s.chapter === Number(ch)
+      && (arch ? s.row['#'] === 'A' : s.row['#'] !== 'A' && sameFigs(s.row.figs, figList)));
+    const status = cardStatus(statusRow?.row);
+    const deck = `Data Models::${arch ? 'Architecture' : 'Submodels'}::${status === 'draft' ? 'Drafts' : 'Settled'}`;
     rows.push([
       `${html(title)}<br><br>${html(cue)}`,
       `<b>Hook:</b> ${html(hook)}<br><b>Mantra:</b> ${html(mantra)}<hr>${keyHtml}`,
-      arch ? `v${volume}::ch${chapter} architecture` : `v${volume}::ch${chapter}`,
-      arch ? 'Data Models::Architecture' : 'Data Models::Submodels',
+      `v${volume}::ch${chapter}${arch ? ' architecture' : ''} dm::status::${status}`,
+      deck,
       arch ? `dm-v${volume}-ch${chapter}-arch` : `dm-v${volume}-ch${chapter}-${figs}`,
     ]);
   }

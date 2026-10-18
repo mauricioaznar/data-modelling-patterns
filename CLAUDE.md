@@ -75,6 +75,10 @@ the user, tease with nicknames, so the sessions stay fun.
   export, and the user re-imports it. Card headings keep the `Card N · VN Ch N · name (Figs …)`
   and `Architecture · VN Ch N · name (Fig N.M)` shapes: the Anki note id comes from the volume,
   chapter and figures (an architecture card's from its volume and chapter).
+- **The overview settles the cards** (the user's call, 2026-10-18): ticking `Overview` in
+  STATUS.md turns the chapter's cards from draft to reviewed, so the export moves them from
+  the Drafts subdecks to Settled. Anki won't move existing cards on re-import, so the user
+  moves them by hand (the steps are in `docs/cards.md`, under Anki).
 
 ### After the overview (the user practises, one submodel at a time)
 - Practice is **per submodel** (a group of figures that answer one set of business questions,
@@ -87,7 +91,9 @@ the user, tease with nicknames, so the sessions stay fun.
 - **Next session start:** open with 3 quick recall questions on the most recently finished
   submodel, favouring its open gaps.
 - **Cards (solo, every morning):** `docs/cards.md` holds one mantra card per submodel, drafted by
-  Claude when the figures land. The user rewrites in their own words any mantra that fails to
+  Claude when the figures land. A card joins the morning loop only at its chapter's overview;
+  until then it sits in Anki's Drafts subdecks, to look up but not to study (the user's call,
+  2026-10-18). The user rewrites in their own words any mantra that fails to
   explode, and Claude checks the rewrite still unpacks into the key. When practice ends, the
   card's Trap becomes one of the user's real mistakes, and Claude checks the whole card against
   NOTES.md (the user's call, 2026-10-16), since nothing carries NOTES changes to the cards by

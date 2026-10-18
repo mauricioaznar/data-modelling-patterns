@@ -46,8 +46,19 @@ and any decisions made.
   patterns gains Ch 4 examples on six rows and a new pattern (typed rows instead of columns),
   a question index row, roadmap "2 submodels so far". Card 10 now Figs 4.1–4.5, card 11 new;
   Anki export 21 cards.
+- Card status in the Anki export: each submodel and architecture card reads its status from
+  its chapter's STATUS.md (draft until Overview is ticked, reviewed after, done once Doc done
+  is ticked), gets a `dm::status::…` tag, and goes to *Drafts* or *Settled* under Submodels or
+  Architecture. Today: 4 settled (Ch 2's submodels), 9 drafts. STATUS.md parsing moved from
+  `check.js` to a shared `scripts/status.js`.
 
 **Decisions**
+- A card joins the morning study loop at its chapter's overview, not when its figures are
+  built (the user's call): drafts are Claude's reading, there to look up, kept out of study
+  by a Drafts options preset with zero new cards and reviews. Moving a card from Drafts to
+  Settled stays a manual step in Anki (re-imports don't move cards; AnkiConnect turned down),
+  done at each overview's close. Ch 2's submodel cards count as settled: they were built
+  before overviews existed.
 - Submodel 1 is *orders, items and order parties* (Figs 4.1–4.5): 4.4 and 4.5 answer its
   questions. Submodel 2 is *order adjustments* (Fig 4.6).
 - Readings left for the Ch 4 overview (NOTES, points 1–12): 4.1 not built; an item names a
@@ -62,7 +73,8 @@ and any decisions made.
 **Next**
 - Share the rest of Ch 4's figures.
 - Re-import `docs/cards-anki.txt` in Anki (card 11 is new; card 10's note id changed with its
-  figures, so delete the old card 10 note).
+  figures, so delete the old card 10 note), then the one-time deck setup and moves in TODO.md
+  (Cards).
 - Still open from 2026-10-17: the associations walk-through (substitute direction), the pricing
   column review, and the Ch 3 overview discussion.
 

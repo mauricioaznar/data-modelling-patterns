@@ -12,21 +12,13 @@ import {
   ROOT, openDb, loadChapters, listVolumes, listChapters, resolveTarget, sessionSetupFor, parseQueries,
 } from './db.js';
 import { readCards, parseCardHeadings, parseArchHeadings, buildAnki, CARDS_ANKI } from './cards.js';
+import { isDone, parseFigId, sameFigs, section, parseStatus } from './status.js';
 
 const BEGIN = '<!-- check:begin -->';
 const END = '<!-- check:end -->';
 
 const readText = (path) => (existsSync(path) ? readFileSync(path, 'utf8').replace(/\r\n/g, '\n') : null);
 const today = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-
-// STATUS.md cells: a date (or any text) = done, "–" = doesn't apply, empty = not yet.
-const isNa = (v) => /^[–—-]$/.test((v ?? '').trim());
-const isDone = (v) => !!(v ?? '').trim() && !isNa(v);
-
-function parseFigId(id) {
-  const m = /^(\d+)\.(\d+)([a-z]?)$/.exec((id ?? '').trim());
-  return m ? { major: Number(m[1]), minor: Number(m[2]), suffix: m[3] } : null;
-}
 
 // Does a figure list like "2.7, 2.12–2.13" cover figure "2.12"? A range or a bare
 // number covers every lettered variant (3.9–3.10 covers 3.9a and 3.10b);
@@ -45,21 +37,6 @@ function covers(spec, figId) {
   });
 }
 
-const sameFigs = (a, b) => {
-  const norm = (s) => (s ?? '').replace(/\s*[—–-]\s*/g, '–').replace(/\s*,\s*/g, ',').trim();
-  return norm(a) === norm(b);
-};
-
-// The lines under a heading that starts with `prefix`, up to the next "## ".
-function section(text, prefix) {
-  const lines = (text ?? '').split('\n');
-  const start = lines.findIndex((l) => l.startsWith(prefix));
-  if (start < 0) return null;
-  let end = start + 1;
-  while (end < lines.length && !/^## /.test(lines[end])) end++;
-  return lines.slice(start + 1, end).join('\n');
-}
-
 // Every "### Fig N.M — Title" under NOTES's "## Figures", with its text.
 function notesFigures(notes) {
   return (section(notes, '## Figures') ?? '').split(/\n(?=### )/).flatMap((part) => {
@@ -71,21 +48,6 @@ function notesFigures(notes) {
 // Figure ids with a section header ("-- ====" then "-- Fig 3.9b — …") in a SQL file.
 const sqlSections = (sql) =>
   new Set([...(sql ?? '').matchAll(/^-- =+\n-- (?:Fig|Table) (\d+\.\d+[a-z]?)\b/gm)].map((m) => m[1]));
-
-function parseStatus(text) {
-  const figList = (label) => {
-    const m = new RegExp(`^${label}[^:\\n]*:[ \\t]*(.*)$`, 'm').exec(text);
-    return m ? m[1].split(',').map((s) => s.trim()).filter((s) => parseFigId(s)) : [];
-  };
-  const lines = (section(text, '## Submodels') ?? '').split('\n').filter((l) => l.trim().startsWith('|'));
-  const cells = (line) => line.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
-  const header = cells(lines[0] ?? '').map((h) => h.toLowerCase());
-  const rows = lines.slice(2).map((line) => {
-    const c = cells(line);
-    return Object.fromEntries(header.map((h, i) => [h, c[i] ?? '']));
-  });
-  return { notBuilt: figList('Not built'), architecture: figList('Architecture figure'), rows };
-}
 
 // Ponder counts per submodel, when EXERCISES.md groups section 0 by "### Submodel N".
 function pondersBySubmodel(exercises) {

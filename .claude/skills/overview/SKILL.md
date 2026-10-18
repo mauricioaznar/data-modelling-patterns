@@ -38,11 +38,18 @@ argument-hint: vN/NN
 - With the refactor finished, run the card-vs-NOTES check once more on every card of the
   chapter, the architecture card included: the refactor may have moved NOTES past what was
   agreed point by point.
-- `npm run cards:anki`, then remind the user to re-import.
+- The export waits for §5: it reads the `Overview` tick.
 
 ## 5. Close
-- Tick `Overview` with today's date for every submodel row and the `A` row. TODO.md and
-  CHANGELOG.md.
+- Tick `Overview` with today's date for every submodel row and the `A` row. This settles the
+  chapter's cards (the user's call, 2026-10-18): run `npm run cards:anki`, and the export
+  turns them from draft to reviewed and puts them in the Settled subdecks.
+- Remind the user to re-import, then to move the chapter's cards out of Drafts by hand,
+  since Anki won't move existing cards: Browse, search
+  `"deck:Data Models::Submodels::Drafts" tag:vN::chNN`, select all, Change Deck to
+  *Data Models::Submodels::Settled*; then the same for *Architecture*. Give the exact
+  searches with the chapter's tag filled in.
+- TODO.md and CHANGELOG.md.
 - `npm run check -- vN/NN` until no ✗ is left; commit.
 - Report the decision on each point, what was refactored and each card fix the
   card-vs-NOTES checks made (or that there were none), then agree the practice order

@@ -36,6 +36,8 @@ blockers, but each one unlocks something:
 - [ ] Anki, once: delete *Data Models::Recall* and its two empty subdecks (the old notes, without stable ids); keep *Data Models::Submodels* (7) and *Patterns* (7)
 - [x] Workflow reorganised (the user's call, 2026-10-16): Claude drafts each submodel's card and doc entry when its figures land; card pass at the chapter overview (CLAUDE.md)
 - [ ] Pick the next deck to add (shortlist 2026-10-16: Traps from the gaps logs, Scenarios as business → model, SQL idioms)
+- [x] Card status (the user's call, 2026-10-18): draft / reviewed / done from each chapter's STATUS.md, tagged `dm::status::…`; Submodels and Architecture split into *Drafts* (look up only) and *Settled*; a card joins the study loop at its chapter's overview, which settles it (cards.md, CLAUDE.md, the three skills)
+- [ ] Anki, once, after the next re-import: create *Data Models::Submodels::Settled*, *::Architecture::Drafts* and *::Architecture::Settled* if the import didn't; give both Drafts an options preset with *New cards/day* 0 and *Maximum reviews/day* 0; move the existing cards: `"deck:Data Models::Submodels" tag:dm::status::draft` → *Submodels::Drafts*, `"deck:Data Models::Submodels" -tag:dm::status::draft` → *Submodels::Settled*, and both Architecture cards → *Architecture::Drafts*
 
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 

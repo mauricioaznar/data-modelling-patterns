@@ -35,10 +35,11 @@ argument-hint: vN/NN <submodel #>
     flows" the same way.
   - A mismatch: NOTES wins and the card is fixed. If practice proved NOTES wrong instead, say
     so, fix NOTES with the user (and the SQL, one commit per figure), then the card.
-- `npm run cards:anki`, then remind the user to re-import.
 
 ## 3. Close out
-- STATUS.md: tick `Practice` and `Doc done` with today's date.
+- STATUS.md: tick `Practice` and `Doc done` with today's date. Then `npm run cards:anki`
+  (the `Doc done` tick turns the card's tag to `dm::status::done`; it stays in Settled), and
+  remind the user to re-import.
 - TODO.md: tick the submodel. If it was the chapter's last, tick the chapter and update the
   README progress table. CHANGELOG.md.
 - `npm run check -- vN/NN` until no ✗ is left; commit.
