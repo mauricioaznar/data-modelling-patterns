@@ -6,7 +6,7 @@ repo and rewrites the generated tables at the bottom. The design reference doc l
 claude.ai, so its columns (Doc draft, Doc done) are on trust.
 
 Not built (alternates): 4.1
-Architecture figure:
+Architecture figure: 4.17
 
 ## Submodels
 | # | Submodel | Figs | Doc draft | Overview | Practice | Doc done |
@@ -18,7 +18,7 @@ Architecture figure:
 | 5 | Requests and quotes | 4.10–4.11 | 2026-10-18 | | | |
 | 6 | Agreements | 4.12–4.13 | 2026-10-18 | | | |
 | 7 | Agreement terms and pricing | 4.14–4.16 | | | | |
-| A | Architecture | | | | – | – |
+| A | Architecture | 4.17 | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 4.1–4.3)`; the `A` row's matches the
 architecture card's `(Fig N.M)`.
@@ -40,6 +40,10 @@ architecture card's `(Fig N.M)`.
 | 4.11 | built | 5 | ✓ | ✓ | ✓ | ✓ | – |
 | 4.12 | built | 6 | ✓ | ✓ | ✓ | ✓ | – |
 | 4.13 | built | 6 | ✓ | ✓ | ✓ | ✓ | – |
+| 4.14 | built | 7 | ✓ | ✓ | ✓ | ✓ | – |
+| 4.15 | built | 7 | ✓ | ✓ | ✓ | ✓ | – |
+| 4.16 | built | 7 | ✓ | ✓ | ✓ | ✓ | – |
+| 4.17 | architecture | – | ✓ | – | – | – | ✓ |
 
 | # | Submodel | Figures built | Card | Ponders |
 |---|---|---|---|---|
@@ -49,6 +53,8 @@ architecture card's `(Fig N.M)`.
 | 4 | Requirements | ✓ | Card 13 | 4 |
 | 5 | Requests and quotes | ✓ | Card 14 | 3 |
 | 6 | Agreements | ✓ | Card 15 | 5 |
+| 7 | Agreement terms and pricing | ✓ | ✗ | 5 |
+| A | Architecture | – | ✗ | – |
 
-Last check: 0 ✗ · 1 !
+Last check: 4 ✗ · 0 !
 <!-- check:end -->

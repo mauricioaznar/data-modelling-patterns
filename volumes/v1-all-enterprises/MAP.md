@@ -8,7 +8,7 @@ points to. Every line carries a tag:
   what to build. The book wins: when a chapter's figures land, its section is rewritten from
   its "How it flows" and marked ✓, and any ~ line it contradicts is fixed or dropped.
 
-As of 2026-10-18: Ch 2 and Ch 3 whole, Ch 4 up to Fig 4.13.
+As of 2026-10-18: Ch 2, Ch 3 and Ch 4 whole.
 
 ## The chain
 
@@ -50,20 +50,20 @@ identification codes, reorder guidelines, INVENTORY ITEM at a facility, PRICE CO
 ESTIMATED PRODUCT COST (each for a product or a feature), PRODUCT ASSOCIATION.
 From Ch 2: ORGANIZATION, PARTY TYPE, FACILITY, GEOGRAPHIC BOUNDARY.
 
-### Ch 4 Ordering products ✓ to Fig 4.13, ~ after
-- ✓ ORDER (sales or purchase) + ORDER ITEM: an agreed price kept as a snapshot, for a product
-  or a feature. Parties as party-role columns beside ORDER ROLE; ORDER ADJUSTMENT; ORDER STATUS
-  and ORDER TERM; ORDER ITEM ASSOCIATION (a purchase line filling a sales line).
-- ✓ REQUIREMENT → REQUEST → QUOTE → an order line accepting a quote line; ORDER REQUIREMENT
-  COMMITMENT back to the need.
-- ✓ AGREEMENT (roles, the party relationship it formalizes) + AGREEMENT ITEM (nested; limited
-  by organization, product and place; changed by addenda).
-- From Ch 2 ✓: PARTY ROLE, CONTACT MECHANISM, FACILITY, GEOGRAPHIC BOUNDARY (tax,
-  applicability), PARTY RELATIONSHIP (agreements), WORK EFFORT (quote items). From Ch 3 ✓:
-  PRODUCT, PRODUCT FEATURE, PRODUCT CATEGORY (tax), product features (desired features).
-- ~ Still to come: agreement pricing (a pricing program's PRICE COMPONENTs, Ch 3), agreement
-  terms (TERM TYPE again), how an order or order item names the agreement it falls under, and
-  the overall figure.
+### Ch 4 Ordering products ✓ (Figs 4.1–4.17)
+Two hubs, both header + items: ORDER + ORDER ITEM (sales or purchase; each line a snapshot of
+product or feature and agreed price) and AGREEMENT + nested AGREEMENT ITEMs (what was agreed
+for a period). Need → ask → offer → order: REQUIREMENT → REQUIREMENT REQUEST → REQUEST ITEM →
+QUOTE ITEM → the ORDER ITEM accepting it; ORDER REQUIREMENT COMMITMENT back to the need.
+Around the order, on it or one item: ORDER ROLE, contact mechanisms by purpose (the overall
+model keeps 4.5's generic version over 4.3's columns), ORDER STATUS, ORDER TERM, ORDER
+ADJUSTMENT. Around the agreement: AGREEMENT ROLE, the PARTY RELATIONSHIP it formalizes,
+AGREEMENT TERM (TERM TYPE, shared with orders and quotes), and Ch 3's PRICE COMPONENTs on its
+pricing programs. No line joins order and agreement: an agreement governs a line through its
+dates, parties and its items' applicability (product, organization, place), derived (4.16).
+From Ch 2: PARTY, PARTY ROLE, PARTY RELATIONSHIP, CONTACT MECHANISM, FACILITY, GEOGRAPHIC
+BOUNDARY (tax, applicability, regional prices), WORK EFFORT (quote items). From Ch 3: PRODUCT,
+PRODUCT FEATURE, PRODUCT CATEGORY (tax), PRICE COMPONENT.
 
 ### Ch 5 Shipments ~
 - SHIPMENT (customer, purchase, transfer, returns, drop ship as types) + SHIPMENT ITEM; shipped
@@ -135,13 +135,13 @@ From Ch 2: ORGANIZATION, PARTY TYPE, FACILITY, GEOGRAPHIC BOUNDARY.
 | PARTY RELATIONSHIP (2) | 2 communication events ✓ · 4 agreements ✓ · 9 employment ~ |
 | CONTACT MECHANISM (2) | 4 order and request mechanisms ✓ · 5 ship from and to ~ · 7 invoice sent to ~ |
 | FACILITY (2) | 3 inventory ✓ · 4 requirements ✓ · 5 shipments and routes ~ · 6 work at a place ~ |
-| GEOGRAPHIC BOUNDARY (2) | 3 prices ✓ · 4 sales tax, agreement applicability ✓ |
+| GEOGRAPHIC BOUNDARY (2) | 3 prices ✓ · 4 sales tax, agreement applicability, regional agreement prices ✓ |
 | PRODUCT, FEATURE (3) | 4 order, quote and agreement items, requirements ✓ · 5 shipment items ~ · 6 standards ~ · 7 invoice items ~ · 8 GL accounts ~ |
 | INVENTORY ITEM (3) | 5 issuance and receipt ~ · 6 consumed and produced ~ · 8 variances ~ |
-| PRICE COMPONENT (3) | 4 agreement pricing ~ |
+| PRICE COMPONENT (3) | 4 agreement pricing ✓ |
 | ORDER ITEM (4) | 5 shipments ~ · 6 fulfilment ~ · 7 billing ~ · 8 budget allocation ~ |
 | REQUIREMENT (4) | 6 work requirements ~ · 8 budget allocation ~ |
-| TERM TYPE (4) | 4 order, quote terms ✓ and agreement terms ~ · 7 invoice terms ~ |
+| TERM TYPE (4) | 4 order, quote and agreement terms ✓ · 7 invoice terms ~ |
 | WORK EFFORT (2, 4, 6) | 2 case follow-ups ✓ · 4 quote items ✓ · 6 the whole chapter ~ · 7 billing ~ |
 | PAYMENT (7) | 8 accounting transactions ~ · 9 paychecks ~ |
 | BUDGET ITEM (8) | 9 positions ~ |

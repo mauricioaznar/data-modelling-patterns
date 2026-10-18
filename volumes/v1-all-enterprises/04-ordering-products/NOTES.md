@@ -40,9 +40,9 @@ lookup into the price list), and roles instead of party columns.
    or one item, in force when, and which of them govern a given order line, when no line
    joins an order to its agreement? (Split from submodel 6: point 29.)
 
-More submodels follow as the rest of the chapter's figures arrive. Figures that answer the
-same questions as an existing submodel join it (4.4 and 4.5 joined submodel 1), and its
-`Figs` grow.
+Figures that answer the same questions as an existing submodel joined it (4.4 and 4.5 joined
+submodel 1). Fig 4.17, the overall order model, is the chapter's architecture figure: no
+SQL, a **How it flows**, and a card of its own.
 
 ## Figures
 
@@ -1377,10 +1377,76 @@ an order reaches its agreement: through the products (and features) both of them
   contract (blanket orders, call-offs), or when deriving it is too slow; then the stored
   link needs a check that it still agrees with the derivation.
 
-### Points to discuss after the overview (Figs 4.1–4.13)
+### Fig 4.17 — Overall order model
+**Transcription** (accepted: ☐; one photo; identifiers only, no attributes; open points
+under "Points to discuss after the overview")
+
+```
+Shown, all from Figs 4.2–4.16:
+  ORDER, ORDER ITEM, ORDER ROLE, ORDER CONTACT MECHANISM, ORDER ITEM CONTACT MECHANISM,
+  CONTACT MECHANISM PURPOSE TYPE, ORDER STATUS, ORDER TERM, ORDER ADJUSTMENT,
+  ORDER REQUIREMENT COMMITMENT, REQUIREMENT (loop), REQUIREMENT REQUEST, REQUEST,
+  REQUEST ITEM, QUOTE, QUOTE ITEM, QUOTE TERM, AGREEMENT, AGREEMENT ITEM (loop),
+  AGREEMENT TERM, AGREEMENT ROLE, PARTY, PARTY RELATIONSHIP, PRODUCT, PRODUCT FEATURE,
+  PRICE COMPONENT
+
+Lines, as read:
+  ORDER ITEM -> ORDER (part of, bar); -> PRODUCT, PRODUCT FEATURE (dashed);
+                -> QUOTE ITEM (the acceptance of)
+  ORDER ROLE -> ORDER, PARTY
+  ORDER CONTACT MECHANISM      -> ORDER, CONTACT MECHANISM PURPOSE TYPE
+  ORDER ITEM CONTACT MECHANISM -> ORDER ITEM, CONTACT MECHANISM PURPOSE TYPE
+  ORDER STATUS, ORDER TERM, ORDER ADJUSTMENT -> ORDER and -> ORDER ITEM (each)
+  ORDER REQUIREMENT COMMITMENT -> ORDER, REQUIREMENT
+  REQUIREMENT REQUEST -> REQUIREMENT, REQUEST ITEM;  REQUEST ITEM -> REQUEST
+  QUOTE ITEM -> QUOTE, REQUEST ITEM (dashed);  QUOTE TERM -> QUOTE, QUOTE ITEM (arc)
+  AGREEMENT ITEM -> AGREEMENT (bar);  AGREEMENT TERM -> AGREEMENT, AGREEMENT ITEM (arc)
+  AGREEMENT ROLE -> AGREEMENT, PARTY;  AGREEMENT -> PARTY RELATIONSHIP
+  PRICE COMPONENT -> PRODUCT, PRODUCT FEATURE, AGREEMENT ITEM
+  No line between ORDER (or ORDER ITEM) and AGREEMENT (or AGREEMENT ITEM).
+```
+
+What it adds or settles:
+- **The generic order parties win:** ORDER ROLE and the two contact-mechanism tables of 4.5
+  are drawn; 4.3's and 4.4's party-role columns aren't, nor the SALES and PURCHASE subtypes
+  (point 38, which answers point 8's question).
+- **No line from order to agreement,** as 4.16 said: the agreement reaches the order through
+  products, parties and dates.
+- **PRICE COMPONENT lands on AGREEMENT ITEM:** the PRICING PROGRAM subtype isn't drawn here,
+  so read as abbreviation of 4.15's line.
+- **ORDER REQUIREMENT COMMITMENT is drawn to ORDER,** where 4.9 has ORDER ITEM (point 39).
+- Left out: CONTACT MECHANISM itself, PARTY ROLE, ORDER ITEM ROLE, ORDER ITEM ASSOCIATION,
+  the request, quote and requirement roles, RESPONDING PARTY, DESIRED FEATURE, WORK EFFORT,
+  ADDENDUM, the applicabilities, SALES TAX LOOKUP and every type lookup (TERM TYPE included).
+  Read as abbreviation, as for Fig 3.11, not removal (point 40).
+
+**How it flows** (architecture figure: no SQL, on assumptions until the overview)
+- **Two hubs, both header + items:** ORDER with its ORDER ITEMs (what was agreed this time,
+  each line a snapshot of product and price) and AGREEMENT with its nested AGREEMENT ITEMs
+  (what was agreed for a period, before any order).
+- **Need → ask → offer → order:** a REQUIREMENT (nested) reaches the REQUEST ITEMs of a
+  REQUEST through REQUIREMENT REQUEST; a QUOTE ITEM answers a request item; an ORDER ITEM
+  accepts a quote item; ORDER REQUIREMENT COMMITMENT says which order fills which need, and
+  how much of it.
+- **Around the order,** each on the whole order or one item: ORDER ROLE (the parties), the
+  contact mechanisms by purpose, ORDER STATUS, ORDER TERM and ORDER ADJUSTMENT. Quotes carry
+  QUOTE TERMs the same way.
+- **Around the agreement:** AGREEMENT ROLE (the parties), the PARTY RELATIONSHIP it
+  formalizes, AGREEMENT TERMs on it or one item, and Ch 3's PRICE COMPONENTs on its pricing
+  programs.
+- **Agreement → order, with no line:** an agreement governs an order line when it is in
+  force on the order's date, the customer plays a role in it, and an item's applicability
+  matches the line (product, organization, place). Derived, never stored (4.16).
+- **From Ch 2:** PARTY, PARTY RELATIONSHIP, CONTACT MECHANISM and its purpose types,
+  GEOGRAPHIC BOUNDARY (tax, applicability, regional prices), WORK EFFORT (quote items).
+  **From Ch 3:** PRODUCT, PRODUCT FEATURE, PRICE COMPONENT.
+- **Alternates:** one ORDER with subtypes beats 4.1's twin sales and purchase models; the
+  overall model keeps 4.5's generic roles and mechanisms over 4.3's and 4.4's columns.
+
+### Points to discuss after the overview (Figs 4.1–4.17)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
-the literal drawing. The list moves under the chapter's last figure when that one arrives.
+the literal drawing.
 
 1. **4.1, not built:** read as the book's straw man, which 4.2 replaces, so it gets no SQL
    (STATUS.md lists it as not built). If you'd rather see its failures in data, as with Fig
@@ -1491,6 +1557,61 @@ the literal drawing. The list moves under the chapter's last figure when that on
 28. **4.13, an item inside an item:** read as inside the same agreement (a check). A
     sub-agreement is an item, not an AGREEMENT of its own, so it can't have its own parties
     or dates; the book may mean a lighter thing than our word suggests.
+29. **4.14–4.16 as a submodel of their own:** Silverston puts terms, pricing and the link to
+    orders under the same heading as agreement definition and items. We made them submodel 7
+    (agreement terms and pricing) rather than growing submodel 6: they answer a different
+    question (what was agreed, and how it reaches an order), card 15's Anki id stays stable,
+    and submodel 6's five ponders were taken. Merge them if you'd rather practise agreements
+    as one, about 3 hours instead of 6.
+30. **4.14, the term subtypes as TERM TYPE's top rows:** legal, financial, incentive,
+    threshold and other head `term_type`, now a hierarchy, and 4.7's and 4.11's term types
+    are filed under them (our filing). Other readings: the subtypes belong to agreement
+    terms only (a kind column on `agreement_term`), or TERM TYPE stays flat and the kind is a
+    second lookup.
+31. **4.14, Table 4.18's dates:** 23884's term has none though FROM DATE is drawn mandatory
+    (seeded with the agreement's start; 23884 itself is ours, Table 4.16 doesn't have it).
+    10002's quantity cap runs to December 31, a day past the agreement and the diskettes
+    term, both ending December 30. Seeded as printed, so the check flags the book's row:
+    either the cap or the agreement's end date is the slip.
+32. **4.14 and 4.16, AGREEMENT's THRU DATE drawn mandatory,** where 4.12 drew it optional.
+    Kept optional: an employment agreement like William's has no end. If Silverston means
+    every agreement to end, 86749 needs a made-up date.
+33. **4.14 and 4.15, a cap and a discount at the same 1,000 reams:** the cap read as
+    cumulative over its dates, across every line the item governs (the text: the item holds
+    only for the first 1,000 reams), so 12574's 300 reams past it are flagged. But Table
+    4.19's 2% discount starts at 1,000 reams on one line, which only an order using the whole
+    year's cap could earn. Is the cap per order, or the break meant for something else?
+34. **4.15, AGREEMENT PRICING PROGRAM as a subtype table:** now that it has a line of its
+    own, as Ch 3's unit-of-measure subtypes did, with the item type kept as discriminator
+    and a check that both agree. PARTY TYPE's "based on" line isn't drawn: read as
+    abbreviation and kept, though an agreement price rarely needs it (the agreement names
+    its parties).
+35. **4.15, Ch 3's queries and agreement prices:** a list price is now a component with no
+    program, but Ch 3's price list, price-a-line and overlap check predate the column and
+    read every component as a list price. Our agreement prices stay out of their way only
+    by carrying a region or old dates, which is why 70001's paper and copier programs have
+    no components. At the overview: should Ch 3's queries say "no program", and is that a
+    refactor in Ch 3 or a note?
+36. **4.15, Table 4.19's regions:** Eastern and Western regions are new boundaries, read as
+    the US split by the Mississippi (Illinois east, Missouri west), so ACME's St. Louis
+    addresses get 7.50. Table 4.19 gives no dates, currency or pricer: the agreement's
+    dates, USD and ABC Corporation.
+37. **4.16, a view, sales lines only:** the figure draws nothing new, so the link is a view
+    (4.13's applicability for every item type). Purchase lines aren't matched: there the
+    agreement's parties meet the order's supplier (the taker), not its placer. Feature lines
+    aren't matched either. Is either worth building?
+38. **4.17, the generic order parties:** the overall model draws ORDER ROLE and the two
+    order contact-mechanism tables (4.5), not 4.3's and 4.4's columns, nor SALES and PURCHASE
+    ORDER. That answers point 8: 4.5 is the overall model. Do 4.3's and 4.4's columns become
+    comparison only (as Ch 2 kept 2.2a), or stay as the faster, checkable version?
+39. **4.17, ORDER REQUIREMENT COMMITMENT to ORDER:** 4.9 draws it to ORDER ITEM, which our
+    build keeps (a need is filled line by line, with a quantity). Read as the overall
+    figure's simplification.
+40. **4.17, what's left out:** contact mechanisms themselves, party roles, item roles and
+    associations, the request, quote and requirement roles, responding parties, desired
+    features, work efforts, addenda, applicabilities and every lookup. Read as abbreviation,
+    as for Fig 3.11. ORDER ITEM ROLE is the one that may be meant: 4.17 draws roles on the
+    order only.
 
 ## Design decisions (book → SQL)
 
