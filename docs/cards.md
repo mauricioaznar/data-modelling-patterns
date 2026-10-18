@@ -548,6 +548,72 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
+### Card 17 · V1 Ch 5 · Shipments, items and status (Figs 5.1–5.2)
+- **Cue:** "What is being shipped, from whom and where to whom and where, which way does it go, and did it leave and arrive as planned?"
+- **Hook:** a delivery van with the planned times written on its side in marker, and a log
+  beside it stamped with the real ones *(Claude's, drafted when the figures landed)*
+- **Mantra:** Shipments run party to party, address to address; the type is the direction;
+  plans on the header, facts in the history.
+
+<details><summary>Key</summary>
+
+- **S:** `shipment` (estimated ready, ship and arrival dates, latest cancel date, estimated
+  and actual cost; shipped from and to a `party` and a `postal_address`; an inquiry
+  `contact_mechanism`; a receiving `telecommunications_number`) · `shipment_type` (a
+  hierarchy: OUTGOING over CUSTOMER_SHIPMENT and PURCHASE_RETURN, INCOMING over
+  PURCHASE_SHIPMENT and CUSTOMER_RETURN, TRANSFER, DROP_SHIPMENT; `from_internal` and
+  `to_internal` flags, ours) · the view `shipment_end` (whose ends are ours, from
+  INTERNAL_ORGANIZATION roles) · `shipment_item` (a `good` or a contents description, a
+  quantity, numbered within its shipment, maybe in response to another line) ·
+  `shipment_status` (SHIPMENT_STATUS group in Ch 2's `status_type`, a datetime; one row per
+  type).
+- **W:** a ship date, a carrier and a "quantity shipped" on the order: no room for a line in
+  two trucks or a truck for two orders, for returns and transfers with no order, or for a
+  drop ship we never touch. And the real ship date typed over the estimate: "was it late?"
+  is gone.
+- **T:** *(the naive-model trap until practice gives yours)* pointing the shipment line at
+  the order line: a line of pens filling two orders, or a return with no order, has nowhere
+  to go. And trusting the type alone for the direction, when the parties at each end say
+  otherwise.
+- **D:** shipment → shipment_type (→ its group); shipment → party ×2 (sender, receiver;
+  Ch 2), → postal_address ×2 (source, destination), → contact_mechanism (inquiry), →
+  telecommunications_number (receiving); shipment ← shipment_item → good (Ch 3), →
+  shipment_item (in response to); shipment ← shipment_status → status_type (Ch 2,
+  SHIPMENT_STATUS group). Rules: the type's flags match the parties' INTERNAL_ORGANIZATION
+  roles; each address is one its party has on file.
+</details>
+
+---
+
+### Card 18 · V1 Ch 5 · Shipments and orders (Fig 5.3)
+- **Cue:** "Which order lines does a shipment line fill, how much of each, and did what went out match what was ordered?"
+- **Hook:** a packing slip stapled to two orders, "700" and "300" pencilled beside its one
+  line of pens, and "black, not blue" circled *(Claude's, drafted when the figures landed)*
+- **Mantra:** Order lines and shipment lines meet in pairs with quantities; full is a sum;
+  shipped features beside ordered ones.
+
+<details><summary>Key</summary>
+
+- **S:** `order_shipment` (an `order_item` from Ch 4 and a `shipment_item`, with the
+  quantity shipped; the pair identifies it) · `shipment_item_feature` (a Ch 3
+  `product_feature` the shipment line went out with) · what was ordered: Ch 4's feature
+  lines under the order line.
+- **W:** a `shipment_id` on the order, or an `order_item_id` on the shipment line. The first
+  can't say which line or how much; the second can't let one truck line fill two orders.
+  And "shipped" typed in as a status.
+- **T:** *(the naive-model trap until practice gives yours)* linking ORDER to SHIPMENT: which
+  line, and how much of it, is lost. And storing "shipped in full" instead of adding up the
+  quantities.
+- **D:** order_item (Ch 4) ← order_shipment → shipment_item (a quantity); shipment_item ←
+  shipment_item_feature → product_feature (Ch 3); the order line's own features: its
+  feature lines (ordered for). Checks: the same good; the line's ship-to is the shipment's
+  destination; no shipment line drawn on beyond its quantity; sales lines on customer
+  shipments, purchase lines on purchase shipments, either on a drop ship. Derived: the
+  orders on a shipment; shipped in full = the sum against the line's quantity.
+</details>
+
+---
+
 ## Deck: architecture
 
 One card per chapter, from its architecture figure (the last, overall one): how the chapter's

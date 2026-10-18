@@ -11,8 +11,8 @@ Architecture figure:
 ## Submodels
 | # | Submodel | Figs | Doc draft | Overview | Practice | Doc done |
 |---|---|---|---|---|---|---|
-| 1 | Shipments, items and status | 5.1–5.2 | | | | |
-| 2 | Shipments and orders | 5.3 | | | | |
+| 1 | Shipments, items and status | 5.1–5.2 | 2026-10-18 | | | |
+| 2 | Shipments and orders | 5.3 | 2026-10-18 | | | |
 
 `Figs` must match the card's heading, e.g. `(Figs 5.1–5.2)`; the `A` row's matches the
 architecture card's `(Fig N.M)`.
