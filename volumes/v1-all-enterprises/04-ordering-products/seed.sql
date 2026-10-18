@@ -132,3 +132,74 @@ insert into order_role (order_id, party_id, order_role_type_id, percent_contribu
   (12562, 1, 'SALESPERSON', 25),     -- DATA ERROR: 125% of one sale credited (caught by a query)
   (12564, 3, 'APPROVER',    null),   -- a purchase order has order roles too
   (12564, 3, 'APPROVER',    null);   -- DATA ERROR: the same approval entered twice (caught by a query)
+
+-- ============================================================
+-- Fig 4.4 — Purchase order parties and contact mechanisms
+-- ============================================================
+-- The buyer's roles, grouped like Ch 2's CUSTOMER. BUYER itself is a
+-- grouping, never assigned (like PERSON_ROLE). SUPPLIER is Ch 2's.
+insert into role_type (role_type_id, parent_type_id, applies_to_kind, description) values
+  ('BUYER',             null,    null,     'Buyer: our side of a purchase order'),
+  ('PLACING_BUYER',     'BUYER', 'EITHER', 'Placing buyer'),
+  ('BILL_TO_PURCHASER', 'BUYER', 'EITHER', 'Bill-to purchaser'),
+  ('SHIP_TO_BUYER',     'BUYER', 'EITHER', 'Ship-to buyer');
+
+-- Party roles used below. From Ch 2: 5 Contoso SUPPLIER (freight, since
+-- 2016), 6 Contoso BILL_TO_CUSTOMER, 37 Fantastic Supplies SUPPLIER.
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (63, 4, 'PLACING_BUYER',     '2010-01-01', null),   -- Northwind
+  (64, 4, 'BILL_TO_PURCHASER', '2010-01-01', null),
+  (65, 4, 'SHIP_TO_BUYER',     '2010-01-01', null),
+  (66, 3, 'PLACING_BUYER',     '2023-09-01', null);   -- Chloe, since she joined
+
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+-- Fantastic Supplies' order desk, where our purchase orders are taken.
+insert into contact_mechanism (contact_mechanism_id, contact_mechanism_kind, contact_mechanism_type_id) values
+  (31, 'ELECTRONIC_ADDRESS', 'EMAIL');
+
+select setval(pg_get_serial_sequence('contact_mechanism', 'contact_mechanism_id'), (select max(contact_mechanism_id) from contact_mechanism));
+
+insert into electronic_address (contact_mechanism_id, electronic_address_string) values
+  (31, 'orders@fantastic.example');
+
+insert into party_contact_mechanism (party_contact_mechanism_id, party_id, contact_mechanism_id, from_date, thru_date, non_solicitation_ind, role_type_id, comment) values
+  (31, 18, 31, '2001-04-05', null, false, 'SUPPLIER', 'Order desk');
+
+select setval(pg_get_serial_sequence('party_contact_mechanism', 'party_contact_mechanism_id'), (select max(party_contact_mechanism_id) from party_contact_mechanism));
+
+-- Three more purchase orders, each with a story.
+insert into "order" (order_id, order_kind, order_date, entry_date) values
+  (12568, 'PURCHASE', '2025-02-11', '2025-02-11'),   -- the copier sold on 12561, drop-shipped to Contoso
+  (12569, 'PURCHASE', '2025-06-02', '2025-06-02'),   -- freight from Contoso
+  (12570, 'PURCHASE', '2023-05-10', '2023-09-12');   -- paper, keyed in months later
+
+select setval(pg_get_serial_sequence('"order"', 'order_id'), (select max(order_id) from "order"));
+
+insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, quantity, unit_price, item_description, comment) values
+  (22, 12568, 1, 6,    1,   2600.00, null, 'Fantastic Supplies delivers straight to Contoso'),
+  (23, 12569, 1, null, 1,   85.00,   'Freight: one pallet, Chatham to St. Louis', 'A service: nothing to ship'),
+  (24, 12570, 1, 1,    200, 29.00,   null, null);
+
+select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max(order_item_id) from order_item));
+
+-- Contact mechanisms: 2 Northwind's second line, 9 Contoso's phone, 13
+-- Northwind's office (100 Commerce Dr), 14 the Chatham warehouse, 15
+-- Contoso's office, 31 Fantastic's order desk.
+insert into purchase_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id,
+                            placed_using_contact_mechanism_id, taken_via_contact_mechanism_id, bill_to_contact_mechanism_id) values
+  (12564, 66, 37, 64,   2,    31, 13),     -- Chloe places it for Northwind; Northwind pays
+  (12568, 63, 37, null, 2,    31, 13),     -- no bill-to: the placer (Northwind) pays
+  (12569, 63, 6,  64,   2,    9,  13),     -- DATA ERROR: taken by Contoso's BILL_TO_CUSTOMER role, not its SUPPLIER role (caught by a query)
+  (12570, 66, 37, 64,   null, 31, 13),     -- DATA ERROR: Chloe's buyer role starts 2023-09-01, after this order (caught by a query)
+  (12567, null, null, null, null, null, null);   -- DATA ERROR: sales order 12567 keyed on the purchase form (caught by a query)
+
+-- Ship-to per item. The freight line (23) is a service: no ship-to.
+insert into purchase_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
+  (16, 65,   14),     -- paper to the Chatham warehouse
+  (17, 65,   14),
+  (18, 65,   13),     -- books to the office
+  (22, 65,   15),     -- a drop ship: our ship-to role, Contoso's address (labelled by a query)
+  (23, null, null),
+  (24, 65,   14),
+  (21, null, null);   -- DATA ERROR: the same clerk's mistake, on 12567's item (caught by a query)

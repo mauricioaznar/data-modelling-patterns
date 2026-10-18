@@ -280,3 +280,136 @@ select order_id, order_role_type_id, sum(percent_contribution) as total_percent
 from order_role
 group by order_id, order_role_type_id
 having sum(percent_contribution) > 100;
+
+-- ============================================================
+-- Fig 4.4 — Purchase order parties and contact mechanisms
+-- ============================================================
+
+-- name: 4.4 — Who placed, took and pays for each purchase order, and through which contact mechanisms (no bill-to: the placer pays)
+select o.order_id, o.order_date,
+       pl.name as placed_by, tk.name as taken_by, coalesce(bt.name, pl.name) as pays,
+       case when po.bill_to_party_role_id is null then 'no bill-to: the placer' else 'requested bill-to' end as payer_from,
+       pu.display_name as placed_using, tv.display_name as taken_via, ba.display_name as bill_to_address
+from purchase_order po
+join "order" o                                   on o.order_id = po.order_id
+left join party_role r1                          on r1.party_role_id = po.placed_by_party_role_id
+left join party_display_name pl                  on pl.party_id = r1.party_id
+left join party_role r2                          on r2.party_role_id = po.taken_by_party_role_id
+left join party_display_name tk                  on tk.party_id = r2.party_id
+left join party_role r3                          on r3.party_role_id = po.bill_to_party_role_id
+left join party_display_name bt                  on bt.party_id = r3.party_id
+left join contact_mechanism_display_name pu      on pu.contact_mechanism_id = po.placed_using_contact_mechanism_id
+left join contact_mechanism_display_name tv      on tv.contact_mechanism_id = po.taken_via_contact_mechanism_id
+left join contact_mechanism_display_name ba      on ba.contact_mechanism_id = po.bill_to_contact_mechanism_id
+where o.order_kind = 'PURCHASE'
+order by o.order_id;
+
+-- name: 4.4 — Where each purchase order item ships, and whether the address is the buyer's own (a drop ship isn't)
+select oi.order_id, oi.order_item_seq_id as line,
+       coalesce(p.name, oi.item_description) as item,
+       n.name as ship_to, a.display_name as ship_to_address,
+       case when s.ship_to_contact_mechanism_id is null then 'no ship-to (a service)'
+            when exists (select 1
+                         from party_contact_mechanism pcm
+                         where pcm.party_id = r.party_id
+                           and pcm.contact_mechanism_id = s.ship_to_contact_mechanism_id
+                           and pcm.from_date <= o.order_date
+                           and (pcm.thru_date is null or pcm.thru_date > o.order_date))
+                 then 'the buyer''s own'
+            else 'someone else''s: a drop ship?' end as address_is
+from order_item oi
+join "order" o                               on o.order_id = oi.order_id
+join purchase_order_item s                   on s.order_item_id = oi.order_item_id
+left join party_role r                       on r.party_role_id = s.ship_to_party_role_id
+left join party_display_name n               on n.party_id = r.party_id
+left join contact_mechanism_display_name a   on a.contact_mechanism_id = s.ship_to_contact_mechanism_id
+left join product p                          on p.product_id = oi.product_id
+where o.order_kind = 'PURCHASE'
+order by oi.order_id, oi.order_item_seq_id;
+
+-- name: 4.4 — Contoso's orders in both directions: one party, a role per hat (a union over the twin tables)
+with line as (
+  select so.order_id, v.line, v.party_role_id
+  from sales_order so
+  cross join lateral (values ('placed by',         so.placed_by_party_role_id),
+                             ('taken by',          so.taken_by_party_role_id),
+                             ('requested bill-to', so.bill_to_party_role_id)) as v(line, party_role_id)
+  union all
+  select po.order_id, v.line, v.party_role_id
+  from purchase_order po
+  cross join lateral (values ('placed by',         po.placed_by_party_role_id),
+                             ('taken by',          po.taken_by_party_role_id),
+                             ('requested bill-to', po.bill_to_party_role_id)) as v(line, party_role_id)
+  union all
+  select oi.order_id, 'ship-to', s.ship_to_party_role_id
+  from sales_order_item s
+  join order_item oi on oi.order_item_id = s.order_item_id
+  union all
+  select oi.order_id, 'ship-to', s.ship_to_party_role_id
+  from purchase_order_item s
+  join order_item oi on oi.order_item_id = s.order_item_id
+)
+select o.order_id, o.order_kind, o.order_date,
+       string_agg(distinct l.line || ' as ' || r.role_type_id, ', ') as contoso_is
+from line l
+join party_role r   on r.party_role_id = l.party_role_id
+join "order" o      on o.order_id = l.order_id
+where r.party_id = 5
+group by o.order_id, o.order_kind, o.order_date
+order by o.order_id;
+
+-- name: 4.4 — Data-quality check: order_kind and the purchase_order subtype table disagree (should be empty)
+select o.order_id, o.order_kind, (po.order_id is not null) as has_purchase_order_row
+from "order" o
+left join purchase_order po on po.order_id = o.order_id
+where (o.order_kind = 'PURCHASE') <> (po.order_id is not null);
+
+-- name: 4.4 — Data-quality check: purchase items without their purchase_order_item row, or such rows on other orders (should be empty)
+select oi.order_item_id, oi.order_id, o.order_kind,
+       case when s.order_item_id is null then 'purchase item without a purchase_order_item row'
+            else 'purchase_order_item row on a ' || lower(o.order_kind) || ' order' end as problem
+from order_item oi
+join "order" o                    on o.order_id = oi.order_id
+left join purchase_order_item s   on s.order_item_id = oi.order_item_id
+where (o.order_kind = 'PURCHASE') <> (s.order_item_id is not null);
+
+-- name: 4.4 — Data-quality check: purchase party lines pointing at a role of the wrong type (should be empty)
+-- 4.3's check, copied onto the other table: a role type below the expected one counts.
+with line as (
+  select po.order_id, v.line, v.party_role_id, v.expected
+  from purchase_order po
+  cross join lateral (values ('placed by',         po.placed_by_party_role_id, 'PLACING_BUYER'),
+                             ('taken by',          po.taken_by_party_role_id,  'SUPPLIER'),
+                             ('requested bill-to', po.bill_to_party_role_id,   'BILL_TO_PURCHASER')) as v(line, party_role_id, expected)
+  union all
+  select oi.order_id, 'ship-to, line ' || oi.order_item_seq_id, s.ship_to_party_role_id, 'SHIP_TO_BUYER'
+  from purchase_order_item s
+  join order_item oi on oi.order_item_id = s.order_item_id
+)
+select l.order_id, l.line, l.party_role_id, r.role_type_id as actual, l.expected
+from line l
+join party_role r on r.party_role_id = l.party_role_id
+where not exists (
+  select 1 from role_type_ancestor a
+  where a.role_type_id = r.role_type_id and a.ancestor_id = l.expected
+)
+order by l.order_id;
+
+-- name: 4.4 — Data-quality check: purchase party lines whose role wasn't current on the order date (should be empty)
+with line as (
+  select po.order_id, v.line, v.party_role_id
+  from purchase_order po
+  cross join lateral (values ('placed by',         po.placed_by_party_role_id),
+                             ('taken by',          po.taken_by_party_role_id),
+                             ('requested bill-to', po.bill_to_party_role_id)) as v(line, party_role_id)
+  union all
+  select oi.order_id, 'ship-to, line ' || oi.order_item_seq_id, s.ship_to_party_role_id
+  from purchase_order_item s
+  join order_item oi on oi.order_item_id = s.order_item_id
+)
+select l.order_id, o.order_date, l.line, r.party_role_id, r.role_type_id, r.from_date, r.thru_date
+from line l
+join "order" o      on o.order_id = l.order_id
+join party_role r   on r.party_role_id = l.party_role_id
+where not (r.from_date <= o.order_date and (r.thru_date is null or r.thru_date > o.order_date))
+order by l.order_id;

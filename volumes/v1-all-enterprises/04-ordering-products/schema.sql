@@ -49,7 +49,7 @@ create table order_item (
 );
 
 -- SALES ORDER ITEM has an attribute, so it's a subtype table sharing the PK.
--- PURCHASE ORDER ITEM has none and gets no table. No discriminator on
+-- PURCHASE ORDER ITEM has none and gets no table until 4.4. No discriminator on
 -- order_item: an item's kind is its order's kind (a data-quality query checks
 -- that sales items, and only they, have a row here).
 create table sales_order_item (
@@ -129,3 +129,31 @@ from contact_mechanism cm
 left join postal_address pa           on pa.contact_mechanism_id = cm.contact_mechanism_id
 left join telecommunications_number t on t.contact_mechanism_id = cm.contact_mechanism_id
 left join electronic_address e        on e.contact_mechanism_id = cm.contact_mechanism_id;
+
+-- ============================================================
+-- Fig 4.4 — Purchase order parties and contact mechanisms
+-- ============================================================
+-- Fig 4.3 turned over: PURCHASE ORDER gets a subtype table with the same six
+-- lines, and PURCHASE ORDER ITEM one with the ship-to pair. The same column
+-- names as sales_order, so the mirror shows. The roles expected are the
+-- buyer's side (PLACING_BUYER, SUPPLIER, BILL_TO_PURCHASER, SHIP_TO_BUYER),
+-- checked by data-quality queries copied from 4.3's: the cost of the twins.
+--
+-- PURCHASE ORDER ITEM is drawn with its own ITEM DESCRIPTION; read as
+-- order_item's (NOTES, point 6), so this table holds only the ship-to pair.
+
+create table purchase_order (
+  order_id                          integer primary key references "order",
+  placed_by_party_role_id           integer references party_role,          -- PLACING BUYER: "placed by"
+  taken_by_party_role_id            integer references party_role,          -- SUPPLIER: "taken by"
+  bill_to_party_role_id             integer references party_role,          -- BILL TO PURCHASER: "with a requested bill to"
+  placed_using_contact_mechanism_id integer references contact_mechanism,   -- "placed using"
+  taken_via_contact_mechanism_id    integer references contact_mechanism,   -- "taken via"
+  bill_to_contact_mechanism_id      integer references contact_mechanism    -- "designated to be billed to"
+);
+
+create table purchase_order_item (
+  order_item_id                integer primary key references order_item,
+  ship_to_party_role_id        integer references party_role,          -- SHIP TO BUYER: "designated to be shipped to"
+  ship_to_contact_mechanism_id integer references contact_mechanism    -- "designated to be shipped to"
+);

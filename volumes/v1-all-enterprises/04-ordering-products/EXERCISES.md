@@ -10,7 +10,7 @@ The sections below are a menu of formats, not a list to complete. A submodel is 
 every row scores 3+ and its scenario holds up.
 
 **Submodels:**
-1. **Orders, items and order parties** (Figs 4.1–4.3). ~3 h
+1. **Orders, items and order parties** (Figs 4.1–4.4). ~3 h
 2. *(to come: the rest of Ch 4's figures.)*
 
 ## Progress
@@ -47,6 +47,9 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 3. **[4.3]** SALES ORDER names its placing customer, taking organization and bill-to through
    PARTY ROLE, while ORDER ROLE names a PARTY and a type. Why the difference, and how do you
    decide whether a new kind of order party gets a line of its own or a row in ORDER ROLE?
+4. **[4.4]** `purchase_order` has the same six party lines as `sales_order`, and every party
+   check is written twice. Which Fig 4.1 problem is back, one level down? Why might Silverston
+   still draw the lines on each subtype rather than once on ORDER?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

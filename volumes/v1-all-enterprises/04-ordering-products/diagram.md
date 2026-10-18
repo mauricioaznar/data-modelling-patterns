@@ -1,9 +1,9 @@
 # Vol 1, Chapter 4 — ER diagram
 
 The diagram shows what `schema.sql` implements, not the book's figures. Fig 4.1 isn't built.
-SALES and PURCHASE are values of `"order".order_kind`; SALES also has a subtype table
-(`sales_order`, Fig 4.3). An item's kind is its order's; sales items have a subtype table
-(`sales_order_item`). Every table has a single-column key and plain foreign keys.
+SALES and PURCHASE are values of `"order".order_kind`; each also has a subtype table
+(`sales_order`, Fig 4.3; `purchase_order`, Fig 4.4). An item's kind is its order's; sales and
+purchase items have subtype tables (`sales_order_item`, `purchase_order_item`). Every table has a single-column key and plain foreign keys.
 
 ```mermaid
 erDiagram
@@ -28,4 +28,12 @@ erDiagram
   ORDER                   ||--o{ ORDER_ROLE          : "involving"
   PARTY                   ||--o{ ORDER_ROLE          : "involved in (Ch 2)"
   ORDER_ROLE_TYPE         ||--o{ ORDER_ROLE          : "description for"
+
+  %% Fig 4.4 — Purchase order parties and contact mechanisms (4.3 turned over)
+  ORDER                   ||--o| PURCHASE_ORDER      : "subtype (kind PURCHASE)"
+  ORDER_ITEM              ||--o| PURCHASE_ORDER_ITEM : "subtype (on a purchase order)"
+  PARTY_ROLE              ||--o{ PURCHASE_ORDER      : "placer of / fulfiller of / bill-to (Ch 2)"
+  CONTACT_MECHANISM       ||--o{ PURCHASE_ORDER      : "placed using / taken via / billed to (Ch 2)"
+  PARTY_ROLE              ||--o{ PURCHASE_ORDER_ITEM : "requested ship-to"
+  CONTACT_MECHANISM       ||--o{ PURCHASE_ORDER_ITEM : "shipping location for"
 ```

@@ -12,7 +12,7 @@ for things that share their structure, the order item as a snapshot of what was 
 lookup into the price list), and roles instead of party columns.
 
 ## Submodels (proposed 2026-10-18, from the figures shared so far)
-1. **Orders, items and order parties** (Figs 4.1–4.3): what was ordered, in which direction
+1. **Orders, items and order parties** (Figs 4.1–4.4): what was ordered, in which direction
    (sales or purchase), at what price, and who placed, took, pays for and receives it?
 
 More submodels follow as the rest of the chapter's figures arrive. If the next figures
@@ -237,7 +237,80 @@ CONTACT MECHANISM            (from Ch 2, Fig 2.9)
   60/40. Our rule: within one order and type, the shares add up to at most 100.
 - **Only the sales side is drawn.** Purchase orders have no party lines in this figure.
 
-### Points to discuss after the overview (Figs 4.1–4.3)
+### Fig 4.4 — Purchase order parties and contact mechanisms
+**Transcription** (accepted: ☐; one landscape photo; open points under "To check against the
+book")
+
+```
+ORDER                        (as 4.2; only the PURCHASE ORDER subtype drawn)
+  -> ORDER ITEM              (order "composed of" many; item "part of" 1, bar)
+
+PURCHASE ORDER
+  -> PLACING BUYER           (many "placed by" 1 role; role "the placer of" many)
+  -> SUPPLIER                (many "taken by" 1 role; role "the fulfiller of" many)
+  -> BILL TO PURCHASER       (many "with a requested bill to" 1 role;
+                              role "the requested bill to" many)
+  -> CONTACT MECHANISM       (many "placed using" 1; mechanism "a placer's location for" many)
+  -> CONTACT MECHANISM       (many "taken via" 1; mechanism "the location for taking" many)
+  -> CONTACT MECHANISM       (many "designated to be billed to" 1;
+                              mechanism "the billing location for" many)
+
+ORDER ITEM                   (as 4.2, drawn without the product and feature lines)
+  subtype PURCHASE ORDER ITEM (o item_description)
+    -> SHIP TO BUYER         (many "designated to be shipped to" 1 role;
+                              role "the requested ship to" many)
+    -> CONTACT MECHANISM     (many "designated to be shipped to" 1;
+                              mechanism "a shipping location for" many)
+
+ORDER ROLE                   (as 4.3: o percent_contribution; "of" ORDER, bar; "involving"
+                              PARTY; "described by" ORDER ROLE TYPE, bar)
+ORDER ROLE TYPE              (no attributes drawn)
+
+PARTY ROLE                   (from Ch 2, Fig 2.4)
+  # party_role_id
+  subtypes: SHIP TO BUYER, PLACING BUYER, SUPPLIER, BILL TO PURCHASER
+  -> PARTY                   (many "for" 1 party, bar; party "acting as" many)
+
+PARTY                        (from Ch 2; subtypes ORGANIZATION, PERSON)
+CONTACT MECHANISM            (from Ch 2, Fig 2.9)
+```
+
+**To check against the book**
+- Fig 4.3 turned over: the same six lines on the order and two on the item, with the
+  purchase side's role names. Optionality read as in 4.3 (every line optional).
+- PURCHASE ORDER ITEM is drawn with its own ITEM DESCRIPTION, while ORDER ITEM keeps one
+  too (as in 4.2 and 4.5; 4.6 draws it on ORDER ITEM only). Read as one attribute, ORDER
+  ITEM's (points to discuss, point 6).
+- Both ship-to lines read as leaving PURCHASE ORDER ITEM, as 4.3's leave SALES ORDER ITEM.
+- Which role answers which line, from the label pairs: "placed by" ↔ "the placer of"
+  (PLACING BUYER), "taken by" ↔ "the fulfiller of" (SUPPLIER), "with a requested bill to" ↔
+  "the requested bill to" (BILL TO PURCHASER), "designated to be shipped to" ↔ "the requested
+  ship to" (SHIP TO BUYER).
+
+**Discussion**
+- **The same four jobs, with the hats swapped.** On a purchase order *we* place the order
+  (a buyer: our purchasing department, or one person in it), the supplier takes and fulfils
+  it, we get the bill, and each item comes to one of our sites. In the seed, Chloe places
+  order 12564 for Northwind with Fantastic Supplies; the paper goes to the Chatham warehouse
+  and the books to the office.
+- **New role types, grouped like the customer's.** PLACING BUYER, BILL TO PURCHASER and SHIP
+  TO BUYER sit under a new BUYER grouping, the mirror of Ch 2's CUSTOMER; SUPPLIER is Ch 2's.
+  A person can be a placing buyer (Chloe), so those roles take either kind of party.
+- **Fig 4.1's twin problem comes back one level down.** 4.2 merged the two orders, but the
+  party lines are copied: `sales_order` and `purchase_order` have the same six columns, and
+  every party check is written twice (the 4.4 queries are 4.3's on the other table).
+  Silverston accepts it here because each line expects a different role, and each subtype
+  stays easy to read. Fig 4.5 is his way out when the copying starts to hurt. (Ponder 4.)
+- **One party, both directions.** Contoso is our customer and our freight supplier. Its
+  orders both ways come from its party roles, one per hat (a query below), and putting the
+  wrong hat on an order (12569 "taken by" Contoso as *bill-to customer*) is caught.
+- **Drop shipping.** Order 12568 buys the copier we sold Contoso on 12561, and Fantastic
+  Supplies delivers it straight to Contoso's office. The ship-to role is still ours (we are
+  the buyer), the address is Contoso's: allowed, and flagged for review. Nothing yet links
+  that purchase line to the sales line it fills.
+- **ORDER ROLE is drawn again,** unchanged: purchase orders have approvers too (12564's).
+
+### Points to discuss after the overview (Figs 4.1–4.4)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing. The list moves under the chapter's last figure when that one arrives.
@@ -249,7 +322,7 @@ the literal drawing. The list moves under the chapter's last figure when that on
    feature, not both; a feature's item is ordered for a product's item, on the same order,
    and the feature must apply to that product; an item with neither carries a description".
    Built as data-quality queries, not constraints, so the reading is easy to change.
-3. **4.3, optionality of the party lines:** all seven read as optional, so the columns are
+3. **4.3 and 4.4, optionality of the party lines:** all seven on each side read as optional, so the columns are
    nullable. When no bill-to is given, the queries bill the placing customer. That fallback
    is ours, not the book's: is the bill-to meant to be mandatory instead?
 4. **4.3, ORDER ROLE's identifier:** read as order + party + type. Bars are visible on "of"
@@ -258,6 +331,13 @@ the literal drawing. The list moves under the chapter's last figure when that on
    trigger for TODO's refactor (`role_type` as a ROLE TYPE supertype with PARTY ROLE TYPE and
    ORDER ROLE TYPE subtypes). The figure draws ORDER ROLE TYPE alone, so it's its own lookup
    for now; decide at the overview, once more role types have shown up.
+6. **4.4, PURCHASE ORDER ITEM's ITEM DESCRIPTION:** drawn on the subtype and on ORDER ITEM
+   (4.5 does the same; 4.6 draws it on ORDER ITEM only). Read as one attribute, kept on
+   `order_item`. If Silverston meant a second one (the supplier's wording for the line, say),
+   it moves to `purchase_order_item`.
+7. **4.4, whose buyer roles:** PLACING BUYER, BILL TO PURCHASER and SHIP TO BUYER are grouped
+   under a new BUYER type, the mirror of CUSTOMER. Nothing drawn says they must be roles of
+   our own organizations (or their employees), so nothing checks it. Should something?
 
 ## Design decisions (book → SQL)
 
@@ -280,7 +360,7 @@ the literal drawing. The list moves under the chapter's last figure when that on
   data-quality query (seed: purchase order 12564's two line 2s).
 - **No `order_item_kind`:** an item's kind is its order's kind, so a second discriminator would
   store one fact twice. SALES ORDER ITEM has an attribute, so it gets a subtype table
-  (`sales_order_item`); PURCHASE ORDER ITEM has none and gets no table. A data-quality query
+  (`sales_order_item`); PURCHASE ORDER ITEM has none and gets no table (until 4.4). A data-quality query
   checks both ways: every sales item has its row, and no row sits on another order (seed: a
   row on the purchase order's paper line).
 - **`product_id` and `product_feature_id` are both nullable,** and point 2's reading is three
@@ -332,6 +412,30 @@ the literal drawing. The list moves under the chapter's last figure when that on
 - **`contact_mechanism_display_name`**, a helper view (no book entity): one line of text per
   contact mechanism, so the queries can show addresses and numbers. Its name follows
   `party_display_name`, which also lets the explorer label contact mechanism ids.
+
+### Fig 4.4
+- **PURCHASE ORDER and PURCHASE ORDER ITEM become subtype tables** (`purchase_order`,
+  `purchase_order_item`), now that they have relationships, as SALES ORDER did in 4.3.
+  `order_kind` stays the discriminator, and two data-quality queries check it both ways
+  (seed: sales order 12567 keyed on the purchase form, with a `purchase_order` row and a
+  `purchase_order_item` row).
+- **The same column names as `sales_order`,** so a reader sees the mirror. A question that
+  spans both directions (Contoso's orders) is a union of two near-identical selects: the cost
+  Fig 4.5 removes.
+- **Four `role_type` rows:** BUYER, a grouping (no `applies_to_kind`, never assigned, like
+  Ch 2's PERSON_ROLE), with PLACING_BUYER, BILL_TO_PURCHASER and SHIP_TO_BUYER under it, open
+  to either kind of party. SUPPLIER is Ch 2's (organizations only). Northwind gets the three
+  buyer roles, and Chloe a placing-buyer role from 2023-09-01, when she joined.
+- **The party checks are 4.3's, copied** onto the purchase lines: wrong role type (seed: 12569
+  taken by Contoso's BILL_TO_CUSTOMER role, not its SUPPLIER role) and role not current on the
+  order date (seed: 12570, dated 2023-05-10, placed by Chloe's buyer role).
+- **A ship-to address the buyer doesn't have on file is allowed,** and a query labels it (seed:
+  12568's drop-shipped copier). Whether buyer roles must belong to our own organizations is
+  not drawn and not checked (point 7).
+- **`item_description` stays on `order_item`** (point 6), so `purchase_order_item` holds only
+  the ship-to pair.
+- **Fantastic Supplies gets an order-desk e-mail** (contact mechanism 31), where our purchase
+  orders are taken.
 
 ## When NOT to use this
 - **A shop that only sells**, and buys through some other system, gets little from the ORDER
