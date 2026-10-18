@@ -271,3 +271,56 @@ insert into order_item_contact_mechanism (order_item_id, contact_mechanism_id, c
   (25, 11, 'SHIPPING'),
   (25, 5,  'DELIVERY_CONTACT'),   -- the courier calls Kiri
   (26, 11, 'SHIPPING');
+
+-- ============================================================
+-- Fig 4.6 — Order adjustments
+-- ============================================================
+-- The book's six subtypes on top, our finer types under them.
+insert into order_adjustment_type (order_adjustment_type_id, parent_type_id, description) values
+  ('DISCOUNT',              null,                    'Discount adjustment'),
+  ('SURCHARGE',             null,                    'Surcharge adjustment'),
+  ('SALES_TAX',             null,                    'Sales tax'),
+  ('SHIPPING_AND_HANDLING', null,                    'Shipping and handling charge'),
+  ('FEE',                   null,                    'Fee'),
+  ('MISCELLANEOUS_CHARGE',  null,                    'Miscellaneous charge'),
+  ('LOYALTY_DISCOUNT',      'DISCOUNT',              'Loyalty discount'),
+  ('VOLUME_DISCOUNT',       'DISCOUNT',              'Volume discount'),
+  ('RUSH_SURCHARGE',        'SURCHARGE',             'Rush order surcharge'),
+  ('FREIGHT',               'SHIPPING_AND_HANDLING', 'Freight'),
+  ('SETUP_FEE',             'FEE',                   'Set-up fee'),
+  ('SMALL_ORDER_FEE',       'FEE',                   'Small order fee'),
+  ('GIFT_WRAP',             null,                    'Gift wrapping');   -- DATA ERROR: rolls up to none of the six (caught by a query)
+
+-- Items: 4 the copier on 12561, with 5 its duplex unit and 6 its finisher,
+-- 7 the paper for the St. Louis depot; 9 the blue pens on 12562; 11 the red
+-- pens; 13 Ben's engraved pen set; 20 the paper on 12566.
+insert into order_adjustment (order_adjustment_id, order_adjustment_type_id, order_id, order_item_id, amount, percentage) values
+  (1,  'LOYALTY_DISCOUNT', 12561, null, null,   5),       -- on the whole order
+  (2,  'FREIGHT',          12561, null, 150.00, null),
+  (3,  'SETUP_FEE',        null,  4,    75.00,  null),
+  (4,  'SALES_TAX',        null,  4,    null,   9.679),   -- Missouri + St. Louis
+  (5,  'SALES_TAX',        null,  5,    null,   9.679),
+  (6,  'SALES_TAX',        null,  6,    null,   9.679),
+  (7,  'SALES_TAX',        null,  7,    null,   9.679),   -- the general rate; the lookup taxes paper lower in Missouri (shown by a query)
+  (8,  'VOLUME_DISCOUNT',  null,  9,    null,   10),      -- 30 pens
+  (9,  'SMALL_ORDER_FEE',  12563, null, 5.00,   null),
+  (10, 'FREIGHT',          12564, null, 45.00,  null),    -- the supplier's freight on our purchase order
+  (11, 'VOLUME_DISCOUNT',  12562, 11,   null,   10),      -- DATA ERROR: names the order AND an item (caught by a query)
+  (12, 'RUSH_SURCHARGE',   null,  20,   15.00,  5),       -- DATA ERROR: an amount AND a percentage (caught by a query)
+  (13, 'GIFT_WRAP',        null,  13,   3.00,   null);
+
+select setval(pg_get_serial_sequence('order_adjustment', 'order_adjustment_id'), (select max(order_adjustment_id) from order_adjustment));
+
+-- Invented rates. Boundaries (Ch 2): 10 Illinois, 11 Missouri, 12 Sangamon
+-- County, 13 Springfield, 17 St. Louis. Category (Ch 3): 2 Paper, above
+-- Bond paper.
+insert into sales_tax_lookup (sales_tax_lookup_id, geographic_boundary_id, product_category_id, sales_tax_percentage) values
+  (1, 10, null, 6.25),
+  (2, 12, null, 1.00),
+  (3, 13, null, 2.50),
+  (4, 11, null, 4.225),
+  (5, 11, 2,    3.00),    -- Missouri taxes paper lower
+  (6, 17, null, 5.454),
+  (7, 11, null, 4.50);    -- DATA ERROR: a second general rate for Missouri (caught by a query)
+
+select setval(pg_get_serial_sequence('sales_tax_lookup', 'sales_tax_lookup_id'), (select max(sales_tax_lookup_id) from sales_tax_lookup));

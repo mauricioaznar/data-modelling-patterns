@@ -11,7 +11,8 @@ every row scores 3+ and its scenario holds up.
 
 **Submodels:**
 1. **Orders, items and order parties** (Figs 4.1–4.5). ~3 h
-2. *(to come: the rest of Ch 4's figures.)*
+2. **Order adjustments** (Fig 4.6). ~3 h
+3. *(to come: the rest of Ch 4's figures.)*
 
 ## Progress
 
@@ -53,6 +54,15 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 5. **[4.5]** Fig 4.5 turns every party and contact mechanism line into a typed row. Name two
    rules that 4.3's columns enforced for free and the rows don't, and describe a business
    for which you'd still choose 4.5.
+
+### Submodel 2: order adjustments
+1. **[4.6]** An adjustment is a row, not a `discount` or `tax` column on the order. What does
+   that buy? And what does a percentage leave unsaid: of what is it taken, and in which order
+   are adjustments applied?
+2. **[4.6]** SALES TAX LOOKUP has no line to ORDER ADJUSTMENT. How does a sales tax adjustment
+   get its rate, and why copy the rate instead of pointing at the lookup row?
+3. **[4.6]** A 10% volume discount on a line could be a lower unit price or an adjustment.
+   When would you use each, and what does each make easy or hard to report?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

@@ -574,3 +574,164 @@ join generic g on g.order_id = s.order_id
               and g.order_item_id is not distinct from s.order_item_id
               and g.job = s.job
 order by s.order_id, s.order_item_id, s.job;
+
+-- ============================================================
+-- Fig 4.6 — Order adjustments
+-- ============================================================
+
+-- name: 4.6 — Order 12561's bill: each line, each adjustment with its value (discounts negative), and the total
+-- A percentage is of the value before any adjustment: the order's lines for an
+-- order adjustment, the one line for an item adjustment (NOTES, point 11).
+with recursive up (order_adjustment_type_id, top_type_id) as (   -- each type with its top-level type
+  select order_adjustment_type_id, order_adjustment_type_id from order_adjustment_type where parent_type_id is null
+  union all
+  select t.order_adjustment_type_id, u.top_type_id
+  from order_adjustment_type t
+  join up u on t.parent_type_id = u.order_adjustment_type_id
+),
+line as (
+  select oi.order_item_id, oi.order_item_seq_id,
+         coalesce(p.name, f.description, oi.item_description) as item,
+         oi.quantity * oi.unit_price as value
+  from order_item oi
+  left join product p           on p.product_id = oi.product_id
+  left join product_feature f   on f.product_feature_id = oi.product_feature_id
+  where oi.order_id = 12561
+),
+adjustment as (
+  select a.order_adjustment_id, t.description, a.percentage, l.order_item_seq_id,
+         case when u.top_type_id = 'DISCOUNT' then -1 else 1 end
+         * coalesce(a.amount, round(coalesce(l.value, (select sum(value) from line)) * a.percentage / 100, 2)) as value
+  from order_adjustment a
+  join up u                       on u.order_adjustment_type_id = a.order_adjustment_type_id
+  join order_adjustment_type t    on t.order_adjustment_type_id = a.order_adjustment_type_id
+  left join line l                on l.order_item_id = a.order_item_id
+  where a.order_id = 12561 or l.order_item_id is not null
+)
+select what, applies_to, value
+from (
+  select 1 as part, order_item_seq_id as seq, 'line ' || order_item_seq_id || ': ' || item as what, null as applies_to, value
+  from line
+  union all
+  select 2, order_adjustment_id, description || coalesce(' ' || percentage || '%', ''),
+         coalesce('line ' || order_item_seq_id, 'the order'), value
+  from adjustment
+  union all
+  select 3, 0, 'Total', null, (select sum(value) from line) + (select coalesce(sum(value), 0) from adjustment)
+) bill
+order by part, seq;
+
+-- name: 4.6 — Each order's value: its lines, its adjustments and the total, sales and purchase alike
+with recursive up (order_adjustment_type_id, top_type_id) as (
+  select order_adjustment_type_id, order_adjustment_type_id from order_adjustment_type where parent_type_id is null
+  union all
+  select t.order_adjustment_type_id, u.top_type_id
+  from order_adjustment_type t
+  join up u on t.parent_type_id = u.order_adjustment_type_id
+),
+lines as (
+  select order_id, sum(quantity * unit_price) as lines_value
+  from order_item
+  group by order_id
+),
+adjustment as (
+  select coalesce(oi.order_id, a.order_id) as order_id,
+         case when u.top_type_id = 'DISCOUNT' then -1 else 1 end
+         * coalesce(a.amount, round(coalesce(oi.quantity * oi.unit_price, l.lines_value) * a.percentage / 100, 2)) as value
+  from order_adjustment a
+  join up u                on u.order_adjustment_type_id = a.order_adjustment_type_id
+  left join order_item oi  on oi.order_item_id = a.order_item_id
+  left join lines l        on l.order_id = a.order_id
+)
+select o.order_id, o.order_kind, l.lines_value,
+       coalesce(sum(a.value), 0) as adjustments,
+       l.lines_value + coalesce(sum(a.value), 0) as total
+from "order" o
+join lines l             on l.order_id = o.order_id
+left join adjustment a   on a.order_id = o.order_id
+group by o.order_id, o.order_kind, l.lines_value
+order by o.order_id;
+
+-- name: 4.6 — Sales tax on order 12561: the rate the lookup gives each line (where it ships, what it is) against the rate charged
+-- Every boundary the ship-to address lies in adds its rate; per boundary, a
+-- rate for the product's category (or one above it) beats the general one.
+with line as (
+  select oi.order_item_id, oi.order_item_seq_id, oi.product_id, o.order_date,
+         coalesce(p.name, f.description) as item,
+         coalesce(s.ship_to_contact_mechanism_id, ps.ship_to_contact_mechanism_id) as ship_to   -- a feature ships with its item
+  from order_item oi
+  join "order" o                   on o.order_id = oi.order_id
+  join sales_order_item s          on s.order_item_id = oi.order_item_id
+  left join sales_order_item ps    on ps.order_item_id = oi.ordered_for_order_item_id
+  left join product p              on p.product_id = oi.product_id
+  left join product_feature f      on f.product_feature_id = oi.product_feature_id
+  where oi.order_id = 12561
+    and oi.quantity * oi.unit_price > 0
+),
+boundary as (
+  select distinct l.order_item_id, a.ancestor_id as geographic_boundary_id
+  from line l
+  join postal_address_boundary pab        on pab.contact_mechanism_id = l.ship_to
+  join geographic_boundary_ancestor a     on a.geographic_boundary_id = pab.geographic_boundary_id
+),
+category as (   -- the product's categories on the order date, and every category above them
+  select l.order_item_id, c.product_category_id
+  from line l
+  join product_category_classification c on c.product_id = l.product_id
+  where c.from_date <= l.order_date and (c.thru_date is null or c.thru_date > l.order_date)
+  union
+  select l.order_item_id, an.ancestor_id
+  from line l
+  join product_category_classification c   on c.product_id = l.product_id
+  join product_category_ancestor an        on an.product_category_id = c.product_category_id
+  where c.from_date <= l.order_date and (c.thru_date is null or c.thru_date > l.order_date)
+),
+rate as (
+  select distinct on (b.order_item_id, b.geographic_boundary_id)
+         b.order_item_id, b.geographic_boundary_id, t.sales_tax_percentage
+  from boundary b
+  join sales_tax_lookup t on t.geographic_boundary_id = b.geographic_boundary_id
+  where t.product_category_id is null
+     or t.product_category_id in (select c.product_category_id from category c where c.order_item_id = b.order_item_id)
+  order by b.order_item_id, b.geographic_boundary_id, (t.product_category_id is null), t.sales_tax_lookup_id
+)
+select l.order_item_seq_id as line, l.item, d.display_name as ships_to,
+       string_agg(g.name || ' ' || r.sales_tax_percentage, ' + ' order by g.name) as from_lookup,
+       sum(r.sales_tax_percentage) as lookup_percent,
+       (select sum(x.percentage) from order_adjustment x
+        where x.order_item_id = l.order_item_id and x.order_adjustment_type_id = 'SALES_TAX') as charged_percent
+from line l
+left join rate r                             on r.order_item_id = l.order_item_id
+left join geographic_boundary g              on g.geographic_boundary_id = r.geographic_boundary_id
+left join contact_mechanism_display_name d   on d.contact_mechanism_id = l.ship_to
+group by l.order_item_id, l.order_item_seq_id, l.item, d.display_name
+order by l.order_item_seq_id;
+
+-- name: 4.6 — Data-quality check: adjustments for both an order and an item, or for neither (should be empty)
+select order_adjustment_id, order_adjustment_type_id, order_id, order_item_id
+from order_adjustment
+where (order_id is null) = (order_item_id is null);
+
+-- name: 4.6 — Data-quality check: adjustments with both an amount and a percentage, or neither (should be empty)
+select order_adjustment_id, order_adjustment_type_id, amount, percentage
+from order_adjustment
+where (amount is null) = (percentage is null);
+
+-- name: 4.6 — Data-quality check: adjustment types that don't roll up to one of the book's six subtypes (should be empty)
+with recursive up (order_adjustment_type_id, top_type_id) as (
+  select order_adjustment_type_id, order_adjustment_type_id from order_adjustment_type where parent_type_id is null
+  union all
+  select t.order_adjustment_type_id, u.top_type_id
+  from order_adjustment_type t
+  join up u on t.parent_type_id = u.order_adjustment_type_id
+)
+select order_adjustment_type_id, top_type_id
+from up
+where top_type_id not in ('DISCOUNT', 'SURCHARGE', 'SALES_TAX', 'SHIPPING_AND_HANDLING', 'FEE', 'MISCELLANEOUS_CHARGE');
+
+-- name: 4.6 — Data-quality check: two sales tax rates for one boundary and category (should be empty)
+select t.geographic_boundary_id, g.name, t.product_category_id, count(*) as rates
+from sales_tax_lookup t
+join geographic_boundary g on g.geographic_boundary_id = t.geographic_boundary_id
+group by t.geographic_boundary_id, g.name, t.product_category_id
+having count(*) > 1;

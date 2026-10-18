@@ -47,4 +47,12 @@ erDiagram
   ORDER_ITEM              ||--o{ ORDER_ITEM_CONTACT_MECHANISM : "having"
   CONTACT_MECHANISM       ||--o{ ORDER_ITEM_CONTACT_MECHANISM : "used in (Ch 2)"
   CONTACT_MECHANISM_PURPOSE_TYPE ||--o{ ORDER_ITEM_CONTACT_MECHANISM : "for (Ch 2)"
+
+  %% Fig 4.6 — Order adjustments (for the order OR one item: a data-quality query)
+  ORDER                   |o--o{ ORDER_ADJUSTMENT    : "affected by"
+  ORDER_ITEM              |o--o{ ORDER_ADJUSTMENT    : "affected by"
+  ORDER_ADJUSTMENT_TYPE   ||--o{ ORDER_ADJUSTMENT    : "description for"
+  ORDER_ADJUSTMENT_TYPE   |o--o{ ORDER_ADJUSTMENT_TYPE : "parent of (the six subtypes on top)"
+  GEOGRAPHIC_BOUNDARY     ||--o{ SALES_TAX_LOOKUP    : "taxed via (Ch 2)"
+  PRODUCT_CATEGORY        |o--o{ SALES_TAX_LOOKUP    : "a consideration for (Ch 3)"
 ```

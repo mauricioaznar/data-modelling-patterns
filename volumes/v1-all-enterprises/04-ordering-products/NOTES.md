@@ -15,8 +15,12 @@ lookup into the price list), and roles instead of party columns.
 1. **Orders, items and order parties** (Figs 4.1–4.5): what was ordered, in which direction
    (sales or purchase), at what price, and who placed, took, pays for and receives it?
 
-More submodels follow as the rest of the chapter's figures arrive. If the next figures
-answer the same questions (the purchase side's parties, say), they join submodel 1 and its
+2. **Order adjustments** (Fig 4.6): what changes the order's price besides quantity × unit
+   price (discounts, surcharges, sales tax, freight, fees), on the whole order or on one
+   line, and which tax rate applies where?
+
+More submodels follow as the rest of the chapter's figures arrive. Figures that answer the
+same questions as an existing submodel join it (4.4 and 4.5 joined submodel 1), and its
 `Figs` grow.
 
 ## Figures
@@ -381,7 +385,83 @@ CONTACT MECHANISM, PARTY                (from Ch 2)
   and query with 4.3's columns. 4.5 earns its keep when new order parties keep arriving, or
   when sales and purchase orders must be handled by the same code.
 
-### Points to discuss after the overview (Figs 4.1–4.5)
+### Fig 4.6 — Order adjustments
+**Transcription** (accepted: ☐; one landscape photo; open points under "To check against the
+book")
+
+```
+ORDER ADJUSTMENT
+  # order_adjustment_id
+  o amount
+  o percentage
+  subtypes: DISCOUNT ADJUSTMENT, SURCHARGE ADJUSTMENT, SALES TAX, SHIPPING AND HANDLING
+            CHARGE, FEE, MISCELLANEOUS CHARGE
+  -> ORDER ITEM              (many "affecting" 1 item; item "affected by" many)
+  -> ORDER                   (many "affecting" 1 order, dashed; order "affected by" many)
+  -> ORDER ADJUSTMENT TYPE   (many "described by" 1 type; type "the description for" many)
+
+ORDER ADJUSTMENT TYPE
+  # order_adjustment_type_id
+  * description
+
+SALES TAX LOOKUP
+  # sales_tax_seq_id
+  * sales_tax_percentage
+  -> GEOGRAPHIC BOUNDARY     (many "for" 1 boundary, bar; boundary "taxed via" many)
+  -> PRODUCT CATEGORY        (many "specified for" 1 category;
+                              category "a consideration for" many)
+
+GEOGRAPHIC BOUNDARY          (from Ch 2, Fig 2.8: # geo_id, o geo_code, * name, o abbreviation;
+                              subtypes drawn here: COUNTY, CITY, STATE)
+PRODUCT CATEGORY             (from Ch 3, Fig 3.2: # product_category_id, * description)
+ORDER, ORDER ITEM            (as 4.2; item subtypes SALES ORDER ITEM (o corresponding_po_id)
+                              and PURCHASE ORDER ITEM; order "composed of" items, bar)
+```
+
+**To check against the book**
+- No arc seen across the two "affecting" lines. Read as Silverston's intention all the same:
+  an adjustment affects the whole order or one item, not both (point 10). The ORDER line is
+  dashed; the ORDER ITEM line read as optional too, which is what lets an adjustment name only
+  the order.
+- No line from SALES TAX LOOKUP to ORDER ADJUSTMENT or to its SALES TAX subtype: read as a
+  reference table that a sales tax adjustment copies its percentage from (point 12).
+- The PRODUCT CATEGORY line read as optional: a rate for a whole boundary names no category.
+  The bar on "for" makes the boundary part of the lookup's identifier, with the seq id.
+- No recursion drawn on ORDER ADJUSTMENT TYPE. Read as Ch 3's cost components: the six
+  subtypes are the top of the type list, and finer types sit under them.
+- PURCHASE ORDER ITEM drawn with no attribute here, and ORDER ITEM keeps ITEM DESCRIPTION:
+  the reading of point 6.
+
+**Discussion**
+- **The problem.** An order's price is more than quantity × unit price: a loyalty discount,
+  freight, a set-up fee, sales tax. The naive order gets a column for each (`discount`,
+  `freight`, `tax`), so every new kind of charge is a schema change, two discounts don't fit,
+  and a discount on one line has nowhere to go.
+- **One entity for every change to the price,** typed, at either level, as an amount or a
+  percentage. Order 12561: 5% loyalty discount and 150.00 freight on the whole order, a 75.00
+  set-up fee and sales tax on the copier's line.
+- **Which way it goes comes from the type.** A discount reduces the price, every other type
+  adds; both are stored positive, as Ch 3 stored its discount components.
+- **A percentage of what?** The figure doesn't say what a percentage is taken from, or in
+  which order adjustments apply (is tax charged on the discounted price?). Our queries take
+  each one of the value before any adjustment (point 11; ponder 1 of submodel 2).
+- **The snapshot again.** Like the unit price (4.2), an adjustment records what was charged:
+  the tax rate is copied from SALES TAX LOOKUP on the order date, so a later rate change
+  doesn't rewrite old orders. That's why no line joins the two (ponder 2).
+- **SALES TAX LOOKUP: a rate per place, optionally per kind of product.** A state rate, a
+  city's add-on, a lower rate for paper in Missouri. The place comes from Ch 2 (the ship-to
+  address's geographic boundaries) and the kind from Ch 3 (the product's categories, and the
+  ones above them). The seed's rates are invented.
+- **Walking up the boundaries can overreach.** Ch 2's postal code 62707 lies in Springfield
+  *and* Chatham, so a Chatham address reaching its boundaries through the postal code also
+  "lies in" Springfield and would pick up its city rate. Real tax engines place the exact
+  address for this reason. Our tax query only meets St. Louis addresses, which are clean.
+- **Purchase orders too:** the adjustment hangs on ORDER and ORDER ITEM, so a supplier's freight
+  on our purchase order 12564 is the same entity.
+- **Rules vs facts, as in 4.2.** Ch 3's price components say what we *would* charge (a
+  discount for big orders); adjustments say what *was* charged on this order.
+
+### Points to discuss after the overview (Figs 4.1–4.6)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing. The list moves under the chapter's last figure when that one arrives.
@@ -417,6 +497,16 @@ the literal drawing. The list moves under the chapter's last figure when that on
    BILL_TO) serve both directions, and the order's kind says which side is ours. Silverston
    may mean one type per hat (placing customer, supplier, bill-to purchaser…), which keeps
    the role names of 4.3 and 4.4 but doubles the list.
+10. **4.6, an order or an item:** no arc is drawn across the two "affecting" lines; read as
+    one or the other, never both (a data-quality query). Other readings: an item's adjustment
+    also names its order (redundant, but easy to sum), or both are allowed.
+11. **4.6, a percentage of what, applied in which order:** the figure doesn't say. Our queries
+    take each percentage of the value before any adjustment, so tax is charged on the
+    undiscounted price. If Silverston means a sequence (discounts, then tax), an adjustment
+    needs a sequence number, or its type an order of application.
+12. **4.6, SALES TAX LOOKUP with no dates and no line to the adjustment:** read as a reference
+    table the order copies its rate from (the snapshot again). Dates would keep old rates for
+    late corrections; we stay with the book.
 
 ## Design decisions (book → SQL)
 
@@ -538,6 +628,32 @@ the literal drawing. The list moves under the chapter's last figure when that on
 - **No fallback to the parent item** for a feature's ship-to here: 12571 has no feature items.
   The rule from 4.3 (a feature ships with its item) would carry over unchanged.
 
+### Fig 4.6
+- **The six subtypes become the top level of `order_adjustment_type`** (DISCOUNT, SURCHARGE,
+  SALES_TAX, SHIPPING_AND_HANDLING, FEE, MISCELLANEOUS_CHARGE), with a `parent_type_id` for
+  finer types under them (loyalty and volume discounts, rush surcharge, freight, set-up and
+  small-order fees): Ch 3's cost component move. A data-quality query checks every type rolls
+  up to one of the six (seed: GIFT_WRAP, with no parent).
+- **`order_id` and `order_item_id` are both nullable;** exactly one set is a data-quality query,
+  as 4.2's product or feature (no arc drawn; point 10). Seed: a volume discount naming order
+  12562 *and* its line 3.
+- **An amount or a percentage, exactly one:** a data-quality query (seed: a rush surcharge with
+  both). Check constraints keep the amount not negative and the percentage in (0, 100]. Where
+  both are set, the queries use the amount.
+- **The sign comes from the top-level type:** DISCOUNT reduces, every other type adds. The
+  queries find the top with a recursive walk, as Ch 3's cost queries do.
+- **A percentage is of the value before any adjustment** (point 11): the order's lines for an
+  order adjustment, the one line for an item adjustment. A feature's line is a line of its own.
+- **`sales_tax_lookup`:** the boundary (required), the category (null = every category) and
+  the percentage, with a surrogate key standing in for the book's seq id. No dates (point
+  12). A data-quality query finds two rates for one boundary and category (seed: Missouri's
+  general rate twice); the tax query takes the lower id.
+- **Which rate applies to a line:** every boundary its ship-to address lies in (Ch 2's
+  `postal_address_boundary`, walked up through `geographic_boundary_ancestor`) adds its own
+  rate, and per boundary a rate for the product's category (or a category above it, Ch 3's
+  `product_category_ancestor`) beats the general one. The query sets it against the rate
+  charged (seed: 12561's paper charged the general rate, where Missouri taxes paper lower).
+
 ## When NOT to use this
 - **A shop that only sells**, and buys through some other system, gets little from the ORDER
   supertype. It costs one discriminator, so it's cheap to keep, but don't model purchase
@@ -552,5 +668,10 @@ the literal drawing. The list moves under the chapter's last figure when that on
 - **Pointing at a contact mechanism only works if mechanisms never change in place** (Ch 2: a
   new address is a new row). A system that edits addresses in place must copy the shipping and
   billing addresses onto the order, or yesterday's orders will "move".
+- **Generic roles and mechanisms (4.5)** when the order's parties are fixed and few: the
+  columns of 4.3 and 4.4 are easier to read, check and query.
+- **Order adjustments (4.6)** when the only change to a price is one flat tax rate: a tax
+  column (or a computed total) is plainer. Go to rows when discounts, fees and tax start to
+  stack, or apply to single lines.
 
 ## Open questions
