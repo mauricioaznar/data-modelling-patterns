@@ -148,6 +148,95 @@ PRODUCT FEATURE       (from Ch 3, Fig 3.4, with its subtypes: product quality, c
 - **From Ch 3:** PRODUCT and PRODUCT FEATURE; and PRODUCT FEATURE APPLICABILITY (3.4), which
   says which features a product can take, so a feature item has a rule to respect.
 
+### Fig 4.3 — Sales order parties and contact mechanisms
+**Transcription** (accepted: ☐; two photos of one landscape page; open points under "To
+check against the book")
+
+```
+ORDER                        (as 4.2; only the SALES ORDER subtype drawn)
+  -> ORDER ITEM              (order "composed of" many; item "part of" 1, bar)
+
+SALES ORDER
+  -> PLACING CUSTOMER        (many "placed by" 1 role; role "the placer of" many)
+  -> INTERNAL ORGANIZATION   (many "taken by" 1 role; role "the fulfiller of" many)
+  -> BILL TO CUSTOMER        (many "with a requested bill to" 1 role;
+                              role "the requested bill to" many)
+  -> CONTACT MECHANISM       (many "placed using" 1; mechanism "a placer's location for" many)
+  -> CONTACT MECHANISM       (many "taken via" 1; mechanism "the location for taking" many)
+  -> CONTACT MECHANISM       (many "designated to be billed to" 1;
+                              mechanism "the billing location for" many)
+
+ORDER ITEM                   (as 4.2, drawn without item_description)
+  subtype SALES ORDER ITEM (o corresponding_po_id)
+    -> SHIP TO CUSTOMER      (many "designated to be shipped to" 1 role;
+                              role "the requested ship to" many)
+    -> CONTACT MECHANISM     (many "designated to be shipped to" 1;
+                              mechanism "the shipping location for" many)
+
+ORDER ROLE
+  o percent_contribution
+  -> ORDER                   (many "of" 1 order, bar; order "involving" many)
+  -> PARTY                   (many "involving" 1 party; party "involved in" many)
+  -> ORDER ROLE TYPE         (many "described by" 1 type, bar; type "the description for" many)
+
+ORDER ROLE TYPE              (no attributes drawn)
+
+PARTY ROLE                   (from Ch 2, Fig 2.4)
+  # party_role_id
+  subtypes: SHIP TO CUSTOMER, PLACING CUSTOMER, INTERNAL ORGANIZATION, BILL TO CUSTOMER
+  -> PARTY                   (many "for" 1 party, bar; party "acting as" many)
+
+PARTY                        (from Ch 2; subtypes ORGANIZATION, PERSON)
+  # party_id
+
+CONTACT MECHANISM            (from Ch 2, Fig 2.9)
+  # contact_mechanism_id
+```
+
+**To check against the book**
+- Optionality: the photos don't show solid vs dashed reliably. Every line from SALES ORDER
+  and SALES ORDER ITEM read as optional at the order end (points to discuss, point 3); the
+  role and mechanism ends as optional (a role needn't be on any order).
+- Both ship-to lines read as leaving SALES ORDER ITEM (one from its top edge to CONTACT
+  MECHANISM, one from its bottom edge to SHIP TO CUSTOMER), not SALES ORDER.
+- Which party role answers which line, read from the label pairs: "placed by" ↔ "the placer
+  of" (PLACING CUSTOMER), "taken by" ↔ "the fulfiller of" (INTERNAL ORGANIZATION), "with a
+  requested bill to" ↔ "the requested bill to" (BILL TO CUSTOMER).
+- ORDER ROLE's two "involving" labels read as one at the ORDER end (order "involving" roles)
+  and one at the ORDER ROLE end (role "involving" a party). Bars seen on "of" and "described
+  by"; the PARTY line's bar unclear (point 4).
+- ITEM DESCRIPTION and the PRODUCT / FEATURE lines are missing from ORDER ITEM here. Read as
+  abbreviation: the figure is about parties.
+
+**Discussion**
+- **Four jobs, often four parties.** Someone places the order, one of our organizations takes
+  it, someone pays, and someone receives the goods. In the seed, Ben (a person) places an
+  order for Contoso, Contoso pays, Contoso's addresses receive it, and Northwind takes it.
+  Fig 4.1's one CUSTOMER can't say that.
+- **The lines point at PARTY ROLE, not at PARTY.** The order names "Contoso as bill-to
+  customer", the dated role row from Ch 2. So the order states which hat the party wears, and
+  a check can ask whether the party held that role on the order date. Ch 2's PARTY ROLE
+  subtypes gain one: PLACING CUSTOMER. (Ponder 3.)
+- **Three contact mechanisms on the order, one on the item:** how it was placed (Contoso's
+  sales inbox), where we took it (our website or a phone line), where the bill goes, and per
+  item where it ships. They point at CONTACT MECHANISM, not POSTAL ADDRESS: an order comes in
+  by phone, e-mail or the web, and a bill can go by e-mail.
+- **Bill-to on the order, ship-to on the item:** one bill, many destinations. Order 12561's
+  copier goes to Contoso's office and its paper to the St. Louis depot. A feature item ships
+  with the item it's ordered for.
+- **Specific lines and a generic ORDER ROLE, side by side.** The parties every sales order
+  has get lines of their own (one each, a column, easy to query). The open-ended rest
+  (salespeople, the clerk who keyed it in, an approver) go through ORDER ROLE, a party plus a
+  type, so a new kind of order party is a new row, not a new column. It's Ch 2's specific vs
+  generic trade-off (Figs 2.5 and 2.6a) used together. The cost: "every party on this order"
+  is a union of both (a query below).
+- **ORDER ROLE names a PARTY and a type, not a PARTY ROLE:** being an order's salesperson is a
+  role within that one order, so it isn't kept as a dated role of the party. It hangs on
+  ORDER, so purchase orders have order roles too (the seed's approver).
+- **PERCENT CONTRIBUTION** shares a role out among parties: Chloe and Ana split the copier sale
+  60/40. Our rule: within one order and type, the shares add up to at most 100.
+- **Only the sales side is drawn.** Purchase orders have no party lines in this figure.
+
 ### Points to discuss after the overview (Figs 4.1–4.3)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -160,6 +249,15 @@ the literal drawing. The list moves under the chapter's last figure when that on
    feature, not both; a feature's item is ordered for a product's item, on the same order,
    and the feature must apply to that product; an item with neither carries a description".
    Built as data-quality queries, not constraints, so the reading is easy to change.
+3. **4.3, optionality of the party lines:** all seven read as optional, so the columns are
+   nullable. When no bill-to is given, the queries bill the placing customer. That fallback
+   is ours, not the book's: is the bill-to meant to be mandatory instead?
+4. **4.3, ORDER ROLE's identifier:** read as order + party + type. Bars are visible on "of"
+   and "described by" only, but two salespeople on one order need the party in it too.
+5. **4.3, ORDER ROLE TYPE vs Ch 2's ROLE TYPE:** this is the second kind of role type, the
+   trigger for TODO's refactor (`role_type` as a ROLE TYPE supertype with PARTY ROLE TYPE and
+   ORDER ROLE TYPE subtypes). The figure draws ORDER ROLE TYPE alone, so it's its own lookup
+   for now; decide at the overview, once more role types have shown up.
 
 ## Design decisions (book → SQL)
 
@@ -203,7 +301,51 @@ the literal drawing. The list moves under the chapter's last figure when that on
   lists at 2.50, the book's order has 12.00). The "agreed vs list" query keeps that on purpose:
   the order keeps what was agreed.
 
+### Fig 4.3
+- **SALES ORDER becomes a subtype table** (`sales_order`, sharing `order_id`), now that it has
+  relationships of its own, as GOOD did in Ch 3's Fig 3.3. `order_kind` stays the
+  discriminator; a data-quality query checks the two agree (seed: order 12567, a sales order
+  with no `sales_order` row).
+- **Party lines → `<line>_party_role_id` columns referencing `party_role`:**
+  `placed_by_party_role_id`, `taken_by_party_role_id`, `bill_to_party_role_id` on
+  `sales_order`, and `ship_to_party_role_id` on `sales_order_item`. A plain FK can't say which
+  role type, so a data-quality query walks Ch 2's `role_type_ancestor` (a role type below the
+  expected one counts; seed: order 12566 billed to Contoso's SHIP_TO role), and another checks
+  the role was current on the order date (seed: Ben's order of 2023-03-15, made while he was
+  still a prospect).
+- **PLACING_CUSTOMER is a new `role_type` row** under Ch 2's CUSTOMER, beside bill-to, ship-to
+  and end-user. ACME, Contoso and Ben get placing roles.
+- **Contact mechanism lines → `<line>_contact_mechanism_id` columns** referencing
+  `contact_mechanism`, of any kind. Whether the party has that mechanism on file is a review
+  query, not a check: shipping to an address the customer doesn't own (collecting at our
+  warehouse, a one-off site) is allowed.
+- **The ship-to columns are added to `sales_order_item`** with `alter table`, as Ch 3 added
+  columns to `product`. Feature items leave them empty; the queries take the parent item's.
+- **No bill-to stored as a default:** a null bill-to falls back to the placing customer in the
+  queries (point 3), so one fact isn't stored twice.
+- **`order_role` has a surrogate key;** the identifier (order + party + type, point 4) is a
+  data-quality query (seed: the purchase order's approval entered twice). So is "the shares of
+  one type on one order add up to at most 100" (seed: 100% + 25% for order 12562). A check keeps
+  each share between 0 and 100.
+- **`order_role_type` is a lookup of its own** (point 5): SALESPERSON, ENTERED_BY, APPROVER,
+  REVIEWER, our examples.
+- **`contact_mechanism_display_name`**, a helper view (no book entity): one line of text per
+  contact mechanism, so the queries can show addresses and numbers. Its name follows
+  `party_display_name`, which also lets the explorer label contact mechanism ids.
+
 ## When NOT to use this
-<!-- Filled as the figures land. -->
+- **A shop that only sells**, and buys through some other system, gets little from the ORDER
+  supertype. It costs one discriminator, so it's cheap to keep, but don't model purchase
+  orders nobody will enter.
+- **A consumer web shop,** where the person who orders nearly always pays and receives: three
+  role lines per order are overkill. A `customer` on the order and the addresses on it are
+  enough until gifts, company accounts or split shipments show up.
+- **Feature items:** if options are never priced or shipped on their own, a list of the chosen
+  features under the item (or a configuration code) is simpler than one item per feature.
+- **ORDER ROLE:** if the only extra party is ever a salesperson, a `salesperson` column says it
+  more plainly. Go generic when the list of order parties keeps growing.
+- **Pointing at a contact mechanism only works if mechanisms never change in place** (Ch 2: a
+  new address is a new row). A system that edits addresses in place must copy the shipping and
+  billing addresses onto the order, or yesterday's orders will "move".
 
 ## Open questions

@@ -44,6 +44,9 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 2. **[4.2]** The copier's duplex unit is an ORDER ITEM of its own, "ordered for" the copier's
    item, not a column or a list on the copier's item. What does that buy, and which rules must
    then hold that no foreign key checks?
+3. **[4.3]** SALES ORDER names its placing customer, taking organization and bill-to through
+   PARTY ROLE, while ORDER ROLE names a PARTY and a type. Why the difference, and how do you
+   decide whether a new kind of order party gets a line of its own or a row in ORDER ROLE?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

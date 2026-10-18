@@ -64,3 +64,71 @@ insert into sales_order_item (order_item_id, corresponding_po_id) values
   (13, null), (14, null), (15, null),
   (16, 'JPM-881'),   -- DATA ERROR: our own PO number typed into a sales-item row on a purchase order (caught by a query)
   (19, null), (20, 'CON-4733'), (21, null);
+
+-- ============================================================
+-- Fig 4.3 — Sales order parties and contact mechanisms
+-- ============================================================
+-- PLACING CUSTOMER is new: a fourth customer role under Ch 2's CUSTOMER.
+insert into role_type (role_type_id, parent_type_id, applies_to_kind, description) values
+  ('PLACING_CUSTOMER', 'CUSTOMER', 'EITHER', 'Placing customer');
+
+-- Party roles used below. From Ch 2: 1 Northwind INTERNAL_ORGANIZATION,
+-- 32 ABC Subsidiary INTERNAL_ORGANIZATION, 6 Contoso BILL_TO, 7 Contoso
+-- SHIP_TO. New: who places orders.
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (60, 16, 'PLACING_CUSTOMER', '1999-01-01', null),   -- ACME Company
+  (61, 5,  'PLACING_CUSTOMER', '2021-04-01', null),   -- Contoso, our customer since 2021
+  (62, 2,  'PLACING_CUSTOMER', '2023-06-01', null);   -- Ben, once he stopped being a prospect
+
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+-- Contact mechanisms from Ch 2: 1 and 2 Northwind's phone lines, 7 Contoso's
+-- sales inbox (Ben reads it as Contoso's contact), 8 Northwind's website,
+-- 14 Northwind's Chatham warehouse, 15 Contoso's office at 1 Market St.
+-- New: Contoso's St. Louis depot, for deliveries only.
+insert into contact_mechanism (contact_mechanism_id, contact_mechanism_kind, contact_mechanism_type_id) values
+  (30, 'POSTAL_ADDRESS', 'POSTAL_ADDRESS');
+
+select setval(pg_get_serial_sequence('contact_mechanism', 'contact_mechanism_id'), (select max(contact_mechanism_id) from contact_mechanism));
+
+insert into postal_address (contact_mechanism_id, address1, address2, directions) values
+  (30, '800 Riverfront Ave', 'Dock 3', 'Trucks use the river gate');
+
+insert into postal_address_boundary (contact_mechanism_id, geographic_boundary_id) values
+  (30, 18), (30, 17), (30, 11), (30, 6);   -- St. Louis MO 63101, US
+
+insert into party_contact_mechanism (party_contact_mechanism_id, party_id, contact_mechanism_id, from_date, thru_date, non_solicitation_ind, role_type_id, comment) values
+  (30, 5, 30, '2022-01-01', null, true, 'SHIP_TO_CUSTOMER', 'St. Louis depot: deliveries only, no sales mail');
+
+select setval(pg_get_serial_sequence('party_contact_mechanism', 'party_contact_mechanism_id'), (select max(party_contact_mechanism_id) from party_contact_mechanism));
+
+insert into sales_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id,
+                         placed_using_contact_mechanism_id, taken_via_contact_mechanism_id, bill_to_contact_mechanism_id) values
+  (12560, 60, 32, null, null, null, null),   -- ACME to ABC Subsidiary (the book's cast), nothing on file: no bill-to, so ACME pays
+  (12561, 61, 1,  6,    7,    8,    15),     -- Contoso orders from its sales inbox on our website; bill to 1 Market St
+  (12562, 62, 1,  6,    7,    2,    15),     -- Ben places it for Contoso, which pays: four parties, four jobs
+  (12563, 62, 1,  null, null, 1,    null),   -- Ben's own order, by phone: no bill-to, so Ben pays
+  (12565, 62, 1,  null, null, 1,    null),   -- DATA ERROR: Ben's placing role starts 2023-06-01, after this order (caught by a query)
+  (12566, 61, 1,  7,    7,    8,    15);     -- DATA ERROR: billed to Contoso's SHIP_TO role, not its BILL_TO role (caught by a query)
+  -- 12567: no row at all. DATA ERROR: a sales order without its sales_order row (caught by a query)
+
+-- Ship-to per item. Feature items (5, 6, 8, 10, 12) ship with their product's item.
+update sales_order_item set ship_to_party_role_id = 7, ship_to_contact_mechanism_id = 15 where order_item_id in (4, 9, 20);   -- Contoso's office
+update sales_order_item set ship_to_party_role_id = 7, ship_to_contact_mechanism_id = 30 where order_item_id = 7;             -- the paper goes to the depot
+update sales_order_item set ship_to_party_role_id = 7, ship_to_contact_mechanism_id = 14 where order_item_id = 11;            -- Contoso collects the red pens at our Chatham warehouse (on the review list)
+
+insert into order_role_type (order_role_type_id, description) values
+  ('SALESPERSON', 'Salesperson: credited with the sale'),
+  ('ENTERED_BY',  'Keyed the order in'),
+  ('APPROVER',    'Approved the order'),
+  ('REVIEWER',    'Reviewed the order');
+
+-- Parties: 1 Ana (a contractor since 2023), 3 Chloe (an employee).
+insert into order_role (order_id, party_id, order_role_type_id, percent_contribution) values
+  (12561, 3, 'SALESPERSON', 60),     -- Chloe and Ana split the copier sale
+  (12561, 1, 'SALESPERSON', 40),
+  (12561, 3, 'ENTERED_BY',  null),
+  (12562, 3, 'SALESPERSON', 100),
+  (12562, 1, 'SALESPERSON', 25),     -- DATA ERROR: 125% of one sale credited (caught by a query)
+  (12564, 3, 'APPROVER',    null),   -- a purchase order has order roles too
+  (12564, 3, 'APPROVER',    null);   -- DATA ERROR: the same approval entered twice (caught by a query)
