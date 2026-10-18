@@ -1242,3 +1242,75 @@ join "order" o       on o.order_id = oi.order_id
 join quote_item qi   on qi.quote_item_id = oi.quote_item_id
 join quote qt        on qt.quote_id = qi.quote_id
 where not (o.order_date >= qt.valid_from_date and o.order_date < qt.valid_thru_date);
+
+-- ============================================================
+-- Fig 4.12 — Agreement definition
+-- ============================================================
+
+-- name: 4.12 — Agreements as Table 4.16 shows them: type (under its parent), parties in their roles, the relationship formalized, start and end
+select a.agreement_id, t.description || coalesce(' (' || lower(pt.description) || ')', '') as type, a.description,
+       (select string_agg(n.name || ' (' || lower(rt.description) || ')', ', ' order by rt.agreement_role_type_id, n.name)
+          from agreement_role r
+          join party_display_name n       on n.party_id = r.party_id
+          join agreement_role_type rt     on rt.agreement_role_type_id = r.agreement_role_type_id
+         where r.agreement_id = a.agreement_id) as roles,
+       prt.name as party_relationship, a.from_date as starting, a.thru_date - 1 as ending
+from agreement a
+join agreement_type t                     on t.agreement_type_id = a.agreement_type_id
+left join agreement_type pt               on pt.agreement_type_id = t.parent_type_id
+left join party_relationship pr           on pr.party_relationship_id = a.party_relationship_id
+left join party_relationship_type prt     on prt.party_relationship_type_id = pr.party_relationship_type_id
+order by a.agreement_id between 70000 and 79999, a.agreement_id;
+
+-- name: 4.12 — One party, many hats: every agreement ABC Corporation and Northwind are in, the role each plays, and whether it was in force on 2002-06-01 and 2025-06-01
+select n.name as party, rt.description as role, a.agreement_id, t.description as type,
+       a.from_date, a.thru_date - 1 as ending,
+       (a.from_date <= date '2002-06-01' and (a.thru_date is null or a.thru_date > date '2002-06-01')) as in_force_2002_06_01,
+       (a.from_date <= date '2025-06-01' and (a.thru_date is null or a.thru_date > date '2025-06-01')) as in_force_2025_06_01
+from agreement_role r
+join party_display_name n     on n.party_id = r.party_id
+join agreement_role_type rt   on rt.agreement_role_type_id = r.agreement_role_type_id
+join agreement a              on a.agreement_id = r.agreement_id
+join agreement_type t         on t.agreement_type_id = a.agreement_type_id
+where r.party_id in (12, 4)
+order by n.name, a.from_date;
+
+-- name: 4.12 — Product agreements (sales or purchase, at any depth of the type tree) and the parties on each side
+with recursive under_product (agreement_type_id) as (
+  select agreement_type_id from agreement_type where agreement_type_id = 'PRODUCT_AGREEMENT'
+  union all
+  select t.agreement_type_id from agreement_type t join under_product u on t.parent_type_id = u.agreement_type_id
+)
+select a.agreement_id, a.agreement_type_id as type, a.description,
+       string_agg(n.name, ', ' order by n.name) filter (where r.agreement_role_type_id = 'SUPPLIER') as suppliers,
+       string_agg(n.name, ', ' order by n.name) filter (where r.agreement_role_type_id = 'CUSTOMER') as customers
+from agreement a
+join under_product u              on u.agreement_type_id = a.agreement_type_id
+left join agreement_role r        on r.agreement_id = a.agreement_id
+left join party_display_name n    on n.party_id = r.party_id
+group by a.agreement_id, a.agreement_type_id, a.description
+order by a.agreement_id;
+
+-- name: 4.12 — Data-quality check: agreements whose party relationship has an end that plays no role in the agreement (should be empty; 10002 is the book's own row, NOTES point 23)
+select a.agreement_id, a.description, e.end_name as relationship_end, n.name as party_without_a_role
+from agreement a
+join party_relationship pr on pr.party_relationship_id = a.party_relationship_id
+cross join lateral (values ('from', pr.from_party_role_id), ('to', pr.to_party_role_id)) e(end_name, party_role_id)
+join party_role ro               on ro.party_role_id = e.party_role_id
+join party_display_name n        on n.party_id = ro.party_id
+where not exists (select 1 from agreement_role r
+                  where r.agreement_id = a.agreement_id and r.party_id = ro.party_id)
+order by a.agreement_id, e.end_name;
+
+-- name: 4.12 — Data-quality check: agreements formalizing a party relationship that wasn't current on the day they began (should be empty)
+select a.agreement_id, a.description, a.from_date as agreement_from,
+       pr.party_relationship_id, pr.from_date as relationship_from, pr.thru_date as relationship_thru
+from agreement a
+join party_relationship pr on pr.party_relationship_id = a.party_relationship_id
+where not (pr.from_date <= a.from_date and (pr.thru_date is null or pr.thru_date > a.from_date));
+
+-- name: 4.12 — Data-quality check: the same party in the same role twice on one agreement (should be empty)
+select agreement_id, party_id, agreement_role_type_id, count(*) as times
+from agreement_role
+group by agreement_id, party_id, agreement_role_type_id
+having count(*) > 1;

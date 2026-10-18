@@ -827,3 +827,89 @@ insert into quote_term (term_type_id, quote_id, quote_item_id, term_value) value
   ('NONPERFORMANCE_PENALTY_PCT', 35678, null, 5),
   ('CENTRAL_CONTACT_REQUIRED',   35678, null, null),
   ('WARRANTY_MONTHS',            62002, 5,    3);   -- DATA ERROR: the quote AND an item (caught by a query)
+
+-- ============================================================
+-- Fig 4.12 — Agreement definition
+-- ============================================================
+insert into agreement_type (agreement_type_id, parent_type_id, description) values
+  ('PRODUCT_AGREEMENT',      null,                'Product agreement'),
+  ('SALES_AGREEMENT',        'PRODUCT_AGREEMENT', 'Sales agreement'),
+  ('PURCHASE_AGREEMENT',     'PRODUCT_AGREEMENT', 'Purchase agreement'),
+  ('EMPLOYMENT_AGREEMENT',   null,                'Employment agreement'),
+  ('OTHER_AGREEMENT',        null,                'Other agreement'),
+  ('PARTNERSHIP_AGREEMENT',  'OTHER_AGREEMENT',   'Partnership agreement'),     -- Table 4.16
+  ('DISTRIBUTION_AGREEMENT', 'OTHER_AGREEMENT',   'Distribution agreement');    -- ours
+
+insert into agreement_role_type (agreement_role_type_id, description) values
+  ('SUPPLIER',    'Supplier'),
+  ('CUSTOMER',    'Customer'),
+  ('EMPLOYER',    'Employer'),
+  ('EMPLOYEE',    'Employee'),
+  ('PARTNER',     'Partner'),
+  ('DISTRIBUTOR', 'Distributor'),
+  ('SIGNATORY',   'Signatory');   -- ours: signs for one of the parties
+
+-- Table 4.16's new parties: William Jones, and XYZ Corporation (not Ch 2's
+-- XYZ Subsidiary, which rolls up to ABC).
+insert into party (party_id, party_kind) values
+  (47, 'PERSON'),         -- William Jones
+  (48, 'ORGANIZATION');   -- XYZ Corporation
+
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into person (party_id, gender_type_id) values
+  (47, 'MALE');
+
+insert into person_name (party_id, person_name_type_id, from_date, thru_date, name) values
+  (47, 'FIRST', '1990-05-07', null, 'William'),
+  (47, 'LAST',  '1990-05-07', null, 'Jones');
+
+insert into organization (party_id, organization_type_id, name) values
+  (48, 'CORPORATION', 'XYZ Corporation');
+
+-- William's employment (Table 4.16's "employment relationship"): ABC
+-- Corporation employs him, so it gets an internal organization role.
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (73, 12, 'INTERNAL_ORGANIZATION', '1990-01-01', null),   -- ABC Corporation
+  (74, 47, 'EMPLOYEE',              '1990-05-07', null);   -- William Jones
+
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+insert into party_relationship (party_relationship_id, party_relationship_type_id, from_party_role_id, to_party_role_id, from_date, thru_date) values
+  (17, 'EMPLOYMENT', 73, 74, '1990-05-07', null);
+
+select setval(pg_get_serial_sequence('party_relationship', 'party_relationship_id'), (select max(party_relationship_id) from party_relationship));
+
+-- Table 4.16, with its ids; the agreement date (none given) is the starting
+-- date. Thru dates are exclusive: "December 30, 2002" is stored as December
+-- 31. Then ours, 70001-70003. Party relationships (Ch 2): 2 Northwind
+-- employs Chloe, 4 Contoso is Northwind's customer, 14 ACME is ABC
+-- Subsidiary's customer, 15 Sellers Assistance sold for ABC Subsidiary until
+-- 2002, 17 ABC Corporation employs William.
+insert into agreement (agreement_id, agreement_type_id, party_relationship_id, agreement_date, from_date, thru_date, description, text) values
+  (10002,  'SALES_AGREEMENT',        14,   '2002-01-01', '2002-01-01', '2002-12-31', 'Pricing and terms for buying inventory items', null),
+  (86749,  'EMPLOYMENT_AGREEMENT',   17,   '1990-05-07', '1990-05-07', null,         'William hired as an entry-level information systems programmer', null),
+  (489589, 'PARTNERSHIP_AGREEMENT',  null, '2000-06-01', '2000-06-01', '2001-06-02', 'An informal partnership, with terms to compensate the partners', null),
+  (70001,  'SALES_AGREEMENT',        4,    '2024-12-10', '2025-01-01', '2026-01-01', 'Contoso''s office supply pricing for 2025', null),
+  (70002,  'EMPLOYMENT_AGREEMENT',   2,    '2023-08-15', '2023-09-01', null,         'Chloe hired as a buyer', null),
+  (70003,  'DISTRIBUTION_AGREEMENT', 15,   '2002-02-20', '2002-03-01', '2003-03-01', 'Sellers Assistance to resell ABC Subsidiary''s supplies', null);   -- DATA ERROR: relationship 15 ended on 2002-01-01 (caught by a query)
+
+select setval(pg_get_serial_sequence('agreement', 'agreement_id'), (select max(agreement_id) from agreement));
+
+-- Parties: 2 Ben, 3 Chloe, 4 Northwind, 5 Contoso, 12 ABC Corporation, 13 ABC
+-- Subsidiary, 16 ACME, 17 Sellers Assistance, 47 William, 48 XYZ.
+insert into agreement_role (agreement_id, party_id, agreement_role_type_id) values
+  (10002,  12, 'SUPPLIER'),   -- Table 4.16: ABC Corporation, though relationship 14 is ABC Subsidiary's (point 23)
+  (10002,  16, 'CUSTOMER'),
+  (86749,  47, 'EMPLOYEE'),
+  (86749,  12, 'EMPLOYER'),
+  (489589, 12, 'PARTNER'),    -- three parties in one role: no party relationship could hold them
+  (489589, 17, 'PARTNER'),
+  (489589, 48, 'PARTNER'),
+  (489589, 48, 'PARTNER'),    -- DATA ERROR: XYZ entered twice as a partner (caught by a query)
+  (70001,  4,  'SUPPLIER'),
+  (70001,  5,  'CUSTOMER'),
+  (70001,  2,  'SIGNATORY'),  -- Ben signs for Contoso
+  (70002,  3,  'EMPLOYEE'),   -- DATA ERROR: Northwind, the employer, plays no role (caught by a query)
+  (70003,  17, 'DISTRIBUTOR'),
+  (70003,  13, 'SUPPLIER');

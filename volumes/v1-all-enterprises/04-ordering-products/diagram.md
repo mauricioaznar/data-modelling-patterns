@@ -109,4 +109,12 @@ erDiagram
   TERM_TYPE               ||--o{ QUOTE_TERM          : "used in"
   QUOTE                   |o--o{ QUOTE_TERM          : "subject to"
   QUOTE_ITEM              |o--o{ QUOTE_TERM          : "subject to"
+
+  %% Fig 4.12 — Agreement definition (PRODUCT over SALES and PURCHASE, EMPLOYMENT, OTHER are agreement_type rows)
+  AGREEMENT_TYPE          ||--o{ AGREEMENT           : "used to describe"
+  AGREEMENT_TYPE          |o--o{ AGREEMENT_TYPE      : "parent of"
+  PARTY_RELATIONSHIP      |o--o{ AGREEMENT           : "involved in (Ch 2)"
+  AGREEMENT               ||--o{ AGREEMENT_ROLE      : "involving"
+  PARTY                   ||--o{ AGREEMENT_ROLE      : "involved in (Ch 2)"
+  AGREEMENT_ROLE_TYPE     ||--o{ AGREEMENT_ROLE      : "the description of"
 ```

@@ -30,6 +30,11 @@ lookup into the price list), and roles instead of party columns.
    information, proposals or prices, about which needs, what did each answer quote, and
    which quote became an order?
 
+6. **Agreements** (Figs 4.12–4.13): which standing agreements do we have, with whom and in
+   which roles, formalizing which relationship, in force when, and which of their clauses
+   (sections, pricing programs, exhibits) apply to which organizations, products and places,
+   as amended by which addenda?
+
 More submodels follow as the rest of the chapter's figures arrive. Figures that answer the
 same questions as an existing submodel join it (4.4 and 4.5 joined submodel 1), and its
 `Figs` grow.
@@ -984,7 +989,160 @@ a quote item for furniture may make the buyer pay the actual freight.
   ROLE has ORDER ROLE's shape, a sixth role type list (point 5).
 - **An accepted quote must still be valid** on the order's date: a check.
 
-### Points to discuss after the overview (Figs 4.1–4.11)
+### Fig 4.12 — Agreement definition
+**Transcription** (accepted: ☐; two landscape photos of the figure, then Table 4.16; open
+points under "To check against the book")
+
+```
+AGREEMENT
+  # agreement_id
+  * agreement_date
+  * from_date
+  o thru_date
+  * description
+  o text
+  subtypes: PRODUCT AGREEMENT (subtypes SALES AGREEMENT, PURCHASE AGREEMENT),
+            EMPLOYMENT AGREEMENT, OTHER AGREEMENT
+  -> AGREEMENT TYPE          (many "described by" 1; type "used to describe" many)
+  -> PARTY RELATIONSHIP      (many "associated with" 1, dashed; relationship "involved in" many)
+
+AGREEMENT TYPE
+  # agreement_type_id
+  * description
+
+AGREEMENT ROLE               (no attributes drawn)
+  -> AGREEMENT               (many "for" 1, bar; agreement "involving" many)
+  -> PARTY                   (many "of" 1, bar; party "involved in" many)
+  -> AGREEMENT ROLE TYPE     (many "described by" 1, bar; type "the description of" many)
+
+AGREEMENT ROLE TYPE          (no attributes drawn)
+
+PARTY RELATIONSHIP           (Ch 2's 2.6a: # from_date, o thru_date, o comment)
+  -> PARTY ROLE              (many "established from" 1, bar; role "involved in" many)
+  -> PARTY ROLE              (many "established to" 1, bar; role "involved in" many)
+PARTY ROLE                   (# party_id, # party_role_id; Ch 2)
+PARTY                        (subtypes ORGANIZATION, PERSON; Ch 2)
+```
+
+**Table 4.16** (agreements, the book's sample, in our words):
+- 10002: a sales agreement, tied to a customer relationship, on the pricing and terms for
+  buying inventory items. ABC Corporation is the supplier, ACME Company the customer. January
+  1 to December 30, 2002.
+- 86749: an employment agreement, tied to an employment relationship: William Jones hired as
+  an entry-level information systems programmer, ABC Corporation the employer. From May 7,
+  1990, no end.
+- 489589: a partnership agreement, an informal partnership with terms to compensate the
+  partners: ABC Corporation, Sellers Assistance Corporation and XYZ Corporation, all three
+  partners. No party relationship. June 1, 2000, to June 1, 2001.
+
+**The text beside it**, in short: the third agreement has three parties in one role, which a
+party relationship (always two ends) can't hold. Agreement roles take any number of parties,
+and new role types are rows, so the model stays flexible.
+
+**To check against the book**
+- AGREEMENT is drawn with subtypes *and* an AGREEMENT TYPE. Table 4.16's types are the subtypes'
+  names plus a partnership, which has no box: read as the subtypes being the main kinds and
+  the type an open list under them.
+- The AGREEMENT TYPE line read as mandatory (every agreement has a type); the PARTY
+  RELATIONSHIP line as optional, dashed on the agreement's side (489589 has none).
+- AGREEMENT ROLE has bars on all three lines: identified by agreement + party + type, as we
+  read ORDER ROLE (point 4). No dates, and Table 4.16 gives none.
+- Table 4.16's ending dates read as inclusive: December 30, 2002 (not 31) and June 1, 2001.
+- Table 4.16 gives no AGREEMENT DATE (when it was signed): the seed uses the starting date.
+- ABC Corporation is 10002's supplier, but Ch 2's customer relationship (Table 2.5) is
+  between ACME and ABC Subsidiary (point 23).
+- XYZ Corporation is read as a new organization: Ch 2's XYZ Subsidiary rolls up to ABC, and
+  a partnership between ABC and its own subsidiary would make little sense.
+- William Jones is new (a person). ABC Corporation employs him from 1990, years before
+  Table 2.5's 1998 dates for ABC's family.
+
+**Discussion**
+- **The problem.** Contracts kept as files in a folder, or as columns on the customer
+  (`contract_start`, `contract_end`): one contract per customer, two parties at most, no
+  history, and no answer to "which agreements is ACME in, and which are in force?".
+- **AGREEMENT is dated and typed:** signed on one date, in force from one date to another, and
+  of a kind: a product agreement (sales or purchase), an employment agreement, or another
+  (a partnership, a distribution deal). Orders (4.2) are one-off; an agreement sets the
+  terms for many orders over a period.
+- **Two ways to reach the parties.** The PARTY RELATIONSHIP an agreement formalizes (a
+  customer relationship, an employment), and AGREEMENT ROLE: any number of parties, each in a
+  typed role. The relationship is optional, because a three-way partnership is no binary
+  relationship; the roles always say who signed what. (Ponder 1 of submodel 6.)
+- **Two paths, so a rule:** when an agreement names a relationship, both its ends should play
+  a role in the agreement. Table 4.16's own 10002 breaks it against Ch 2's data (point 23).
+- **Subtypes and a type at once:** the subtype boxes are the kinds the model hangs lines on
+  (product agreements matter for pricing and orders), the type rows an open list. With no
+  attributes, both become rows of one hierarchy. (Ponder 2 of submodel 6.)
+- **AGREEMENT ROLE TYPE** is the seventh role-type list (point 5).
+
+### Fig 4.13 — Agreement item
+**Transcription** (accepted: ☐; one photo; open points under "To check against the book")
+
+```
+AGREEMENT ITEM
+  # agreement_item_seq_id
+  * agreement_text
+  o agreement_image
+  subtypes: SUB AGREEMENT, AGREEMENT SECTION, AGREEMENT PRICING PROGRAM, AGREEMENT EXHIBIT
+  -> AGREEMENT               (many "part of" 1, bar; agreement "composed of" many)
+  -> AGREEMENT ITEM          (many "part of" 1, dashed loop; item "comprised of" many)
+
+ADDENDUM
+  # addendum_id
+  o addendum_creation_date
+  o addendum_effective_date
+  * addendum_text
+  -> AGREEMENT ITEM          (many "a modification to" 1; item "modified by" many)       } arc
+  -> AGREEMENT               (many "a modification to" 1; agreement "modified by" many)  }
+
+AGREEMENT ORGANIZATION APPLICABILITY   (no attributes drawn)
+  -> ORGANIZATION            (many "based on" 1)
+  -> AGREEMENT ITEM          (many "used to define" 1; item "specified for" many)
+AGREEMENT PRODUCT APPLICABILITY        (no attributes drawn)
+  -> PRODUCT                 (many "based on" 1; product "used to define" many)
+  -> AGREEMENT ITEM          (many "used to define" 1; item "specified for" many)
+AGREEMENT GEOGRAPHICAL APPLICABILITY   (no attributes drawn)
+  -> GEOGRAPHIC BOUNDARY     (many "based on" 1; boundary "used to define" many)
+  -> AGREEMENT ITEM          (many "used to define" 1; item "specified for" many)
+
+AGREEMENT                    (as 4.12, subtypes redrawn)
+ORGANIZATION                 (* name; Ch 2)
+PRODUCT                      (# product_id, * description; Ch 3)
+GEOGRAPHIC BOUNDARY          (# geo_id, * name; Ch 2)
+```
+
+No table or text came with this figure.
+
+**To check against the book**
+- AGREEMENT ITEM's "part of" loop is dashed at both ends: an item may sit inside another
+  item, and may hold others. Read as inside the same agreement (a check).
+- The arc across ADDENDUM's two lines: an addendum changes the whole agreement or one item,
+  never both. Read as exactly one.
+- The three applicabilities have no bars and no attributes: read as an item limited to these
+  organizations, products and boundaries. What an item with none of a kind means isn't
+  drawn (point 26).
+- ORGANIZATION applicability lands on ORGANIZATION, not PARTY: a clause can't be limited to
+  one person.
+- AGREEMENT IMAGE is optional: read as a reference to a scanned page or a drawing, stored as
+  text.
+- PRODUCT is drawn with DESCRIPTION only, as a reminder; Ch 3's PRODUCT is unchanged.
+- PRICING PROGRAM has no lines here; its prices presumably come in a later figure.
+
+**Discussion**
+- **The problem.** An agreement's text as one block can't say which clause covers which
+  products, customers or regions, and a change overwrites what was signed.
+- **AGREEMENT ITEM breaks the agreement into numbered parts,** typed (a section, a pricing
+  program, an exhibit, a sub-agreement) and nested: sections inside sections, a
+  sub-agreement with its own sections. (Ponder 5 of submodel 6.)
+- **Applicability limits an item** to some organizations, products and geographic
+  boundaries, which answers "which clauses apply to this order line?": an agreement in force
+  on the order's date, with the customer among its parties, and an item whose limits all
+  match (the query). (Ponder 3 of submodel 6.)
+- **ADDENDUM keeps changes beside the text they change,** dated (created, effective), for the
+  whole agreement or one item: the arc. What was signed stays readable, and so does when it
+  changed. (Ponder 4 of submodel 6.)
+
+### Points to discuss after the overview (Figs 4.1–4.13)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing. The list moves under the chapter's last figure when that one arrives.
@@ -1007,7 +1165,8 @@ the literal drawing. The list moves under the chapter's last figure when that on
 5. **4.3, ORDER ROLE TYPE vs Ch 2's ROLE TYPE:** this is the second kind of role type, the
    trigger for TODO's refactor (`role_type` as a ROLE TYPE supertype with PARTY ROLE TYPE and
    ORDER ROLE TYPE subtypes). The figure draws ORDER ROLE TYPE alone, so it's its own lookup
-   for now; decide at the overview, once more role types have shown up.
+   for now; decide at the overview, once more role types have shown up. Fig 4.12's AGREEMENT
+   ROLE TYPE makes seven.
 6. **4.4, PURCHASE ORDER ITEM's ITEM DESCRIPTION:** drawn on the subtype and on ORDER ITEM
    (4.5 does the same; 4.6 draws it on ORDER ITEM only). Read as one attribute, kept on
    `order_item`. If Silverston meant a second one (the supplier's wording for the line, say),
@@ -1072,6 +1231,31 @@ the literal drawing. The list moves under the chapter's last figure when that on
     the quotes that answer them (by a day, by three weeks). Seeded as printed: either the
     request dates or the quote dates are the slip. A check for quotes issued before the
     request they answer would flag both book rows, so there is none yet.
+23. **4.12, Table 4.16's 10002 and Ch 2's customer relationship:** the agreement names ABC
+    Corporation as supplier and ACME as customer, and is tied to "the" customer relationship.
+    Ch 2's only one for ACME (Table 2.5) is with ABC Subsidiary. Linked to it as printed, so
+    the check "the relationship's parties play roles in the agreement" flags the book's own
+    row. Either the parent signs for its subsidiary (and the rule should accept a parent
+    through the org rollup), or Silverston means a relationship with ABC Corporation, which
+    Ch 2 doesn't seed.
+24. **4.12, AGREEMENT's subtypes as type rows:** PRODUCT over SALES and PURCHASE, EMPLOYMENT,
+    and OTHER over Table 4.16's partnership (and our distribution agreement), all rows of
+    `agreement_type`. If a later figure hangs a line on SALES AGREEMENT alone, it needs a
+    subtype table, as SALES ORDER got.
+25. **4.12, when a relationship-tied agreement may start:** read as while the relationship
+    is current (a check). Whether it must also end before the relationship does isn't
+    checked.
+26. **4.13, applicability with nothing of a kind:** read as "no limit of that kind": an item
+    with no product rows applies to every product. The other reading (none = applies to
+    nothing) makes every clause list its products. An organization applicability matches
+    the order's placing or bill-to party; a geographic one the ship-to address, at any depth
+    of boundaries.
+27. **4.13, the addendum's arc and dates:** exactly one of agreement and item (a check), and
+    effective while its agreement is (a check). Its dates are drawn optional, so an addendum
+    with no effective date is allowed and counts as never in force in our queries.
+28. **4.13, an item inside an item:** read as inside the same agreement (a check). A
+    sub-agreement is an item, not an AGREEMENT of its own, so it can't have its own parties
+    or dates; the book may mean a lighter thing than our word suggests.
 
 ## Design decisions (book → SQL)
 
@@ -1355,6 +1539,29 @@ the literal drawing. The list moves under the chapter's last figure when that on
   comparison query lists the must-have desired features (4.9) the quoted product doesn't
   offer on the quote's date.
 
+### Fig 4.12
+- **AGREEMENT's subtypes → rows of `agreement_type`,** a hierarchy with `parent_type_id`
+  (Ch 2's `organization_type`): no subtype has attributes, and the figure draws AGREEMENT
+  TYPE beside them anyway. Table 4.16's partnership and our distribution agreement sit under
+  OTHER. A recursive query finds every product agreement, at any depth (point 24).
+- **`agreement`** keeps the book's ids, `text` as a column (allowed in PostgreSQL), and
+  `party_relationship_id` as a nullable FK to Ch 2's 2.6a table. `thru_date` is exclusive:
+  Table 4.16's December 30, 2002, is stored as December 31. The agreement date (when signed)
+  isn't in Table 4.16; the seed uses the starting date.
+- **`agreement_role_type`** (supplier, customer, employer, employee, partner, distributor, and
+  our signatory) is the seventh role-type lookup (point 5). **`agreement_role`** has a
+  surrogate key; agreement + party + type twice is a data-quality query (seed: XYZ entered
+  twice as a partner).
+- **The relationship's ends must play roles in the agreement:** a data-quality query. It
+  catches our 70002 (Chloe's employment, Northwind left out) and the book's 10002 (point 23).
+- **An agreement may start only while its relationship is current:** a data-quality query
+  (seed: our 70003, Sellers Assistance's distribution deal, begun after its relationship
+  ended in 2002; point 25).
+- **New parties:** William Jones (a person, ABC Corporation's employee since 1990, through a
+  new internal organization role for ABC Corporation and a new employment relationship) and
+  XYZ Corporation. Ours: 70001, Northwind's 2025 sales agreement with Contoso on their
+  customer relationship, Ben signing for Contoso; 70002 and 70003, the bad rows above.
+
 ## When NOT to use this
 - **A shop that only sells**, and buys through some other system, gets little from the ORDER
   supertype. It costs one discriminator, so it's cheap to keep, but don't model purchase
@@ -1390,5 +1597,8 @@ the literal drawing. The list moves under the chapter's last figure when that on
 - **Requirements (4.9)** when every need goes straight to an order (a small shop buying for
   itself): requirement rows are overhead. They earn their keep when needs are gathered,
   approved, broken down, or filled by several orders.
+- **Agreements (4.12)** when every customer buys on the same published terms: there is
+  nothing negotiated to record. A contract file attached to the customer is enough until
+  agreements need dates, several parties, or their clauses must drive prices and checks.
 
 ## Open questions

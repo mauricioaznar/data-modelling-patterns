@@ -15,7 +15,8 @@ every row scores 3+ and its scenario holds up.
 3. **Order status, terms and item associations** (Figs 4.7–4.8). ~3 h
 4. **Requirements** (Fig 4.9). ~3 h
 5. **Requests and quotes** (Figs 4.10–4.11). ~3 h
-6. *(to come: the rest of Ch 4's figures.)*
+6. **Agreements** (Figs 4.12–4.13). ~3 h
+7. *(to come: the rest of Ch 4's figures.)*
 
 ## Progress
 
@@ -97,9 +98,18 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    REQUIREMENT REQUEST, a many-to-many. Why no product, and what would break if each request
    item could carry only one requirement?
 2. **[4.11]** QUOTE ITEM names its own product, although you could reach a product from the
-   request item through its requirement. Why keep both paths? Use Paperline's quote.
+   request item through its requirement. Why keep both paths? Use Paperline's quote, or
+   Table 4.15's black pens.
 3. **[4.11]** Walk Northwind's paper from need to order: which entities and lines does it
    pass through, and which of those links carry a quantity?
+
+### Submodel 6: agreements
+1. **[4.12]** An AGREEMENT may point to the PARTY RELATIONSHIP it formalizes, and it also has
+   AGREEMENT ROLES. Why both? What goes wrong with only the relationship, and what with only
+   the roles?
+2. **[4.12]** AGREEMENT is drawn with subtypes (product, sales, purchase, employment, other)
+   and with an AGREEMENT TYPE. When does a kind of agreement deserve a subtype box, and when
+   is a type row enough?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
