@@ -1022,3 +1022,42 @@ insert into agreement_term (agreement_term_id, term_type_id, agreement_id, agree
   (8, 'DELIVERY_WITHIN_DAYS',      70001,  5,    2,     '2025-01-01', null);           -- DATA ERROR: the agreement AND an item (caught by a query)
 
 select setval(pg_get_serial_sequence('agreement_term', 'agreement_term_id'), (select max(agreement_term_id) from agreement_term));
+
+-- ============================================================
+-- Fig 4.15 — Agreement pricing
+-- ============================================================
+-- Table 4.19's regions, new boundaries in the US, read as split by the
+-- Mississippi: Illinois east, Missouri west, so ACME's St. Louis addresses
+-- get the western price (NOTES, point 36).
+insert into geographic_boundary (geographic_boundary_id, geographic_boundary_type_id, geo_code, name, abbreviation) values
+  (40, 'REGION', null, 'Eastern region', null),
+  (41, 'REGION', null, 'Western region', null);
+
+select setval(pg_get_serial_sequence('geographic_boundary', 'geographic_boundary_id'), (select max(geographic_boundary_id) from geographic_boundary));
+
+insert into geographic_boundary_association (from_geographic_boundary_id, to_geographic_boundary_id) values
+  (40, 6), (41, 6),     -- both regions within the US
+  (10, 40), (11, 41);   -- Illinois in the east, Missouri in the west
+
+-- Items: 3, 4, 5 70001's paper, copier and pens programs; 6 its exhibit;
+-- 9 10002's paper.
+insert into agreement_pricing_program (agreement_item_id) values
+  (3), (4), (5), (9),
+  (6);   -- DATA ERROR: 70001's exhibit (the price list) entered as a pricing program (caught by a query)
+
+-- Table 4.19 on 10002's paper, with the agreement's dates (thru exclusive),
+-- USD, and ABC Corporation (12) as pricer; quantity break 3 is Ch 3's 1000+.
+-- Ours: 70001's pens, delivered in Missouri (11). 70001's paper and copier
+-- programs stay unpriced (NOTES, Fig 4.15's design decisions).
+insert into price_component (price_component_id, price_component_type_id, charge_kind, from_date, thru_date, price, percent, currency_uom_id,
+                             product_id, product_feature_id, pricer_party_id,
+                             geographic_boundary_id, party_type_id, product_category_id, quantity_break_id, order_value_id, sale_type_id,
+                             per_uom_id, quantity, comment, agreement_item_id) values
+  (26, 'BASE_PRICE', null, '2002-01-01', '2002-12-31', 7.00, null, 'USD', 1, null, 12, 40,   null, null, null, null, null, null, null, 'Table 4.19: Eastern region', 9),
+  (27, 'BASE_PRICE', null, '2002-01-01', '2002-12-31', 7.50, null, 'USD', 1, null, 12, 41,   null, null, null, null, null, null, null, 'Table 4.19: Western region', 9),
+  (28, 'DISCOUNT',   null, '2002-01-01', '2002-12-31', null, 2,    null,  1, null, 12, null, null, null, 3,    null, null, null, null, 'Table 4.19: 2% off from 1,000 reams', 9),
+  (29, 'BASE_PRICE', null, '2025-01-01', '2026-01-01', 2.25, null, 'USD', 2, null, 4,  11,   null, null, null, null, null, null, null, 'Contoso''s pens, delivered in Missouri', 5),
+  (30, 'BASE_PRICE', null, '2001-01-01', '2002-01-01', 6.80, null, 'USD', 1, null, 12, 40,   null, null, null, null, null, null, null, 'DATA ERROR: last year''s price, keyed on the 2002 program (caught by a query)', 9),
+  (31, 'BASE_PRICE', null, '2002-01-01', '2002-12-31', 6.50, null, 'USD', 3, null, 12, null, null, null, null, null, null, null, null, 'DATA ERROR: the diskettes priced on the paper program (caught by a query)', 9);
+
+select setval(pg_get_serial_sequence('price_component', 'price_component_id'), (select max(price_component_id) from price_component));

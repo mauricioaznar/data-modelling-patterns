@@ -1237,6 +1237,89 @@ its terms hold only for the first 1,000 reams.
   adds up the order lines it covers. That needs the path from order line to agreement item,
   Fig 4.16's view.
 
+### Fig 4.15 — Agreement pricing
+**Transcription** (accepted: ☐; one photo, with the text before it and Table 4.19, printed
+after Fig 4.16's opening text; open points under "To check against the book")
+
+```
+PRICE COMPONENT              (as 3.7)
+  # price_component_id
+  * from_date
+  o thru_date
+  o price
+  o percent
+  o comment
+  subtypes: BASE PRICE, DISCOUNT COMPONENT, SURCHARGE COMPONENT, MANUFACTURER SUGGESTED PRICE
+  subtypes: ONE TIME CHARGE, RECURRING CHARGE, UTILIZATION CHARGE (o quantity)
+  -> AGREEMENT PRICING PROGRAM (many "specified for" 1, dashed; program "priced using" many)   new
+  -> GEOGRAPHIC BOUNDARY     (many "based on" 1, dashed; "a location used to define" many)
+  -> PRODUCT CATEGORY        (many "based on" 1, dashed; "used to define" many)
+  -> QUANTITY BREAK          (many "based on" 1, dashed; "a discount level defined for" many)
+  -> ORDER VALUE             (many "based on" 1, dashed; "a discount level defined for" many)
+  -> SALE TYPE               (many "based on" 1, dashed; "used to define" many)
+  -> CURRENCY MEASURE        (many "in the currency of" 1, dashed; "used in" many)
+  -> ORGANIZATION            (many "specified for" 1, dashed; "the pricer of" many)
+  -> PRODUCT                 (many "a price defined for" 1, dashed; "priced by" many)
+  -> PRODUCT FEATURE         (many "a price defined for" 1, dashed; "priced by" many)
+  RECURRING CHARGE   -> TIME FREQUENCY MEASURE ("per"; "used in")
+  UTILIZATION CHARGE -> UNIT OF MEASURE        ("per"; "used in")
+
+AGREEMENT ITEM               (# agreement_item_seq_id)
+  subtype: AGREEMENT PRICING PROGRAM
+GEOGRAPHIC BOUNDARY          (# geo_id, * name; Ch 2)
+PRODUCT CATEGORY             (# product_category_id, * description; Ch 3)
+QUANTITY BREAK               (# quantity_break_id, * from_quantity, o thru_quantity; Ch 3)
+ORDER VALUE                  (# order_value_id, * from_amount, o thru_amount; Ch 3)
+SALE TYPE                    (# sale_type_id, * description; Ch 3)
+UNIT OF MEASURE              (# uom_id, * abbreviation, * description;
+                              subtypes TIME FREQUENCY MEASURE, CURRENCY MEASURE; Ch 3)
+ORGANIZATION                 (Ch 2)
+PRODUCT                      (# product_id, * name; Ch 3)
+PRODUCT FEATURE              (# product_feature_id, * description; Ch 3)
+```
+
+**Table 4.19** (agreement item prices, the book's sample, in our words): 10002's item 1, the
+Johnson bond paper: a base price of $7.00 in the Eastern region, a base price of $7.50 in the
+Western region, and a 2% discount from 1,000 reams.
+
+**The text beside it**, in short: an agreement item holds the prices agreed between the
+parties, which may vary by period, quantity, the parties' addresses and region. Fig 4.15
+reuses Ch 3's pricing model (Fig 3.7): a PRICE COMPONENT may now also belong to an AGREEMENT
+PRICING PROGRAM, a subtype of AGREEMENT ITEM, and a program has any number of components.
+The text under the figure (cut off in the photo) seems to weigh this as an alternate model
+whose advantage is reusing the pricing structure.
+
+**To check against the book**
+- The new line is dashed at both ends: a list price belongs to no program, and a program
+  may have no prices yet.
+- The line lands on the subtype AGREEMENT PRICING PROGRAM, not on AGREEMENT ITEM: only
+  pricing programs carry prices. With a line of its own, the subtype gets a table (point 34).
+- PARTY TYPE's "based on" line (3.7) isn't drawn: read as abbreviation, as Fig 3.11 left
+  out boundaries and breaks, so the column stays (point 34).
+- Table 4.19 gives no dates, currency or pricer: seeded with the agreement's dates, US
+  dollars, and ABC Corporation, the supplier, as pricer.
+- The Eastern and Western regions are new boundaries: read as the US split by the
+  Mississippi, Illinois east and Missouri west, so ACME's St. Louis addresses get the
+  western price (point 36).
+- Table 4.19's discount: "2" in the PERCENT column, from 1,000 reams, no upper break. Ch 3's
+  quantity break 1,000+ is reused.
+- The text beside the figure (where it may say which alternate it prefers) is only partly in
+  the photos.
+
+**Discussion**
+- **The problem.** Agreed prices kept apart from the price list (a `contract_price` table, a
+  spreadsheet per customer) repeat every pricing condition (region, quantity, period) in a
+  second structure, and every pricing rule is written twice.
+- **One pricing structure, one more condition:** an agreement price is a PRICE COMPONENT
+  with the pricing program set; a list price has none. Everything Ch 3 built (regions,
+  breaks, order values, charge kinds) works for agreements at no cost. (Ponder 3 of
+  submodel 7.)
+- **Two paths, so rules:** the program's own applicability (4.13) and its components'
+  conditions both say what it prices, and both have dates beside the agreement's. Checks
+  keep them in line.
+- **The cost:** every query that reads PRICE COMPONENT as "the price list" now has to say
+  "with no program", Ch 3's included (point 35).
+
 ### Points to discuss after the overview (Figs 4.1–4.13)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -1703,6 +1786,25 @@ the literal drawing. The list moves under the chapter's last figure when that on
   March 2003. Ours on 70001: payment due in 30 days (financial) and a 2% year-end rebate (an
   incentive).
 
+### Fig 4.15
+- **AGREEMENT PRICING PROGRAM → a subtype table, `agreement_pricing_program`,** sharing
+  `agreement_item_id`, now that it has a line of its own (Ch 3's `currency_measure`, and the
+  note under 4.13). `agreement_item_type` stays the discriminator; the two must agree, a
+  data-quality query (seed: 70001's exhibit, the price list, entered as a program).
+- **`price_component.agreement_item_id`,** added with `alter table`: a nullable FK to the
+  subtype. Null is a list price (Ch 3), set is a price agreed in that program.
+- **Table 4.19's three components** on 10002's item 1, with the agreement's dates, USD and
+  ABC Corporation as pricer. Eastern and Western regions are new REGION boundaries in the
+  US, with Illinois in the east and Missouri in the west (point 36). Ours: 70001's pens at
+  2.25, delivered in Missouri.
+- **Two more checks, both "two paths, so a rule":** an agreement price dated outside its
+  agreement (seed: last year's 6.80 keyed on the 2002 program), and one for a product its
+  program's applicability doesn't cover (seed: the diskettes priced on the paper program).
+- **Ch 3's queries predate the column** (point 35): they still read every component as a
+  list price. Ours stay out of their way only because each carries a region or dates long
+  past. So 70001's paper and copier programs stay unpriced: a component with no condition
+  but the program would collide with the list price in Ch 3's overlap check.
+
 ## When NOT to use this
 - **A shop that only sells**, and buys through some other system, gets little from the ORDER
   supertype. It costs one discriminator, so it's cheap to keep, but don't model purchase
@@ -1744,5 +1846,8 @@ the literal drawing. The list moves under the chapter's last figure when that on
 - **Agreement terms (4.14)** when nobody checks orders against the contract: the signed
   text is enough. Term rows pay off when something adds up the orders under a cap, or
   enforces an exclusivity or a payment term.
+- **Agreement pricing (4.15)** when an agreement only ever grants a flat percentage off the
+  list: one term (a discount percent) says it. Price components per program pay off when
+  agreed prices vary by region, quantity or period, as list prices do.
 
 ## Open questions

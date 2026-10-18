@@ -1469,3 +1469,74 @@ join agreement a           on a.agreement_id = coalesce(tm.agreement_id, i.agree
 where tm.from_date < a.from_date
    or (a.thru_date is not null and tm.from_date >= a.thru_date)
    or (a.thru_date is not null and tm.thru_date > a.thru_date);
+
+-- ============================================================
+-- Fig 4.15 — Agreement pricing
+-- ============================================================
+
+-- name: 4.15 — Each pricing program's prices: what it charges, for which product, under which conditions, and when
+select a.agreement_id, i.agreement_item_seq_id as item, i.agreement_text as program,
+       t.description as component, coalesce(pr.name, '(any product)') as product,
+       case when pc.price is not null then pc.price || ' ' || pc.currency_uom_id else pc.percent || '%' end as amount,
+       concat_ws(', ',
+         'in ' || gb.name,
+         'qty ' || qb.from_quantity || coalesce(' to <' || qb.thru_quantity, '+'),
+         'order ' || ov.from_amount || coalesce(' to <' || ov.thru_amount, '+'),
+         'sale ' || st.description) as based_on,
+       pc.from_date, pc.thru_date - 1 as last_day
+from price_component pc
+join agreement_item i            on i.agreement_item_id = pc.agreement_item_id
+join agreement a                 on a.agreement_id = i.agreement_id
+join price_component_type t      on t.price_component_type_id = pc.price_component_type_id
+left join product pr             on pr.product_id = pc.product_id
+left join geographic_boundary gb on gb.geographic_boundary_id = pc.geographic_boundary_id
+left join quantity_break qb      on qb.quantity_break_id = pc.quantity_break_id
+left join order_value ov         on ov.order_value_id = pc.order_value_id
+left join sale_type st           on st.sale_type_id = pc.sale_type_id
+order by a.agreement_id, i.agreement_item_seq_id, pc.from_date, pc.price_component_id;
+
+-- name: 4.15 — Bond paper's base prices over time: the list (no program) and the agreed ones, side by side
+select pc.from_date, pc.thru_date - 1 as last_day, pc.price, pc.currency_uom_id, gb.name as region,
+       coalesce('agreement ' || i.agreement_id || ', item ' || i.agreement_item_seq_id, '(list price)') as source,
+       pc.comment
+from price_component pc
+left join agreement_item i       on i.agreement_item_id = pc.agreement_item_id
+left join geographic_boundary gb on gb.geographic_boundary_id = pc.geographic_boundary_id
+where pc.product_id = 1
+  and pc.price_component_type_id = 'BASE_PRICE'
+order by pc.from_date, source;
+
+-- name: 4.15 — Data-quality check: pricing-program rows and item types that disagree (should be empty)
+select coalesce(p.agreement_item_id, i.agreement_item_id) as agreement_item_id,
+       coalesce(x.agreement_id, i.agreement_id) as agreement_id,
+       coalesce(x.agreement_text, i.agreement_text) as agreement_text,
+       case when p.agreement_item_id is null then 'typed PRICING_PROGRAM, no program row'
+            else 'program row, typed ' || x.agreement_item_type_id end as problem
+from agreement_pricing_program p
+full join (select * from agreement_item where agreement_item_type_id = 'PRICING_PROGRAM') i
+  on i.agreement_item_id = p.agreement_item_id
+left join agreement_item x on x.agreement_item_id = p.agreement_item_id
+where p.agreement_item_id is null
+   or i.agreement_item_id is null
+order by 1;
+
+-- name: 4.15 — Data-quality check: agreement prices dated outside their agreement (should be empty; a null thru date runs with the agreement, as for terms)
+select pc.price_component_id, a.agreement_id, i.agreement_item_seq_id as item, pc.comment,
+       a.from_date as agreement_from, a.thru_date - 1 as agreement_last_day,
+       pc.from_date as price_from, pc.thru_date - 1 as price_last_day
+from price_component pc
+join agreement_item i on i.agreement_item_id = pc.agreement_item_id
+join agreement a      on a.agreement_id = i.agreement_id
+where pc.from_date < a.from_date
+   or (a.thru_date is not null and pc.from_date >= a.thru_date)
+   or (a.thru_date is not null and pc.thru_date > a.thru_date);
+
+-- name: 4.15 — Data-quality check: agreement prices for a product their program's applicability leaves out (should be empty)
+select pc.price_component_id, i.agreement_id, i.agreement_item_seq_id as item, i.agreement_text as program,
+       pr.name as priced_product, pc.comment
+from price_component pc
+join agreement_item i on i.agreement_item_id = pc.agreement_item_id
+join product pr       on pr.product_id = pc.product_id
+where exists (select 1 from agreement_product_applicability x where x.agreement_item_id = i.agreement_item_id)
+  and not exists (select 1 from agreement_product_applicability x
+                  where x.agreement_item_id = i.agreement_item_id and x.product_id = pc.product_id);

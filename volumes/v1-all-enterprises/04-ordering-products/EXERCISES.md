@@ -129,6 +129,9 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 2. **[4.14]** Order, quote and agreement terms now share one TERM TYPE, with the five
    agreement-term subtypes at its top. What does sharing the list buy, and what goes wrong
    if each term table keeps its own?
+3. **[4.15]** An agreed price is a Ch 3 PRICE COMPONENT with one more line, not an AGREEMENT
+   PRICE entity of its own. What does reusing PRICE COMPONENT buy, and what must every query
+   that reads "the price list" now do differently?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

@@ -136,4 +136,8 @@ erDiagram
   TERM_TYPE               ||--o{ AGREEMENT_TERM      : "used as part of"
   AGREEMENT               |o--o{ AGREEMENT_TERM      : "further defined by"
   AGREEMENT_ITEM          |o--o{ AGREEMENT_TERM      : "further defined by"
+
+  %% Fig 4.15 — Agreement pricing (AGREEMENT PRICING PROGRAM is a subtype table of agreement_item; a price with no program is a list price)
+  AGREEMENT_ITEM          ||--o| AGREEMENT_PRICING_PROGRAM : "subtype (typed PRICING_PROGRAM)"
+  AGREEMENT_PRICING_PROGRAM |o--o{ PRICE_COMPONENT   : "priced using (Ch 3)"
 ```

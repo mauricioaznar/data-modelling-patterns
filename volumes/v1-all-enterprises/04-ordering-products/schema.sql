@@ -632,3 +632,22 @@ create table agreement_term (
   thru_date         date,
   check (thru_date is null or thru_date > from_date)
 );
+
+-- ============================================================
+-- Fig 4.15 — Agreement pricing
+-- ============================================================
+-- An agreement price is Ch 3's PRICE COMPONENT with one more line, "specified
+-- for" an AGREEMENT PRICING PROGRAM. That subtype now has a line of its own,
+-- so it gets a table sharing agreement_item_id (as Ch 3's currency_measure),
+-- and a plain FK insists a price hangs on a pricing program.
+-- agreement_item_type stays the discriminator: the two must agree (a
+-- data-quality query).
+create table agreement_pricing_program (
+  agreement_item_id integer primary key references agreement_item
+);
+
+-- Null = a list price (Ch 3); set = a price agreed in that program. Ch 3's
+-- queries predate the column and read every component as a list price
+-- (NOTES, point 35).
+alter table price_component
+  add column agreement_item_id integer references agreement_pricing_program;   -- "specified for" / "priced using"
