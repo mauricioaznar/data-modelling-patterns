@@ -117,4 +117,17 @@ erDiagram
   AGREEMENT               ||--o{ AGREEMENT_ROLE      : "involving"
   PARTY                   ||--o{ AGREEMENT_ROLE      : "involved in (Ch 2)"
   AGREEMENT_ROLE_TYPE     ||--o{ AGREEMENT_ROLE      : "the description of"
+
+  %% Fig 4.13 — Agreement item (SECTION, PRICING PROGRAM, EXHIBIT, SUB AGREEMENT are agreement_item_type rows; an addendum changes the agreement OR one item)
+  AGREEMENT               ||--o{ AGREEMENT_ITEM      : "composed of"
+  AGREEMENT_ITEM_TYPE     ||--o{ AGREEMENT_ITEM      : "describes"
+  AGREEMENT_ITEM          |o--o{ AGREEMENT_ITEM      : "comprised of"
+  AGREEMENT               |o--o{ ADDENDUM            : "modified by"
+  AGREEMENT_ITEM          |o--o{ ADDENDUM            : "modified by"
+  AGREEMENT_ITEM          ||--o{ AGREEMENT_ORGANIZATION_APPLICABILITY : "specified for"
+  ORGANIZATION            ||--o{ AGREEMENT_ORGANIZATION_APPLICABILITY : "used to define (Ch 2)"
+  AGREEMENT_ITEM          ||--o{ AGREEMENT_PRODUCT_APPLICABILITY      : "specified for"
+  PRODUCT                 ||--o{ AGREEMENT_PRODUCT_APPLICABILITY      : "used to define (Ch 3)"
+  AGREEMENT_ITEM          ||--o{ AGREEMENT_GEOGRAPHICAL_APPLICABILITY : "specified for"
+  GEOGRAPHIC_BOUNDARY     ||--o{ AGREEMENT_GEOGRAPHICAL_APPLICABILITY : "used to define (Ch 2)"
 ```

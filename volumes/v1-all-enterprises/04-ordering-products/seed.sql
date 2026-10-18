@@ -913,3 +913,57 @@ insert into agreement_role (agreement_id, party_id, agreement_role_type_id) valu
   (70002,  3,  'EMPLOYEE'),   -- DATA ERROR: Northwind, the employer, plays no role (caught by a query)
   (70003,  17, 'DISTRIBUTOR'),
   (70003,  13, 'SUPPLIER');
+
+-- ============================================================
+-- Fig 4.13 — Agreement item
+-- ============================================================
+insert into agreement_item_type (agreement_item_type_id, description) values
+  ('SECTION',         'Agreement section'),
+  ('PRICING_PROGRAM', 'Agreement pricing program'),
+  ('EXHIBIT',         'Agreement exhibit'),
+  ('SUB_AGREEMENT',   'Sub-agreement');
+
+-- No book table for this figure: all items are ours. Contoso's 70001 gets a
+-- full outline (sections, three pricing programs under "Pricing", an exhibit,
+-- a sub-agreement with a section of its own); the book's agreements a few.
+insert into agreement_item (agreement_item_id, agreement_id, agreement_item_seq_id, agreement_item_type_id, agreement_text, agreement_image, part_of_agreement_item_id) values
+  (1,  70001,  1, 'SECTION',         'Scope: the office supplies Northwind sells Contoso in 2025', null, null),
+  (2,  70001,  2, 'SECTION',         'Pricing',                                                    null, null),
+  (3,  70001,  3, 'PRICING_PROGRAM', 'Bond paper at 40.00 a ream, for Contoso',                    null, 2),
+  (4,  70001,  4, 'PRICING_PROGRAM', 'Copiers at 5% off list',                                     null, 2),
+  (5,  70001,  5, 'PRICING_PROGRAM', 'Pens at 2.25 each, any colour, delivered in Missouri',       null, 2),
+  (6,  70001,  6, 'EXHIBIT',         'Exhibit A: the 2025 price list',                             'exhibits/70001-a.pdf', null),
+  (7,  70001,  7, 'SUB_AGREEMENT',   'Consignment stock at Contoso''s St. Louis depot',            null, null),
+  (8,  70001,  8, 'SECTION',         'Stock is counted on the first working day of each month',    null, 7),
+  (9,  10002,  1, 'SECTION',         'Prices for inventory items',                                 null, null),
+  (10, 10002,  2, 'PRICING_PROGRAM', 'Bond paper by the ream, in volume tiers',                    null, 9),
+  (11, 86749,  1, 'SECTION',         'Position: entry-level information systems programmer',       null, null),
+  (12, 86749,  2, 'SECTION',         'Salary reviewed every year',                                 null, 9),      -- DATA ERROR: inside 10002's section (caught by a query)
+  (13, 489589, 1, 'SECTION',         'Profits shared equally among the three partners',            null, null);
+
+select setval(pg_get_serial_sequence('agreement_item', 'agreement_item_id'), (select max(agreement_item_id) from agreement_item));
+
+-- Parties: 5 Contoso, 16 ACME. Products: 1 bond paper, 2 the pen, 6 the
+-- copier. Boundaries: 11 Missouri, 17 St. Louis.
+insert into agreement_organization_applicability (agreement_item_id, party_id) values
+  (3,  5),
+  (7,  5),
+  (10, 16);
+
+insert into agreement_product_applicability (agreement_item_id, product_id) values
+  (3,  1),
+  (4,  6),
+  (5,  2),
+  (10, 1);
+
+insert into agreement_geographical_applicability (agreement_item_id, geographic_boundary_id) values
+  (5, 11),   -- the pens: Missouri deliveries only, so the line shipped to Chatham, Illinois, misses it
+  (7, 17);
+
+insert into addendum (addendum_id, agreement_id, agreement_item_id, addendum_creation_date, addendum_effective_date, addendum_text) values
+  (1, null,   3,    '2025-02-14', '2025-03-01', 'Paper lowered to 38.00 a ream from March'),
+  (2, 70001,  null, '2025-05-20', '2025-06-01', 'Pricing extended to Contoso''s new Springfield office'),
+  (3, 70001,  5,    '2025-04-01', '2025-04-01', 'Red pens no longer included'),     -- DATA ERROR: the agreement AND an item (caught by a query)
+  (4, 489589, null, '2001-08-20', '2001-09-01', 'XYZ''s share raised to 40%');      -- DATA ERROR: effective after the partnership ended (caught by a query)
+
+select setval(pg_get_serial_sequence('addendum', 'addendum_id'), (select max(addendum_id) from addendum));

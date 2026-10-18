@@ -1314,3 +1314,106 @@ select agreement_id, party_id, agreement_role_type_id, count(*) as times
 from agreement_role
 group by agreement_id, party_id, agreement_role_type_id
 having count(*) > 1;
+
+-- ============================================================
+-- Fig 4.13 — Agreement item
+-- ============================================================
+
+-- name: 4.13 — Each agreement as an outline: items nested under the items they sit in, with their type, what limits them, and their addenda
+with recursive outline as (
+  select i.agreement_item_id, i.agreement_id, i.agreement_item_seq_id, i.agreement_item_type_id, i.agreement_text,
+         0 as depth, lpad(i.agreement_item_seq_id::text, 3, '0') as path
+  from agreement_item i
+  where i.part_of_agreement_item_id is null
+  union all
+  select c.agreement_item_id, c.agreement_id, c.agreement_item_seq_id, c.agreement_item_type_id, c.agreement_text,
+         o.depth + 1, o.path || '.' || lpad(c.agreement_item_seq_id::text, 3, '0')
+  from agreement_item c
+  join outline o on o.agreement_item_id = c.part_of_agreement_item_id
+)
+select o.agreement_id, repeat('. ', o.depth) || o.agreement_item_seq_id || ' ' || o.agreement_text as item,
+       o.agreement_item_type_id as type,
+       (select string_agg(n.name, ', ') from agreement_organization_applicability x
+          join party_display_name n on n.party_id = x.party_id
+         where x.agreement_item_id = o.agreement_item_id) as organizations,
+       (select string_agg(p.name, ', ') from agreement_product_applicability x
+          join product p on p.product_id = x.product_id
+         where x.agreement_item_id = o.agreement_item_id) as products,
+       (select string_agg(g.name, ', ') from agreement_geographical_applicability x
+          join geographic_boundary g on g.geographic_boundary_id = x.geographic_boundary_id
+         where x.agreement_item_id = o.agreement_item_id) as places,
+       (select string_agg(ad.addendum_effective_date || ': ' || ad.addendum_text, '; ' order by ad.addendum_effective_date)
+          from addendum ad where ad.agreement_item_id = o.agreement_item_id) as addenda
+from outline o
+order by o.agreement_id between 70000 and 79999, o.agreement_id, o.path;
+
+-- name: 4.13 — Addenda: what each changes (the whole agreement or one item), from when, and whether it was in force on 2025-04-15
+select ad.addendum_id, a.agreement_id,
+       case when ad.agreement_item_id is null then 'the whole agreement'
+            else 'item ' || i.agreement_item_seq_id || ': ' || i.agreement_text end as changes,
+       ad.addendum_creation_date as created, ad.addendum_effective_date as effective, ad.addendum_text,
+       coalesce(ad.addendum_effective_date <= date '2025-04-15'
+                and a.from_date <= date '2025-04-15' and (a.thru_date is null or a.thru_date > date '2025-04-15'), false) as in_force_2025_04_15
+from addendum ad
+left join agreement_item i on i.agreement_item_id = ad.agreement_item_id
+join agreement a           on a.agreement_id = coalesce(ad.agreement_id, i.agreement_id)
+order by a.agreement_id between 70000 and 79999, a.agreement_id, ad.addendum_effective_date;
+
+-- name: 4.13 — Which pricing programs apply to each sales order line: an agreement in force on the order's date, with the placing or bill-to party in a role, and a program whose organizations, products and places all match (none of a kind = no limit)
+with line as (
+  select oi.order_id, oi.order_item_seq_id, o.order_date, oi.product_id, soi.ship_to_contact_mechanism_id,
+         array_remove(array[pl.party_id, bt.party_id], null) as customer_parties
+  from order_item oi
+  join "order" o                 on o.order_id = oi.order_id
+  join sales_order so            on so.order_id = oi.order_id
+  left join sales_order_item soi on soi.order_item_id = oi.order_item_id
+  left join party_role pl        on pl.party_role_id = so.placed_by_party_role_id
+  left join party_role bt        on bt.party_role_id = so.bill_to_party_role_id
+  where oi.product_id is not null
+)
+select l.order_id, l.order_item_seq_id as line, l.order_date, p.name as product, ship.display_name as ship_to,
+       coalesce(pp.programs, '(none)') as pricing_programs
+from line l
+join product p                                on p.product_id = l.product_id
+left join contact_mechanism_display_name ship on ship.contact_mechanism_id = l.ship_to_contact_mechanism_id
+left join lateral (
+  select string_agg(a.agreement_id || '/' || i.agreement_item_seq_id || ' ' || i.agreement_text, '; '
+                    order by a.agreement_id, i.agreement_item_seq_id) as programs
+  from agreement a
+  join agreement_item i on i.agreement_id = a.agreement_id and i.agreement_item_type_id = 'PRICING_PROGRAM'
+  where a.from_date <= l.order_date and (a.thru_date is null or a.thru_date > l.order_date)
+    and exists (select 1 from agreement_role r
+                where r.agreement_id = a.agreement_id and r.party_id = any (l.customer_parties))
+    and (not exists (select 1 from agreement_organization_applicability x where x.agreement_item_id = i.agreement_item_id)
+         or exists (select 1 from agreement_organization_applicability x
+                    where x.agreement_item_id = i.agreement_item_id and x.party_id = any (l.customer_parties)))
+    and (not exists (select 1 from agreement_product_applicability x where x.agreement_item_id = i.agreement_item_id)
+         or exists (select 1 from agreement_product_applicability x
+                    where x.agreement_item_id = i.agreement_item_id and x.product_id = l.product_id))
+    and (not exists (select 1 from agreement_geographical_applicability x where x.agreement_item_id = i.agreement_item_id)
+         or exists (select 1 from agreement_geographical_applicability x
+                    join postal_address_boundary pb         on pb.contact_mechanism_id = l.ship_to_contact_mechanism_id
+                    join geographic_boundary_ancestor ga    on ga.geographic_boundary_id = pb.geographic_boundary_id
+                    where x.agreement_item_id = i.agreement_item_id and ga.ancestor_id = x.geographic_boundary_id))
+) pp on true
+order by l.order_date, l.order_id, l.order_item_seq_id;
+
+-- name: 4.13 — Data-quality check: addenda changing both the agreement and an item, or neither (should be empty)
+select addendum_id, agreement_id, agreement_item_id, addendum_text
+from addendum
+where (agreement_id is null) = (agreement_item_id is null);
+
+-- name: 4.13 — Data-quality check: items sitting inside an item of another agreement (should be empty)
+select c.agreement_item_id, c.agreement_id, c.agreement_item_seq_id as item, c.agreement_text,
+       p.agreement_id as parent_agreement_id, p.agreement_item_seq_id as parent_item
+from agreement_item c
+join agreement_item p on p.agreement_item_id = c.part_of_agreement_item_id
+where p.agreement_id <> c.agreement_id;
+
+-- name: 4.13 — Data-quality check: addenda effective outside their agreement's dates (should be empty)
+select ad.addendum_id, a.agreement_id, a.from_date, a.thru_date - 1 as ending, ad.addendum_effective_date, ad.addendum_text
+from addendum ad
+left join agreement_item i on i.agreement_item_id = ad.agreement_item_id
+join agreement a           on a.agreement_id = coalesce(ad.agreement_id, i.agreement_id)
+where ad.addendum_effective_date is not null
+  and not (ad.addendum_effective_date >= a.from_date and (a.thru_date is null or ad.addendum_effective_date < a.thru_date));

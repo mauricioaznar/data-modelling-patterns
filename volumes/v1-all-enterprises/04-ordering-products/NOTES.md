@@ -1562,6 +1562,32 @@ the literal drawing. The list moves under the chapter's last figure when that on
   XYZ Corporation. Ours: 70001, Northwind's 2025 sales agreement with Contoso on their
   customer relationship, Ben signing for Contoso; 70002 and 70003, the bad rows above.
 
+### Fig 4.13
+- **AGREEMENT ITEM's four subtypes → rows of `agreement_item_type`** (section, pricing
+  program, exhibit, sub-agreement): no attributes or lines yet. If a later figure hangs
+  prices on PRICING PROGRAM, that line can point at `agreement_item` with a check on its
+  type, or the type gets a subtype table then.
+- **`agreement_item`:** a surrogate key and the seq id; `part_of_agreement_item_id` for the
+  dashed loop, with a check against pointing at itself. An item inside an item of another
+  agreement is a data-quality query (seed: a section of William's 86749 placed under
+  10002's; point 28). `agreement_image` is text, a file reference.
+- **`addendum`:** `agreement_id` and `agreement_item_id` both nullable, exactly one set (the
+  arc) a data-quality query (seed: a pens addendum naming 70001 and its item). Effective
+  outside its agreement's dates is another (seed: a partnership addendum three months after
+  489589 ended; point 27).
+- **Three applicability tables,** each a surrogate key and two plain FKs: to `organization`
+  (Ch 2, keyed on `party_id`), `product` (Ch 3) and `geographic_boundary` (Ch 2).
+- **The applicability query** reads "none of a kind = no limit" (point 26): a pricing program
+  applies to an order line when its agreement is in force on the order's date and has the
+  order's placing or bill-to party in a role, and each kind of limit it has matches the
+  placing or bill-to party, the line's product, and the ship-to address (through Ch 2's
+  `postal_address_boundary` and `geographic_boundary_ancestor`, at any depth).
+- **Seeds, all ours** (no table came with the figure): 70001's outline (scope, pricing with
+  three programs, an exhibit with an image reference, a consignment sub-agreement with its
+  own section), two items for 10002, a section each for 86749 and 489589, and four addenda
+  (Contoso's paper price lowered from March, the agreement extended to a new office, and the
+  two bad rows).
+
 ## When NOT to use this
 - **A shop that only sells**, and buys through some other system, gets little from the ORDER
   supertype. It costs one discriminator, so it's cheap to keep, but don't model purchase

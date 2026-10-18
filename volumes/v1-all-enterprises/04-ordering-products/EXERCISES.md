@@ -110,6 +110,14 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 2. **[4.12]** AGREEMENT is drawn with subtypes (product, sales, purchase, employment, other)
    and with an AGREEMENT TYPE. When does a kind of agreement deserve a subtype box, and when
    is a type row enough?
+3. **[4.13]** A pricing program with no product applicability rows: does it apply to every
+   product or to none? Pick a reading, and say what each one costs when a new product joins
+   the catalogue.
+4. **[4.13]** Why record an ADDENDUM instead of editing the item's text, and why may it
+   change the whole agreement or one item, but not both?
+5. **[4.13]** A SUB AGREEMENT is an item of its agreement, not an AGREEMENT of its own under a
+   parent. What can't it have that way (its own parties, its own dates), and when would you
+   make it a full agreement instead?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
