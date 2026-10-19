@@ -61,8 +61,33 @@ and any decisions made.
   export 41 cards. Design reference: three draft entries and the Ch 6 architecture entry,
   Ch 6 examples on twelve Core patterns rows and a new row (general to specific, most
   specific wins), three question index rows, roadmap "7 submodels + architecture".
+- Ch 7 (Invoicing) started from the template, with Figs 7.1a, 7.1b, 7.2, 7.3a and 7.3b and
+  Tables 7.1–7.6 (photos), transcribed with 12 points to discuss.
+- Fig 7.1a built: `invoice` (a SALES/PURCHASE kind), `invoice_item_type` (7.1b's acquiring
+  and adjustment sets as the hierarchy's top rows), `invoice_item` with "adjusted by" and
+  "sold with". Tables 7.1–7.3; a copier billed by serial number, a discount on its line, the
+  book's −2 ream correction on a later bill (30016). Six checks, all fed by bad invoice 30011.
+- Fig 7.2 built: billed to and from as lines to PARTY, addressed to and sent from any
+  contact mechanism; `invoice_role` + type. Table 7.4 with new addresses and e-mails, each
+  with a BILLING purpose. Three checks and a review (30010, neither side ours).
+- Fig 7.3a built: `billing_account` (billed at a mechanism), dated `billing_account_role` +
+  type, the billed-to arc as a check constraint, a requested bill-to account on Ch 4's
+  orders. Tables 7.5–7.6; who owes an account invoice on its date. Five checks.
+- Submodels 1 (invoices and items) and 2 (invoice parties and billing accounts); ponders 1–3
+  and 1–4; ER diagram; cards 29–30, Anki export 43 cards. Design reference: two draft
+  entries, a Ch 7 column in Core patterns with examples on fourteen rows, two question index
+  rows, roadmap Ch 7 In progress.
 
 **Decisions**
+- Ch 7: build 7.1a and 7.2–7.3a, not the alternates 7.1b and 7.3b; their rules become
+  checks, and the chapter's overall figure decides (points 3 and 11).
+- Ch 7: every invoice item is typed, product lines too (point 1); amount is per unit, so
+  Table 7.3's tax fits no clean rate, seeded as printed (point 2).
+- Ch 7: billed to stays nullable for the arc with the billing account; billed from is
+  mandatory. Table 7.6's text slip (Joe for John) read in the table's favour (point 9).
+- Ch 7: John Smith (54) and Jane Smith (58) are Ch 6's people, now also customers; Joe Smith
+  and Tom Jones are new. ACME's and ABC Subsidiary's Table 7.4 addresses are new mechanisms
+  beside Ch 4's (point 5).
 - WORK EFFORT TYPE read as a catalogue of kinds of work (Table 6.6 gives standard hours per
   activity), the levels its grouping rows (point 16); a sixth level, JOB, and the runs
   retyped JOB (points 10 and 15).
@@ -86,7 +111,9 @@ and any decisions made.
 - Work effort purpose optional; production runs typed PROJECT for want of a level in the book.
 
 **Next**
-- The Ch 4, 5 and 6 overviews (Ch 6: 42 points); then practice, submodel by submodel.
+- The rest of Ch 7's figures (the user's call to keep building ahead).
+- The Ch 4, 5, 6 and 7 overviews (Ch 6: 42 points, Ch 7: 12 so far); then practice,
+  submodel by submodel.
 
 ## 2026-10-18
 

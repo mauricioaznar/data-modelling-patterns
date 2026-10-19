@@ -925,6 +925,72 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
+### Card 29 · V1 Ch 7 · Invoices and invoice items (Fig 7.1a)
+- **Cue:** "What does this bill charge for, line by line, and which lines are tax, fees, discounts or corrections of other lines?"
+- **Hook:** a till receipt where the tax, the delivery fee and yesterday's refund are all
+  printed as lines, each with an arrow to the line it touches *(Claude's, drafted when the
+  figures landed)*
+- **Mantra:** Every charge is a typed line; an adjustment points at what it adjusts, a
+  feature at what it was sold with.
+
+<details><summary>Key</summary>
+
+- **S:** `invoice` (date, message, description; `invoice_kind` SALES or PURCHASE) ·
+  `invoice_item` (seq within the invoice, taxable flag, quantity optional and signed, amount
+  per unit; for a product, a feature, a serialized inventory item, or only a description;
+  "adjusted by" and "sold with", both recursive) · `invoice_item_type` (ACQUIRING_ITEM over
+  product, feature, work effort, time entry; ADJUSTMENT over discount, surcharge, sales tax,
+  shipping and handling, fee, miscellaneous: 7.1b's two subtype sets as top rows).
+- **W:** `tax_amount` and `freight_charge` columns on the invoice and one `product_id` per
+  line: a new fee is a schema change, a discount on one line has nowhere to go, two servers
+  with different features can't keep them apart, and a mistake gets fixed by editing a legal
+  document.
+- **T:** *(the naive-model trap until practice gives yours)* correcting a billed quantity in
+  place instead of adding a −2 line that points back; putting the product and its feature on
+  one line; tying an invoice-level tax to a line.
+- **D:** invoice ← invoice_item → invoice_item_type (→ parent type); item → product,
+  product_feature, inventory_item (Ch 3; all optional); item → item (adjustment for; sold
+  with). Checks: a seq twice on one invoice; a grouping-row type; a line that bills nothing; a
+  feature not sold with a product line of its invoice; an adjustment of another invoice's
+  line, or a correction of another product; an inventory item of a different product.
+</details>
+
+---
+
+### Card 30 · V1 Ch 7 · Invoice parties and billing accounts (Figs 7.2–7.3a)
+- **Cue:** "Who is billed and who bills, where did the invoice go, who else touched it, and when it's billed to an account, who actually owes?"
+- **Hook:** a family phone bill addressed to the account, not the person; inside the
+  envelope, the account card lists Mum as primary payer and whoever is secondary this year
+  *(Claude's, drafted when the figures landed)*
+- **Mantra:** Billed from a party, billed to a party or an account; sent anywhere; extra
+  people are dated roles.
+
+<details><summary>Key</summary>
+
+- **S:** `invoice` gains billed to (party), billed from (party, mandatory), addressed to and
+  sent from (any contact mechanism), and `billing_account_id` in an arc with billed to ·
+  `invoice_role` (party, type, datetime, percentage) + `invoice_role_type` (entered by,
+  approver, sender, receiver) · `billing_account` (from, thru, description, billed at a
+  contact mechanism) · `billing_account_role` (party, type, from, thru) +
+  `billing_account_role_type` (primary payer, secondary payer, service rep, manager, sales
+  rep). Ch 4's orders gain a requested bill-to account, in an arc with the bill-to role.
+- **W:** a `customer_id` and a `billing_address` on the invoice: no e-mailed bills, no
+  approver or clerk, no way to bill a household account whose payers change, no splitting one
+  customer's office supplies from its consulting.
+- **T:** *(the naive-model trap until practice gives yours)* pointing billed to at an account
+  *and* a party; reading "who owes" off the account without the invoice date; addressing a bill
+  to any mechanism the party has instead of one it uses for billing.
+- **D:** invoice → party (billed to | billing_account: the arc), → party (billed from), →
+  contact_mechanism (addressed to, sent from; Ch 2); invoice ← invoice_role → party, →
+  invoice_role_type; billing_account → contact_mechanism (billed at); billing_account ←
+  billing_account_role → party, → billing_account_role_type; sales_order, purchase_order (Ch
+  4) → billing_account. Checks: addressed where the party takes no bills; a mechanism the
+  sender doesn't hold; a role twice; an account invoice outside the account's dates or
+  addressed off the account; two primary payers at once; no primary payer on the date.
+</details>
+
+---
+
 ## Deck: architecture
 
 One card per chapter, from its architecture figure (the last, overall one): how the chapter's

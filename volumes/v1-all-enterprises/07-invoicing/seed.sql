@@ -140,7 +140,7 @@ insert into party_contact_mechanism_purpose (party_contact_mechanism_id, contact
 update invoice set addressed_to_contact_mechanism_id = 45, sent_from_contact_mechanism_id = 46 where invoice_id in (30002, 30016);
 update invoice set addressed_to_contact_mechanism_id = 47, sent_from_contact_mechanism_id = 46 where invoice_id = 30005;
 update invoice set addressed_to_contact_mechanism_id = 48, sent_from_contact_mechanism_id = 49 where invoice_id = 30010;
-update invoice set addressed_to_contact_mechanism_id = 45, sent_from_contact_mechanism_id = 46 where invoice_id = 30011;   -- DATA ERROR: John Smith's bill sent to ACME's billing address (caught by a query)
+update invoice set addressed_to_contact_mechanism_id = 45, sent_from_contact_mechanism_id = 49 where invoice_id = 30011;   -- DATA ERRORS: John Smith's bill sent to ACME's billing address, and from ACME's e-mail, which ABC Subsidiary doesn't hold (both caught by queries)
 
 -- The text's four role types.
 insert into invoice_role_type (invoice_role_type_id, description) values
@@ -196,7 +196,8 @@ insert into billing_account_role (billing_account_id, party_id, billing_account_
   (1459, 58, 'PRIMARY_PAYER',   '2000-04-15', null),
   (1459, 54, 'SECONDARY_PAYER', '2000-04-15', '2001-06-16'),
   (1459, 61, 'SECONDARY_PAYER', '2001-06-16', null),
-  (1459, 61, 'PRIMARY_PAYER',   '2001-07-01', null);   -- DATA ERROR: a second primary payer while Jane still is (caught by a query)
+  (1459, 61, 'PRIMARY_PAYER',   '2001-07-01', null),   -- DATA ERROR: a second primary payer while Jane still is (caught by a query)
+  (1459, 61, 'SECONDARY_PAYER', '2001-06-16', null);   -- DATA ERROR: Joe's secondary role keyed in twice (caught by a query)
 
 -- Invoices on account, ours. Billed to the account, so no party.
 insert into invoice (invoice_id, invoice_kind, invoice_date, message, description, billing_account_id, billed_from_party_id,

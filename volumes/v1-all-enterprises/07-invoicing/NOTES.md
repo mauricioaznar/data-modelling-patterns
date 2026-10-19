@@ -399,7 +399,8 @@ the literal drawing.
   linked to its party with a BILLING purpose where invoices arrive. John Smith is Ch 6's (54),
   now also a customer; Tom Jones (62) is new. Roles: Rosa Diaz (Ch 5, ABC Subsidiary) entered
   30002 and 30005; William Jones (Ch 4, ABC Corporation) approved 30002. Bad rows: invoice
-  30011, John Smith's bill addressed to ACME's billing address; Rosa entered 30002 twice.
+  30011, John Smith's bill addressed to ACME's billing address and sent from ACME's e-mail;
+  Rosa entered 30002 twice.
 
 ### Fig 7.3a
 - **`billing_account`** (`from_date`, `thru_date` exclusive, `description`,
@@ -420,7 +421,7 @@ the literal drawing.
   "45 Elm Street" (ours). Invoices on account (ours): 30012 to 1296 (consulting for ACME),
   30013 to 1459 (the family's phone bill). Bad rows: 30014, billed to 1459 in January 2000,
   before it opened; 30015, billed to 1295 but addressed to jsmith@us.com; Joe Smith as a
-  second primary payer on 1459 from Jul 1, 2001.
+  second primary payer on 1459 from Jul 1, 2001, and his secondary role keyed in twice.
 
 ## When NOT to use this
 - **One line per product, no fees, one tax:** a small shop's invoice is fine with a total and
