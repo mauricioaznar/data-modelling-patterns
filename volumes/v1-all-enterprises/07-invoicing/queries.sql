@@ -173,3 +173,90 @@ select invoice_id, party_id, invoice_role_type_id, count(*) as rows
 from invoice_role
 group by invoice_id, party_id, invoice_role_type_id
 having count(*) > 1;
+
+-- ============================================================
+-- Fig 7.3a — Billing account
+-- ============================================================
+
+-- name: 7.3a — Tables 7.5–7.6: each account, where its bills go, and who is on it in which role (thru shown inclusive)
+select a.billing_account_id, a.description, cm.display_name as billed_at,
+       p.name as party, t.description as role, r.from_date, r.thru_date - 1 as thru_date_inclusive
+from billing_account a
+join contact_mechanism_display_name cm on cm.contact_mechanism_id = a.billed_at_contact_mechanism_id
+left join billing_account_role r       on r.billing_account_id = a.billing_account_id
+left join billing_account_role_type t  on t.billing_account_role_type_id = r.billing_account_role_type_id
+left join party_display_name p         on p.party_id = r.party_id
+order by a.billing_account_id, r.from_date, t.description;
+
+-- name: 7.3a — Who owes each invoice: the party billed, or the account's primary payer on the invoice date (NOTES, point 12)
+select v.invoice_id, v.invoice_date, v.billing_account_id,
+       coalesce(bt.name, string_agg(pp.name, ', ')) as who_owes
+from invoice v
+left join party_display_name bt on bt.party_id = v.billed_to_party_id
+left join billing_account_role r
+       on r.billing_account_id = v.billing_account_id
+      and r.billing_account_role_type_id = 'PRIMARY_PAYER'
+      and r.from_date <= v.invoice_date and (r.thru_date is null or r.thru_date > v.invoice_date)
+left join party_display_name pp on pp.party_id = r.party_id
+group by v.invoice_id, v.invoice_date, v.billing_account_id, bt.name
+order by v.invoice_id;
+
+-- name: 7.3a — Account 1459's payers on three days: Jun 1, 2001 (John is secondary), Jun 20, 2001 (Joe has replaced him), Aug 1, 2001 (the bad second primary shows)
+select d.as_of, p.name as party, t.description as role
+from (values (date '2001-06-01'), (date '2001-06-20'), (date '2001-08-01')) as d(as_of)
+join billing_account_role r          on r.billing_account_id = 1459
+                                    and r.from_date <= d.as_of and (r.thru_date is null or r.thru_date > d.as_of)
+join billing_account_role_type t     on t.billing_account_role_type_id = r.billing_account_role_type_id
+join party_display_name p            on p.party_id = r.party_id
+order by d.as_of, t.description, p.name;
+
+-- name: 7.3a — Everything billed per account, and every account a party pays on
+select p.name as party, t.description as role, a.billing_account_id, a.description,
+       (select count(*) from invoice v where v.billing_account_id = a.billing_account_id) as invoices
+from billing_account_role r
+join billing_account a            on a.billing_account_id = r.billing_account_id
+join billing_account_role_type t  on t.billing_account_role_type_id = r.billing_account_role_type_id
+join party_display_name p         on p.party_id = r.party_id
+where r.thru_date is null
+order by p.name, a.billing_account_id;
+
+-- name: 7.3a — Data-quality check: invoices billed to an account outside the account's dates (should be empty)
+select v.invoice_id, v.invoice_date, a.billing_account_id, a.from_date, a.thru_date
+from invoice v
+join billing_account a on a.billing_account_id = v.billing_account_id
+where v.invoice_date < a.from_date or (a.thru_date is not null and v.invoice_date >= a.thru_date);
+
+-- name: 7.3a — Data-quality check: account invoices addressed somewhere other than the account's billing mechanism (should be empty)
+select v.invoice_id, a.billing_account_id, cm.display_name as addressed_to, ab.display_name as account_billed_at
+from invoice v
+join billing_account a                      on a.billing_account_id = v.billing_account_id
+left join contact_mechanism_display_name cm on cm.contact_mechanism_id = v.addressed_to_contact_mechanism_id
+join contact_mechanism_display_name ab      on ab.contact_mechanism_id = a.billed_at_contact_mechanism_id
+where v.addressed_to_contact_mechanism_id is distinct from a.billed_at_contact_mechanism_id;
+
+-- name: 7.3a — Data-quality check: two primary payers at once on one account (should be empty)
+select r1.billing_account_id, r1.party_id as first_payer, r2.party_id as second_payer, greatest(r1.from_date, r2.from_date) as overlap_from
+from billing_account_role r1
+join billing_account_role r2
+  on r2.billing_account_id = r1.billing_account_id
+ and r2.billing_account_role_id > r1.billing_account_role_id
+ and r1.billing_account_role_type_id = 'PRIMARY_PAYER'
+ and r2.billing_account_role_type_id = 'PRIMARY_PAYER'
+ and r1.from_date < coalesce(r2.thru_date, 'infinity')
+ and r2.from_date < coalesce(r1.thru_date, 'infinity');
+
+-- name: 7.3a — Data-quality check: account invoices with no primary payer on the invoice date (should be empty; 30014 predates its account)
+select v.invoice_id, v.invoice_date, v.billing_account_id
+from invoice v
+where v.billing_account_id is not null
+  and not exists (
+    select 1 from billing_account_role r
+    where r.billing_account_id = v.billing_account_id
+      and r.billing_account_role_type_id = 'PRIMARY_PAYER'
+      and r.from_date <= v.invoice_date and (r.thru_date is null or r.thru_date > v.invoice_date));
+
+-- name: 7.3a — Data-quality check: the same party in the same role on one account from the same day, twice (should be empty)
+select billing_account_id, party_id, billing_account_role_type_id, from_date, count(*) as rows
+from billing_account_role
+group by billing_account_id, party_id, billing_account_role_type_id, from_date
+having count(*) > 1;

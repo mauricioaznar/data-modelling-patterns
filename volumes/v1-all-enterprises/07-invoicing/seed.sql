@@ -156,3 +156,58 @@ insert into invoice_role (invoice_id, party_id, invoice_role_type_id, role_datet
   (30002, 47, 'APPROVER',   '2001-05-25 14:30+00', null),
   (30005, 50, 'ENTERED_BY', '2001-06-05 10:00+00', null),
   (30002, 50, 'ENTERED_BY', '2001-05-25 09:12+00', null);   -- DATA ERROR: Rosa entered 30002 twice (caught by a query)
+
+-- ============================================================
+-- Fig 7.3a — Billing account
+-- ============================================================
+-- 50: Jane Smith's home, where account 1459's bills go (ours).
+insert into contact_mechanism (contact_mechanism_id, contact_mechanism_kind, contact_mechanism_type_id) values
+  (50, 'POSTAL_ADDRESS', 'POSTAL_ADDRESS');
+
+select setval(pg_get_serial_sequence('contact_mechanism', 'contact_mechanism_id'), (select max(contact_mechanism_id) from contact_mechanism));
+
+insert into postal_address (contact_mechanism_id, address1, address2, directions) values
+  (50, '45 Elm Street', null, null);
+
+insert into party_contact_mechanism (party_contact_mechanism_id, party_id, contact_mechanism_id, from_date, thru_date, non_solicitation_ind, role_type_id, comment) values
+  (51, 58, 50, '1999-01-01', null, false, null, 'Home');
+
+select setval(pg_get_serial_sequence('party_contact_mechanism', 'party_contact_mechanism_id'), (select max(party_contact_mechanism_id) from party_contact_mechanism));
+
+insert into billing_account_role_type (billing_account_role_type_id, description) values
+  ('PRIMARY_PAYER',        'Primary payer'),
+  ('SECONDARY_PAYER',      'Secondary payer'),
+  ('CUSTOMER_SERVICE_REP', 'Customer service representative'),
+  ('MANAGER',              'Manager'),
+  ('SALES_REP',            'Sales representative');
+
+-- Tables 7.5 and 7.6. 1459's dates, mechanism and description are ours.
+insert into billing_account (billing_account_id, from_date, thru_date, description, billed_at_contact_mechanism_id) values
+  (1295, '2000-04-15', null, 'All charges for office supplies',     45),
+  (1296, '2000-04-15', null, 'All charges for consulting services', 45),
+  (1459, '2000-04-15', null, 'Smith household phone service',       50);
+
+select setval(pg_get_serial_sequence('billing_account', 'billing_account_id'), (select max(billing_account_id) from billing_account));
+
+-- Thru dates +1 day (exclusive): John's last day is Jun 15, 2001.
+insert into billing_account_role (billing_account_id, party_id, billing_account_role_type_id, from_date, thru_date) values
+  (1295, 16, 'PRIMARY_PAYER',   '2000-04-15', null),
+  (1296, 16, 'PRIMARY_PAYER',   '2000-04-15', null),
+  (1459, 58, 'PRIMARY_PAYER',   '2000-04-15', null),
+  (1459, 54, 'SECONDARY_PAYER', '2000-04-15', '2001-06-16'),
+  (1459, 61, 'SECONDARY_PAYER', '2001-06-16', null),
+  (1459, 61, 'PRIMARY_PAYER',   '2001-07-01', null);   -- DATA ERROR: a second primary payer while Jane still is (caught by a query)
+
+-- Invoices on account, ours. Billed to the account, so no party.
+insert into invoice (invoice_id, invoice_kind, invoice_date, message, description, billing_account_id, billed_from_party_id,
+                     addressed_to_contact_mechanism_id, sent_from_contact_mechanism_id) values
+  (30012, 'SALES', '2001-07-01', null, 'Consulting, June 2001',     1296, 13, 45, 46),
+  (30013, 'SALES', '2001-07-01', null, 'Phone service, June 2001',  1459, 13, 50, 46),
+  (30014, 'SALES', '2000-01-10', null, 'Phone service, December 1999', 1459, 13, 50, 46),   -- DATA ERROR: before the account opened (caught by a query)
+  (30015, 'SALES', '2001-07-01', null, 'Paper',                     1295, 13, 47, 46);      -- DATA ERROR: addressed to John Smith's e-mail, not the account's address (caught by a query)
+
+insert into invoice_item (invoice_id, invoice_item_seq_id, invoice_item_type_id, product_id, taxable_flag, quantity, amount, item_description) values
+  (30012, 1, 'PRODUCT_ITEM', null, false, 16,   75.00, 'Consulting hours'),
+  (30013, 1, 'PRODUCT_ITEM', null, true,  null, 45.00, 'Phone service, June 2001'),
+  (30014, 1, 'PRODUCT_ITEM', null, true,  null, 45.00, 'Phone service, December 1999'),
+  (30015, 1, 'PRODUCT_ITEM', 1,    true,  5,    8.00,  null);
