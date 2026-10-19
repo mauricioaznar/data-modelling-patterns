@@ -738,6 +738,25 @@ the literal drawing.
   management twice; 120005 started twice and completed before it started; 51245 given the
   grouping row as a status.
 
+### Fig 6.6
+- **WORKER** joins Ch 2's `role_type` under PERSON_ROLE, and EMPLOYEE and CONTRACTOR move
+  under it, so `role_type_ancestor` answers "is this role a worker?".
+- **`timesheet`**: a `party_role_id` (the worker's role), from and thru dates (thru
+  exclusive, as everywhere), a comment. That the role is a WORKER is a data-quality query.
+- **`time_entry`**: timesheet, work effort, from and thru datetimes, hours, a comment. Thru
+  after from is a check constraint. Checks: an entry outside its timesheet's period, and
+  more hours than the entry's span holds.
+- **`timesheet_role`** and **`timesheet_role_type`** (APPROVER, ENTERED_BY: ours, the book
+  draws no rows). A worker approving their own timesheet is a check.
+- **Assignments stay as 6.5 built them** (point 25): thru date optional.
+- **Seed:** Table 6.10 with its ids. Dick Jones and John Smith become employees of ABC
+  Manufacturing (party roles 81 and 82, dates ours). Entries printed as days run midnight to
+  midnight. 294395, the goals session, is an activity outside the plan. Ours: the timesheet
+  roles. Bad rows: timesheet 1500 on ACME's placing-customer role; an entry on 1450 dated
+  after the sheet; 30 hours in one day on 1200; Dick Jones approving his own sheet. A review
+  query lists time with no covering assignment (point 24): John Smith's goals session and
+  his Feb 16–Mar 1 interviews.
+
 ## When NOT to use this
 - **A shop that only sells** never generates work: a service it sells is a product line on
   an order (Ch 4), and nothing needs WORK EFFORT.

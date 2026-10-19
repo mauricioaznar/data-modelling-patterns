@@ -80,6 +80,11 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    were only effort, party and role?
 2. **[6.5]** USA Consulting is assigned to 29005 and has skills. Why PARTY and not PERSON on
    both, and what does the enterprise give up by not knowing who at USA Consulting does it?
+3. **[6.6]** A TIMESHEET hangs off a PARTY ROLE (a worker), while a TIME ENTRY hangs off a
+   WORK EFFORT, not off the assignment. What does each choice buy, and which question
+   (asked of Table 6.10) does the second one make hard?
+4. **[6.6]** Why have TIMESHEET at all? Say what you lose if TIME ENTRY points straight at
+   the party role and the timesheet disappears.
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

@@ -418,3 +418,56 @@ insert into work_effort_status (work_effort_id, status_type_id, status_datetime)
   (120005, 'WORK_COMPLETED',     '2000-06-05 11:00'),   -- DATA ERROR: completed before it started
   (120005, 'WORK_STARTED',       '2000-06-05 14:00'),   -- DATA ERROR: started twice (the book keys a status by effort and type)
   (51245,  'WORK_EFFORT_STATUS', '2000-06-05 08:00');   -- DATA ERROR: the grouping row used as a status
+
+-- ============================================================
+-- Fig 6.6 — Work effort time tracking
+-- ============================================================
+-- WORKER groups Ch 2's EMPLOYEE and CONTRACTOR.
+insert into role_type (role_type_id, parent_type_id, applies_to_kind, description) values
+  ('WORKER', 'PERSON_ROLE', null, 'Worker');
+
+update role_type set parent_type_id = 'WORKER' where role_type_id in ('EMPLOYEE', 'CONTRACTOR');
+
+-- Dick Jones and John Smith work for ABC Manufacturing (dates ours).
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (81, 56, 'EMPLOYEE', '1990-01-01', null),
+  (82, 54, 'EMPLOYEE', '1995-01-01', null);
+
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+-- Table 6.10's goals session: not part of the plan.
+insert into work_effort (work_effort_id, work_effort_type_id, name, description, scheduled_start_date, scheduled_completion_date) values
+  (294395, 'ACTIVITY', 'Monthly goals session', 'Facilitate monthly goals session', '2001-02-06', '2001-02-06');
+
+-- Table 6.10, thru dates +1 day (exclusive). Entries printed as days are
+-- whole days: midnight to midnight.
+insert into timesheet (timesheet_id, party_role_id, from_date, thru_date, comment) values
+  (1390, 81, '2001-01-01', '2001-01-16', null),
+  (1200, 82, '2001-02-01', '2001-02-16', null),
+  (1450, 82, '2001-02-16', '2001-03-02', null),
+  -- ours
+  (1500, 60, '2001-02-01', '2001-02-16', 'Keyed against the wrong role');   -- DATA ERROR: ACME's placing-customer role, not a worker
+
+select setval(pg_get_serial_sequence('timesheet', 'timesheet_id'), (select max(timesheet_id) from timesheet));
+
+insert into time_entry (timesheet_id, work_effort_id, from_datetime, thru_datetime, hours, comment) values
+  (1390, 29000,  '2001-01-02', '2001-01-05', 13, null),
+  (1390, 29006,  '2001-01-05', '2001-01-07', 7,  null),   -- Table 6.10's "29005" (NOTES, point 23)
+  (1200, 29003,  '2001-02-01', '2001-02-06', 30, null),
+  (1200, 294395, '2001-02-06', '2001-02-07', 6,  null),
+  (1450, 29003,  '2001-02-16', '2001-03-02', 45, null),
+  -- ours, each with one mistake
+  (1450, 29003,  '2001-03-05', '2001-03-06', 8,  null),   -- DATA ERROR: after the timesheet's period
+  (1200, 294395, '2001-02-07', '2001-02-08', 30, null);   -- DATA ERROR: 30 hours in one day
+
+insert into timesheet_role_type (timesheet_role_type_id, description) values
+  ('APPROVER',   'Approved the timesheet'),
+  ('ENTERED_BY', 'Keyed the timesheet in');
+
+-- Ours: Sam Bossman approves Dick Jones's sheet, Dick Jones approves John Smith's.
+insert into timesheet_role (timesheet_id, party_id, timesheet_role_type_id) values
+  (1390, 55, 'APPROVER'),
+  (1390, 57, 'ENTERED_BY'),
+  (1200, 56, 'APPROVER'),
+  (1450, 56, 'APPROVER'),
+  (1390, 56, 'APPROVER');   -- DATA ERROR: Dick Jones approves his own timesheet

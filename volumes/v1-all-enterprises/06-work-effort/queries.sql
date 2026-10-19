@@ -475,3 +475,102 @@ from work_effort_status s
 join work_effort_status c on c.work_effort_id = s.work_effort_id and c.status_type_id = 'WORK_COMPLETED'
 where s.status_type_id = 'WORK_STARTED'
   and c.status_datetime < s.status_datetime;
+
+-- ============================================================
+-- Fig 6.6 — Work effort time tracking
+-- ============================================================
+
+-- name: 6.6 — Table 6.10: each timesheet, its worker and its time entries (thru shown inclusive)
+select ts.timesheet_id, ts.from_date, ts.thru_date - 1 as thru_inclusive, n.name as party, r.role_type_id as as_role,
+       te.work_effort_id, we.description as work_effort,
+       te.from_datetime::date as entry_from, (te.thru_datetime - interval '1 day')::date as entry_thru, te.hours
+from timesheet ts
+join party_role r         on r.party_role_id = ts.party_role_id
+join party_display_name n on n.party_id = r.party_id
+join time_entry te        on te.timesheet_id = ts.timesheet_id
+join work_effort we       on we.work_effort_id = te.work_effort_id
+where te.time_entry_id not in (6, 7)   -- leave out our two bad entries
+order by ts.from_date, ts.timesheet_id, te.from_datetime;
+
+-- name: 6.6 — Hours spent on the sales and marketing plan, part by part, and in total (time is booked on the parts, never on 39409 itself)
+with recursive parts (work_effort_id) as (
+  select 39409
+  union
+  select a.to_work_effort_id
+  from parts p
+  join work_effort_association a on a.from_work_effort_id = p.work_effort_id and a.work_effort_association_type_id = 'BREAKDOWN'
+)
+select coalesce(we.work_effort_id::text, 'total') as work_effort_id, case when grouping(we.work_effort_id) = 1 then 'all of 39409' else min(we.description) end as work_effort,
+       sum(te.hours) as hours
+from parts p
+join time_entry te  on te.work_effort_id = p.work_effort_id
+join work_effort we on we.work_effort_id = p.work_effort_id
+group by rollup (we.work_effort_id)
+order by we.work_effort_id nulls last;
+
+-- name: 6.6 — Each timesheet's total hours and who else is on it (approver, who keyed it in)
+select ts.timesheet_id, n.name as worker, ts.from_date, ts.thru_date - 1 as thru_inclusive,
+       (select sum(hours) from time_entry te where te.timesheet_id = ts.timesheet_id) as hours,
+       string_agg(rt.description || ': ' || o.name, '; ' order by rt.description, o.name) as others
+from timesheet ts
+join party_role r                  on r.party_role_id = ts.party_role_id
+join party_display_name n          on n.party_id = r.party_id
+left join timesheet_role tr        on tr.timesheet_id = ts.timesheet_id
+left join timesheet_role_type rt   on rt.timesheet_role_type_id = tr.timesheet_role_type_id
+left join party_display_name o     on o.party_id = tr.party_id
+group by ts.timesheet_id, n.name, ts.from_date, ts.thru_date
+order by ts.from_date;
+
+-- name: 6.6 — Review: time booked with no assignment covering it, on the effort or on any effort it is part of (NOTES, point 24)
+with recursive up (work_effort_id, ancestor_id) as (
+  select work_effort_id, work_effort_id from work_effort
+  union
+  select u.work_effort_id, a.from_work_effort_id
+  from up u
+  join work_effort_association a on a.to_work_effort_id = u.ancestor_id and a.work_effort_association_type_id = 'BREAKDOWN'
+)
+select te.time_entry_id, n.name as party, te.work_effort_id, we.description, te.from_datetime::date as entry_from,
+       (te.thru_datetime - interval '1 day')::date as entry_thru, te.hours
+from time_entry te
+join timesheet ts         on ts.timesheet_id = te.timesheet_id
+join party_role r         on r.party_role_id = ts.party_role_id
+join party_display_name n on n.party_id = r.party_id
+join work_effort we       on we.work_effort_id = te.work_effort_id
+where not exists (
+  select 1
+  from up u
+  join work_effort_party_assignment a on a.work_effort_id = u.ancestor_id
+  where u.work_effort_id = te.work_effort_id
+    and a.party_id = r.party_id
+    and a.from_date <= te.from_datetime::date
+    and (a.thru_date is null or a.thru_date >= te.thru_datetime::date))
+order by te.from_datetime;
+
+-- name: 6.6 — Data-quality check: timesheets for a party role that isn't a worker (employee or contractor) (should be empty)
+select ts.timesheet_id, r.party_role_id, r.role_type_id, n.name
+from timesheet ts
+join party_role r         on r.party_role_id = ts.party_role_id
+join party_display_name n on n.party_id = r.party_id
+where not exists (select 1 from role_type_ancestor a where a.role_type_id = r.role_type_id and a.ancestor_id = 'WORKER');
+
+-- name: 6.6 — Data-quality check: time entries outside their timesheet's period (should be empty)
+select te.time_entry_id, te.timesheet_id, ts.from_date, ts.thru_date, te.from_datetime, te.thru_datetime
+from time_entry te
+join timesheet ts on ts.timesheet_id = te.timesheet_id
+where te.from_datetime::date < ts.from_date
+   or te.thru_datetime::date > ts.thru_date;
+
+-- name: 6.6 — Data-quality check: time entries with more hours than the time between their from and thru (should be empty)
+select te.time_entry_id, te.timesheet_id, te.from_datetime, te.thru_datetime, te.hours,
+       extract(epoch from te.thru_datetime - te.from_datetime) / 3600 as hours_available
+from time_entry te
+where te.hours > extract(epoch from te.thru_datetime - te.from_datetime) / 3600;
+
+-- name: 6.6 — Data-quality check: workers who approve their own timesheet (should be empty)
+select tr.timesheet_id, n.name
+from timesheet_role tr
+join timesheet ts         on ts.timesheet_id = tr.timesheet_id
+join party_role r         on r.party_role_id = ts.party_role_id
+join party_display_name n on n.party_id = tr.party_id
+where tr.timesheet_role_type_id = 'APPROVER'
+  and tr.party_id = r.party_id;
