@@ -307,3 +307,114 @@ insert into work_effort_association (work_effort_association_type_id, from_work_
   ('BREAKDOWN',   3454589, 28045,   '2000-05-20'),   -- DATA ERROR: a task drawn as its own job's parent (a cycle)
   ('DEPENDENCY',  120003,  120004,  '2000-05-20'),   -- DATA ERROR: typed with the grouping row
   ('PRECEDENCY',  120004,  120002,  '2000-05-20');   -- DATA ERROR: QA (to Jun 4) must finish before operating (Jun 3)
+
+-- ============================================================
+-- Fig 6.5 — Work effort party assignment
+-- ============================================================
+-- Bob Jenkins and Jane Smith at ABC Manufacturing; USA Consulting, the
+-- outside firm. Gender isn't in the book.
+insert into party (party_id, party_kind) values
+  (57, 'PERSON'),
+  (58, 'PERSON'),
+  (59, 'ORGANIZATION');
+
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into person (party_id, gender_type_id) values
+  (57, 'NOT_DISCLOSED'),
+  (58, 'NOT_DISCLOSED');
+
+insert into person_name (party_id, person_name_type_id, from_date, thru_date, name) values
+  (57, 'FIRST', '1995-01-01', null, 'Bob'),
+  (57, 'LAST',  '1995-01-01', null, 'Jenkins'),
+  (58, 'FIRST', '1995-01-01', null, 'Jane'),
+  (58, 'LAST',  '1995-01-01', null, 'Smith');
+
+insert into organization (party_id, organization_type_id, name) values
+  (59, 'CORPORATION', 'USA Consulting');
+
+-- The plan's parts (Table 6.7); 29006 is Table 6.10's team-member work
+-- (NOTES, point 23). The plan now runs the year, as its assignments do.
+update work_effort set scheduled_completion_date = '2001-12-15' where work_effort_id = 39409;
+
+insert into work_effort (work_effort_id, work_effort_type_id, facility_id, name, description,
+                         scheduled_start_date, scheduled_completion_date) values
+  (29000, 'TASK', null, 'Develop project plan',          'Develop project plan',                      '2001-01-02', '2001-01-04'),
+  (29003, 'TASK', null, 'Conduct initial interviews',    'Conduct initial interviews',                '2001-01-05', '2001-03-01'),
+  (29005, 'TASK', null, 'Conduct market research',       'Conduct market research',                   '2001-03-01', '2001-07-01'),
+  (29006, 'TASK', null, 'Identify potential team',       'Identify potential team members for project', '2001-01-05', '2001-01-06');
+
+insert into work_effort_association (work_effort_association_type_id, from_work_effort_id, to_work_effort_id, from_date) values
+  ('BREAKDOWN', 39409, 29000, '2000-12-15'),
+  ('BREAKDOWN', 39409, 29003, '2000-12-15'),
+  ('BREAKDOWN', 39409, 29005, '2000-12-15'),
+  ('BREAKDOWN', 39409, 29006, '2000-12-15');
+
+insert into work_effort_role_type (work_effort_role_type_id, description) values
+  ('PROJECT_MANAGER',       'Project manager'),
+  ('PROJECT_ADMINISTRATOR', 'Project administrator'),
+  ('TEAM_MEMBER',           'Team member'),
+  ('CREATOR',               'Creator'),
+  ('DATA_ENTRY',            'Data entry in system'),
+  ('PERFORMER',             'Performer'),
+  ('OUTSOURCING',           'Outsourcing responsibility');
+
+-- Table 6.7, thru dates +1 day (exclusive). Bob Jenkins's from date is ours
+-- (point 20); Jane Smith's year read as 2001 (point 21). The facility is ours.
+insert into work_effort_party_assignment (work_effort_id, party_id, work_effort_role_type_id, facility_id, from_date, thru_date, comment) values
+  (39409, 56, 'PROJECT_MANAGER',       null, '2001-01-02', '2001-09-16', null),
+  (39409, 57, 'PROJECT_ADMINISTRATOR', null, '2001-01-02', null,         null),
+  (39409, 54, 'TEAM_MEMBER',           null, '2001-03-05', '2001-08-07', 'Leaves on Aug 7, 2001 for three weeks of vacation'),
+  (39409, 54, 'TEAM_MEMBER',           null, '2001-09-01', '2001-12-03', null),
+  (39409, 58, 'TEAM_MEMBER',           null, '2001-08-06', '2001-09-16', 'Keen on the assignment'),
+  (29000, 56, 'CREATOR',               null, '2001-01-02', '2001-01-05', null),
+  (29000, 57, 'DATA_ENTRY',            null, '2001-01-04', '2001-01-05', null),
+  (29003, 54, 'PERFORMER',             16,   '2001-01-05', '2001-02-06', null),
+  (29005, 59, 'OUTSOURCING',           null, '2001-03-01', '2001-07-02', 'Contracted outside'),
+  -- ours
+  (39409, 54, 'TEAM_MEMBER',           null, '2001-07-01', '2001-10-01', null);   -- DATA ERROR: overlaps both of John Smith's periods
+
+insert into skill_type (skill_type_id, description) values
+  ('PROJECT_MANAGEMENT', 'Project management'),
+  ('MARKETING',          'Marketing'),
+  ('MARKET_RESEARCH',    'Market research'),
+  ('SALES_ANALYSIS',     'Sales analysis'),
+  ('DATA_WAREHOUSING',   'Data warehousing');
+
+-- Table 6.8: a firm has skills too.
+insert into party_skill (party_id, skill_type_id, years_experience, rating) values
+  (54, 'PROJECT_MANAGEMENT', 20, 10),
+  (54, 'MARKETING',          5,  6),
+  (56, 'PROJECT_MANAGEMENT', 12, 8),
+  (59, 'MARKET_RESEARCH',    25, 10),
+  (59, 'SALES_ANALYSIS',     15, 7),
+  (59, 'DATA_WAREHOUSING',   5,  5),
+  -- ours
+  (56, 'PROJECT_MANAGEMENT', 15, 9);   -- DATA ERROR: Dick Jones's project management twice
+
+insert into status_type (status_type_id, parent_type_id, description) values
+  ('WORK_EFFORT_STATUS', null,                 'Work effort status'),
+  ('WORK_PENDING',       'WORK_EFFORT_STATUS', 'Pending'),
+  ('WORK_IN_PROGRESS',   'WORK_EFFORT_STATUS', 'In progress'),
+  ('WORK_STARTED',       'WORK_EFFORT_STATUS', 'Started'),
+  ('WORK_COMPLETED',     'WORK_EFFORT_STATUS', 'Completed');
+
+-- Table 6.9. Run #1 is still in progress, so 6.3a's completion and yield
+-- (ours) are taken back.
+update work_effort set actual_completion_datetime = null, actual_hours = null where work_effort_id = 28045;
+update production_run set quantity_produced = null, quantity_rejected = null where work_effort_id = 28045;
+
+insert into work_effort_status (work_effort_id, status_type_id, status_datetime) values
+  (28045,  'WORK_IN_PROGRESS', null),
+  (120001, 'WORK_STARTED',     '2000-06-02 13:00'),
+  (120001, 'WORK_COMPLETED',   '2000-06-02 14:00'),
+  (120002, 'WORK_STARTED',     '2000-06-03 13:00'),
+  (120002, 'WORK_COMPLETED',   '2000-06-03 16:00'),
+  (120003, 'WORK_STARTED',     '2000-06-04 09:00'),
+  (120003, 'WORK_COMPLETED',   '2000-06-04 10:00'),
+  (120004, 'WORK_PENDING',     null),
+  -- ours, each with one mistake
+  (120005, 'WORK_STARTED',       '2000-06-05 15:00'),
+  (120005, 'WORK_COMPLETED',     '2000-06-05 11:00'),   -- DATA ERROR: completed before it started
+  (120005, 'WORK_STARTED',       '2000-06-05 14:00'),   -- DATA ERROR: started twice (the book keys a status by effort and type)
+  (51245,  'WORK_EFFORT_STATUS', '2000-06-05 08:00');   -- DATA ERROR: the grouping row used as a status

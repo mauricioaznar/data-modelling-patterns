@@ -74,6 +74,13 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    WORK EFFORT TYPE. What does that tell you about what WORK EFFORT TYPE really lists, and
    why does it fight with Ch 2's PROGRAM…ACTIVITY rows?
 
+### Submodel 4: work effort assignments and time
+1. **[6.5]** John Smith is a team member on 39409 twice, with a gap for his vacation. Which
+   attribute in the assignment's key makes that possible, and what would break if the key
+   were only effort, party and role?
+2. **[6.5]** USA Consulting is assigned to 29005 and has skills. Why PARTY and not PERSON on
+   both, and what does the enterprise give up by not knowing who at USA Consulting does it?
+
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
 notation (entities, key attributes, relationships and cardinality). Then diff it against

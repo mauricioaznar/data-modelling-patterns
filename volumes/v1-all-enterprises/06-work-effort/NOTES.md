@@ -621,6 +621,10 @@ the literal drawing.
     assignments. Built optional.
 26. **Submodel 4's figures:** 6.5–6.6 for now. If Fig 6.7 (rates) joins it, its card heading
     changes and Anki makes a new note.
+27. **6.5, two places for "started at":** a STARTED status with its datetime and WORK
+    EFFORT's actual start datetime say the same thing. Table 6.9's activities have statuses
+    and no actuals; seeded that way. Which one is the record, or does the status fill the
+    actual?
 
 ## Design decisions (book → SQL)
 
@@ -713,6 +717,26 @@ the literal drawing.
   rollers; QA alongside operating), and 120005, a second clean-up that redoes 120003. Bad
   rows: 3454589 drawn as the parent of 28045 (a cycle); 120003 → 120004 typed DEPENDENCY;
   120004 to finish before 120002 starts, though it's scheduled a day later.
+
+### Fig 6.5
+- **`work_effort_party_assignment`**: effort, party, `work_effort_role_type`, an optional
+  facility, from and thru dates, a comment. The book's key (effort, party, role, from date)
+  is a surrogate key here, and overlapping periods for one party in one role on one effort
+  are a data-quality query (exact duplicates included).
+- **`skill_type`** and **`party_skill`** (years, rating), as drawn. One row per party and
+  skill (the book's key) is a data-quality query. A rating scale isn't given; only
+  non-negative is enforced.
+- **`work_effort_status`**: effort, `status_type_id` from Ch 2's `status_type` under a new
+  WORK_EFFORT_STATUS group (as Ch 4 did for orders), and an optional datetime (point 22).
+  Checks: a type outside the group, the same status twice for one effort, completed before
+  started.
+- **Seed:** Tables 6.7–6.9. Bob Jenkins (57), Jane Smith (58) and USA Consulting (59) are
+  new; the people's gender isn't given (NOT_DISCLOSED). 39409's parts 29000, 29003, 29005
+  and our 29006 (point 23) are tasks under it, and 39409 now runs to Dec 15, 2001. Run #1
+  (28045) is in progress, so 6.3a's completion and yield for it (ours) are removed. Bad
+  rows: a third John Smith team-member row overlapping both of his; Dick Jones's project
+  management twice; 120005 started twice and completed before it started; 51245 given the
+  grouping row as a status.
 
 ## When NOT to use this
 - **A shop that only sells** never generates work: a service it sells is a product line on

@@ -368,3 +368,110 @@ join work_effort f on f.work_effort_id = a.from_work_effort_id
 join work_effort t on t.work_effort_id = a.to_work_effort_id
 where a.work_effort_association_type_id = 'PRECEDENCY'
   and t.scheduled_start_date < f.scheduled_completion_date;
+
+-- ============================================================
+-- Fig 6.5 — Work effort party assignment
+-- ============================================================
+
+-- name: 6.5 — Table 6.7: who is assigned to the sales and marketing plan and its parts, as what, when (thru shown inclusive)
+select a.work_effort_id, we.description as work_effort, n.name as party, n.party_kind, rt.description as role,
+       a.from_date, a.thru_date - 1 as thru_inclusive, f.description as at_facility, a.comment
+from work_effort_party_assignment a
+join work_effort we           on we.work_effort_id = a.work_effort_id
+join party_display_name n     on n.party_id = a.party_id
+join work_effort_role_type rt on rt.work_effort_role_type_id = a.work_effort_role_type_id
+left join facility f          on f.facility_id = a.facility_id
+order by a.work_effort_id desc, a.from_date, n.name;
+
+-- name: 6.5 — Who is working on the plan (39409) or any of its parts on Aug 20, 2001? John Smith is on vacation; Jane Smith covers
+with recursive parts (work_effort_id) as (
+  select 39409
+  union
+  select a.to_work_effort_id
+  from parts p
+  join work_effort_association a on a.from_work_effort_id = p.work_effort_id and a.work_effort_association_type_id = 'BREAKDOWN'
+)
+select n.name as party, rt.description as role, we.description as work_effort, a.from_date, a.thru_date
+from work_effort_party_assignment a
+join parts p                  on p.work_effort_id = a.work_effort_id
+join work_effort we           on we.work_effort_id = a.work_effort_id
+join party_display_name n     on n.party_id = a.party_id
+join work_effort_role_type rt on rt.work_effort_role_type_id = a.work_effort_role_type_id
+where a.from_date <= date '2001-08-20' and (a.thru_date is null or a.thru_date > date '2001-08-20')
+  and a.work_effort_party_assignment_id <> (select max(work_effort_party_assignment_id) from work_effort_party_assignment where party_id = 54)   -- leave out the bad overlap row
+order by n.name;
+
+-- name: 6.5 — Table 6.8: who can manage a project, best rated first, and what each manages today (Jan 15, 2001)
+select n.name as party, s.years_experience, s.rating,
+       string_agg(we.description, '; ') as managing_now
+from party_skill s
+join party_display_name n on n.party_id = s.party_id
+left join work_effort_party_assignment a on a.party_id = s.party_id and a.work_effort_role_type_id = 'PROJECT_MANAGER'
+                                        and a.from_date <= date '2001-01-15' and (a.thru_date is null or a.thru_date > date '2001-01-15')
+left join work_effort we  on we.work_effort_id = a.work_effort_id
+where s.skill_type_id = 'PROJECT_MANAGEMENT'
+  and not (s.party_id = 56 and s.years_experience = 15)   -- leave out the bad duplicate row
+group by n.name, s.years_experience, s.rating
+order by s.rating desc, s.years_experience desc;
+
+-- name: 6.5 — Skills per party: people and firms alike (why it's PARTY SKILL, not PERSON SKILL)
+select n.name as party, n.party_kind, st.description as skill, s.years_experience, s.rating
+from party_skill s
+join party_display_name n on n.party_id = s.party_id
+join skill_type st        on st.skill_type_id = s.skill_type_id
+order by n.party_kind, n.name, s.rating desc;
+
+-- name: 6.5 — Table 6.9: each effort's status history, and its current status (the latest; a status with no time counts only when it's the only one)
+select ws.work_effort_id, we.description, t.description as status, ws.status_datetime,
+       ws.work_effort_status_id = (select s2.work_effort_status_id from work_effort_status s2
+                                   where s2.work_effort_id = ws.work_effort_id
+                                   order by s2.status_datetime desc nulls last limit 1) as is_current
+from work_effort_status ws
+join work_effort we  on we.work_effort_id = ws.work_effort_id
+join status_type t   on t.status_type_id = ws.status_type_id
+where ws.work_effort_id in (28045, 120001, 120002, 120003, 120004)
+order by ws.work_effort_id, ws.status_datetime nulls first;
+
+-- name: 6.5 — How long each activity took, from its status events, against its estimate (120001 took one hour of a 20-hour estimate)
+select we.work_effort_id, we.description, s.status_datetime as started, c.status_datetime as completed,
+       round(extract(epoch from c.status_datetime - s.status_datetime) / 3600, 1) as hours_elapsed, we.estimated_hours
+from work_effort we
+join work_effort_status s on s.work_effort_id = we.work_effort_id and s.status_type_id = 'WORK_STARTED'
+join work_effort_status c on c.work_effort_id = we.work_effort_id and c.status_type_id = 'WORK_COMPLETED'
+order by we.work_effort_id;
+
+-- name: 6.5 — Data-quality check: one party in the same role on the same effort for overlapping periods (should be empty)
+select a.work_effort_id, n.name as party, a.work_effort_role_type_id,
+       a.from_date, a.thru_date, b.from_date as other_from, b.thru_date as other_thru
+from work_effort_party_assignment a
+join work_effort_party_assignment b on b.work_effort_id = a.work_effort_id and b.party_id = a.party_id
+                                   and b.work_effort_role_type_id = a.work_effort_role_type_id
+                                   and b.work_effort_party_assignment_id > a.work_effort_party_assignment_id
+join party_display_name n on n.party_id = a.party_id
+where a.from_date < coalesce(b.thru_date, 'infinity') and b.from_date < coalesce(a.thru_date, 'infinity');
+
+-- name: 6.5 — Data-quality check: a party with the same skill twice (should be empty)
+select s.party_id, n.name, s.skill_type_id, count(*) as rows
+from party_skill s
+join party_display_name n on n.party_id = s.party_id
+group by s.party_id, n.name, s.skill_type_id
+having count(*) > 1;
+
+-- name: 6.5 — Data-quality check: work effort statuses that aren't a work effort status type, a grouping row included (should be empty)
+select ws.work_effort_status_id, ws.work_effort_id, ws.status_type_id
+from work_effort_status ws
+join status_type t on t.status_type_id = ws.status_type_id
+where t.parent_type_id is distinct from 'WORK_EFFORT_STATUS';
+
+-- name: 6.5 — Data-quality check: the same status twice for one effort, the book's key (should be empty)
+select work_effort_id, status_type_id, count(*) as rows
+from work_effort_status
+group by work_effort_id, status_type_id
+having count(*) > 1;
+
+-- name: 6.5 — Data-quality check: efforts completed before they started (should be empty)
+select s.work_effort_id, s.status_datetime as started, c.status_datetime as completed
+from work_effort_status s
+join work_effort_status c on c.work_effort_id = s.work_effort_id and c.status_type_id = 'WORK_COMPLETED'
+where s.status_type_id = 'WORK_STARTED'
+  and c.status_datetime < s.status_datetime;
