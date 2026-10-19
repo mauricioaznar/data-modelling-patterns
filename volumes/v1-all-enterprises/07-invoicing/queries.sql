@@ -323,3 +323,58 @@ select invoice_id, invoice_item_id, term_type_id, count(*) as rows, string_agg(c
 from invoice_term
 group by invoice_id, invoice_item_id, term_type_id
 having count(*) > 1;
+
+-- ============================================================
+-- Fig 7.5 — Billing for shipment items
+-- ============================================================
+
+-- name: 7.5 — Table 7.9: each shipment line beside the invoice line that bills it, with both quantities
+select si.shipment_id, si.shipment_item_seq_id as shipment_seq, p.name as shipped, si.quantity as shipped_qty,
+       ii.invoice_id, ii.invoice_item_seq_id as invoice_seq, ii.quantity as invoice_qty
+from shipment_item_billing b
+join shipment_item si on si.shipment_item_id = b.shipment_item_id
+join invoice_item ii  on ii.invoice_item_id = b.invoice_item_id
+left join product p   on p.product_id = si.product_id
+where si.shipment_id in (1235, 1330)
+order by si.shipment_id, si.shipment_item_seq_id, ii.invoice_id;
+
+-- name: 7.5 — What each 2001 customer shipment line went out with, and what is billed for it so far (a void invoice bills nothing: 1330's books are unbilled again)
+select si.shipment_id, si.shipment_item_seq_id as seq, s.estimated_ship_date, p.name as good, si.quantity as shipped,
+       coalesce(sum(ii.quantity) filter (where not exists (
+                  select 1 from invoice_status x where x.invoice_id = ii.invoice_id and x.status_type_id = 'INVOICE_VOID')), 0) as billed,
+       string_agg(distinct ii.invoice_id::text, ', ') as invoices
+from shipment_item si
+join shipment s             on s.shipment_id = si.shipment_id
+left join product p         on p.product_id = si.product_id
+left join shipment_item_billing b on b.shipment_item_id = si.shipment_item_id
+left join invoice_item ii   on ii.invoice_item_id = b.invoice_item_id
+where s.shipment_type_id = 'CUSTOMER_SHIPMENT' and s.estimated_ship_date >= '2001-01-01'
+group by si.shipment_item_id, si.shipment_id, si.shipment_item_seq_id, s.estimated_ship_date, p.name, si.quantity
+order by si.shipment_id, si.shipment_item_seq_id;
+
+-- name: 7.5 — Data-quality check: the same shipment line on the same invoice line twice (should be empty)
+select shipment_item_id, invoice_item_id, count(*) as rows
+from shipment_item_billing
+group by shipment_item_id, invoice_item_id
+having count(*) > 1;
+
+-- name: 7.5 — Data-quality check: shipment lines billed on an invoice line for another product (should be empty)
+select si.shipment_id, si.shipment_item_seq_id as shipment_seq, sp.name as shipped,
+       ii.invoice_id, ii.invoice_item_seq_id as invoice_seq, ip.name as billed
+from shipment_item_billing b
+join shipment_item si on si.shipment_item_id = b.shipment_item_id
+join invoice_item ii  on ii.invoice_item_id = b.invoice_item_id
+join product sp       on sp.product_id = si.product_id
+join product ip       on ip.product_id = ii.product_id
+where si.product_id <> ii.product_id;
+
+-- name: 7.5 — Data-quality check: shipments billed to someone else than the party they went to (party-billed invoices; should be empty)
+select s.shipment_id, sn.name as shipped_to, v.invoice_id, bn.name as billed_to
+from shipment_item_billing b
+join shipment_item si          on si.shipment_item_id = b.shipment_item_id
+join shipment s                on s.shipment_id = si.shipment_id
+join invoice_item ii           on ii.invoice_item_id = b.invoice_item_id
+join invoice v                 on v.invoice_id = ii.invoice_id
+join party_display_name sn     on sn.party_id = s.shipped_to_party_id
+join party_display_name bn     on bn.party_id = v.billed_to_party_id
+where v.billed_to_party_id <> s.shipped_to_party_id;

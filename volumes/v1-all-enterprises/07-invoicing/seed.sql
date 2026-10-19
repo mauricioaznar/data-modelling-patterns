@@ -253,3 +253,44 @@ insert into invoice_term (term_type_id, invoice_id, invoice_item_id, term_value)
   ('NO_EXCHANGE_OR_REFUND',  null,  2,    null),
   ('PAYMENT_DUE_DAYS',       30005, null, 15),   -- ours
   ('PAYMENT_DUE_DAYS',       30002, null, 45);   -- DATA ERROR: a second payment term on 30002 (caught by a query)
+
+-- ============================================================
+-- Fig 7.5 — Billing for shipment items
+-- ============================================================
+-- Table 7.9 to its intention, not its numbers (NOTES, point 14). Shipments
+-- 1235 and 1330 are ours: 1235 sends ACME what 30002 bills, 1330 sends John
+-- Smith three books in three lines. Mechanisms as Ch 5's 9000: 40 ABC
+-- Subsidiary's warehouse, 32 ACME's head office, 44 the shipping desk, 43
+-- ACME's receiving phone. John Smith has no postal address on file.
+insert into shipment (shipment_id, shipment_type_id, estimated_ship_date, estimated_arrival_date,
+                      shipped_from_party_id, shipped_from_contact_mechanism_id, shipped_to_party_id, shipped_to_contact_mechanism_id,
+                      inquiry_contact_mechanism_id, receiving_contact_mechanism_id) values
+  (1235, 'CUSTOMER_SHIPMENT', '2001-05-24', '2001-05-25', 13, 40, 16, 32,   44, 43),
+  (1330, 'CUSTOMER_SHIPMENT', '2001-06-04', '2001-06-06', 13, 40, 54, null, 44, null);
+
+insert into shipment_item (shipment_item_id, shipment_id, shipment_item_seq_id, product_id, quantity) values
+  (26, 1235, 1, 1, 10),   -- bond paper
+  (27, 1235, 2, 2, 4),    -- pens
+  (28, 1235, 3, 3, 6),    -- diskettes
+  (29, 1330, 1, 7, 1),    -- the Data Model Resource Book, in three lines
+  (30, 1330, 2, 7, 1),
+  (31, 1330, 3, 7, 1);
+
+select setval(pg_get_serial_sequence('shipment_item', 'shipment_item_id'), (select max(shipment_item_id) from shipment_item));
+
+-- 30005's book line (ours) now bills the three books 1330 sends.
+update invoice_item set quantity = 3 where invoice_item_id = 8;
+
+-- Invoice items: 1, 3, 4 are 30002's paper, pens and diskettes; 12 is
+-- 30016's -2 ream credit (the book's 30045 row); 8 is 30005's books.
+insert into shipment_item_billing (shipment_item_id, invoice_item_id) values
+  (26, 1),
+  (27, 3),
+  (28, 4),
+  (26, 12),   -- the credit bills 1235's paper line again, for -2
+  (29, 8),
+  (30, 8),
+  (31, 8),
+  (3,  3),    -- DATA ERROR: 9000's diskettes billed on 30002's pen line (caught by a query)
+  (2,  14),   -- DATA ERROR: pens shipped to ACME billed to John Smith on 30011 (caught by a query)
+  (27, 3);    -- DATA ERROR: the same pair twice (caught by a query)

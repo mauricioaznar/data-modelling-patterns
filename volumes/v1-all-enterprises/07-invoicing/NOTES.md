@@ -373,8 +373,7 @@ INVOICE, INVOICE ITEM          (7.1a's; INVOICE ITEM drawn with its SALES and PU
   term on one line, have nowhere to go, and a bare text can't be computed with (is it late?).
 
 ### Fig 7.5 — Billing for shipment items
-**Transcription** (accepted: ☐; photo with the first row of Table 7.9; the rest of the table
-is cut off)
+**Transcription** (accepted: ☐; photos with Table 7.9)
 
 ```
 SHIPMENT ITEM BILLING             (no attributes; identified by both lines: tildes)
@@ -386,14 +385,22 @@ SHIPMENT ITEM (Ch 5's: seq id, quantity, shipment contents description), "part o
 ```
 
 **Table 7.9, shipment invoice data** (shipment · shipment item seq · invoice · invoice item
-seq · quantity, from the invoice item), first row only
+seq · quantity, from the invoice item)
 - 1235 · 1 · 30002 · 1 · 1000
-- 1235 · 2 · … (cut off)
+- 1235 · 2 · 30002 · 2 · 1000
+- 1235 · 3 · 30002 · 3 · 100
+- 1235 · 1 · 30045 · 1 · −10
+- 1330 · 1 · 30005 · 1 ·
+- 1330 · 2 · 30005 · 1 ·
+- 1330 · 3 · 30005 · 1 ·
+
+So the table shows the three cases: one shipment line per invoice line (1235 on 30002), a
+later credit line billing the same shipment line again (−10 on 30045: some came back or
+were damaged), and several shipment lines gathered on one invoice line (1330 on 30005).
 
 **To check against the book**
-- The rest of Table 7.9 (point 14).
-- Table 7.9 shows quantity 1000 for 30002's line 1, which Table 7.2 bills as 10 reams
-  (point 14).
+- 30002's quantities here (1000, 1000, 100) are Ch 5's shipment 9000 (pencils, pens,
+  diskettes), not Table 7.2's lines (10 reams, a feature, 4 pens): point 14.
 
 **Discussion**
 - **Many to many, both ways.** One invoice line can bill several shipment lines (10 reams
@@ -550,7 +557,143 @@ quantity · unit price · payment application amount · payment · payment amoun
 - **Outstanding = invoice total − applications.** Nothing stores a balance; it is computed,
   so it can't drift.
 
-### Points to discuss after the overview (Figs 7.1a–7.8a so far)
+### Fig 7.8b — Invoice item payments, alternate model
+**Transcription** (accepted: ☐; not built, see STATUS)
+
+```
+PAYMENT APPLICATION               (as 7.8a: # id, * amount applied, "applying" PAYMENT)
+  -> INVOICE ITEM              (dashed: many "applied to" 1; item "paid via" many)
+  -> BILLING ACCOUNT           (dashed: many "applied to" 1; account "affected via" many)
+PAYMENT, PAYMENT METHOD TYPE      (as 7.8a; the ref is "payment ref no" here)
+INVOICE ITEM                      # seq id, * taxable flag, * quantity, * unit price,
+                                  o item description; SALES / PURCHASE INVOICE ITEM;
+                                  "part of" INVOICE (# id, * date, o description, o message)
+```
+
+**What it changes**: payments apply to invoice **lines**, not whole invoices, so a customer
+who disputes one line can pay the others and the books show which line is still open. The
+cost: every payment has to be spread across lines, even the plain "here's the total" ones.
+INVOICE ITEM is drawn with a mandatory quantity and unit price (7.1a's are optional, and its
+amount is called amount): read as a drawing slip, 7.1a's attributes stand.
+
+**Not built**: the overall figure (7.10) keeps 7.8a's INVOICE PAYMENT APPLICATION to
+INVOICE. Table 7.11's $12.84 on line 1's row (point 19) reads like a 7.8b example.
+
+### Fig 7.9 — Financial accounts, withdrawals and deposits
+**Transcription** (accepted: ☐; photo with Table 7.12)
+
+```
+PAYMENT                           (7.8a's: # id, * effective date, * payment ref no,
+                                   * amount, o comment; "paid via" PAYMENT METHOD TYPE)
+  DISBURSEMENT -> WITHDRAWAL   ("affecting" / "caused by"; no crow's foot: one to one)
+  RECEIPT      -> DEPOSIT      (many "deposited via" 1; deposit "the mechanism to deposit"
+                                many)
+
+FINANCIAL ACCOUNT TRANSACTION
+  # financial_account_trans_id
+  * transaction_date
+  o entry_date
+  subtypes: WITHDRAWAL, DEPOSIT, FINANCIAL ACCOUNT ADJUSTMENT
+  -> FINANCIAL ACCOUNT         (many "affecting" 1; account "affected by" many)
+  -> PARTY                     (many "executed by" 1; party "the executer of" many)
+
+FINANCIAL ACCOUNT
+  # financial_account_id
+  * financial_account_name
+  subtypes: INVESTMENT ACCOUNT, BANK ACCOUNT
+  -> FINANCIAL ACCOUNT TYPE    (dashed: many "described by" 1; type "the description for")
+
+FINANCIAL ACCOUNT ROLE            (identified by account + type + party: tildes)
+  * from_date
+  o thru_date
+  -> FINANCIAL ACCOUNT         (many "of" 1; account "owned by" many)
+  -> FINANCIAL ACCOUNT ROLE TYPE (many "for" 1; type "the description for" many)
+  -> PARTY                     (many "for" 1; party "involved in" many)
+
+FINANCIAL ACCOUNT TYPE            # id, * description
+FINANCIAL ACCOUNT ROLE TYPE, PAYMENT METHOD TYPE (# id, * description)
+```
+
+**Table 7.12, deposits and withdrawals** (payment · payment amount · transaction · deposit
+amount · withdrawal amount · financial account)
+- 1298398 · $182.20 · 398749 · $917.04 · · 8389309984
+- 1298412 · $12.84 · (398749)
+- 394789 · $343.00 · (398749)
+- 97873 · $379.00 · (398749)
+- 88394 · $480.00 · 398761 · · $480.00 · 8389309984
+- 88756 · $670.00 · 398762 · · $670.00 · 8389309984
+
+The deposit is the four receipts banked together (182.20 + 12.84 + 343 + 379 = 917.04);
+each withdrawal is one check. The first two receipts are Table 7.11's.
+
+**To check against the book**
+- No amount on FINANCIAL ACCOUNT TRANSACTION: the table's deposit and withdrawal amounts
+  add up the payments. A FINANCIAL ACCOUNT ADJUSTMENT (a bank fee, interest) has no payment
+  to add up (point 24).
+- The financial account id is the bank account number (8389309984) in Table 7.12.
+- The text's types: checking, savings, IRA, mutual fund, as FINANCIAL ACCOUNT TYPE rows.
+- Does a withdrawal have exactly one disbursement? Read so from the line (no crow's foot)
+  and the table (one check per withdrawal).
+
+**Discussion**
+- **A payment isn't money in the bank.** A check received is a RECEIPT; it becomes cash when
+  it's deposited, usually with others, on another day, into one of several accounts. The
+  naive model (`bank_account_id` on PAYMENT) can't say which receipts went in which deposit
+  slip, or reconcile the bank statement (one line of $917.04) against four payments.
+- **The account belongs to parties in roles** (owner, signer, administrator), dated, the
+  same move as Ch 7's billing account roles. Who executed a transaction is a line of its own.
+- **Adjustments** are bank charges and interest: transactions with no payment behind them.
+
+### Fig 7.10 — Overall invoice model (architecture)
+**Transcription** (accepted: ☐; entities with their identifiers only, lines as drawn)
+
+```
+INVOICE (# id) -- the hub
+  "composed of" INVOICE ITEM (# seq id; two recursive dashed lines: adjusted by, sold with)
+    -> INVOICE ITEM TYPE, PRODUCT, PRODUCT FEATURE (dashed)
+    <- ORDER ITEM BILLING -> ORDER ITEM (Ch 4)
+    <- SHIPMENT ITEM BILLING -> SHIPMENT ITEM (Ch 5)
+    <- WORK EFFORT BILLING -> WORK EFFORT (Ch 6)
+    <- TIME ENTRY BILLING -> TIME ENTRY (Ch 6)
+  <- INVOICE TERM (arc: invoice or item) -> TERM TYPE
+  <- INVOICE STATUS (the type isn't drawn)
+  <- INVOICE ROLE -> INVOICE ROLE TYPE, PARTY
+  -> PARTY (billed to, billed from) and BILLING ACCOUNT, in an arc on billed to
+  -> CONTACT MECHANISM (addressed to, sent from)
+BILLING ACCOUNT -> CONTACT MECHANISM; <- BILLING ACCOUNT ROLE -> TYPE, PARTY
+INVOICE PAYMENT APPLICATION -> INVOICE, BILLING ACCOUNT (dashed); "applying" PAYMENT
+PAYMENT -> PAYMENT METHOD TYPE, PARTY (from, to), FINANCIAL ACCOUNT TRANSACTION
+FINANCIAL ACCOUNT TRANSACTION -> FINANCIAL ACCOUNT, PARTY
+FINANCIAL ACCOUNT <- FINANCIAL ACCOUNT ROLE -> PARTY
+```
+
+**What it adds or settles**
+- It keeps **7.1a** (one INVOICE ITEM with a type and two recursive lines, not 7.1b's
+  subtypes), **7.3a** (lines to PARTY, not 7.3b's PARTY ROLE subtypes) and **7.8a** (the
+  application to the INVOICE, here named INVOICE PAYMENT APPLICATION, not 7.8b's item).
+- Misprints: INVOICE TERM is labelled "# status date" and INVOICE STATUS "# invoice date";
+  read as swapped captions (point 25). INVOICE STATUS TYPE and the ITEM's INVENTORY ITEM line
+  aren't drawn: read as left out for space.
+- One line from PAYMENT to FINANCIAL ACCOUNT TRANSACTION, many payments to one transaction,
+  where 7.9 draws one per subtype (receipt to deposit, disbursement to withdrawal). Built as
+  one FK with the subtype rules as checks.
+
+**How it flows**
+- **Hubs:** INVOICE and INVOICE ITEM. Everything else hangs off one of them.
+- **What it bills:** each item is typed and names a product, feature or inventory item
+  (Ch 3); the billing links reach back to what caused the charge: order items (Ch 4),
+  shipment items (Ch 5), work efforts and time entries (Ch 6).
+- **Who and where:** billed from a party, to a party or a billing account; addressed to and
+  sent from any contact mechanism (Ch 2); other parties by INVOICE ROLE.
+- **Its life:** INVOICE STATUS (approved, sent, void) and INVOICE TERM (net days, late fee).
+- **Money:** PAYMENT (receipt or disbursement, between two parties) applies to invoices,
+  or to a billing account on account; payments are banked as FINANCIAL ACCOUNT
+  TRANSACTIONs (deposits gather receipts, a withdrawal clears a check) on FINANCIAL ACCOUNTs
+  owned by parties in roles.
+- **Hand-over:** Ch 8 (accounting) is where these invoices and payments become ledger
+  entries.
+
+### Points to discuss after the overview (Figs 7.1a–7.10)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing.
@@ -565,8 +708,7 @@ the literal drawing.
    gives 14.9%. It is exactly 13.5% of 190 (the $2 glossy finish charged on each of 10 reams)
    or 15% of 171. Seeded as printed; the totals query shows it.
 3. **7.1b's percentage:** an INVOICE ADJUSTMENT has a percentage (a 10% discount) in 7.1b,
-   not in 7.1a. Not built. If the overall figure keeps it, `invoice_item` gains a
-   `percentage`, as Ch 4's `order_adjustment` has.
+   not in 7.1a. Not built: Fig 7.10 keeps 7.1a (no attributes shown), so no percentage.
 4. **Table 7.4's dates against Ch 4:** invoice 30002 (May 25, 2001) bills the paper, pens and
    diskettes of Ch 4's order 12560, which Table 4.2 dates Jun 8, 2001. A bill before its
    order. No line ties them yet (the billing figures come later); flag when they do.
@@ -590,17 +732,20 @@ the literal drawing.
     on). Built with a surrogate key; the duplicate check counts account + party + type +
     from date.
 11. **7.3a or 7.3b:** lines to PARTY or to PARTY ROLE. Built: 7.3a, with 7.3b's rules as
-    checks. The overall figure decides.
+    checks. Fig 7.10 keeps 7.3a (lines to PARTY), so the build stands.
 12. **Who's on the hook for an account invoice:** the arc lets an invoice be billed to an
     account with no party. "Who owes" is then the account's primary payer on the invoice date.
     Built as a query; an account with no primary payer on that date is a check.
 13. **7.4, term value drawn mandatory**, yet Table 7.8's non-returnable row has none (the
     type says it all, as Ch 4's NO_EXCHANGE_OR_REFUND). Built nullable, like Ch 4's term
     tables.
-14. **Table 7.9 is cut off** after its first row, which bills shipment 1235's line 1 on
-    30002's line 1 with quantity 1000, where Table 7.2 bills 10 reams. Shipment 1235 isn't
-    in Ch 5. Seeded as ours: 1235 sends 30002's paper, pens and diskettes to ACME, and its
-    line 1 is billed on 30002's line 1 (the 1000 not used). The rest of the table to come.
+14. **Table 7.9's 30002 isn't Table 7.2's:** its quantities (1000, 1000, 100) are Ch 5's
+    shipment 9000, and its line 2 is a feature in Table 7.2. Shipments 1235 and 1330 aren't
+    in Ch 5. Built to the table's intention, not its numbers: 1235 (ours) sends 30002's
+    paper, pens and diskettes to ACME and its lines are billed on 30002's product lines 1,
+    3 and 4; the −10 credit on 30045 is played by our 30016 (−2 reams), which bills 1235's
+    line 1 again; 1330 (ours) sends John Smith three books in three lines, all billed on
+    30005's line 1 (made 3 books).
 15. **7.6, hours on TIME ENTRY BILLING:** the text offers it for an entry billed over more
     than one line; not drawn, not built. A review lists TIME_ENTRY_ITEM lines whose quantity
     differs from the hours of the entries they bill.
@@ -615,8 +760,8 @@ the literal drawing.
     account", to a billing account with no invoice. Read as an arc: exactly one of the two,
     a check constraint.
 19. **Table 7.11's $12.84 sits on line 1's row**, not the invoice's: maybe the second
-    payment settles one line (the paper). Fig 7.8b (not shared yet) is likely the alternate
-    applying payments to invoice items. Built at invoice level: both payments apply to 30002.
+    payment settles one line (the paper): a 7.8b example. Fig 7.10 keeps 7.8a, the
+    application to the whole invoice. Built so: both payments apply to 30002.
 20. **Table 7.11 against Table 7.3:** tax is line 5 at $12.04 there, line 7 at $25.65 in
     Table 7.3. And the two payments (182.20 + 12.84 = 195.04) fit neither total: 218.65 with
     Table 7.3's tax, 205.04 with Table 7.11's (the $2 finish counted once). Kept 7.3's lines
@@ -629,6 +774,22 @@ the literal drawing.
 23. **Table 7.8's non-returnable term is on line 2**, the glossy-finish feature line, not on
     a product. Seeded as printed, with Ch 4's NO_EXCHANGE_OR_REFUND type: TERM TYPE is one
     list shared by orders, quotes, agreements and now invoices.
+24. **7.9, no amount on FINANCIAL ACCOUNT TRANSACTION:** a deposit's or withdrawal's amount
+    is the sum of its payments (Table 7.12 adds them up), but an ADJUSTMENT (a bank fee,
+    interest) has no payment behind it. Built: an `amount` used only by adjustments (a
+    check), deposits and withdrawals add up their payments.
+25. **7.10's swapped captions:** INVOICE TERM shows "# status date" and INVOICE STATUS
+    "# invoice date". Read as a slip: 7.4's attributes stand.
+26. **The financial account id is the bank's number** (8389309984) in Table 7.12. Kept as the
+    key, a `bigint` (too big for an integer): our only non-integer key so far. A surrogate
+    with the number as an attribute would follow the convention better.
+27. **7.9 draws a disbursement to one withdrawal, 7.10 many payments to one transaction:**
+    built as one FK on PAYMENT; a check catches a withdrawal holding other than exactly one
+    disbursement, and a receipt in a withdrawal or a disbursement in a deposit.
+28. **Table 7.12's other four payments** (394789, 97873 receipts; 88394, 88756 checks) aren't
+    in Table 7.11. Ours: 394789 is John Smith paying part of 30012, 97873 ACME paying on
+    account 1296; the checks go to Fantastic Supplies (30020, and an advance) and Hartley
+    Accounting (an advance).
 
 ## Design decisions (book → SQL)
 
@@ -720,6 +881,18 @@ the literal drawing.
 - **Seed:** Tables 7.7–7.8; ours: 30016 approved and sent, 30020 received, a 15-day term on
   30005. Bad rows: 30011 sent before its date, 30005 sent again after its void, 30013 given an
   order status, 30016's sent keyed twice, a second payment term (45 days) on 30002.
+
+### Fig 7.5
+- **`shipment_item_billing`** (surrogate key, two FKs, no attributes as drawn). The pair
+  twice is a check.
+- **Checks:** the same pair twice; a shipment line billed on a line for another product; a
+  shipment billed to someone else than the party it went to (party-billed invoices only:
+  an account invoice is paid by whoever is on the account).
+- **Query:** what each customer shipment line has had billed, where a line billed only on a
+  void invoice counts as unbilled. That's why a status history matters downstream.
+- **Seed** (point 14): shipments 1235 (to ACME) and 1330 (to John Smith), ours; 30005's book
+  line becomes 3 books. Bad rows: 9000's diskettes on 30002's pen line, 9000's pens (to
+  ACME) on John Smith's 30011, 1235's pens on 30002's line 3 twice.
 
 ## When NOT to use this
 - **One line per product, no fees, one tax:** a small shop's invoice is fine with a total and
