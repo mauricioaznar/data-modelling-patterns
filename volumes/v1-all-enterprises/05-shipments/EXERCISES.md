@@ -12,6 +12,7 @@ every row scores 3+ and its scenario holds up.
 **Submodels:**
 1. **Shipments, items and status** (Figs 5.1–5.2). ~3 h
 2. **Shipments and orders** (Fig 5.3). ~3 h
+3. **Packages and receipts** (Fig 5.4). ~3 h
 
 ## Progress
 
@@ -66,6 +67,20 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    other can't, when one shipment line fills two orders?
 4. **[5.3]** A drop shipment fills two order lines at once. Which ones, whose are they, and
    why can't a customer shipment do the same?
+
+### Submodel 3: packages and receipts
+1. **[5.4]** SHIPMENT PACKAGE has no line to SHIPMENT. How do you find a package's shipment,
+   and what stops one box from holding two shipments' goods? Would you add the line?
+2. **[5.4]** A receipt points straight at an ORDER ITEM, though ORDER SHIPMENT already ties
+   the shipment line to its order lines. What does each path say, and what must hold between
+   them?
+3. **[5.4]** A receipt counts one good out of one package, not one shipment line. Using
+   1146's pencils (two cartons) and 1149's package 53100 (three lines), say why.
+4. **[5.4]** The receipt names the INVENTORY ITEM the goods were stored into. What does that
+   buy over just adding to Ch 3's quantity on hand, and what does the quantity on hand
+   become?
+5. **[5.4]** Receipts are for incoming shipments. ACME signs for shipment 9000 at its door:
+   where, if anywhere, does this model record that?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

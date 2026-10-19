@@ -383,3 +383,182 @@ join shipment sh                            on sh.shipment_id = si.shipment_id
 join contact_mechanism_display_name la      on la.contact_mechanism_id = l.contact_mechanism_id
 join contact_mechanism_display_name sa      on sa.contact_mechanism_id = sh.shipped_to_contact_mechanism_id
 where l.contact_mechanism_id <> sh.shipped_to_contact_mechanism_id;
+
+-- ============================================================
+-- Fig 5.4 — Shipment receipt for incoming shipments
+-- ============================================================
+
+-- name: 5.4 — Shipment receipts as Table 5.8 shows them: each line, its packages and each package's receipt
+-- A receipt is within a package and of a good; the package's content of that
+-- good says which shipment line it counts.
+select si.shipment_id, st.description as shipment_type, si.shipment_item_seq_id as line, si.quantity,
+       p.name as product, pc.quantity as packaging_content_quantity, pc.shipment_package_id as package,
+       r.shipment_receipt_id as receipt, r.quantity_accepted
+from shipment_receipt r
+join packaging_content pc  on pc.shipment_package_id = r.shipment_package_id
+join shipment_item si      on si.shipment_item_id = pc.shipment_item_id and si.product_id = r.product_id
+join shipment sh           on sh.shipment_id = si.shipment_id
+join shipment_type st      on st.shipment_type_id = sh.shipment_type_id
+join product p             on p.product_id = si.product_id
+where r.shipment_receipt_id in (12900, 12901, 12902, 13902, 13903, 13904, 13905, 13804)
+  and si.shipment_id in (1146, 1149, 3485)
+order by array_position(array[1146, 1149, 3485], si.shipment_id), si.shipment_item_seq_id, pc.shipment_package_id;
+
+-- name: 5.4 — What each package holds, and the shipment it belongs to, worked out from its contents
+select pk.shipment_package_id as package, pk.date_created, si.shipment_id, si.shipment_item_seq_id as line,
+       coalesce(p.name, si.shipment_contents_description) as contents, pc.quantity
+from shipment_package pk
+join packaging_content pc  on pc.shipment_package_id = pk.shipment_package_id
+join shipment_item si      on si.shipment_item_id = pc.shipment_item_id
+left join product p        on p.product_id = si.product_id
+order by pk.shipment_package_id, si.shipment_id, si.shipment_item_seq_id;
+
+-- name: 5.4 — Each incoming shipment line: shipped, packed, accepted, rejected, and not yet counted
+-- Incoming: the shipment's type ends at one of ours (purchase shipments,
+-- customer returns, transfers).
+with packed as (
+  select shipment_item_id, sum(quantity) as packed
+  from packaging_content
+  group by shipment_item_id
+),
+counted as (
+  select pc.shipment_item_id, sum(r.quantity_accepted) as accepted, sum(r.quantity_rejected) as rejected
+  from shipment_receipt r
+  join packaging_content pc  on pc.shipment_package_id = r.shipment_package_id
+  join shipment_item si      on si.shipment_item_id = pc.shipment_item_id and si.product_id = r.product_id
+  group by pc.shipment_item_id
+)
+select si.shipment_id, st.description as shipment_type, si.shipment_item_seq_id as line,
+       coalesce(p.name, si.shipment_contents_description) as contents, si.quantity as shipped,
+       coalesce(k.packed, 0) as packed, coalesce(c.accepted, 0) as accepted, coalesce(c.rejected, 0) as rejected,
+       si.quantity - coalesce(c.accepted, 0) - coalesce(c.rejected, 0) as not_yet_counted
+from shipment_item si
+join shipment sh        on sh.shipment_id = si.shipment_id
+join shipment_type st   on st.shipment_type_id = sh.shipment_type_id
+left join product p     on p.product_id = si.product_id
+left join packed k      on k.shipment_item_id = si.shipment_item_id
+left join counted c     on c.shipment_item_id = si.shipment_item_id
+where st.to_internal
+order by si.shipment_id, si.shipment_item_seq_id;
+
+-- name: 5.4 — Each purchase order line: ordered, shipped to us, and accepted or rejected by the receipts checked against it
+select oi.order_id, oi.order_item_seq_id as line, p.name as product, oi.quantity as ordered,
+       (select coalesce(sum(os.quantity), 0) from order_shipment os where os.order_item_id = oi.order_item_id)        as shipped,
+       (select coalesce(sum(r.quantity_accepted), 0) from shipment_receipt r where r.order_item_id = oi.order_item_id) as accepted,
+       (select coalesce(sum(r.quantity_rejected), 0) from shipment_receipt r where r.order_item_id = oi.order_item_id) as rejected
+from order_item oi
+join "order" o    on o.order_id = oi.order_id
+join product p    on p.product_id = oi.product_id
+where o.order_kind = 'PURCHASE'
+  and exists (select 1 from order_shipment os where os.order_item_id = oi.order_item_id)
+order by oi.order_id, oi.order_item_seq_id;
+
+-- name: 5.4 — What was rejected and why, and who received and inspected it
+select r.shipment_receipt_id as receipt, s.shipment_id, p.name as good, r.quantity_accepted, r.quantity_rejected,
+       coalesce(rr.description, '(no reason given)') as reason,
+       string_agg(t.description || ': ' || n.name, '; ' order by t.description) as people
+from shipment_receipt r
+left join lateral (select min(x.shipment_id) as shipment_id
+                   from shipment_package_shipment x
+                   where x.shipment_package_id = r.shipment_package_id) s on true
+left join product p                      on p.product_id = r.product_id
+left join rejection_reason rr            on rr.rejection_reason_id = r.rejection_reason_id
+left join shipment_receipt_role ro       on ro.shipment_receipt_id = r.shipment_receipt_id
+left join shipment_receipt_role_type t   on t.shipment_receipt_role_type_id = ro.shipment_receipt_role_type_id
+left join party_display_name n           on n.party_id = ro.party_id
+where r.quantity_rejected > 0
+group by r.shipment_receipt_id, s.shipment_id, p.name, r.quantity_accepted, r.quantity_rejected, rr.description
+order by r.shipment_receipt_id;
+
+-- name: 5.4 — Where received goods went: accepted quantities by inventory item and facility, beside its quantity on hand
+select ii.inventory_item_id, p.name as good, f.description as facility,
+       sum(r.quantity_accepted) as accepted_into_it, ii.quantity_on_hand
+from shipment_receipt r
+join inventory_item ii  on ii.inventory_item_id = r.inventory_item_id
+join product p          on p.product_id = ii.product_id
+join facility f         on f.facility_id = ii.facility_id
+group by ii.inventory_item_id, p.name, f.description, ii.quantity_on_hand
+order by ii.inventory_item_id;
+
+-- name: 5.4 — Data-quality check: packages holding lines of more than one shipment (should be empty)
+select shipment_package_id as package, string_agg(shipment_id::text, ', ' order by shipment_id) as shipments
+from shipment_package_shipment
+group by shipment_package_id
+having count(*) > 1;
+
+-- name: 5.4 — Data-quality check: shipment lines packed for more than they carry (should be empty)
+select si.shipment_id, si.shipment_item_seq_id as line, si.quantity as carries, sum(pc.quantity) as packed
+from shipment_item si
+join packaging_content pc on pc.shipment_item_id = si.shipment_item_id
+group by si.shipment_item_id, si.shipment_id, si.shipment_item_seq_id, si.quantity
+having sum(pc.quantity) > si.quantity;
+
+-- name: 5.4 — Data-quality check: receipts of a good their package doesn't hold (should be empty)
+select r.shipment_receipt_id as receipt, r.shipment_package_id as package, p.name as good
+from shipment_receipt r
+join product p on p.product_id = r.product_id
+where not exists (select 1
+                  from packaging_content pc
+                  join shipment_item si on si.shipment_item_id = pc.shipment_item_id
+                  where pc.shipment_package_id = r.shipment_package_id
+                    and si.product_id = r.product_id);
+
+-- name: 5.4 — Data-quality check: more of a good counted out of a package than it holds (should be empty)
+with held as (
+  select pc.shipment_package_id, si.product_id, sum(pc.quantity) as held
+  from packaging_content pc
+  join shipment_item si on si.shipment_item_id = pc.shipment_item_id
+  group by pc.shipment_package_id, si.product_id
+),
+counted as (
+  select shipment_package_id, product_id, sum(quantity_accepted + quantity_rejected) as counted,
+         string_agg(shipment_receipt_id::text, ', ' order by shipment_receipt_id) as receipts
+  from shipment_receipt
+  group by shipment_package_id, product_id
+)
+select c.shipment_package_id as package, p.name as good, h.held, c.counted, c.receipts
+from counted c
+join held h      on h.shipment_package_id = c.shipment_package_id and h.product_id = c.product_id
+join product p   on p.product_id = c.product_id
+where c.counted > h.held;
+
+-- name: 5.4 — Data-quality check: rejections with no reason, or a reason with nothing rejected (should be empty)
+select shipment_receipt_id as receipt, quantity_rejected, rejection_reason_id
+from shipment_receipt
+where (quantity_rejected > 0) <> (rejection_reason_id is not null);
+
+-- name: 5.4 — Data-quality check: receipts checked against an order line that ORDER SHIPMENT doesn't tie to their shipment line (should be empty)
+-- The direct line to the order item against the long way round: package →
+-- its content of the receipt's good → shipment line → order shipment.
+select r.shipment_receipt_id as receipt, r.shipment_package_id as package, oi.order_id, oi.order_item_seq_id as order_line
+from shipment_receipt r
+join order_item oi on oi.order_item_id = r.order_item_id
+where not exists (select 1
+                  from packaging_content pc
+                  join shipment_item si    on si.shipment_item_id = pc.shipment_item_id
+                  join order_shipment os   on os.shipment_item_id = si.shipment_item_id
+                  where pc.shipment_package_id = r.shipment_package_id
+                    and si.product_id = r.product_id
+                    and os.order_item_id = r.order_item_id);
+
+-- name: 5.4 — Data-quality check: receipts counting a shipment line whose shipment doesn't end at one of ours (should be empty)
+-- Fig 5.4 is for incoming shipments: the type's to_internal flag (5.1). The
+-- line is the package's content of the receipt's good.
+select r.shipment_receipt_id as receipt, sh.shipment_id, t.description as shipment_type
+from shipment_receipt r
+join packaging_content pc  on pc.shipment_package_id = r.shipment_package_id
+join shipment_item si      on si.shipment_item_id = pc.shipment_item_id and si.product_id = r.product_id
+join shipment sh           on sh.shipment_id = si.shipment_id
+join shipment_type t       on t.shipment_type_id = sh.shipment_type_id
+where t.to_internal is not true;
+
+-- name: 5.4 — Data-quality check: the same row twice, in packaging_content or shipment_receipt_role (should be empty)
+select 'packaging_content' as table_name, shipment_package_id || ' / line ' || shipment_item_id as pair, count(*) as times
+from packaging_content
+group by shipment_package_id, shipment_item_id
+having count(*) > 1
+union all
+select 'shipment_receipt_role', shipment_receipt_id || ' / ' || party_id || ' / ' || shipment_receipt_role_type_id, count(*)
+from shipment_receipt_role
+group by shipment_receipt_id, party_id, shipment_receipt_role_type_id
+having count(*) > 1;

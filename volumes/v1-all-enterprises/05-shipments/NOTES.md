@@ -23,6 +23,10 @@ an item-to-item link carrying its own quantity.
    how much of each; is an order line shipped in full; and did what went out match what was
    ordered (the good, its features, the destination)?
 
+3. **Packages and receipts** (Fig 5.4): which packages hold which shipment lines, and when an
+   incoming package is opened, how much of each good was accepted or rejected and why, who
+   received it, which stock it went into, and which order line it's checked against?
+
 Later figures join a submodel when they answer the same questions, or start one.
 
 ## Figures
@@ -295,7 +299,113 @@ it simple.
   shipment isn't an error by itself; 9200's 1,500 pencils, which no order claims, is shown
   for review.
 
-### Points to discuss after the overview (Figs 5.1–5.3 so far)
+### Fig 5.4 — Shipment receipt for incoming shipments
+**Transcription** (accepted: ☐; one photo, with Table 5.8 on another; open points under "To
+check against the book")
+
+```
+SHIPMENT PACKAGE
+  # shipment_package_id
+  * date_created
+  (no line to SHIPMENT)
+
+PACKAGING CONTENT            (both lines carry a bar)
+  * quantity
+  -> SHIPMENT ITEM           (many "of" 1 shipment item, bar; item "packaged within" many)
+  -> SHIPMENT PACKAGE        (many "in" 1 package, bar; package "composed of" many)
+
+SHIPMENT RECEIPT
+  # receipt_id
+  * datetime_received
+  * item_description
+  * quantity_accepted
+  * quantity_rejected
+  -> SHIPMENT PACKAGE        (many "within" 1 package; package "consisting of" many)
+  -> GOOD                    (many "of" 1 good; good "the description for" many)
+  -> INVENTORY ITEM          (many "stored into" 1 item; item "the destination for" many)
+  -> ORDER ITEM              (many "verified against and applied to" 1 order item; order
+                              item "accounted for via" many)
+  -> REJECTION REASON        (many "rejected because of" 1 reason; reason "the reason for
+                              rejection of" many; dashed)
+
+SHIPMENT RECEIPT ROLE        (no attributes; all three lines carry a bar)
+  -> SHIPMENT RECEIPT        (many "for" 1 receipt, bar; receipt "involving" many)
+  -> SHIPMENT RECEIPT ROLE TYPE (many "described by" 1 type, bar; type "the description
+                              for" many)
+  -> PARTY                   (many "of" 1 party, bar; party "involved in" many)
+
+SHIPMENT RECEIPT ROLE TYPE   (no attributes drawn)
+REJECTION REASON
+  # rejection_id
+  * description
+
+INVENTORY ITEM               (Ch 3: # inventory_item_id)
+  -> GOOD                    (many "the physical occurrence of" 1 good; good "the generic
+                              description for" many)
+SHIPMENT ITEM                (as 5.2, with its "in response to" loop) -> GOOD ("a shipment
+                              of" / "shipped via")
+ORDER ITEM                   (as Ch 4: # order_item_seq_id, o quantity, o unit_price,
+                              o estimated_delivery_date, o shipping_instructions, o comment;
+                              PURCHASE ORDER ITEM (o item_description), SALES ORDER ITEM
+                              (o corresponding_po_id))
+```
+
+**Table 5.8** (shipment receipts, the book's sample, in our words): the two purchase
+shipments and one transfer, line by line, with how much of each line went into which
+package and what each package's receipt accepted.
+- 1146's line 1, 2,000 Jones #2 pencils, arrives in two packages of 1,000 (52000 and 52001),
+  each with its own receipt (12900, 12901), all accepted. Line 2, 1,000 Goldstein Elite
+  pens, comes in package 52002, its receipt printed 12901 again, all accepted. Line 3, 1,000
+  boxes of HD diskettes, shows one package of 100 (52003), receipt 13902, all accepted.
+- 1149's three lines (200 standard erasers, 200 boxes of HD diskettes, 100 Jones #2 pencils)
+  share one package, 53100, with a receipt each (13903 to 13905), all accepted.
+- "4800 (transfer)": 500 Jones #2 pencils in package 52004, receipt 13804, of which 300 are
+  accepted.
+
+**The text below it** (one line, opening the next figure's): an item issuance can have many
+ITEM ISSUANCE ROLEs, and its line to SHIPMENT ITEM is optional.
+
+**To check against the book**
+- Optionality, from the photo: the receipt's line to its package read as mandatory (Table
+  5.8 counts every receipt within a package); its good, inventory item, order line and
+  rejection reason as optional (point 22). The reason's line is dashed.
+- ITEM DESCRIPTION drawn mandatory on the receipt, beside an optional good: kept, read as
+  what the receiver wrote down (point 22).
+- SHIPMENT PACKAGE has no line to SHIPMENT; its shipment follows from its contents (point
+  17).
+- Bars: PACKAGING CONTENT is identified by its line and its package; SHIPMENT RECEIPT ROLE by
+  its receipt, type and party.
+- Table 5.8 contradicts Tables 5.1 and 5.3 on 4800 (point 18), prints receipt 12901 twice
+  (point 20), and gives 1146's diskette line 1,000 boxes but one package of 100 (point 21).
+  Its lines for 1146 and 1149 replace the ones we had made up (point 19).
+- ORDER ITEM drawn with COMMENT and PURCHASE ORDER ITEM's own ITEM DESCRIPTION again (Ch 4's
+  point 6).
+
+**Discussion**
+- **Packages are how goods physically travel.** A shipment line can be spread over several
+  boxes (1146's pencils in two cartons), and one box can hold several lines (1149's three
+  lines in 53100). PACKAGING CONTENT is the link with a quantity, the same many-to-many
+  shape as ORDER SHIPMENT one level down. A package's shipment is found through its
+  contents; nothing drawn stops one box from mixing two shipments. (Ponder 1.)
+- **A receipt counts one good in one package, as it is opened:** how much was accepted, how
+  much rejected and why. It is the fact the purchase was waiting for: 1146's estimated
+  arrival says when it should come, its "received" status that it came, and its receipts
+  what was actually in the boxes. (Ponder 3.)
+- **The receipt turns a good into stock.** "Stored into" names the INVENTORY ITEM (Ch 3) the
+  accepted goods went into: the catalogue's GOOD becomes a physical instance at a facility.
+  Ch 3's quantity on hand is what receipts (and, later, issues) leave behind. (Ponder 4.)
+- **Two paths to the order line.** A receipt is "verified against and applied to" an order
+  line directly, though the long way round already exists: receipt → package → its content
+  of that good → shipment line → ORDER SHIPMENT → order line. The direct line says which
+  line this count settles; the long path says which lines it could settle. The two must
+  agree (a check). (Ponder 2.)
+- **Receipts are for incoming shipments,** as the title says: purchase shipments, customer
+  returns and, at the receiving site, transfers. What a customer signs for at its door isn't
+  our receipt. (Ponder 5.)
+- **Who received and inspected** is a scoped role, as for orders and requirements: a party
+  and a type within one receipt.
+
+### Points to discuss after the overview (Figs 5.1–5.4 so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing. The list moves under the chapter's last figure as figures arrive.
@@ -351,6 +461,35 @@ the literal drawing. The list moves under the chapter's last figure as figures a
     text's alternative). Kept as drawn: one line of black pens answers both blue orders the
     same way. On ORDER SHIPMENT, each order line could get its own answer (black for one,
     blue for the other) on one shipment line, at the cost of repeating them.
+17. **5.4, no line from SHIPMENT PACKAGE to SHIPMENT:** a package's shipment is worked out
+    from its contents' shipment lines. A package holding lines of two shipments is a
+    data-quality query (ours). If Silverston meant a package to belong to one shipment, a
+    line of its own would say it with a plain FK.
+18. **Table 5.8's "4800 (transfer)":** in Table 5.1, 4800 is a drop shipment, and Table 5.3
+    cancels it. Read as 3485, Table 5.1's transfer from ABC Corporation to ABC Subsidiary,
+    whose line we had made up as 1,000 pencils: now the table's 500, 300 accepted.
+19. **Table 5.8 replaces our own lines on 1146 and 1149:** 1146 carries 2,000 pencils, 1,000
+    pens and 1,000 boxes of diskettes; 1149 200 erasers, 200 boxes of diskettes and 100
+    pencils. Our purchase order 300 behind them is re-planned to match (four lines).
+20. **Table 5.8 prints receipt 12901 twice:** the pencils in 52001 and the pens in 52002. One
+    receipt is within one package and of one good, so the pens' is read as 12902.
+21. **Table 5.8, 1146's diskettes:** the line says 1,000 boxes, the one package shown holds
+    100. Read as a line packed in two: ours, the other 900 sit in package 52005, opened two
+    days later. If 1,000 is a misprint for 100, the line shrinks and 52005 goes.
+22. **5.4, optionality:** a receipt is within one package (mandatory); its good, inventory
+    item, order line and rejection reason are optional. ITEM DESCRIPTION is drawn mandatory
+    even with a good: kept, as what the receiver wrote on the slip.
+23. **5.4, the receipt's direct line to ORDER ITEM:** read as the line this count is checked
+    against, and checked consistent with the long path through ORDER SHIPMENT. The
+    alternative reading is that receipts settle order lines with no shipment line (goods
+    turning up unannounced), where the check would be wrong.
+24. **5.4, receipts for incoming shipments only** (the figure's title): a receipt within a
+    package of an outgoing shipment is a data-quality query (ours). Transfers count as
+    incoming at the site that receives them.
+25. **5.4, SHIPMENT RECEIPT ROLE TYPE as a lookup of its own:** the eighth role-type lookup
+    (Ch 4's point 5 and TODO's ROLE TYPE refactor).
+26. **5.4, ORDER ITEM's attributes again:** COMMENT on ORDER ITEM and ITEM DESCRIPTION on
+    PURCHASE ORDER ITEM, as Fig 4.4 drew them (Ch 4's point 6).
 
 ## Design decisions (book → SQL)
 
@@ -386,7 +525,7 @@ the literal drawing. The list moves under the chapter's last figure as figures a
 ### Fig 5.2
 - **`shipment_item` has a surrogate key and the line number** `shipment_item_seq_id`. The
   line number's uniqueness within its shipment (the bar) is a data-quality query (seed: 1149
-  has two lines numbered 1).
+  has two lines numbered 3).
 - **`product_id` references `good`,** Ch 3's subtype table, since the line lands on GOOD; a
   service can't be shipped. Nullable (point 5): an item with neither a good nor a contents
   description is a data-quality query (seed: 1578's line 2).
@@ -404,7 +543,8 @@ the literal drawing. The list moves under the chapter's last figure as figures a
   delivered, received) dated before an earlier one, or anything after a cancellation (seed:
   1146 received the day before it shipped).
 - **Seed:** Table 5.2's lines on 9000, and Table 5.5's (shared with Fig 5.3) on 9200 and 9400;
-  Table 5.3's statuses on 9000 and 4800 (read as 2001, point 8). The other lines and
+  Table 5.3's statuses on 9000 and 4800 (read as 2001, point 8); since Fig 5.4, Table 5.8's
+  lines on 1146, 1149 and 3485 (points 18–19), which replaced ours. The other lines and
   statuses are ours. New to Ch 3's catalogue: the Jones #2 pencil and the standard eraser,
   sold each; the HD diskettes are Ch 3's box of 3½-inch diskettes (1.44 MB), as Ch 4 read
   them.
@@ -431,10 +571,47 @@ the literal drawing. The list moves under the chapter's last figure as figures a
   erasers on customer shipment 9500).
 - **Seed:** Tables 5.4, 5.6 and 5.7 as orders 100 and 200 (ACME's, taken by ABC Subsidiary;
   dates and prices ours), each pen line with a blue feature line under it (point 14). Ours:
-  purchase order 300 (ABC Subsidiary buys pencils and erasers from General Goods for ABC
-  Corporation, delivered by 1146 and 1149), sales order 400 and customer shipment 9500,
-  which carry the four mistakes. New Ch 2 roles: General Goods as SUPPLIER, ABC Corporation
-  as SHIP_TO_BUYER.
+  purchase order 300 (ABC Subsidiary buys pencils, erasers, pens and diskettes from General
+  Goods for ABC Corporation; re-planned at Fig 5.4 to match Table 5.8's 1146 and 1149),
+  sales order 400 and customer shipment 9500, which carry the four mistakes. New Ch 2 roles:
+  General Goods as SUPPLIER, ABC Corporation as SHIP_TO_BUYER.
+
+### Fig 5.4
+- **`shipment_package` keeps the book's ids** (52000 …) and its `date_created`; no FK to
+  `shipment`, as drawn (point 17). A package whose contents come from two shipments is a
+  data-quality query (seed: ten of 9000's diskettes put in 1146's carton of pens, 52002).
+- **`packaging_content`: a surrogate key, the package, the shipment line and a quantity.**
+  Contents adding up to more than the line carries are a data-quality query (seed: 60
+  pencils packed for 9500's line of 50). Less is shown for review: a line may not be packed
+  yet, or not recorded box by box.
+- **`shipment_receipt` keeps the book's receipt ids.** `shipment_package_id` is `not null`;
+  `product_id` (→ `good`), `inventory_item_id`, `order_item_id` and `rejection_reason_id`
+  are nullable (point 22). `datetime_received` is a `timestamptz`; `item_description`,
+  `quantity_accepted` and `quantity_rejected` are `not null`.
+- **A receipt's good must be in its package** (data-quality query; seed: 13906, pens counted
+  in 53100, which holds none), and the package's receipts of a good may not count more than
+  it holds (data-quality query; seed: 12950, another 50 pencils out of 52001's 1,000).
+- **A rejected quantity needs a reason, and a reason needs something rejected:** a
+  data-quality query (seed: 19601, five of ACME's returned pens rejected with no reason).
+- **The two paths to the order line must agree** (point 23): the order line a receipt names
+  must be filled, through ORDER SHIPMENT, by the shipment line its package holds of that
+  good (data-quality query; seed: 12960, 1146's diskettes checked against ACME's sales line
+  of order 200).
+- **Receipts only on incoming shipments** (point 24): purchase shipments, customer returns
+  and transfers (data-quality query; seed: 15780, a receipt for our own return 1578).
+- **`shipment_receipt_role` + `shipment_receipt_role_type`** (RECEIVER, INSPECTOR), a lookup
+  of its own (point 25). The identifier (receipt, type, party) is a data-quality query
+  shared with `packaging_content`'s (seed: William as receiver of 12900 twice).
+- **`rejection_reason`** has a text key, like Ch 3's `reason`: damaged, wrong product, not
+  ordered, poor quality.
+- **Stock:** two facilities of ABC's (Ch 2), one per address, and six inventory items (Ch 3)
+  the receipts store into; their quantity on hand is what the receipts accepted, since
+  nothing is issued yet.
+- **Seed:** Table 5.8's eight receipts (12901's second read as 12902, point 20; "4800" as
+  3485, point 18), with their packages and contents. Ours: package 52005 with 1146's other
+  900 boxes of diskettes (point 21), packages for 9600, 1578 and 9500, the receipt for
+  ACME's returned pens, and the six receipts and rows that carry the mistakes. Dates,
+  descriptions, roles and stock are ours.
 
 ## When NOT to use this
 - **A shop that ships each order once, whole, to one address** can keep a ship date and a

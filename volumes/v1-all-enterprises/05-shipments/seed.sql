@@ -111,9 +111,11 @@ insert into product_category_classification (product_id, product_category_id, fr
   (20, 4, '1995-01-01', null, true, null),
   (21, 1, '1995-01-01', null, true, null);
 
--- Table 5.2 (9000) and Table 5.5 (9200, 9400; shared with Fig 5.3), then
--- ours. Goods: 2 the Goldstein Elite pen, 3 the box of 3½-inch (HD)
--- diskettes, 20 the Jones #2 pencil, 21 the standard eraser.
+-- Table 5.2 (9000), Table 5.5 (9200, 9400; shared with Fig 5.3) and Table
+-- 5.8 (1146, 1149, 3485; shared with Fig 5.4, which replaced our own lines:
+-- NOTES, points 18-19), then ours. Ids 21-24 are 9500's (Fig 5.3). Goods: 2
+-- the Goldstein Elite pen, 3 the box of 3½-inch (HD) diskettes, 20 the Jones
+-- #2 pencil, 21 the standard eraser.
 insert into shipment_item (shipment_item_id, shipment_id, shipment_item_seq_id, product_id, quantity,
                            shipment_contents_description, in_response_to_shipment_item_id) values
   (1,  9000, 1, 20,   1000, null, null),
@@ -123,12 +125,16 @@ insert into shipment_item (shipment_item_id, shipment_id, shipment_item_seq_id, 
   (5,  9200, 2, 3,    100,  null, null),
   (6,  9200, 3, 20,   1500, null, null),   -- Table 5.5 as read; no order line in Table 5.6 claims it (NOTES, point 13)
   (7,  9400, 1, 20,   500,  null, null),
-  (8,  1146, 1, 20,   1200, null, null),   -- ours from here
-  (9,  1149, 1, 20,   800,  null, null),
-  (10, 1149, 1, 21,   500,  null, null),   -- DATA ERROR: a second line 1 on the shipment (caught by a query)
+  (8,  1146, 1, 20,   2000, null, null),   -- Table 5.8
+  (17, 1146, 2, 2,    1000, null, null),
+  (18, 1146, 3, 3,    1000, null, null),   -- one package of 100 shown (NOTES, point 21)
+  (9,  1149, 1, 21,   200,  null, null),
+  (10, 1149, 2, 3,    200,  null, null),
+  (19, 1149, 3, 20,   100,  null, null),
+  (13, 3485, 1, 20,   500,  null, null),   -- Table 5.8's "4800 (transfer)" (NOTES, point 18)
+  (20, 1149, 3, 2,    50,   null, null),   -- ours from here. DATA ERROR: a second line 3 on the shipment (caught by a query)
   (11, 1578, 1, 20,   100,  null, 8),      -- water-damaged pencils sent back from 1146
   (12, 1578, 2, null, 5,    null, null),   -- DATA ERROR: no good and no description (caught by a query)
-  (13, 3485, 1, 20,   1000, null, null),   -- stock moved to the subsidiary that ships to ACME
   (14, 4800, 1, null, 12,   'Promotional display stands', null),   -- not a catalogue good
   (15, 9600, 1, 2,    50,   null, 2),      -- ACME returns 50 of 9000's pens (the wrong colour: Fig 5.3)
   (16, 9600, 2, 2,    10,   null, 15);     -- DATA ERROR: answers a line of its own shipment (caught by a query)
@@ -222,8 +228,10 @@ insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, 
   (39, 200, 1, 2,    null, null, 300,  12.00, null),
   (40, 200, 2, 3,    null, null, 200,  7.00,  null),
   (41, 200, 3, null, 3,    39,   300,  0.00,  'Blue: Table 5.7'),
-  (42, 300, 1, 20,   null, null, 2000, 0.10,  null),
-  (43, 300, 2, 21,   null, null, 500,  0.20,  null),
+  (42, 300, 1, 20,   null, null, 2100, 0.10,  'On 1146 and 1149 (Table 5.8)'),
+  (43, 300, 2, 21,   null, null, 200,  0.20,  null),
+  (47, 300, 3, 2,    null, null, 1000, 1.20,  null),
+  (48, 300, 4, 3,    null, null, 1200, 4.00,  'On 1146 and 1149 (Table 5.8)'),
   (44, 400, 1, 21,   null, null, 200,  0.40,  null),
   (45, 400, 2, 20,   null, null, 100,  0.25,  'For ACME''s delivery address, not its head office'),
   (46, 400, 3, 3,    null, null, 50,   7.00,  null);
@@ -239,7 +247,9 @@ insert into sales_order_item (order_item_id, ship_to_party_role_id, ship_to_cont
 
 insert into purchase_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
   (42, 75, 33),
-  (43, 75, 33);
+  (43, 75, 33),
+  (47, 75, 33),
+  (48, 75, 33);
 
 -- Ours: customer shipment 9500 to ACME, the one carrying the mistakes below.
 insert into shipment (shipment_id, shipment_type_id, estimated_ship_date, estimated_arrival_date,
@@ -248,10 +258,10 @@ insert into shipment (shipment_id, shipment_type_id, estimated_ship_date, estima
   (9500, 'CUSTOMER_SHIPMENT', '2001-03-28', '2001-03-30', 13, 40, 16, 32, 44);
 
 insert into shipment_item (shipment_item_id, shipment_id, shipment_item_seq_id, product_id, quantity) values
-  (17, 9500, 1, 21, 150),
-  (18, 9500, 2, 20, 100),
-  (19, 9500, 3, 20, 50),
-  (20, 9500, 4, 21, 60);
+  (21, 9500, 1, 21, 150),
+  (22, 9500, 2, 20, 100),
+  (23, 9500, 3, 20, 50),
+  (24, 9500, 4, 21, 60);
 
 select setval(pg_get_serial_sequence('shipment_item', 'shipment_item_id'), (select max(shipment_item_id) from shipment_item));
 
@@ -262,8 +272,9 @@ insert into shipment_status (shipment_status_id, shipment_id, status_type_id, st
 select setval(pg_get_serial_sequence('shipment_status', 'shipment_status_id'), (select max(shipment_status_id) from shipment_status));
 
 -- Table 5.6, then ours. Order lines: 35-37 order 100, 39-40 order 200, 42-43
--- purchase order 300, 44-46 order 400. Shipment lines: 1-3 on 9000, 4-6 on
--- 9200, 7 on 9400, 8 on 1146, 9-10 on 1149, 17-20 on 9500.
+-- and 47-48 purchase order 300, 44-46 order 400. Shipment lines: 1-3 on
+-- 9000, 4-6 on 9200, 7 on 9400, 8, 17-18 on 1146, 9-10 and 19 on 1149, 21-24
+-- on 9500.
 insert into order_shipment (order_shipment_id, order_item_id, shipment_item_id, quantity) values
   (1,  35, 1,  1000),   -- order 100's pencils, part one ...
   (2,  35, 7,  500),    --   ... and the rest, on 9400
@@ -272,13 +283,16 @@ insert into order_shipment (order_shipment_id, order_item_id, shipment_item_id, 
   (5,  39, 2,  300),    --   ... and order 200 at once
   (6,  40, 3,  100),
   (7,  40, 5,  100),
-  (8,  42, 8,  1200),   -- ours from here: purchase order 300 delivered in two
-  (9,  42, 9,  800),
-  (10, 43, 10, 500),
-  (11, 44, 17, 200),    -- DATA ERROR: 200 drawn on a line of 150 erasers (caught by a query)
-  (12, 45, 18, 100),    -- DATA ERROR: the line ships to 2300 Drident Avenue, 9500 goes to 234 Stretch Street (caught by a query)
-  (13, 46, 19, 50),     -- DATA ERROR: diskettes filled by a line of pencils (caught by a query)
-  (14, 43, 20, 60);     -- DATA ERROR: a purchase line filled by a customer shipment (caught by two queries: direction and destination)
+  (8,  42, 8,  2000),   -- ours from here: purchase order 300 on Table 5.8's 1146 and 1149
+  (9,  42, 19, 100),
+  (10, 43, 9,  200),
+  (15, 47, 17, 1000),
+  (16, 48, 18, 1000),
+  (17, 48, 10, 200),
+  (11, 44, 21, 200),    -- DATA ERROR: 200 drawn on a line of 150 erasers (caught by a query)
+  (12, 45, 22, 100),    -- DATA ERROR: the line ships to 2300 Drident Avenue, 9500 goes to 234 Stretch Street (caught by a query)
+  (13, 46, 23, 50),     -- DATA ERROR: diskettes filled by a line of pencils (caught by a query)
+  (14, 43, 24, 60);     -- DATA ERROR: a purchase line filled by a customer shipment (caught by two queries: direction and destination)
 
 select setval(pg_get_serial_sequence('order_shipment', 'order_shipment_id'), (select max(order_shipment_id) from order_shipment));
 
@@ -288,3 +302,116 @@ insert into shipment_item_feature (shipment_item_feature_id, shipment_item_id, p
   (2, 2, 4);   -- DATA ERROR: the same feature twice on the line (caught by a query)
 
 select setval(pg_get_serial_sequence('shipment_item_feature', 'shipment_item_feature_id'), (select max(shipment_item_feature_id) from shipment_item_feature));
+
+-- ============================================================
+-- Fig 5.4 — Shipment receipt for incoming shipments
+-- ============================================================
+-- Where received goods go: a warehouse at each of ABC's addresses (Ch 2's
+-- facilities; 33 100 Main Street, 40 300 Main Street).
+insert into facility (facility_id, facility_type_id, part_of_facility_id, description, square_footage) values
+  (11, 'WAREHOUSE', null, 'ABC Corporation warehouse, 100 Main Street', 30000),
+  (12, 'WAREHOUSE', null, 'ABC Subsidiary warehouse, 300 Main Street',  12000);
+
+select setval(pg_get_serial_sequence('facility', 'facility_id'), (select max(facility_id) from facility));
+
+insert into facility_contact_mechanism (facility_id, contact_mechanism_id, from_date, thru_date) values
+  (11, 33, '1998-03-04', null),
+  (12, 40, '1999-01-01', null);
+
+-- The stock the receipts store into (Ch 3). Quantity on hand = what the
+-- receipts accepted; nothing is issued yet (the next figure's job).
+insert into inventory_item (inventory_item_id, inventory_item_kind, product_id, inventory_item_status_type_id, lot_id, facility_id, container_id, serial_num, quantity_on_hand) values
+  (10, 'NON_SERIALIZED', 20, 'GOOD', null, 11, null, null, 2100),   -- pencils at ABC Corporation
+  (11, 'NON_SERIALIZED', 2,  'GOOD', null, 11, null, null, 1000),   -- pens
+  (12, 'NON_SERIALIZED', 3,  'GOOD', null, 11, null, null, 1200),   -- diskettes
+  (13, 'NON_SERIALIZED', 21, 'GOOD', null, 11, null, null, 200),    -- erasers
+  (14, 'NON_SERIALIZED', 20, 'GOOD', null, 12, null, null, 300),    -- pencils at ABC Subsidiary, from the transfer
+  (15, 'NON_SERIALIZED', 2,  'GOOD', null, 12, null, null, 40);     -- ACME's returned pens
+
+select setval(pg_get_serial_sequence('inventory_item', 'inventory_item_id'), (select max(inventory_item_id) from inventory_item));
+
+-- Table 5.8's packages, then ours (52005 and the 59xxx and 51578 ones). The
+-- dates are ours: the day each was packed.
+insert into shipment_package (shipment_package_id, date_created) values
+  (52000, '2001-03-19'),
+  (52001, '2001-03-19'),
+  (52002, '2001-03-19'),
+  (52003, '2001-03-19'),
+  (52005, '2001-03-19'),   -- ours: the rest of 1146's diskettes (NOTES, point 21)
+  (53100, '2001-03-25'),
+  (52004, '2001-06-23'),   -- Table 5.8's "4800 (transfer)", read as 3485 (point 18)
+  (59600, '2001-03-16'),   -- ACME's returned pens
+  (51578, '2001-04-09'),   -- our return to General Goods
+  (59500, '2001-03-28');
+
+select setval(pg_get_serial_sequence('shipment_package', 'shipment_package_id'), (select max(shipment_package_id) from shipment_package));
+
+-- Shipment lines: 8, 17, 18 on 1146; 9, 10, 19 on 1149; 13 on 3485; 15 on
+-- 9600; 11 on 1578; 22, 23 on 9500; 3 on 9000.
+insert into packaging_content (packaging_content_id, shipment_package_id, shipment_item_id, quantity) values
+  (1,  52000, 8,  1000),   -- Table 5.8: 1146's pencils in two cartons
+  (2,  52001, 8,  1000),
+  (3,  52002, 17, 1000),
+  (4,  52003, 18, 100),
+  (5,  52005, 18, 900),    -- ours
+  (6,  53100, 9,  200),    -- 1149's three lines in one package
+  (7,  53100, 10, 200),
+  (8,  53100, 19, 100),
+  (9,  52004, 13, 500),
+  (10, 59600, 15, 50),     -- ours from here
+  (11, 51578, 11, 100),
+  (12, 59500, 22, 100),
+  (13, 59500, 23, 60),     -- DATA ERROR: 60 packed for a line of 50 (caught by a query)
+  (14, 52002, 3,  10);     -- DATA ERROR: ten of 9000's diskettes in 1146's carton of pens (caught by a query)
+
+select setval(pg_get_serial_sequence('packaging_content', 'packaging_content_id'), (select max(packaging_content_id) from packaging_content));
+
+insert into rejection_reason (rejection_reason_id, description) values
+  ('DAMAGED',       'Damaged in transit'),
+  ('WRONG_PRODUCT', 'Not the product ordered'),
+  ('NOT_ORDERED',   'More than was ordered'),
+  ('POOR_QUALITY',  'Below the agreed quality');
+
+-- Table 5.8's receipts (the pens' 12901 read as 12902: point 20), then ours.
+-- Order lines (purchase order 300): 42 pencils, 43 erasers, 47 pens, 48
+-- diskettes; 40 is ACME's diskettes on sales order 200. Inventory items
+-- 10-15 above. Times and descriptions are ours.
+insert into shipment_receipt (shipment_receipt_id, shipment_package_id, product_id, inventory_item_id, order_item_id, rejection_reason_id,
+                              datetime_received, item_description, quantity_accepted, quantity_rejected) values
+  (12900, 52000, 20, 10,   42,   null,      '2001-03-20 10:00+00', 'Jones #2 pencils, carton of 1,000',           1000, 0),
+  (12901, 52001, 20, 10,   42,   null,      '2001-03-20 10:20+00', 'Jones #2 pencils, carton of 1,000',           1000, 0),
+  (12902, 52002, 2,  11,   47,   null,      '2001-03-20 10:40+00', 'Goldstein Elite pens, carton of 1,000',       1000, 0),
+  (13902, 52003, 3,  12,   48,   null,      '2001-03-20 11:00+00', 'HD diskettes, 100 boxes',                     100,  0),
+  (13903, 53100, 21, 13,   43,   null,      '2001-03-31 09:00+00', 'Standard erasers',                            200,  0),
+  (13904, 53100, 3,  12,   48,   null,      '2001-03-31 09:10+00', 'HD diskettes, 200 boxes',                     200,  0),
+  (13905, 53100, 20, 10,   42,   null,      '2001-03-31 09:20+00', 'Jones #2 pencils',                            100,  0),
+  (13804, 52004, 20, 14,   null, 'DAMAGED', '2001-06-25 10:00+00', 'Jones #2 pencils from ABC Corporation',       300,  200),   -- no order behind a transfer
+  (19600, 59600, 2,  15,   null, 'DAMAGED', '2001-03-19 10:00+00', 'Goldstein Elite pens returned by ACME, black', 40,   5),     -- ours from here
+  (19601, 59600, 2,  null, null, null,      '2001-03-19 10:30+00', 'Goldstein Elite pens returned by ACME',       0,    5),     -- DATA ERROR: five rejected with no reason (caught by a query)
+  (12950, 52001, 20, 10,   42,   null,      '2001-03-20 12:00+00', 'Jones #2 pencils',                            50,   0),     -- DATA ERROR: 1,050 counted out of a carton of 1,000 (caught by a query)
+  (13906, 53100, 2,  null, null, null,      '2001-03-31 09:30+00', 'Pens found in the mixed package',             10,   0),     -- DATA ERROR: 53100 holds no pens (caught by a query)
+  (12960, 52005, 3,  12,   40,   null,      '2001-03-22 09:00+00', 'HD diskettes, 900 boxes',                     900,  0),     -- DATA ERROR: checked against ACME's sales line, which 1146 doesn't fill (caught by a query)
+  (15780, 51578, 20, null, null, null,      '2001-04-12 15:00+00', 'Jones #2 pencils',                            100,  0);     -- DATA ERROR: a receipt for our own return to General Goods (caught by a query)
+
+select setval(pg_get_serial_sequence('shipment_receipt', 'shipment_receipt_id'), (select max(shipment_receipt_id) from shipment_receipt));
+
+insert into shipment_receipt_role_type (shipment_receipt_role_type_id, description) values
+  ('RECEIVER',  'Signed for the goods'),
+  ('INSPECTOR', 'Inspected the goods and decided what to accept');
+
+-- Parties: 47 William Jones (ABC Corporation's employee), 13 ABC Subsidiary.
+insert into shipment_receipt_role (shipment_receipt_role_id, shipment_receipt_id, party_id, shipment_receipt_role_type_id) values
+  (1,  12900, 47, 'RECEIVER'),
+  (2,  12900, 47, 'RECEIVER'),    -- DATA ERROR: the same party in the same role twice (caught by a query)
+  (3,  12901, 47, 'RECEIVER'),
+  (4,  12902, 47, 'RECEIVER'),
+  (5,  13902, 47, 'RECEIVER'),
+  (6,  13903, 47, 'RECEIVER'),
+  (7,  13904, 47, 'RECEIVER'),
+  (8,  13905, 47, 'RECEIVER'),
+  (9,  13804, 13, 'RECEIVER'),
+  (10, 13804, 13, 'INSPECTOR'),
+  (11, 19600, 13, 'RECEIVER'),
+  (12, 19600, 13, 'INSPECTOR');
+
+select setval(pg_get_serial_sequence('shipment_receipt_role', 'shipment_receipt_role_id'), (select max(shipment_receipt_role_id) from shipment_receipt_role));

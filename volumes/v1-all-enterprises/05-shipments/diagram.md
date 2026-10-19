@@ -53,4 +53,24 @@ erDiagram
   SHIPMENT_ITEM             ||--o{ ORDER_SHIPMENT        : "the shipment of"
   SHIPMENT_ITEM             ||--o{ SHIPMENT_ITEM_FEATURE : "shipped with"
   PRODUCT_FEATURE           ||--o{ SHIPMENT_ITEM_FEATURE : "shipped via (Ch 3)"
+
+  %% Fig 5.4 — Shipment receipt for incoming shipments (no line from package to shipment)
+  SHIPMENT_RECEIPT {
+    int         shipment_receipt_id PK
+    int         shipment_package_id FK
+    int         product_id FK "a good, or null"
+    timestamptz datetime_received
+    numeric     quantity_accepted
+    numeric     quantity_rejected
+  }
+  SHIPMENT_PACKAGE           ||--o{ PACKAGING_CONTENT     : "composed of"
+  SHIPMENT_ITEM              ||--o{ PACKAGING_CONTENT     : "packaged within"
+  SHIPMENT_PACKAGE           ||--o{ SHIPMENT_RECEIPT      : "consisting of"
+  GOOD                       |o--o{ SHIPMENT_RECEIPT      : "the description for (Ch 3)"
+  INVENTORY_ITEM             |o--o{ SHIPMENT_RECEIPT      : "the destination for (Ch 3)"
+  ORDER_ITEM                 |o--o{ SHIPMENT_RECEIPT      : "accounted for via (Ch 4)"
+  REJECTION_REASON           |o--o{ SHIPMENT_RECEIPT      : "the reason for rejection of"
+  SHIPMENT_RECEIPT           ||--o{ SHIPMENT_RECEIPT_ROLE : "involving"
+  PARTY                      ||--o{ SHIPMENT_RECEIPT_ROLE : "involved in (Ch 2)"
+  SHIPMENT_RECEIPT_ROLE_TYPE ||--o{ SHIPMENT_RECEIPT_ROLE : "the description for"
 ```
