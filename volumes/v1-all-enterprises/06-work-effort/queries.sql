@@ -574,3 +574,80 @@ join party_role r         on r.party_role_id = ts.party_role_id
 join party_display_name n on n.party_id = tr.party_id
 where tr.timesheet_role_type_id = 'APPROVER'
   and tr.party_id = r.party_id;
+
+-- ============================================================
+-- Fig 6.7 — Work effort rates
+-- ============================================================
+-- name: 6.7 — Rates in force for each assignment on two days, by type (May 14 and 21, 2001)
+select d.as_of, n.name, we.name as effort, r.rate_type_id, r.rate
+from (values (date '2001-05-14'), (date '2001-05-21')) d (as_of)
+join work_effort_assignment_rate r   on r.from_date <= d.as_of and (r.thru_date is null or r.thru_date > d.as_of)
+join work_effort_party_assignment a  on a.work_effort_party_assignment_id = r.work_effort_party_assignment_id
+join work_effort we                  on we.work_effort_id = a.work_effort_id
+join party_display_name n            on n.party_id = a.party_id
+order by d.as_of, n.name, r.rate_type_id, r.rate;
+
+-- name: 6.7 — What each time entry costs and bills: hours × the regular rate in force that day, the assignment's rate first, else the party's (NOTES, point 29)
+with entry as (
+  select te.time_entry_id, te.work_effort_id, r.party_id, te.from_datetime::date as day, te.hours
+  from time_entry te
+  join timesheet ts  on ts.timesheet_id = te.timesheet_id
+  join party_role r  on r.party_role_id = ts.party_role_id
+),
+rate_on (time_entry_id, rate_type_id, rate, level) as (
+  select e.time_entry_id, ar.rate_type_id, ar.rate, 'assignment'
+  from entry e
+  join work_effort_party_assignment a on a.work_effort_id = e.work_effort_id and a.party_id = e.party_id
+                                     and a.from_date <= e.day and (a.thru_date is null or a.thru_date > e.day)
+  join work_effort_assignment_rate ar on ar.work_effort_party_assignment_id = a.work_effort_party_assignment_id
+                                     and ar.from_date <= e.day and (ar.thru_date is null or ar.thru_date > e.day)
+  union all
+  select e.time_entry_id, pr.rate_type_id, pr.rate, 'party'
+  from entry e
+  join party_rate pr on pr.party_id = e.party_id
+                    and pr.from_date <= e.day and (pr.thru_date is null or pr.thru_date > e.day)
+),
+best as (
+  select distinct on (time_entry_id, rate_type_id) time_entry_id, rate_type_id, rate, level
+  from rate_on
+  order by time_entry_id, rate_type_id, case level when 'assignment' then 1 else 2 end, rate desc
+)
+select e.time_entry_id, n.name, e.day, e.hours,
+       p.rate as pay_rate, p.level as pay_from, e.hours * p.rate as cost,
+       b.rate as billing_rate, b.level as billing_from, e.hours * b.rate as billed
+from entry e
+join party_display_name n on n.party_id = e.party_id
+left join best p on p.time_entry_id = e.time_entry_id and p.rate_type_id = 'REGULAR_PAY'
+left join best b on b.time_entry_id = e.time_entry_id and b.rate_type_id = 'REGULAR_BILLING'
+where exists (select 1 from rate_on ro where ro.time_entry_id = e.time_entry_id)
+order by e.day;
+
+-- name: 6.7 — Standard rates by kind of position, in force today
+select pt.description as position_type, ptr.rate_type_id, ptr.rate, ptr.from_date
+from position_type_rate ptr
+join position_type pt on pt.position_type_id = ptr.position_type_id
+where ptr.from_date <= current_date and (ptr.thru_date is null or ptr.thru_date > current_date)
+order by pt.description, ptr.rate_type_id;
+
+-- name: 6.7 — Data-quality check: two rates of the same type in force at once for the same position type, party or assignment (should be empty)
+with rate (level, owner, rate_type_id, id, from_date, thru_date) as (
+  select 'position type', position_type_id, rate_type_id, position_type_rate_id, from_date, thru_date from position_type_rate
+  union all
+  select 'party', party_id::text, rate_type_id, party_rate_id, from_date, thru_date from party_rate
+  union all
+  select 'assignment', work_effort_party_assignment_id::text, rate_type_id, work_effort_assignment_rate_id, from_date, thru_date from work_effort_assignment_rate
+)
+select a.level, a.owner, a.rate_type_id, a.from_date, a.thru_date, b.from_date as other_from, b.thru_date as other_thru
+from rate a
+join rate b on b.level = a.level and b.owner = a.owner and b.rate_type_id = a.rate_type_id and b.id > a.id
+where a.from_date < coalesce(b.thru_date, 'infinity') and b.from_date < coalesce(a.thru_date, 'infinity')
+order by a.level, a.owner, a.rate_type_id, a.from_date;
+
+-- name: 6.7 — Data-quality check: assignment rates outside their assignment's dates (should be empty)
+select ar.work_effort_assignment_rate_id, n.name, ar.rate_type_id, ar.from_date, ar.thru_date,
+       a.from_date as assigned_from, a.thru_date as assigned_thru
+from work_effort_assignment_rate ar
+join work_effort_party_assignment a on a.work_effort_party_assignment_id = ar.work_effort_party_assignment_id
+join party_display_name n           on n.party_id = a.party_id
+where ar.from_date < a.from_date
+   or (a.thru_date is not null and coalesce(ar.thru_date, 'infinity') > a.thru_date);

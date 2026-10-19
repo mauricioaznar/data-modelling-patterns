@@ -86,6 +86,15 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 4. **[6.6]** Why have TIMESHEET at all? Say what you lose if TIME ENTRY points straight at
    the party role and the timesheet disappears.
 
+### Submodel 5: work effort rates
+1. **[6.7]** Table 6.11 hangs Gary Smith's rates on his assignment, not on him. What does an
+   `hourly_rate` column on PERSON lose? Name two rows of Table 6.11 it can't hold.
+2. **[6.7]** A rate can sit on a position type, a party or an assignment. For Gary Smith's
+   May 21, 2001 hours, which billing rate applies, and why doesn't the model itself say so?
+   Where does that rule live?
+3. **[6.7]** After his raise, Gary Smith's overtime pay equals his regular pay. Why record
+   an overtime rate at all instead of leaving it out?
+
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
 notation (entities, key attributes, relationships and cardinality). Then diff it against

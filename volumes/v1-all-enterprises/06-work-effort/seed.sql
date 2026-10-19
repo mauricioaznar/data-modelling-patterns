@@ -471,3 +471,80 @@ insert into timesheet_role (timesheet_id, party_id, timesheet_role_type_id) valu
   (1200, 56, 'APPROVER'),
   (1450, 56, 'APPROVER'),
   (1390, 56, 'APPROVER');   -- DATA ERROR: Dick Jones approves his own timesheet
+
+-- ============================================================
+-- Fig 6.7 — Work effort rates
+-- ============================================================
+-- Gary Smith, a programmer at ABC Manufacturing, and the accounting
+-- program he develops: all ours but his name and the task (NOTES, point 30).
+insert into party (party_id, party_kind) values
+  (60, 'PERSON');
+
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into person (party_id, gender_type_id) values
+  (60, 'MALE');
+
+insert into person_name (party_id, person_name_type_id, from_date, thru_date, name) values
+  (60, 'FIRST', '1995-01-01', null, 'Gary'),
+  (60, 'LAST',  '1995-01-01', null, 'Smith');
+
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (83, 60, 'EMPLOYEE', '1998-03-01', null);
+
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+insert into work_effort (work_effort_id, work_effort_type_id, facility_id, name, description, scheduled_start_date, scheduled_completion_date) values
+  (40100, 'PROJECT', 16, 'Develop accounting program', 'Develop the in-house accounting program', '2000-05-15', '2001-12-31');
+
+select setval(pg_get_serial_sequence('work_effort', 'work_effort_id'), (select max(work_effort_id) from work_effort));
+
+insert into work_effort_party_assignment (work_effort_party_assignment_id, work_effort_id, party_id, work_effort_role_type_id, from_date, thru_date) values
+  (100, 40100, 60, 'PERFORMER', '2000-05-15', null);
+
+select setval(pg_get_serial_sequence('work_effort_party_assignment', 'work_effort_party_assignment_id'),
+              (select max(work_effort_party_assignment_id) from work_effort_party_assignment));
+
+insert into rate_type (rate_type_id, description) values
+  ('REGULAR_BILLING',  'Regular billing'),
+  ('OVERTIME_BILLING', 'Overtime billing'),
+  ('REGULAR_PAY',      'Regular pay'),
+  ('OVERTIME_PAY',     'Overtime pay');
+
+-- Table 6.11, thru dates +1 day (exclusive).
+insert into work_effort_assignment_rate (work_effort_party_assignment_id, rate_type_id, from_date, thru_date, rate) values
+  (100, 'REGULAR_BILLING',  '2000-05-15', '2001-05-15', 65.00),
+  (100, 'OVERTIME_BILLING', '2000-05-15', '2001-05-15', 70.00),
+  (100, 'REGULAR_PAY',      '2000-05-15', '2001-05-15', 40.00),
+  (100, 'OVERTIME_PAY',     '2000-05-15', '2001-05-15', 43.00),
+  (100, 'REGULAR_PAY',      '2001-05-15', null,         45.00),
+  (100, 'OVERTIME_PAY',     '2001-05-15', null,         45.00),   -- overtime no dearer than regular: payroll unchanged
+  -- ours, each with one mistake
+  (100, 'OVERTIME_PAY',     '2001-05-01', '2001-06-01', 44.00),   -- DATA ERROR: overlaps both overtime pay rates
+  (100, 'REGULAR_BILLING',  '2000-04-01', '2000-05-15', 60.00);   -- DATA ERROR: before the assignment starts
+
+-- Ours: standard rates for kinds of position, and party rates that hold
+-- wherever the party works.
+insert into position_type (position_type_id, description) values
+  ('PROGRAMMER',        'Programmer'),
+  ('SENIOR_PROGRAMMER', 'Senior programmer'),
+  ('PROJECT_MANAGER',   'Project manager');
+
+insert into position_type_rate (position_type_id, rate_type_id, from_date, thru_date, rate) values
+  ('PROGRAMMER',        'REGULAR_PAY',     '2000-01-01', null, 35.00),
+  ('PROGRAMMER',        'REGULAR_BILLING', '2000-01-01', null, 55.00),
+  ('SENIOR_PROGRAMMER', 'REGULAR_PAY',     '2000-01-01', null, 42.00),
+  ('PROJECT_MANAGER',   'REGULAR_BILLING', '2000-01-01', null, 90.00);
+
+insert into party_rate (party_id, rate_type_id, from_date, thru_date, rate) values
+  (60, 'REGULAR_BILLING', '2000-01-01', null, 60.00),    -- Gary Smith on any job
+  (59, 'REGULAR_BILLING', '2001-01-01', null, 150.00);   -- USA Consulting's fee
+
+-- Gary Smith's May 2001 time, across the raise (ours).
+insert into timesheet (timesheet_id, party_role_id, from_date, thru_date) values
+  (1600, 83, '2001-05-01', '2001-06-01');
+
+insert into time_entry (timesheet_id, work_effort_id, from_datetime, thru_datetime, hours) values
+  (1600, 40100, '2001-05-07', '2001-05-08', 8),
+  (1600, 40100, '2001-05-14', '2001-05-15', 10),
+  (1600, 40100, '2001-05-21', '2001-05-22', 8);

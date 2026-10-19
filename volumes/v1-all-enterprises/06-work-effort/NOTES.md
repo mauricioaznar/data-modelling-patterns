@@ -13,7 +13,7 @@ the work actually planned and done. Associative entities join the two, and join 
 order lines. The recurring moves: need versus fulfilment (Ch 4's requirement and order),
 many-to-many fulfilment links, and two independent subtype sets, each held as a type lookup.
 
-## Submodels (proposed 2026-10-19, Figs 6.1–6.6 shared so far)
+## Submodels (proposed 2026-10-19, all figures shared; Fig 6.13 is the architecture)
 1. **Work requirements and their roles** (Figs 6.1–6.2): what work is needed, of which type
    (a production run, maintenance, an internal project), to produce which product or
    deliverable, or to work on which machine; who created it, for whom, who is responsible for
@@ -32,6 +32,20 @@ many-to-many fulfilment links, and two independent subtype sets, each held as a 
    role, where and for which dates; what each party is skilled at; what state the work is in
    and since when; how many hours each worker spent on which effort, gathered on timesheets
    per period, and who else is involved in each timesheet?
+
+5. **Work effort rates** (Fig 6.7): what does an hour of this person on this job cost us,
+   and what do we bill for it, regular or overtime, on a given day? What is the standard
+   rate for a kind of position, or for a party wherever they work?
+
+6. **Inventory and fixed asset assignments** (Figs 6.8–6.10): which stock a job used up, and
+   how much; which machines, vehicles and tools a job uses and when, in what state and at
+   what cost; what kinds of asset there are; who has which asset checked out, and is it
+   still active or lost?
+
+7. **Work effort standards and results** (Figs 6.11–6.12): for a kind of work, what does it
+   usually break into, and how many people of which skill, how many of which goods, and
+   which kinds of asset for how long does it need? What does it normally produce or repair?
+   And what did each actual effort produce (stock, deliverables) or repair?
 
 ## Figures
 
@@ -538,7 +552,412 @@ entry from–thru · hours)
   effort, separately. Whether someone logged time on work they weren't assigned to is a
   question for a query, and Table 6.10 already answers yes (point 24).
 
-### Points to discuss after the overview (Figs 6.1–6.6)
+### Fig 6.7 — Work effort rates
+**Transcription** (accepted: ☐; photos with Table 6.11)
+
+```
+POSITION TYPE RATE
+  # from_date
+  o thru_date
+  o rate
+  -> POSITION TYPE             (many "for" 1; type "with a rate of" many; key)
+  -> RATE TYPE                 (many "of" 1; type "used to define" many; key)
+
+PARTY RATE
+  # from_date
+  o thru_date
+  o rate
+  -> PARTY                     (many "for" 1; party "with a rate of" many; key)
+  -> RATE TYPE                 (many "of" 1; type "used to define" many; key)
+
+WORK EFFORT ASSIGNMENT RATE
+  # from_date
+  o thru_date
+  o rate
+  -> WORK EFFORT PARTY ASSIGNMENT (many 1; the assignment "with a rate of" many; key)
+  -> RATE TYPE                 (many "associated with" 1; type "used to define" many; key)
+
+RATE TYPE
+  # rate_type_id
+  * description
+
+POSITION TYPE
+  # position_type_id
+  * description
+
+WORK EFFORT PARTY ASSIGNMENT
+  # from_date
+  * thru_date                  (starred, as in 6.6)
+  o comment
+  -> PARTY                     ("the assignment of" / "allocated via")
+  -> WORK EFFORT               ("for" / "assigned via")
+
+PARTY (with PERSON, ORGANIZATION); WORK EFFORT (6.3a's attributes)
+```
+
+**Table 6.11, rates** (work task · party · rate type · from · thru · rate)
+- Develop accounting program · Gary Smith · regular billing · May 15, 2000–May 14, 2001 · $65
+- same · overtime billing · same dates · $70
+- same · regular pay · same dates · $40
+- same · overtime pay · same dates · $43
+- same · regular pay · from May 15, 2001 · $45
+- same · overtime pay · from May 15, 2001 · $45
+
+**To check against the book**
+- The line from WORK EFFORT ASSIGNMENT RATE to the assignment is labelled "with a rate of"
+  at both ends in the photo; read as the rate "for" the assignment.
+- Table 6.11's header says "work task" and "party": read as Gary Smith's assignment to the
+  task, the only place an assignment rate can hang.
+- No unit on any rate: read as dollars an hour, since the text multiplies it by time entry
+  hours.
+
+**Discussion**
+- **Hours become money only through a rate.** A time entry has hours, not dollars. To bill a
+  client or pay a worker you multiply the hours by the rate in force on the day, of the right
+  kind (regular or overtime, billing or pay). The naive model puts `hourly_rate` on the
+  person: one number, so billing and pay can't differ, and a raise rewrites last year's
+  invoices.
+- **Three levels, from general to specific.** A standard rate for a kind of position (all
+  senior programmers), a rate for a party wherever they work, and a rate for one assignment.
+  Each is dated and typed by RATE TYPE. The model stores all three; which one wins is a
+  business rule outside it (the text says so). The usual rule is that the most specific wins.
+- **Rate type, not columns.** Regular, overtime, billing and pay are rows of RATE TYPE, so a
+  holiday rate or a weekend rate is a new row, not a new column.
+- **Overtime equal to regular.** After the raise, overtime pay is $45, the same as regular.
+  Storing it anyway keeps the payroll process unchanged: it still looks up an overtime rate,
+  which happens to be no higher.
+
+### Fig 6.8 — Inventory assignments
+**Transcription** (accepted: ☐; photos with Table 6.12)
+
+```
+WORK EFFORT INVENTORY ASSIGNMENT
+  o quantity
+  -> INVENTORY ITEM            (many "the use of" 1; item "used in" many; key)
+  -> WORK EFFORT               (many "used in the completion of" 1; effort "in need of" many; key)
+
+INVENTORY ITEM
+  # inventory_item_id
+  subtypes SERIALIZED INVENTORY ITEM (* serial_num), NON SERIALIZED INVENTORY ITEM
+           (* quantity_on_hand)
+
+WORK EFFORT (6.3a's attributes)
+```
+
+**Table 6.12, inventory used** (effort · item · quantity)
+- Assemble pencil components · pencil cartridges · 100
+- Assemble pencil components · erasers · 100
+- Assemble pencil components · labels · 100
+
+**To check against the book**
+- The key is the item and the effort alone: one row per item per effort, with a single
+  quantity.
+- Quantity is drawn optional; a serialized item has no quantity to give.
+
+**Discussion**
+- **Work consumes stock.** A job takes physical stock (Ch 3's inventory items) and uses it
+  up. The link says which stock and how much. The naive model puts a `materials` text on the
+  job, which no stock count can use.
+- **Item, not good.** The link points at the inventory item (these 100 cartridges on that
+  shelf), not at the catalogue good. The plan side (Fig 6.11) points at the good.
+- **Depletion is a process, not a line.** The text says the business must lower the item's
+  quantity on hand when a job uses it; the model doesn't do it by itself. Ch 5's balance (count
+  + receipts − issuances) now gets a fourth term: what work efforts used, and Fig 6.12 adds a
+  fifth, what they produced.
+
+### Fig 6.9 — Fixed asset assignments
+**Transcription** (accepted: ☐; photos with Tables 6.13–6.15)
+
+```
+WORK EFFORT FIXED ASSET ASSIGNMENT
+  * from_date                  (a star, not a hash: not in the key as drawn)
+  o thru_date
+  o allocated_cost
+  o comment
+  -> FIXED ASSET               (many "a usage of" 1; asset "used in" many; key)
+  -> WORK EFFORT               (many "used to perform" 1; effort "assigned fixed assets via"
+                                many; key)
+  -> WORK EFF ASSET ASSIGN STATUS TYPE (many "in the state of" 1; type "the status for" many;
+                                not in the key)
+
+WORK EFF ASSET ASSIGN STATUS TYPE (no attributes drawn)
+
+FIXED ASSET
+  # fixed_asset_id
+  * name
+  * date_acquired
+  o date_last_serviced
+  o date_next_service
+  o production_capacity
+  o description
+  subtypes PROPERTY, VEHICLE, EQUIPMENT, OTHER FIXED ASSET
+  -> UNIT OF MEASURE           (many "associated with" 1; unit "the capacity uom" many)
+  -> FIXED ASSET TYPE          (many "described by" 1; type "used to describe" many)
+
+FIXED ASSET TYPE
+  # fixed_asset_type_id
+  * description
+  -> FIXED ASSET TYPE          (recursive: "a type of" / "sub-typed by", dashed)
+
+UNIT OF MEASURE
+  # uom_id
+  * description
+```
+
+**Table 6.13, fixed assets** (id · type · name · acquired · last serviced · next service ·
+capacity · unit)
+- 1000 · pencil-making machine · Pencil labeler #1 · Jun 12, 2000 · Jun 12, 2000 · Jun 12,
+  2001 · 1,000,000 · pens/day
+- 2266 · fork lift · Fork lift #25 · Mar 1, 1999 · Mar 15, 2001 · Aug 1, 2001 · 5 · people
+
+**Table 6.14, fixed asset types** (id · description · parent)
+- 1000 Equipment; 1390 Pencil-making machine, 1458 Pen-making machine, 1532 Paper-making
+  machine, each under Equipment
+- 2000 Vehicle; 2019 Truck, 2266 Fork lift, 2356 Jet airplane, 2567 Car under Vehicle; 2188
+  Mac truck-18 wheels under Truck
+
+**Table 6.15, assets on efforts** (effort · asset · from · thru · comment)
+- Label pencils · Pencil labeler #1 · Jun 12–Jun 15, 2000
+- Move raw materials in place for production run · Fork lift #25 · Apr 15–May 15, 2000 ·
+  may need it for longer
+- Test database tool · Office laptop #2 · from Jul 1, 2000 · an ongoing effort
+
+**To check against the book**
+- From date is starred, not hashed, in both assignment entities (point 31).
+- Table 6.13's asset ids 1000 and 2266 are also type ids in Table 6.14 (Equipment, Fork
+  lift); the pencil labeler is measured in pens a day, the fork lift in people (point 32).
+- The status line's optionality: solid at the assignment, read as mandatory.
+
+**Discussion**
+- **One machine, one job at a time.** The text's reason for the entity: a machine can usually
+  serve only one effort at a time, so scheduling needs to know when each asset is booked. The
+  dates matter more than for people, and two overlapping bookings of one asset are the
+  mistake to catch.
+- **Status on the booking.** Requested or assigned: a booking can be asked for before it's
+  granted. Here it's a single current status, not a history like WORK EFFORT STATUS.
+- **Allocated cost.** How much of the asset's cost the job carries, for costing the job.
+- **Subtypes and a type hierarchy side by side.** PROPERTY, VEHICLE, EQUIPMENT and OTHER are
+  the subtypes; FIXED ASSET TYPE nests further (vehicle, truck, an 18-wheeler) as deep as
+  needed. Ch 5 already built the type as a lookup with VEHICLE and EQUIPMENT; the subtypes
+  become its top rows and the recursion its parent column.
+- **Capacity needs a unit.** 1,000,000 of what, per what: production capacity comes with a
+  UNIT OF MEASURE (Ch 3's).
+
+### Fig 6.10 — Party fixed asset assignments
+**Transcription** (accepted: ☐; photos with Table 6.16)
+
+```
+PARTY FIXED ASSET ASSIGNMENT
+  * from_date                  (a star again)
+  o thru_date
+  o allocated_cost
+  o comment
+  -> FIXED ASSET               (many "an assignment for" 1; asset "assigned via" many; key)
+  -> PARTY                     (many "an assignment to" 1; party "assigned" many; key)
+  -> PARTY ASSET ASSIGN STATUS TYPE (many "in the state of" 1; type "the status for" many)
+
+PARTY ASSET ASSIGN STATUS TYPE    (no attributes drawn)
+FIXED ASSET (as in 6.9, subtypes PROPERTY, VEHICLE, EQUIPMENT, OTHER ASSET); PARTY
+```
+
+**Table 6.16, assets held by parties** (party · asset · start · end · status)
+- John Smith · Car#25 · Jan 1, 2000–Jan 1, 2001 · active
+- Dick Jones · Tool set #5 · Mar 15, 2000–Mar 15, 2000 · lost
+
+**To check against the book**
+- Table 6.16 says "Car#25", the text says "Truck #25" and then "this car" (point 33).
+- 6.10 calls the last subtype OTHER ASSET, 6.9 OTHER FIXED ASSET.
+
+**Discussion**
+- **Assets go to parties too.** Checked out, not used on a job: a car to a salesman, a tool
+  set to a fitter. The party answers for it while it's out. This is how the enterprise knows
+  where its assets are and that the car isn't free to give someone else.
+- **Same shape as 6.9, other end.** Dates, allocated cost, a comment and a current status
+  (active, lost). "Lost" ends the story: the status carries the outcome the dates can't.
+- **Party, not person or role.** A department could hold the photocopier.
+
+### Fig 6.11 — Work effort type standards
+**Transcription** (accepted: ☐; photos with Tables 6.17–6.18)
+
+```
+WORK EFFORT TYPE ASSOCIATION
+  subtypes WORK EFFORT TYPE BREAKDOWN, WORK EFFORT TYPE DEPENDENCY
+  -> WORK EFFORT TYPE          (many "associated with" 1, "from"; key)
+  -> WORK EFFORT TYPE          (many "associated with" 1, "to"; key)
+  (no attributes drawn)
+
+WORK EFFORT SKILL STANDARD
+  * estimated_num_people
+  * estimated_duration
+  o estimated_cost
+  -> SKILL TYPE                (many "for" 1; type "needed in" many; key)
+  -> WORK EFFORT TYPE          (many "for" 1; type "in need of" many; key)
+
+WORK EFFORT GOOD STANDARD
+  * estimated_quantity
+  o estimated_cost
+  -> GOOD                      (many "for" 1; good "needed in" many; key)
+  -> WORK EFFORT TYPE          (many "for" 1; type "in need of" many; key)
+
+WORK EFFORT FIXED ASSET STANDARD
+  * estimated_quantity
+  * estimated_duration
+  o estimated_cost
+  -> FIXED ASSET TYPE          (many "for" 1; type "needed in" many; key)
+  -> WORK EFFORT TYPE          (many "for" 1; type "of" many; key)
+
+WORK EFFORT TYPE
+  # work_effort_type_id
+  * description
+  o standard_work_hours
+  -> FIXED ASSET TYPE          (many "used to repair" 1; "repaired from" many)   } an arc:
+  -> DELIVERABLE TYPE          (many "used to produce" 1; "created from" many)   } at most
+  -> PRODUCT                   (many "used to produce" 1; "created from" many)   } one
+
+SKILL TYPE (# id, * description); GOOD; FIXED ASSET TYPE (# id, * description);
+DELIVERABLE TYPE (# id, * description); PRODUCT (Ch 3's attributes)
+```
+
+**Table 6.17, goods standards** (work effort type · item · estimated quantity · cost)
+- Large production run of pencils · erasers · 1,000 · $2,500
+- Large production run of pencils · labels · 1,000 · $2,000
+- Large production run of pens · ink cartridges · 2,000 · $3,000
+
+**Table 6.18, fixed asset standards** (work effort type · asset type · quantity · duration)
+- Large production run of pencils · pencil labeler · 1 · 10 days
+- Large production run of pencils · fork lift · 2 · 5 days
+
+**To check against the book**
+- The arc over the three "used to" lines: read as at most one of them (point 36).
+- Table 6.18's "pencil labeler" isn't a type in Table 6.14 (point 35).
+- No sample data for the skill standard; ours.
+- The text says the PARTS model of "Figure 2.10b" would put PART in place of GOOD: read as
+  Fig 3.10b.
+
+**Discussion**
+- **Plan from the type, record on the instance.** A kind of work (a large production run of
+  pencils) has standards: so many people of this skill for so long, so many erasers, two
+  fork lifts for five days. From the work scheduled you predict what you'll need and prepare.
+  The naive model copies the list onto every job, or keeps it in a spreadsheet.
+- **Good, not inventory item.** For planning you only need the kind of good. Comparing the
+  standard with stock on hand says whether there's enough to run the job.
+- **Asset type, not asset.** Likewise, the plan needs "a fork lift", not Fork lift #25.
+- **The type's own breakdown.** WORK EFFORT TYPE ASSOCIATION is Fig 6.4's association one
+  level up: the standard plan of a kind of work (a large run is set-up, operate, clean up,
+  QA; set-up comes first). Instances copy it when the job is planned.
+- **What the type is for.** A kind of work repairs a kind of asset, or produces a kind of
+  deliverable, or produces a product: the expected outcome, set beside the actual one of Fig
+  6.12.
+
+### Fig 6.12 — Work effort results
+**Transcription** (accepted: ☐; photo, text on the next page)
+
+```
+WORK EFFORT INVENTORY PRODUCED    (no attributes)
+  -> WORK EFFORT               (many "by" 1; effort "producing" many; key)
+  -> INVENTORY ITEM            (many "resulting in production of" 1; item "produced by" many;
+                                key)
+
+WORK EFFORT DELIVERABLE PRODUCED  (no attributes)
+  -> WORK EFFORT               (many "by" 1; effort "producing" many; key)
+  -> DELIVERABLE               (many "resulting in production of" 1; deliverable "produced
+                                by" many; key)
+
+WORK EFFORT
+  (6.3a's attributes, both subtype sets)
+  -> FIXED ASSET               (many "resulting in the repair of" 1; asset "repaired via"
+                                many; optional)
+
+INVENTORY ITEM (SERIALIZED with * serial_num, NON SERIALIZED with * quantity_on_hand);
+DELIVERABLE (# id, * name, o description); FIXED ASSET (6.9's attributes)
+```
+
+**To check against the book**
+- No quantity on WORK EFFORT INVENTORY PRODUCED (point 38).
+- The repair line is drawn optional at both ends.
+
+**Discussion**
+- **Standards say what should come out; results say what did.** An effort produces stock (an
+  inventory item), a deliverable (a plan, a report), or repairs a fixed asset. All three
+  optional: a meeting produces nothing you can store.
+- **Record results low, roll them up.** The text says to hang results on the lowest efforts
+  (the task that wrote the report), so a project's results are the union of its parts'.
+- **Closing the loop with Ch 3 and Fig 6.1.** The requirement said "produce this product" or
+  "fix that machine"; the result says which stock came out or which machine was fixed. Each
+  can be checked against the other.
+
+### Fig 6.13 — Overall work effort model
+**Transcription** (accepted: ☐; one photo; identifiers only, a few attributes; open points
+under "Points to discuss after the overview")
+
+```
+Shown:
+  WORK ORDER ITEM FULFILLMENT, ORDER REQUIREMENT COMMITMENT (o quantity), ORDER ITEM
+  (# order_item_seq_id), WORK REQUIREMENT FULFILLMENT, REQUIREMENT (loop),
+  WORK EFFORT DELIVERABLE PRODUCED, WORK EFFORT INVENTORY PRODUCED,
+  WORK EFFORT (# id; PROGRAM, PHASE, PROJECT, TASK, ACTIVITY; PRODUCTION RUN, MAINTENANCE,
+  RESEARCH, WORK FLOW; a loop), WORK EFFORT STATUS, WORK EFFORT STATUS TYPE,
+  WORK EFFORT PARTY ASSIGNMENT (# from_date), WORK EFFORT ROLE TYPE, FACILITY (twice),
+  WORK EFFORT ASSIGNMENT RATE (# from_date), WORK EFFORT INVENTORY ASSIGNMENT, INVENTORY
+  ITEM, WORK EFFORT FIXED ASSET ASSIGNMENT, FIXED ASSET, UNIT OF MEASURE, WORK EFFORT FIXED
+  ASSET STANDARD, WORK EFFORT TYPE (# id), WORK EFFORT PURPOSE TYPE (# id), WORK EFFORT
+  SKILL STANDARD, WORK EFFORT GOOD STANDARD, GOOD, TIMESHEET ROLE, TIMESHEET (# from_date),
+  WORKER (EMPLOYEE, CONTRACTOR), TIME ENTRY (# from_datetime), PARTY RATE, PARTY SKILL,
+  PARTY, SKILL TYPE, POSITION TYPE RATE (# from_date), POSITION TYPE (# id, * description)
+
+Lines, as read:
+  WORK ORDER ITEM FULFILLMENT -> ORDER ITEM, WORK EFFORT
+  ORDER REQUIREMENT COMMITMENT -> ORDER ITEM, REQUIREMENT
+  WORK REQUIREMENT FULFILLMENT -> REQUIREMENT, WORK EFFORT;  REQUIREMENT loop (dashed)
+  WORK EFFORT DELIVERABLE PRODUCED, WORK EFFORT INVENTORY PRODUCED -> WORK EFFORT
+  WORK EFFORT STATUS -> WORK EFFORT, WORK EFFORT STATUS TYPE
+  WORK EFFORT PARTY ASSIGNMENT -> WORK EFFORT, FACILITY, PARTY, WORK EFFORT ROLE TYPE
+  WORK EFFORT ASSIGNMENT RATE -> WORK EFFORT PARTY ASSIGNMENT
+  WORK EFFORT INVENTORY ASSIGNMENT -> WORK EFFORT, INVENTORY ITEM
+  WORK EFFORT FIXED ASSET ASSIGNMENT -> WORK EFFORT, FIXED ASSET
+  FIXED ASSET -> UNIT OF MEASURE
+  WORK EFFORT FIXED ASSET STANDARD -> FIXED ASSET (not FIXED ASSET TYPE), WORK EFFORT TYPE
+  WORK EFFORT -> FACILITY, WORK EFFORT TYPE, WORK EFFORT PURPOSE TYPE; WORK EFFORT loop
+  WORK EFFORT SKILL STANDARD -> WORK EFFORT TYPE, SKILL TYPE
+  WORK EFFORT GOOD STANDARD -> WORK EFFORT TYPE, GOOD
+  TIMESHEET ROLE -> TIMESHEET, PARTY;  TIMESHEET -> WORKER;  TIME ENTRY -> TIMESHEET,
+  WORK EFFORT
+  PARTY RATE, PARTY SKILL -> PARTY;  PARTY SKILL -> SKILL TYPE
+  POSITION TYPE RATE -> POSITION TYPE
+```
+
+What it adds or settles:
+- **6.3a wins over 6.3b:** WORK ORDER ITEM FULFILLMENT is there, so an order line can reach
+  its work directly (settles point 11).
+- **The standard needs an asset, not an asset type?** WORK EFFORT FIXED ASSET STANDARD hangs
+  on FIXED ASSET here, FIXED ASSET TYPE in 6.11, which drops out of the figure (point 39).
+- **WORK EFFORT's loop** stands for Fig 6.4's association (and the redo line), as Ch 4's
+  overall model drew REQUIREMENT's loop.
+- Left out: every association, role, rate and status type; WORK REQUIREMENT and its roles;
+  DELIVERABLE (and type) and the repair line; PARTY FIXED ASSET ASSIGNMENT and its status;
+  WORK EFFORT TYPE ASSOCIATION; FIXED ASSET TYPE; the type's "used to" arc. Read as
+  abbreviation, as for Figs 3.11, 4.17 and 5.8 (point 40).
+
+**How it flows** (architecture figure: no SQL, on assumptions until the overview)
+- **Two hubs, need and work:** a WORK REQUIREMENT (Ch 4's REQUIREMENT, work kind) says what
+  work is needed; a WORK EFFORT is the work planned and done, at a level (program to
+  activity, or job) and for a purpose (production run, maintenance, research, work flow).
+- **How work is started:** WORK REQUIREMENT FULFILLMENT (need → work) or WORK ORDER ITEM
+  FULFILLMENT (a sold line → work); ORDER REQUIREMENT COMMITMENT links the two from Ch 4.
+- **How work is shaped:** WORK EFFORT ASSOCIATION breaks it down and orders it; a STATUS
+  history says where it stands.
+- **What it takes:** parties in roles, dated (PARTY ASSIGNMENT), priced by rates at three
+  levels; hours on TIME ENTRYs gathered on a WORKER's TIMESHEET; stock used up (INVENTORY
+  ASSIGNMENT); machines booked (FIXED ASSET ASSIGNMENT). Assets also go out to parties.
+- **What it should take and give:** WORK EFFORT TYPE carries standards (skills, goods,
+  assets, hours) and its own breakdown; RESULTS record stock and deliverables produced and
+  assets repaired.
+- **From Ch 2:** PARTY, PARTY ROLE (WORKER), FACILITY, STATUS TYPE. **From Ch 3:** PRODUCT,
+  GOOD, INVENTORY ITEM, UNIT OF MEASURE. **From Ch 4:** REQUIREMENT, ORDER ITEM. **From Ch 5
+  (ahead of Ch 8):** FIXED ASSET. **Ahead of Ch 9:** POSITION TYPE.
+- **Alternates:** 6.3a kept, 6.3b dropped.
+
+### Points to discuss after the overview (Figs 6.1–6.13)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing.
@@ -625,6 +1044,57 @@ the literal drawing.
     EFFORT's actual start datetime say the same thing. Table 6.9's activities have statuses
     and no actuals; seeded that way. Which one is the record, or does the status fill the
     actual?
+28. **6.7 is its own submodel:** rates became submodel 5, not part of 4, so card 25's heading
+    stays (settles point 26). Rates answer "what does the hour cost", a separate question.
+29. **6.7, which rate wins:** the model stores three levels and leaves the choice to a
+    business rule. Built: a query takes the assignment's rate, else the party's. Position
+    type rates stand alone: nothing ties a party to a position type until Ch 9's position
+    fulfilment.
+30. **6.7, POSITION TYPE ahead of Ch 9:** built here as a plain lookup, as Ch 5 built FIXED
+    ASSET ahead of Ch 8. Gary Smith, the accounting program, his assignment (role, dates),
+    the position rates, his party rates and his time entries are ours; only Table 6.11's
+    assignment rates are the book's.
+31. **6.9–6.10, from date starred, not hashed:** every other dated link in the book keys on
+    its from date, and without it an asset couldn't go back to the same job or person twice.
+    Read as a drawing slip. Built with a surrogate key; the rule the text gives (one asset,
+    one job at a time; a car held by one person at a time) is the check: overlapping
+    bookings of one asset.
+32. **Table 6.13, ids and units:** the asset ids 1000 and 2266 are also type ids in Table
+    6.14 (Equipment, Fork lift). Seeded as printed: assets and types are separate number
+    spaces, and our type ids are text anyway. The pencil labeler's "pens/day" and the fork
+    lift's "people" seeded as printed, as units of their own.
+33. **Table 6.16, Car #25 or Truck #25:** seeded as a new asset "Car #25" of type CAR, apart
+    from Ch 5's Truck #25 (fixed asset 2). If it's the same truck, John Smith's checkout
+    joins Ch 5's route segments.
+34. **Table 6.15 against Table 6.6, moving raw materials:** the effort is Table 6.6's 3454588,
+    scheduled Jun 1, 2000, while the fork lift is booked Apr 15–May 15. Seeded on 3454588 as
+    printed; a review lists bookings outside their effort's schedule.
+35. **Table 6.18, "pencil labeler":** not a type in Table 6.14. Added as a type under
+    pencil-making machine, and Table 6.13's Pencil labeler #1 typed with it, so a planner can
+    see the standard is met by a real asset.
+36. **6.11, the "used to" arc:** at most one of asset type repaired, deliverable type or
+    product produced, a single-row rule built as a check constraint. Ch 2's and point 16's
+    `parent_type_id` (a kind of) stays apart from the new WORK EFFORT TYPE ASSOCIATION (made
+    of). The association reuses 6.4's type lookup and its leaves (breakdown, precedency,
+    concurrency); the drawn DEPENDENCY is a grouping row there, so using it is a check.
+37. **Tables 6.12 and 6.17, the goods:** pencil cartridges, labels and ink cartridges are new
+    raw materials; erasers are Ch 5's standard eraser. Stock at the pen plant is ours.
+    "Assemble pencil components" and "Label pencils" are seeded as parts of a new job (ours),
+    a large production run of pencils typed with Table 6.17's type.
+38. **6.12, no quantity produced:** the link has no quantity, so when two efforts feed one
+    stock item (51285 and 51298 into the plant's pens) you can't tell who made how many. A
+    production run's own quantity produced fills the gap for runs. Add a quantity to the link?
+39. **6.13, asset standard on FIXED ASSET:** 6.11 draws it on FIXED ASSET TYPE and the text
+    says the plan needs only the kind. Built per 6.11; 6.13 read as a slip.
+40. **6.13 leaves out:** WORK REQUIREMENT and its roles, the association and type
+    association, every role, rate and status type, deliverables and the repair line, PARTY
+    FIXED ASSET ASSIGNMENT, FIXED ASSET TYPE. Read as abbreviation, as for Figs 3.11, 4.17 and
+    5.8, not removal.
+41. **6.9–6.10, the two status types:** built as Ch 2 `status_type` rows under two new groups,
+    as 6.5's work effort status was, not as two new tables. Both drawn mandatory, built `not
+    null`.
+42. **Table 6.11, billing after the raise:** the billing rates stop on May 14, 2001 and only
+    pay rates go on. Hours after that have no billing rate; the cost query shows the gap.
 
 ## Design decisions (book → SQL)
 
@@ -756,6 +1226,25 @@ the literal drawing.
   after the sheet; 30 hours in one day on 1200; Dick Jones approving his own sheet. A review
   query lists time with no covering assignment (point 24): John Smith's goals session and
   his Feb 16–Mar 1 interviews.
+
+### Fig 6.7
+- **`rate_type`** (regular and overtime, billing and pay), a lookup.
+- **`position_type`**, ahead of Ch 9 (point 30): only the id and description drawn here.
+- **Three rate tables, one shape:** `position_type_rate`, `party_rate` and
+  `work_effort_assignment_rate`, each with its owner, a rate type, from and thru dates
+  (exclusive thru) and the rate. The rate is drawn optional; built `not null`, since a rate
+  row without a rate says nothing. Surrogate keys; two rates of one type in force at once
+  for the same owner is a check across all three, and an assignment rate outside its
+  assignment's dates is another.
+- **Which rate wins** is a query, not a column (point 29): the cost query takes the
+  assignment's rate, else the party's. Position rates can't join in until Ch 9 ties a party
+  to a position.
+- **Seed:** Table 6.11 on Gary Smith's assignment (100) to the accounting program (40100),
+  both ours, as are his employee role (83), the position types and rates, two party rates
+  (Gary Smith's billing rate, USA Consulting's fee) and his May 2001 time. After the raise
+  the cost query falls back to his party billing rate, since the assignment's billing rates
+  stop on May 14 (point 42). Bad rows: an overtime pay rate overlapping both of his, and a
+  billing rate from before his assignment.
 
 ## When NOT to use this
 - **A shop that only sells** never generates work: a service it sells is a product line on

@@ -6,7 +6,7 @@ repo and rewrites the generated tables at the bottom. The design reference doc l
 claude.ai, so its columns (Doc draft, Doc done) are on trust.
 
 Not built (alternates): 6.3b
-Architecture figure:
+Architecture figure: 6.13
 
 ## Submodels
 | # | Submodel | Figs | Doc draft | Overview | Practice | Doc done |
@@ -15,7 +15,10 @@ Architecture figure:
 | 2 | Work effort generation | 6.3a | 2026-10-19 | | | |
 | 3 | Work effort breakdown | 6.4 | 2026-10-19 | | | |
 | 4 | Work effort assignments and time | 6.5–6.6 | 2026-10-19 | | | |
-| A | Architecture | | | | – | – |
+| 5 | Work effort rates | 6.7 | | | | |
+| 6 | Inventory and fixed asset assignments | 6.8–6.10 | | | | |
+| 7 | Work effort standards and results | 6.11–6.12 | | | | |
+| A | Architecture | 6.13 | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 6.1–6.2)`; the `A` row's matches the
 architecture card's `(Fig N.M)`.
