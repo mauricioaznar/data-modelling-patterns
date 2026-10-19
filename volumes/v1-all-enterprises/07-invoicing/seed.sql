@@ -294,3 +294,31 @@ insert into shipment_item_billing (shipment_item_id, invoice_item_id) values
   (3,  3),    -- DATA ERROR: 9000's diskettes billed on 30002's pen line (caught by a query)
   (2,  14),   -- DATA ERROR: pens shipped to ACME billed to John Smith on 30011 (caught by a query)
   (27, 3);    -- DATA ERROR: the same pair twice (caught by a query)
+
+-- ============================================================
+-- Fig 7.6 — Billing of time entries and work efforts
+-- ============================================================
+-- No table in the book. Ours: ABC Subsidiary bills ACME for Ch 6's
+-- consulting work: John Smith's interview hours (time entries 3 and 5 on
+-- 29003, 30 + 45 hours) by the hour, and the project plan (29000) by the
+-- job, half on approval and the rest on delivery.
+insert into invoice (invoice_id, invoice_kind, invoice_date, description, billed_to_party_id, billed_from_party_id,
+                     addressed_to_contact_mechanism_id, sent_from_contact_mechanism_id) values
+  (30017, 'SALES', '2001-03-05', 'Consulting, January and February 2001', 16, 13, 45, 46);
+
+insert into invoice_item (invoice_item_id, invoice_id, invoice_item_seq_id, invoice_item_type_id, taxable_flag, quantity, amount, item_description) values
+  (40, 30017, 1, 'TIME_ENTRY_ITEM',  false, 75,   90.00,   'Initial interviews, hours'),
+  (41, 30017, 2, 'WORK_EFFORT_ITEM', false, null, 2000.00, 'Project plan: 50% on approval'),
+  (42, 30017, 3, 'WORK_EFFORT_ITEM', false, null, 2400.00, 'Project plan: the rest on delivery');
+
+select setval(pg_get_serial_sequence('invoice_item', 'invoice_item_id'), (select max(invoice_item_id) from invoice_item));
+
+-- Invoice item 21 is 30012's consulting line (ours, 7.3a), typed PRODUCT_ITEM.
+insert into time_entry_billing (time_entry_id, invoice_item_id) values
+  (3, 40),
+  (5, 40),
+  (3, 21);   -- DATA ERROR: entry 3 billed again, on a line that isn't a time entry line (caught by queries)
+
+insert into work_effort_billing (work_effort_id, invoice_item_id, percentage) values
+  (29000, 41, 50),
+  (29000, 42, 60);   -- DATA ERROR: the plan billed 110% in all (caught by a query)

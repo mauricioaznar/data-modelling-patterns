@@ -378,3 +378,68 @@ join invoice v                 on v.invoice_id = ii.invoice_id
 join party_display_name sn     on sn.party_id = s.shipped_to_party_id
 join party_display_name bn     on bn.party_id = v.billed_to_party_id
 where v.billed_to_party_id <> s.shipped_to_party_id;
+
+-- ============================================================
+-- Fig 7.6 — Billing of time entries and work efforts
+-- ============================================================
+
+-- name: 7.6 — Each service line and what it bills: the time entries (who, when, hours) or the work effort and its share
+select ii.invoice_id, ii.invoice_item_seq_id as seq, ii.invoice_item_type_id as item_type, ii.quantity, ii.amount,
+       w.name as work_effort, coalesce(eb.percentage::text || '%', '') as share,
+       p.name as worker, te.from_datetime::date as entry_from, te.hours
+from invoice_item ii
+left join time_entry_billing tb  on tb.invoice_item_id = ii.invoice_item_id
+left join time_entry te          on te.time_entry_id = tb.time_entry_id
+left join timesheet ts           on ts.timesheet_id = te.timesheet_id
+left join party_role pr          on pr.party_role_id = ts.party_role_id
+left join party_display_name p   on p.party_id = pr.party_id
+left join work_effort_billing eb on eb.invoice_item_id = ii.invoice_item_id
+left join work_effort w          on w.work_effort_id = coalesce(eb.work_effort_id, te.work_effort_id)
+where tb.time_entry_billing_id is not null or eb.work_effort_billing_id is not null
+order by ii.invoice_id, ii.invoice_item_seq_id, te.from_datetime;
+
+-- name: 7.6 — Time not billed yet: each time entry and its hours, with the invoices that bill it (Ch 6's in-house work shows too: it was never billable)
+select te.time_entry_id, p.name as worker, w.name as work_effort, te.from_datetime::date as entry_from, te.hours,
+       string_agg(ii.invoice_id::text, ', ') as billed_on
+from time_entry te
+join timesheet ts               on ts.timesheet_id = te.timesheet_id
+join party_role pr              on pr.party_role_id = ts.party_role_id
+join party_display_name p       on p.party_id = pr.party_id
+join work_effort w              on w.work_effort_id = te.work_effort_id
+left join time_entry_billing tb on tb.time_entry_id = te.time_entry_id
+left join invoice_item ii       on ii.invoice_item_id = tb.invoice_item_id
+group by te.time_entry_id, p.name, w.name, te.from_datetime, te.hours
+order by te.time_entry_id;
+
+-- name: 7.6 — Review: time entry lines whose hours differ from the hours of the entries they bill (no hours on the link to split an entry: NOTES, point 15)
+select ii.invoice_id, ii.invoice_item_seq_id as seq, ii.quantity as billed_hours, sum(te.hours) as entry_hours
+from invoice_item ii
+join time_entry_billing tb on tb.invoice_item_id = ii.invoice_item_id
+join time_entry te         on te.time_entry_id = tb.time_entry_id
+group by ii.invoice_item_id, ii.invoice_id, ii.invoice_item_seq_id, ii.quantity
+having ii.quantity is distinct from sum(te.hours);
+
+-- name: 7.6 — Data-quality check: billing links on a line of the wrong type: time entries on a line not typed TIME_ENTRY_ITEM, efforts on one not typed WORK_EFFORT_ITEM (should be empty)
+select 'time entry' as link, tb.time_entry_id as linked_id, ii.invoice_id, ii.invoice_item_seq_id as seq, ii.invoice_item_type_id
+from time_entry_billing tb
+join invoice_item ii on ii.invoice_item_id = tb.invoice_item_id
+where ii.invoice_item_type_id <> 'TIME_ENTRY_ITEM'
+union all
+select 'work effort', eb.work_effort_id, ii.invoice_id, ii.invoice_item_seq_id, ii.invoice_item_type_id
+from work_effort_billing eb
+join invoice_item ii on ii.invoice_item_id = eb.invoice_item_id
+where ii.invoice_item_type_id <> 'WORK_EFFORT_ITEM';
+
+-- name: 7.6 — Data-quality check: time entries billed on more than one line, with no hours to say how they split (should be empty)
+select tb.time_entry_id, count(*) as lines, string_agg(ii.invoice_id || '/' || ii.invoice_item_seq_id, ', ') as billed_on
+from time_entry_billing tb
+join invoice_item ii on ii.invoice_item_id = tb.invoice_item_id
+group by tb.time_entry_id
+having count(*) > 1;
+
+-- name: 7.6 — Data-quality check: work efforts billed for more than 100% in all (should be empty)
+select w.work_effort_id, w.name, sum(eb.percentage) as billed_pct
+from work_effort_billing eb
+join work_effort w on w.work_effort_id = eb.work_effort_id
+group by w.work_effort_id, w.name
+having sum(eb.percentage) > 100;

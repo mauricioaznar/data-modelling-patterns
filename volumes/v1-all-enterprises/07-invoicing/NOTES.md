@@ -894,6 +894,20 @@ the literal drawing.
   line becomes 3 books. Bad rows: 9000's diskettes on 30002's pen line, 9000's pens (to
   ACME) on John Smith's 30011, 1235's pens on 30002's line 3 twice.
 
+### Fig 7.6
+- **`time_entry_billing`** and **`work_effort_billing`** (`percentage` above 0, at most 100:
+  the share of the effort the line bills). No hours on the time link (point 15).
+- **The line's type says the route:** time links only on TIME_ENTRY_ITEM lines, effort
+  links only on WORK_EFFORT_ITEM lines (7.1b's leaves, already in `invoice_item_type`): a
+  check.
+- **Checks:** a link on a line of the wrong type; a time entry billed on more than one line
+  (nothing says how it splits); an effort billed over 100% in all. **Review:** time lines
+  whose hours differ from their entries' hours.
+- **Seed** (no table in the book; ours): 30017 bills ACME for John Smith's interview hours
+  (entries 3 and 5, 75 hours at $90) and Ch 6's project plan 29000 at 50% on approval.
+  Bad rows: entry 3 billed again on 30012's product line, and a second plan line at 60%
+  (110% in all).
+
 ## When NOT to use this
 - **One line per product, no fees, one tax:** a small shop's invoice is fine with a total and
   a tax column; the typed items earn their keep when new charges keep appearing.
