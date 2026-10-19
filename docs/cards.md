@@ -835,6 +835,96 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
+### Card 26 · V1 Ch 6 · Work effort rates (Fig 6.7)
+- **Cue:** "What does an hour of this person on this job cost us and bill the client, regular or overtime, on a given day, and what's the standard rate for a position or a party?"
+- **Hook:** a pay slip and an invoice side by side for the same hours, three price tags
+  stapled above them: one for the job title, one for the person, one for this job only
+  *(Claude's, drafted when the figures landed)*
+- **Mantra:** Hours × the rate in force. Rates are dated and typed, on a position type, a
+  party or an assignment; the most specific wins.
+
+<details><summary>Key</summary>
+
+- **S:** `rate_type` (regular and overtime, billing and pay) · `work_effort_assignment_rate`
+  (assignment, rate type, from, thru, rate) · `party_rate` (party, …) ·
+  `position_type_rate` (position type, …) · `position_type`, built ahead of Ch 9.
+- **W:** an `hourly_rate` column on the person: billing and pay can't differ, a raise
+  rewrites past invoices, and Table 6.11's six rows (two of them after the raise) can't be
+  held.
+- **T:** *(the naive-model trap until practice gives yours)* expecting the model to say
+  which rate wins (it's a business rule; the cost query takes the assignment's, else the
+  party's); dropping the overtime rate once it equals regular.
+- **D:** work_effort_assignment_rate → work_effort_party_assignment (→ work_effort, →
+  party), → rate_type; party_rate → party (Ch 2), → rate_type; position_type_rate →
+  position_type, → rate_type. Checks: two rates of one type in force at once for the same
+  owner; an assignment rate outside its assignment's dates.
+</details>
+
+---
+
+### Card 27 · V1 Ch 6 · Inventory and fixed asset assignments (Figs 6.8–6.10)
+- **Cue:** "Which stock did this job use up; which machines, vehicles and tools are booked on which job and when; and who has which asset checked out, active or lost?"
+- **Hook:** a workshop booking board with machine names down the side and job cards pinned
+  in dated slots, a bin of used-up parts below, and a sign-out sheet by the door where one
+  line says LOST *(Claude's, drafted when the figures landed)*
+- **Mantra:** Jobs use up stock items and book assets, one job at a time. Assets also go
+  out to parties, active or lost.
+
+<details><summary>Key</summary>
+
+- **S:** `work_effort_inventory_assignment` (effort, inventory item, quantity) ·
+  `work_effort_fixed_asset_assignment` (effort, asset, status, from, thru, allocated cost,
+  comment) · `party_fixed_asset_assignment` (party, asset, status, …) · `fixed_asset_type`
+  nests, its top rows the subtypes PROPERTY, VEHICLE, EQUIPMENT, OTHER · `fixed_asset`
+  gains a description and a capacity unit · statuses: two groups in Ch 2's `status_type`
+  (requested, assigned; active, lost).
+- **W:** a `materials` text and a `machine_id` on the job: no stock count can use the text,
+  one machine per job, no dates, so nobody sees the labeler is double-booked.
+- **T:** *(the naive-model trap until practice gives yours)* pointing use at the GOOD
+  instead of the INVENTORY ITEM; trusting a thru date to say an asset was lost.
+- **D:** work_effort_inventory_assignment → work_effort, → inventory_item (Ch 3);
+  work_effort_fixed_asset_assignment → work_effort, → fixed_asset, → status_type (Ch 2);
+  party_fixed_asset_assignment → party (Ch 2), → fixed_asset, → status_type; fixed_asset →
+  fixed_asset_type (→ parent), → unit_of_measure (Ch 3). Checks: an item twice on one
+  effort; a serialized item used more than once; one asset on two jobs or two holders at
+  once; a foreign status; a capacity with no unit; an asset used after it was lost.
+</details>
+
+---
+
+### Card 28 · V1 Ch 6 · Work effort standards and results (Figs 6.11–6.12)
+- **Cue:** "What does a kind of work normally need and break into, is there enough for the jobs planned, and what did each job actually produce or repair?"
+- **Hook:** a recipe card clipped to a finished cake: the card lists the ingredients, the
+  tins and the cooks for "a large batch"; the plate shows what came out of this one
+  *(Claude's, drafted when the figures landed)*
+- **Mantra:** The kind of work holds the recipe (skills, goods, asset types, its own
+  breakdown); the job records what came out.
+
+<details><summary>Key</summary>
+
+- **S:** `work_effort_skill_standard` (type, skill type, people, duration, cost) ·
+  `work_effort_good_standard` (type, good, quantity, cost) ·
+  `work_effort_fixed_asset_standard` (type, asset type, quantity, duration, cost) ·
+  `work_effort_type_association` (from type, to type, 6.4's association type) ·
+  `work_effort_type` repairs an asset type or produces a deliverable type or a product (at
+  most one) · `work_effort_inventory_produced`, `work_effort_deliverable_produced` ·
+  `work_effort.repaired_fixed_asset_id`.
+- **W:** copying the materials list onto every job, or keeping it in a spreadsheet: no way
+  to predict what next month's jobs need, or to compare it with what they used.
+- **T:** *(the naive-model trap until practice gives yours)* pointing a standard at a real
+  asset or stock item; mixing the type's parent ("a kind of") with its association ("made
+  of"); expecting a quantity on what was produced.
+- **D:** work_effort_skill_standard → work_effort_type, → skill_type; good standard → good
+  (Ch 3); fixed asset standard → fixed_asset_type; work_effort_type_association →
+  work_effort_type (from, to), → work_effort_association_type; work_effort_type →
+  fixed_asset_type | deliverable_type | product (an arc); inventory produced → work_effort,
+  → inventory_item (Ch 3); deliverable produced → work_effort, → deliverable; work_effort →
+  fixed_asset (repaired). Checks: a grouping row as a type association; a kind twice in one
+  type's standards; a repair of another asset than the need names.
+</details>
+
+---
+
 ## Deck: architecture
 
 One card per chapter, from its architecture figure (the last, overall one): how the chapter's
@@ -969,6 +1059,42 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
   **contact_mechanism**. Bold = from Ch 2, 3 and 4 (and Ch 8's fixed asset, built early).
   Kept: every submodel; no line from a package to its shipment, none from an issuance to a
   package.
+</details>
+
+---
+
+### Architecture · V1 Ch 6 · Work effort (Fig 6.13)
+- **Cue:** "Everything about work, from the need or the sold line that starts it to the people, hours, stock and machines it takes and what it gives, in one picture."
+- **Hook:** a job ticket on a clipboard: a "why" box at the top (a need or an order line),
+  sub-tasks with arrows, a roster with rates, a punch-card pocket, a parts list, a machine
+  booking, and a "what came out" box at the bottom *(Claude's, drafted when the figure
+  landed)*
+- **Mantra:** Need and work apart. Work is broken down, staffed and priced, timed, fed stock
+  and machines; its kind holds the standards, and it records what came out.
+
+<details><summary>Key</summary>
+
+- **S:** `work_requirement` (Ch 4's requirement, work kind) and `work_effort` (a level and a
+  purpose), with `work_effort_type` as the catalogue of kinds of work.
+- **W:** needs reach work through WORK REQUIREMENT FULFILLMENT, sold WORK lines through WORK
+  ORDER ITEM FULFILLMENT (6.3a kept); WORK EFFORT ASSOCIATION breaks work down and orders
+  it, a STATUS history tracks it; PARTY ASSIGNMENTs staff it, rates price them, TIME ENTRYs
+  on WORKER timesheets time it; INVENTORY and FIXED ASSET ASSIGNMENTs feed it; the type's
+  standards plan it; the produced links and the repair line record its results.
+- **T:** *(the naive-model trap until practice gives yours)* one `job` table with an
+  assignee, an hours column, a materials text and an order number: it breaks when one need
+  takes two runs, a person comes back after a holiday, or a machine is double-booked.
+- **D:** **requirement** ← work_requirement_fulfillment → work_effort; **order_item** ←
+  work_order_item_fulfillment → work_effort; work_effort ↔ work_effort_association;
+  work_effort ← work_effort_status → **status_type**; work_effort ←
+  work_effort_party_assignment → **party**, **facility** (← work_effort_assignment_rate);
+  **party** ← party_rate, party_skill; position_type ← position_type_rate; timesheet →
+  **party_role** (WORKER) ← time_entry → work_effort; work_effort ←
+  work_effort_inventory_assignment → **inventory_item**; work_effort ←
+  work_effort_fixed_asset_assignment → **fixed_asset** → **unit_of_measure**;
+  work_effort_type ← skill, **good** and fixed asset type standards; work_effort ←
+  inventory and deliverable produced. Bold = from Ch 2, 3, 4 and 5. Kept: every submodel;
+  6.3b dropped.
 </details>
 
 ---

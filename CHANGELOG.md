@@ -39,6 +39,28 @@ and any decisions made.
 - Submodels 3 (breakdown) and 4 (assignments and time); ponders 1–3 and 1–4; cards 24–25,
   Anki export 37 cards. Design reference: two draft entries, Ch 6 examples on eight Core
   patterns rows, two question index rows, roadmap "4 submodels so far".
+- Figs 6.7–6.13 with Tables 6.11–6.18 (photos), transcribed with points 28–42.
+- Fig 6.7 built: `rate_type`, `position_type` (ahead of Ch 9) and three rate tables
+  (position type, party, assignment). Table 6.11 on Gary Smith's assignment; a cost query
+  takes the assignment's rate, else the party's. Two checks.
+- Fig 6.8 built: `work_effort_inventory_assignment`. Table 6.12 on a pencil job's assembly
+  task, new raw materials and plant stock. Two checks.
+- Fig 6.9 built: `fixed_asset_type` nests under the four subtypes as top rows, capacity
+  units, `work_effort_fixed_asset_assignment` with a status group. Tables 6.13–6.15. Three
+  checks.
+- Fig 6.10 built: `party_fixed_asset_assignment` (active, lost). Table 6.16 with Car #25 and
+  Tool set #5. Three checks.
+- Fig 6.11 built: what a kind of work repairs or produces (an arc), the type association,
+  skill, good and fixed asset standards. Tables 6.17–6.18 on large pencil and pen runs; the
+  pencil job is short of labels and erasers. Two checks.
+- Fig 6.12 built: inventory and deliverables produced, the repaired asset. One check.
+- Fig 6.13, the architecture: How it flows; MAP's Ch 6 section rewritten and marked done,
+  hub lines updated.
+- Submodels 5 (rates), 6 (inventory and fixed asset assignments) and 7 (standards and
+  results); ponders 1–3, 1–3 and 1–4; cards 26–28 and the Ch 6 architecture card, Anki
+  export 41 cards. Design reference: three draft entries and the Ch 6 architecture entry,
+  Ch 6 examples on twelve Core patterns rows and a new row (general to specific, most
+  specific wins), three question index rows, roadmap "7 submodels + architecture".
 
 **Decisions**
 - WORK EFFORT TYPE read as a catalogue of kinds of work (Table 6.6 gives standard hours per
@@ -48,7 +70,13 @@ and any decisions made.
   two 29005s split, team-member work seeded as 29006 (point 23).
 - Run #1 (28045) is in progress per Table 6.9, so our invented completion and yield for it
   are removed.
-- Submodel 4 holds Figs 6.5–6.6 for now; rates (6.7) may join it (point 26).
+- Rates are submodel 5, not part of 4, so card 25's heading stays (point 28).
+- The asset links' from date is starred, not hashed: read as a slip, built dated, and the
+  real rule (one job or one holder at a time) is the check (point 31).
+- Table 6.18's "pencil labeler" added as an asset type, and labeler #1 typed with it (point
+  35). Ch 5's trucks stay VEHICLE, since Ch 5's queries test that type by name.
+- Fig 6.13 keeps 6.3a's direct order-to-work line (settles point 11); its asset standard on
+  FIXED ASSET read as a slip for FIXED ASSET TYPE (point 39).
 - Build 6.3a, not 6.3b: it holds both the direct order-to-work path and the path through a
   requirement; the chapter's overall figure decides (point 11).
 - REQUIREMENT TYPE drawn mandatory, built nullable: Ch 4's product requirements have no type
@@ -58,7 +86,7 @@ and any decisions made.
 - Work effort purpose optional; production runs typed PROJECT for want of a level in the book.
 
 **Next**
-- The rest of Ch 6's figures (rates, asset assignments, the overall figure); then the Ch 4, 5 and 6 overviews.
+- The Ch 4, 5 and 6 overviews (Ch 6: 42 points); then practice, submodel by submodel.
 
 ## 2026-10-18
 

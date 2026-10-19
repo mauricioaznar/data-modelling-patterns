@@ -15,10 +15,10 @@ Architecture figure: 6.13
 | 2 | Work effort generation | 6.3a | 2026-10-19 | | | |
 | 3 | Work effort breakdown | 6.4 | 2026-10-19 | | | |
 | 4 | Work effort assignments and time | 6.5–6.6 | 2026-10-19 | | | |
-| 5 | Work effort rates | 6.7 | | | | |
-| 6 | Inventory and fixed asset assignments | 6.8–6.10 | | | | |
-| 7 | Work effort standards and results | 6.11–6.12 | | | | |
-| A | Architecture | 6.13 | | | – | – |
+| 5 | Work effort rates | 6.7 | 2026-10-19 | | | |
+| 6 | Inventory and fixed asset assignments | 6.8–6.10 | 2026-10-19 | | | |
+| 7 | Work effort standards and results | 6.11–6.12 | 2026-10-19 | | | |
+| A | Architecture | 6.13 | 2026-10-19 | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 6.1–6.2)`; the `A` row's matches the
 architecture card's `(Fig N.M)`.
@@ -34,6 +34,13 @@ architecture card's `(Fig N.M)`.
 | 6.4 | built | 3 | ✓ | ✓ | ✓ | ✓ | – |
 | 6.5 | built | 4 | ✓ | ✓ | ✓ | ✓ | – |
 | 6.6 | built | 4 | ✓ | ✓ | ✓ | ✓ | – |
+| 6.7 | built | 5 | ✓ | ✓ | ✓ | ✓ | – |
+| 6.8 | built | 6 | ✓ | ✓ | ✓ | ✓ | – |
+| 6.9 | built | 6 | ✓ | ✓ | ✓ | ✓ | – |
+| 6.10 | built | 6 | ✓ | ✓ | ✓ | ✓ | – |
+| 6.11 | built | 7 | ✓ | ✓ | ✓ | ✓ | – |
+| 6.12 | built | 7 | ✓ | ✓ | ✓ | ✓ | – |
+| 6.13 | architecture | – | ✓ | – | – | – | ✓ |
 
 | # | Submodel | Figures built | Card | Ponders |
 |---|---|---|---|---|
@@ -41,6 +48,10 @@ architecture card's `(Fig N.M)`.
 | 2 | Work effort generation | ✓ | Card 23 | 5 |
 | 3 | Work effort breakdown | ✓ | Card 24 | 3 |
 | 4 | Work effort assignments and time | ✓ | Card 25 | 4 |
+| 5 | Work effort rates | ✓ | Card 26 | 3 |
+| 6 | Inventory and fixed asset assignments | ✓ | Card 27 | 3 |
+| 7 | Work effort standards and results | ✓ | Card 28 | 4 |
+| A | Architecture | – | Architecture | – |
 
-Last check: 0 ✗ · 1 !
+Last check: 0 ✗ · 0 !
 <!-- check:end -->
