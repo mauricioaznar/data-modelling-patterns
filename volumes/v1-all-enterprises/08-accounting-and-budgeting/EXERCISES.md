@@ -65,6 +65,14 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 5. *(8.3b)* Stored balances are derived data. When is storing them right, and what must
    be true of a period before you trust its stored balance over its postings?
 
+### Submodel 3: budgets
+1. *(8.6)* Whose budget it is lives in BUDGET ROLE, not in a column on BUDGET. What does
+   that buy, and why does the text want budgets at the lowest organization level?
+2. *(8.6)* A BUDGET ITEM has a purpose and a justification; an ORDER ITEM has neither.
+   What is a budget for, that it needs them? Write one pair for "a new laptop".
+3. *(8.6)* Budget periods are STANDARD TIME PERIODs, not 8.1's ACCOUNTING PERIODs. When
+   would you want the budget tied to an organization's fiscal period instead?
+
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
 notation (entities, key attributes, relationships and cardinality). Then diff it against

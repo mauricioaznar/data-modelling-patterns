@@ -737,6 +737,25 @@ Added with Figs 8.4–8.7b:
   method never ended, a depreciation of the dock conveyor (no method), a depreciation of no
   asset. Both new depreciations are dated 2001, so 2000's stored balances still agree.
 
+### Fig 8.6
+- **`standard_time_period`** its own table, typed by 8.1's `period_type`, which gains
+  YEAR and MONTH (point 19).
+- **The subtypes as `budget_type` rows** (OPERATING_BUDGET, CAPITAL_BUDGET), as in 8.2;
+  the description not null though drawn optional. The budget's description is its
+  `comment` (point 18).
+- **`budget_item`** with a surrogate key and (budget, seq) unique; `part_of_budget_item_id`
+  for the recursion; amount ≥ 0 (a revision can take an item to zero).
+- **`budget_status`** on Ch 2's `status_type` under a BUDGET_STATUS group, like Ch 4–7's
+  statuses. **`budget_role` + `budget_role_type`**, its own lookup like every role type.
+- **Checks:** a status from another group; a budget with no items or for no one; parts in
+  another budget or not adding up to their parent (point 24). **Queries:** Tables 8.7–8.9
+  (items as a tree, the total from top items only, the current status); the 2001 budgets
+  rolled up through Ch 2's ORGANIZATION_ROLLUP to ABC Corporation.
+- **Seed:** Tables 8.7–8.9; ours: the three departments (point 23), 39908's machines
+  broken down into two, the other budgets' statuses. Bad rows: travel budget 40102 (no
+  items, for no one), furniture parts adding to $12,000 of $10,000, an order status on
+  39908.
+
 ## When NOT to use this
 - **One company, one ledger:** a single small business can key the chart and the books
   together; ORGANIZATION GL ACCOUNT earns its keep with several internal organizations.

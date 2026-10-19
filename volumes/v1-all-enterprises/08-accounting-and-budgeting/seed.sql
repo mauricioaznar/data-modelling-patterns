@@ -295,3 +295,111 @@ insert into transaction_detail (transaction_detail_id, accounting_transaction_id
   (323922, 32392, 2, 11, 75, 'CREDIT', null),
   (323931, 32393, 1, 14, 60, 'DEBIT',  null),
   (323932, 32393, 2, 11, 60, 'CREDIT', null);
+
+-- ============================================================
+-- Fig 8.6 — Budget definition
+-- ============================================================
+-- ABC Corporation's departments (ours, NOTES point 23): 65 Marketing, 66
+-- Administration, 67 Manufacturing operations, each a DEPARTMENT rolling up
+-- to ABC Corporation (role 30, its PARENT_ORGANIZATION role from Ch 2).
+insert into party (party_id, party_kind) values
+  (65, 'ORGANIZATION'),
+  (66, 'ORGANIZATION'),
+  (67, 'ORGANIZATION');
+insert into organization (party_id, organization_type_id, name) values
+  (65, 'OTHER_INFORMAL', 'Marketing department'),
+  (66, 'OTHER_INFORMAL', 'Administration department'),
+  (67, 'OTHER_INFORMAL', 'Manufacturing operations');
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (85, 65, 'DEPARTMENT', '1999-01-01', null),
+  (86, 66, 'DEPARTMENT', '1999-01-01', null),
+  (87, 67, 'DEPARTMENT', '1999-01-01', null);
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+insert into party_relationship (party_relationship_id, party_relationship_type_id, from_party_role_id, to_party_role_id, from_date, thru_date) values
+  (18, 'ORGANIZATION_ROLLUP', 85, 30, '1999-01-01', null),
+  (19, 'ORGANIZATION_ROLLUP', 86, 30, '1999-01-01', null),
+  (20, 'ORGANIZATION_ROLLUP', 87, 30, '1999-01-01', null);
+select setval(pg_get_serial_sequence('party_relationship', 'party_relationship_id'), (select max(party_relationship_id) from party_relationship));
+
+-- Calendar periods beside 8.1's fiscal ones.
+insert into period_type (period_type_id, description) values
+  ('YEAR',  'Year'),
+  ('MONTH', 'Month');
+
+insert into standard_time_period (standard_time_period_id, period_type_id, from_date, thru_date) values
+  (1, 'YEAR',  '2001-01-01', '2002-01-01'),
+  (2, 'MONTH', '2002-06-01', '2002-07-01'),
+  (3, 'YEAR',  '2002-01-01', '2003-01-01');
+select setval(pg_get_serial_sequence('standard_time_period', 'standard_time_period_id'), (select max(standard_time_period_id) from standard_time_period));
+
+insert into budget_type (budget_type_id, description) values
+  ('OPERATING_BUDGET', 'Operating budget: expense items'),
+  ('CAPITAL_BUDGET',   'Capital budget: fixed assets and long-term items');
+
+-- Table 8.7, then one of ours.
+insert into budget (budget_id, budget_type_id, standard_time_period_id, comment) values
+  (29839, 'OPERATING_BUDGET', 1, 'Marketing budget'),
+  (38576, 'OPERATING_BUDGET', 2, 'Office expenses budget'),
+  (39908, 'CAPITAL_BUDGET',   1, 'New manufacturing machines needed'),
+  (40102, 'OPERATING_BUDGET', 3, 'Travel budget');   -- DATA ERROR: no items, and for no one
+select setval(pg_get_serial_sequence('budget', 'budget_id'), (select max(budget_id) from budget));
+
+insert into budget_item_type (budget_item_type_id, description) values
+  ('TRADE_SHOWS',             'Trade shows'),
+  ('ADVERTISING',             'Advertising'),
+  ('DIRECT_MAIL',             'Direct mail'),
+  ('INTERNET_ADVERTISING',    'Internet advertising'),   -- Table 8.10's added item
+  ('OFFICE_SUPPLIES',         'Office supplies'),
+  ('FURNITURE',               'Furniture'),
+  ('DESKS',                   'Desks'),
+  ('CHAIRS',                  'Chairs'),
+  ('MANUFACTURING_MACHINES',  'Manufacturing machines'),
+  ('ENGRAVING_MACHINE',       'Engraving machine'),
+  ('LABELING_MACHINE',        'Labeling machine');
+
+-- Table 8.8 (purpose and justification in our words), then 39908's items and
+-- 38576's furniture parts (ours). Item ids are budget id × 10 + seq.
+insert into budget_item (budget_item_id, budget_id, budget_item_seq_id, budget_item_type_id, part_of_budget_item_id, amount, purpose, justification) values
+  (298391, 29839, 1, 'TRADE_SHOWS',            null,   20000, 'Meet the markets directly',             'Last year''s spend brought three new clients'),
+  (298392, 29839, 2, 'ADVERTISING',            null,   30000, 'Make the products known',               'The competition demands product recognition'),
+  (298393, 29839, 3, 'DIRECT_MAIL',            null,   15000, 'Generate sales leads',                  'About 50 leads for every $5,000 spent'),
+  (385761, 38576, 1, 'OFFICE_SUPPLIES',        null,   5000,  'Supplies for office administration',    'Spent last year, needed again'),
+  (385762, 38576, 2, 'FURNITURE',              null,   10000, 'For the new Benjamin Street facility',  'The new facility needs basic furniture'),
+  (399081, 39908, 1, 'MANUFACTURING_MACHINES', null,   60000, 'Replace the oldest machines',           'Breakdowns stopped two production runs last year'),
+  (399082, 39908, 2, 'ENGRAVING_MACHINE',      399081, 35000, 'Replace the engraver sold in 2000',     'Custom-engraved pens are back-ordered'),
+  (399083, 39908, 3, 'LABELING_MACHINE',       399081, 25000, 'A second pencil labeler',               'The labeler runs at capacity'),
+  (385763, 38576, 3, 'DESKS',                  385762, 8000,  'Six desks',                             null),
+  (385764, 38576, 4, 'CHAIRS',                 385762, 4000,  'Twelve chairs',                         null);   -- DATA ERROR: desks and chairs come to 12,000 of furniture's 10,000
+
+insert into status_type (status_type_id, parent_type_id, description) values
+  ('BUDGET_STATUS',    null,            'Budget status'),
+  ('BUDGET_CREATED',   'BUDGET_STATUS', 'Created'),
+  ('BUDGET_SUBMITTED', 'BUDGET_STATUS', 'Submitted'),
+  ('BUDGET_SENT_BACK', 'BUDGET_STATUS', 'Sent back for modifications'),
+  ('BUDGET_APPROVED',  'BUDGET_STATUS', 'Approved');
+
+-- Table 8.9, then ours.
+insert into budget_status (budget_status_id, budget_id, status_type_id, status_date, comment) values
+  (1, 29839, 'BUDGET_CREATED',   '2000-10-15', null),
+  (2, 29839, 'BUDGET_SUBMITTED', '2000-11-01', null),
+  (3, 29839, 'BUDGET_SENT_BACK', '2000-11-15', 'Management agreed with the kinds of items but asked for every amount to be lowered'),
+  (4, 29839, 'BUDGET_SUBMITTED', '2000-11-20', null),
+  (5, 29839, 'BUDGET_APPROVED',  '2000-11-30', null),
+  (6, 38576, 'BUDGET_CREATED',   '2002-04-20', null),
+  (7, 38576, 'BUDGET_SUBMITTED', '2002-05-02', null),
+  (8, 39908, 'BUDGET_CREATED',   '2000-10-20', null),
+  (9, 39908, 'ORDER_APPROVED',   '2000-12-01', null);   -- DATA ERROR: an order status on a budget
+select setval(pg_get_serial_sequence('budget_status', 'budget_status_id'), (select max(budget_status_id) from budget_status));
+
+insert into budget_role_type (budget_role_type_id, description) values
+  ('BUDGET_FOR', 'The party the budget is requested for'),
+  ('INITIATOR',  'The party who started the budget request');
+
+insert into budget_role (budget_role_id, budget_id, party_id, budget_role_type_id) values
+  (1, 29839, 65, 'BUDGET_FOR'),
+  (2, 38576, 66, 'BUDGET_FOR'),
+  (3, 39908, 67, 'BUDGET_FOR');
+select setval(pg_get_serial_sequence('budget_role', 'budget_role_id'), (select max(budget_role_id) from budget_role));

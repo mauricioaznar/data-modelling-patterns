@@ -430,3 +430,93 @@ join fixed_asset a on a.fixed_asset_id = d1.fixed_asset_id;
 select fixed_asset_id, name, fixed_asset_type_id
 from fixed_asset
 where date_acquired is null;
+
+-- ============================================================
+-- Fig 8.6 — Budget definition
+-- ============================================================
+
+-- name: 8.6 — Table 8.7: each budget with its type, the party it is for, its period and the period's type
+select b.budget_id, t.description as budget_type, d.name as budget_for,
+       p.from_date, p.thru_date - 1 as thru_inclusive, pt.description as period_type, b.comment as description
+from budget b
+join budget_type t           on t.budget_type_id = b.budget_type_id
+join standard_time_period p  on p.standard_time_period_id = b.standard_time_period_id
+join period_type pt          on pt.period_type_id = p.period_type_id
+left join budget_role r      on r.budget_id = b.budget_id and r.budget_role_type_id = 'BUDGET_FOR'
+left join party_display_name d on d.party_id = r.party_id
+order by b.budget_id;
+
+-- name: 8.6 — Table 8.8: each budget's items as a tree, and the budget's total (its top items only: parts break their parent down)
+with recursive tree as (
+  select i.budget_item_id, 0 as depth, lpad(i.budget_item_seq_id::text, 3) as path
+  from budget_item i where i.part_of_budget_item_id is null
+  union all
+  select c.budget_item_id, t.depth + 1, t.path || '/' || lpad(c.budget_item_seq_id::text, 3)
+  from budget_item c join tree t on t.budget_item_id = c.part_of_budget_item_id
+)
+select i.budget_id, b.comment as budget, i.budget_item_seq_id as seq,
+       repeat('  ', t.depth) || y.description as item, i.amount, i.purpose, i.justification,
+       sum(i.amount) filter (where t.depth = 0) over (partition by i.budget_id) as budget_total
+from tree t
+join budget_item i       on i.budget_item_id = t.budget_item_id
+join budget b            on b.budget_id = i.budget_id
+join budget_item_type y  on y.budget_item_type_id = i.budget_item_type_id
+order by i.budget_id, t.path;
+
+-- name: 8.6 — Table 8.9: each budget's status history, the latest one marked current
+select s.budget_id, s.status_date, t.description as status, s.comment,
+       s.status_date = max(s.status_date) over (partition by s.budget_id) as current
+from budget_status s
+join status_type t on t.status_type_id = s.status_type_id
+order by s.budget_id, s.status_date;
+
+-- name: 8.6 — Budgets rolled up the organization: each 2001 budget's total, counted for its department and for every organization above it
+with recursive totals as (
+  select b.budget_id, b.standard_time_period_id, r.party_id, sum(i.amount) as total
+  from budget b
+  join budget_role r on r.budget_id = b.budget_id and r.budget_role_type_id = 'BUDGET_FOR'
+  join budget_item i on i.budget_id = b.budget_id and i.part_of_budget_item_id is null
+  group by b.budget_id, b.standard_time_period_id, r.party_id
+),
+up as (
+  select t.budget_id, t.standard_time_period_id, t.total, t.party_id as org_id
+  from totals t
+  union all
+  select u.budget_id, u.standard_time_period_id, u.total, hi.party_id
+  from up u
+  join party_role lo        on lo.party_id = u.org_id
+  join party_relationship x on x.from_party_role_id = lo.party_role_id and x.party_relationship_type_id = 'ORGANIZATION_ROLLUP'
+                           and x.thru_date is null
+  join party_role hi        on hi.party_role_id = x.to_party_role_id
+)
+select d.name as organization, p.from_date as period_from, pt.description as period_type,
+       count(*) as budgets, sum(u.total) as budgeted
+from up u
+join party_display_name d   on d.party_id = u.org_id
+join standard_time_period p on p.standard_time_period_id = u.standard_time_period_id
+join period_type pt         on pt.period_type_id = p.period_type_id
+where p.from_date = '2001-01-01' and pt.period_type_id = 'YEAR'
+group by d.name, p.from_date, pt.description
+order by budgeted desc;
+
+-- name: 8.6 — Data-quality check: budget statuses that aren't budget status types (should be empty)
+select s.budget_status_id, s.budget_id, s.status_type_id, t.parent_type_id
+from budget_status s
+join status_type t on t.status_type_id = s.status_type_id
+where t.parent_type_id is distinct from 'BUDGET_STATUS';
+
+-- name: 8.6 — Data-quality check: budgets with no items, or for no party (should be empty)
+select b.budget_id, b.comment,
+       not exists (select 1 from budget_item i where i.budget_id = b.budget_id) as no_items,
+       not exists (select 1 from budget_role r where r.budget_id = b.budget_id and r.budget_role_type_id = 'BUDGET_FOR') as for_no_one
+from budget b
+where not exists (select 1 from budget_item i where i.budget_id = b.budget_id)
+   or not exists (select 1 from budget_role r where r.budget_id = b.budget_id and r.budget_role_type_id = 'BUDGET_FOR');
+
+-- name: 8.6 — Data-quality check: item parts in another budget, or parts that don't add up to their parent (should be empty)
+select p.budget_id, p.budget_item_seq_id as parent_seq, p.amount as parent_amount,
+       sum(c.amount) as parts_total, bool_or(c.budget_id <> p.budget_id) as part_in_other_budget
+from budget_item p
+join budget_item c on c.part_of_budget_item_id = p.budget_item_id
+group by p.budget_item_id, p.budget_id, p.budget_item_seq_id, p.amount
+having sum(c.amount) <> p.amount or bool_or(c.budget_id <> p.budget_id);
