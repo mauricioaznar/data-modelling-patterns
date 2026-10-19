@@ -14,6 +14,7 @@ Architecture figure:
 | 1 | Shipments, items and status | 5.1–5.2 | 2026-10-18 | | | |
 | 2 | Shipments and orders | 5.3 | 2026-10-18 | | | |
 | 3 | Packages and receipts | 5.4 | 2026-10-18 | | | |
+| 4 | Issuances and picklists | 5.5 | | | | |
 
 `Figs` must match the card's heading, e.g. `(Figs 5.1–5.2)`; the `A` row's matches the
 architecture card's `(Fig N.M)`.
@@ -26,12 +27,14 @@ architecture card's `(Fig N.M)`.
 | 5.2 | built | 1 | ✓ | ✓ | ✓ | ✓ | – |
 | 5.3 | built | 2 | ✓ | ✓ | ✓ | ✓ | – |
 | 5.4 | built | 3 | ✓ | ✓ | ✓ | ✓ | – |
+| 5.5 | built | 4 | ✓ | ✓ | ✓ | ✓ | – |
 
 | # | Submodel | Figures built | Card | Ponders |
 |---|---|---|---|---|
 | 1 | Shipments, items and status | ✓ | Card 17 | 5 |
 | 2 | Shipments and orders | ✓ | Card 18 | 4 |
 | 3 | Packages and receipts | ✓ | Card 19 | 5 |
+| 4 | Issuances and picklists | ✓ | ✗ | 5 |
 
-Last check: 0 ✗ · 1 !
+Last check: 2 ✗ · 1 !
 <!-- check:end -->

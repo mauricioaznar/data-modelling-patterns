@@ -27,6 +27,10 @@ an item-to-item link carrying its own quantity.
    incoming package is opened, how much of each good was accepted or rejected and why, who
    received it, which stock it went into, and which order line it's checked against?
 
+4. **Issuances and picklists** (Fig 5.5): which stock was pulled for each outgoing shipment
+   line, how much and by whom, according to which picklist; and does the quantity on hand
+   still match what came in, went out and was counted?
+
 Later figures join a submodel when they answer the same questions, or start one.
 
 ## Figures
@@ -405,7 +409,91 @@ ITEM ISSUANCE ROLEs, and its line to SHIPMENT ITEM is optional.
 - **Who received and inspected** is a scoped role, as for orders and requirements: a party
   and a type within one receipt.
 
-### Points to discuss after the overview (Figs 5.1–5.4 so far)
+### Fig 5.5 — Item issuance for outgoing shipments
+**Transcription** (accepted: ☐; one photo, with Table 5.9 on another; open points under "To
+check against the book")
+
+```
+ITEM ISSUANCE
+  # item_issuance_id
+  * issued_datetime
+  * quantity
+  -> SHIPMENT ITEM           (many "issued for" 1 shipment item; item "obtained via" many;
+                              dashed: optional)
+  -> INVENTORY ITEM          (many "issued from" 1 item; item "issued via" many)
+  -> PICKLIST ITEM           (many "issued according to" 1 picklist item; picklist item "the
+                              record of the need to issue" many)
+
+ITEM ISSUANCE ROLE           (no attributes; all three lines carry a bar)
+  -> ITEM ISSUANCE           (many "for" 1 issuance; issuance "involving" many)
+  -> ITEM ISSUANCE ROLE TYPE (many "described by" 1 type; type "the description for" many)
+  -> PARTY                   (many "of" 1 party; party "involved in" many)
+
+ITEM ISSUANCE ROLE TYPE      (no attributes drawn)
+
+PICKLIST
+  # picklist_id
+  * date_created
+  (no line to a shipment, a facility or a party)
+
+PICKLIST ITEM                (both lines carry a bar)
+  * quantity
+  -> PICKLIST                (many "part of" 1 picklist; picklist "composed of" many)
+  -> INVENTORY ITEM          (many "picked from" 1 item; item "picked using" many)
+
+INVENTORY ITEM               (Ch 3) -> GOOD ("the physical occurrence of" / "the generic
+                              description for")
+SHIPMENT ITEM, PACKAGING CONTENT, SHIPMENT PACKAGE: as 5.4, with 5.2's "in response to" loop
+
+Two labels with no line: "issued via" above PACKAGING CONTENT, "created to send" above
+SHIPMENT PACKAGE.
+```
+
+**Table 5.9** (item issuances, the book's sample, in our words): the two customer shipments
+of Table 5.5, line by line, with each line's packages beside the issuances that pulled its
+goods from stock.
+- 9000: line 1, 1,000 Jones #2 pencils, packed in 62000, one issuance (12900, 1,000). Line 2,
+  1,000 Goldstein Elite pens, also in 62000, pulled in two issuances (12901 for 800, 13100
+  for 200). Line 3, 100 boxes of HD diskettes, in 62000, issuance 12902.
+- 9200: line 1, 350 standard erasers in 62001 (issuance 13800). Line 2, 100 boxes of
+  diskettes in 62002 (13801). Line 3, 1,500 pencils: 1,500 printed as packed in 62002 and
+  500 more in 62003, pulled as 1,000 (13802) and 500 (13803).
+
+**To check against the book**
+- Optionality, from the photo: the line to SHIPMENT ITEM is dashed (the text under Fig 5.4
+  says it's optional); the line to INVENTORY ITEM read as mandatory and the one to PICKLIST
+  ITEM as optional (point 29).
+- The two labels with no line (point 27). Fig 5.8 draws neither line.
+- Table 5.9's 9200 line 3: 1,500 + 500 packed for a line of 1,500 (point 28).
+- Bars: PICKLIST ITEM is identified by its picklist and its inventory item; ITEM ISSUANCE
+  ROLE by its issuance, type and party.
+
+**Discussion**
+- **The issuance is the receipt's mirror.** A receipt counts a good out of a package *into*
+  an inventory item; an issuance pulls a quantity *out of* an inventory item for a shipment
+  line. Ch 3's stock now has both its movements, and the two hand over at INVENTORY ITEM.
+- **One pull, one row.** 9000's pens come out in two issuances (800 and 200): the stock sat
+  in two places (in our seed, the loose stock and a bin), each its own INVENTORY ITEM. So a
+  line has many issuances, and each names the exact stock it drained. (Ponder 1.)
+- **The issuance knows its line, not its box.** Table 5.9 sets packages and issuances side
+  by side, but the drawn model joins them only through the shipment line. Which of 9200's
+  two pencil boxes 13802's 1,000 went into isn't recorded. (Ponder 2.)
+- **Three quantities on one line, plan beside the facts again:** the picklist item says what
+  to pull and from where (the plan), the issuance what was pulled (the fact), the packaging
+  content what went into which box (another fact). A short pick, a pull from the wrong bin
+  or a box packed beyond its line each shows as a gap between two of them. (Ponder 3.)
+- **A picklist has no shipment.** It's a warehouse sheet: pull these quantities from these
+  stocks. Which shipments it served is worked out through its issuances, so one sheet can
+  serve several shipments (a wave pick). (Ponder 4.)
+- **The issuance names its stock twice:** directly, and through its picklist item. The two
+  must agree, the shortcut-against-path check of Fig 5.4 again.
+- **qoh = balance, at last.** Ch 3 cached the quantity on hand and promised a check once
+  receipts and issuances existed (Ch 3 NOTES, Fig 3.6 vocabulary). Now the balance is
+  receipts accepted − issued + variances, from zero. Stock that predates the system starts
+  with an opening count, a variance against zero. (Ponder 5.)
+- **Who pulled it** is a scoped role again, now the ninth role-type lookup.
+
+### Points to discuss after the overview (Figs 5.1–5.5 so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing. The list moves under the chapter's last figure as figures arrive.
@@ -449,7 +537,8 @@ the literal drawing. The list moves under the chapter's last figure as figures a
     redirected truck)?
 13. **Table 5.5's 9200 line 3:** read from a skewed photo as 1,500 pencils on 9200 and 500 on
     9400. Table 5.6 claims 9400's 500 but nothing of 9200's 1,500. A slip in the book, or a
-    line meant to fill no order? Seeded as read; a review query shows it unclaimed.
+    line meant to fill no order? Seeded as read; a review query shows it unclaimed. Table
+    5.9 prints the same 1,500 (point 28), so the reading holds; the question stays.
 14. **Table 5.7, ordered features as Ch 4's feature lines:** orders 100 and 200 get a blue
     line under their pen lines (lines 4 and 3), which Table 5.4 doesn't list. If Ch 4's point
     2 settles that a feature may sit on its product's own line, these become columns there.
@@ -490,6 +579,26 @@ the literal drawing. The list moves under the chapter's last figure as figures a
     (Ch 4's point 5 and TODO's ROLE TYPE refactor).
 26. **5.4, ORDER ITEM's attributes again:** COMMENT on ORDER ITEM and ITEM DESCRIPTION on
     PURCHASE ORDER ITEM, as Fig 4.4 drew them (Ch 4's point 6).
+27. **5.5, two labels with no line:** "issued via" above PACKAGING CONTENT and "created to
+    send" above SHIPMENT PACKAGE. Read as leftovers of an earlier drawing and built as drawn;
+    Fig 5.8 draws neither line. Had they been meant, an issuance would name the package
+    content it filled (Table 5.9 lines them up) and a package its shipment (point 17).
+28. **Table 5.9, 9200 line 3:** 1,500 printed as packed in 62002 and 500 more in 62003, for a
+    line of 1,500. Read 62002's as 1,000, which pairs with issuance 13802's 1,000 and sums
+    to the line. If the line was meant to be 2,000, Table 5.5 and the issuances are wrong.
+29. **5.5, optionality:** an issuance is from one inventory item (mandatory); its shipment
+    line is optional (the text says so; read as stock leaving for other reasons, such as
+    our own use) and so is its picklist item. The picklist item's two lines are mandatory.
+30. **5.5, which shipments may draw issuances, and from where** (ours, the mirror of point
+    24): only shipments that leave one of our organizations, and only from stock at a
+    facility at the shipment's ship-from address. Both are data-quality queries.
+31. **5.5, ITEM ISSUANCE ROLE TYPE as a lookup of its own:** the ninth role-type lookup
+    (point 25).
+32. **5.5, opening stock:** the book has no opening balance. Stock that predates the
+    shipments gets an opening count, an INVENTORY ITEM VARIANCE against zero (Ch 3) with an
+    OPENING_COUNT reason of ours, so qoh = balance can be checked from zero.
+33. **5.5, PICKLIST with no line to a shipment, facility or party:** kept. Its shipments come
+    through its issuances; which warehouse it's for follows from its picked stock.
 
 ## Design decisions (book → SQL)
 
@@ -579,7 +688,8 @@ the literal drawing. The list moves under the chapter's last figure as figures a
 ### Fig 5.4
 - **`shipment_package` keeps the book's ids** (52000 …) and its `date_created`; no FK to
   `shipment`, as drawn (point 17). A package whose contents come from two shipments is a
-  data-quality query (seed: ten of 9000's diskettes put in 1146's carton of pens, 52002).
+  data-quality query (seed: ten of 9400's pencils put in 1146's carton of pens, 52002; until
+  Fig 5.5 packed 9000's diskettes in 62000, the ten were 9000's).
 - **`packaging_content`: a surrogate key, the package, the shipment line and a quantity.**
   Contents adding up to more than the line carries are a data-quality query (seed: 60
   pencils packed for 9500's line of 50). Less is shown for review: a line may not be packed
@@ -606,12 +716,56 @@ the literal drawing. The list moves under the chapter's last figure as figures a
   ordered, poor quality.
 - **Stock:** two facilities of ABC's (Ch 2), one per address, and six inventory items (Ch 3)
   the receipts store into; their quantity on hand is what the receipts accepted, since
-  nothing is issued yet.
+  nothing is issued yet (Fig 5.5 issues from two of them and updates it).
 - **Seed:** Table 5.8's eight receipts (12901's second read as 12902, point 20; "4800" as
   3485, point 18), with their packages and contents. Ours: package 52005 with 1146's other
   900 boxes of diskettes (point 21), packages for 9600, 1578 and 9500, the receipt for
   ACME's returned pens, and the six receipts and rows that carry the mistakes. Dates,
   descriptions, roles and stock are ours.
+
+### Fig 5.5
+- **`item_issuance` keeps the book's ids** (12900 …; another table from the receipts of the
+  same numbers). `inventory_item_id` is `not null`; `shipment_item_id` and
+  `picklist_item_id` are nullable (point 29). `issued_datetime` is a `timestamptz`;
+  `quantity` is `not null` and positive.
+- **Nothing ties an issuance to a package,** as drawn (point 27): Table 5.9's packages and
+  issuances meet only at the shipment line, and the queries show them side by side.
+- **`picklist` (its id and `date_created`) and `picklist_item`** (a surrogate key, the
+  picklist, the inventory item, a positive quantity). The book's identifier (picklist +
+  inventory item) is a data-quality query shared with the role's (seed: picklist 2 lists 9200's
+  diskette stock twice).
+- **`item_issuance_role` + `item_issuance_role_type`** (ISSUER, APPROVER), a lookup of its
+  own (point 31); its identifier is in the same shared query (seed: Rosa Diaz as issuer of
+  12900 twice).
+- **The issued good must be the line's good:** the inventory item's good against the
+  shipment line's (data-quality query; seed: 13951, erasers pulled for 9500's pencil line).
+- **No more issued than the line carries** (data-quality query; seed: 13952, 60 pencils for
+  9500's line of 50, the same 60 Fig 5.4 packed). Less is shown for review: not yet pulled.
+- **The two paths to the stock must agree:** the issuance's inventory item against its
+  picklist item's (data-quality query; seed: 13900, 9400's pencils taken from the floor
+  stock though the picklist named the bin).
+- **Issuances only for shipments that leave one of ours** (point 30: the type's
+  `from_internal` flag; data-quality query; seed: 11460, 20 pencils keyed against incoming
+  1146).
+- **Stock from the shipment's origin** (point 30): an outgoing shipment's issuances come
+  from an inventory item whose facility (or its container's) has the shipment's ship-from
+  address on file on the issue date (data-quality query; seed: 13950, 9500's erasers taken
+  from ABC Corporation's stock, 100 Main Street, for a shipment leaving 300 Main Street).
+- **qoh = balance** (Ch 3's promised check, point 32): for every inventory item with a
+  receipt or an issuance, `quantity_on_hand` must equal receipts accepted − issued +
+  variances (data-quality query; seed: item 19, the diskettes, still at 400 because 9200's
+  100 were never subtracted). Ch 3's own items have variances only and no starting point,
+  so they stay out.
+- **Stock:** ABC Subsidiary's warehouse (9000, 9200, 9400 and 9500 leave from it) gets six
+  inventory items (pencils loose and in bin P-1, pens loose and in bin P-2, diskettes,
+  erasers), each with an opening count on 2001-03-01. Each quantity on hand is what's left
+  after the issues, the wrong ones included, as a cache that applied every row written. ABC
+  Corporation's pencils and erasers (Fig 5.4's items 10 and 13) are updated the same way.
+- **Seed:** Table 5.9's eight issuances and four packages (62002's 1,500 read as 1,000:
+  point 28). Ours: Rosa Diaz (party 50), ABC Subsidiary's warehouse clerk; three
+  picklists; legit issuances for 9400, 3485 (from ABC Corporation, the transfer Fig 5.4
+  received), 1578 (our return to General Goods) and five erasers for our own use with no
+  shipment line; and the six rows that carry the mistakes. Times, roles and stock are ours.
 
 ## When NOT to use this
 - **A shop that ships each order once, whole, to one address** can keep a ship date and a

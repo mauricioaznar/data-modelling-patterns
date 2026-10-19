@@ -13,6 +13,7 @@ every row scores 3+ and its scenario holds up.
 1. **Shipments, items and status** (Figs 5.1–5.2). ~3 h
 2. **Shipments and orders** (Fig 5.3). ~3 h
 3. **Packages and receipts** (Fig 5.4). ~3 h
+4. **Issuances and picklists** (Fig 5.5). ~3 h
 
 ## Progress
 
@@ -81,6 +82,20 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    become?
 5. **[5.4]** Receipts are for incoming shipments. ACME signs for shipment 9000 at its door:
    where, if anywhere, does this model record that?
+
+### Submodel 4: issuances and picklists
+1. **[5.5]** 9000's 1,000 pens leave in two issuances, 800 and 200. Why not one issuance,
+   and what would be lost if the shipment line pointed at one INVENTORY ITEM itself?
+2. **[5.5]** Table 5.9 sets 9200's pencils, 1,000 in one box and 500 in another, beside
+   issuances of 1,000 and 500. Which box did issuance 13802 fill, according to the model?
+   Would you add the line the stray "issued via" label hints at, and what would it cost?
+3. **[5.5]** One shipment line, three quantities: picked, issued, packed. Say what each
+   records and what a gap between any two of them means on the warehouse floor.
+4. **[5.5]** PICKLIST has no line to SHIPMENT. How do you find the shipments a picklist
+   served, and what does a picker gain from a sheet that isn't tied to one shipment?
+5. **[5.5]** Ch 3 stored a quantity on hand and promised a check once receipts and
+   issuances existed. Say the balance in words, why the stock 9000 drew on needs an opening
+   count, and what the check finding item 19 means.
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

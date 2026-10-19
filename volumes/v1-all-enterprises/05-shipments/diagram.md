@@ -73,4 +73,22 @@ erDiagram
   SHIPMENT_RECEIPT           ||--o{ SHIPMENT_RECEIPT_ROLE : "involving"
   PARTY                      ||--o{ SHIPMENT_RECEIPT_ROLE : "involved in (Ch 2)"
   SHIPMENT_RECEIPT_ROLE_TYPE ||--o{ SHIPMENT_RECEIPT_ROLE : "the description for"
+
+  %% Fig 5.5 — Item issuance for outgoing shipments (no line from issuance to package)
+  ITEM_ISSUANCE {
+    int         item_issuance_id PK
+    int         inventory_item_id FK
+    int         shipment_item_id FK "or null"
+    int         picklist_item_id FK "or null"
+    timestamptz issued_datetime
+    numeric     quantity
+  }
+  INVENTORY_ITEM             ||--o{ ITEM_ISSUANCE         : "issued via (Ch 3)"
+  SHIPMENT_ITEM              |o--o{ ITEM_ISSUANCE         : "obtained via"
+  PICKLIST_ITEM              |o--o{ ITEM_ISSUANCE         : "the record of the need to issue"
+  PICKLIST                   ||--o{ PICKLIST_ITEM         : "composed of"
+  INVENTORY_ITEM             ||--o{ PICKLIST_ITEM         : "picked using (Ch 3)"
+  ITEM_ISSUANCE              ||--o{ ITEM_ISSUANCE_ROLE    : "involving"
+  PARTY                      ||--o{ ITEM_ISSUANCE_ROLE    : "involved in (Ch 2)"
+  ITEM_ISSUANCE_ROLE_TYPE    ||--o{ ITEM_ISSUANCE_ROLE    : "the description for"
 ```

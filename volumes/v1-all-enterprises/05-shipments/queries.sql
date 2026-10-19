@@ -562,3 +562,190 @@ select 'shipment_receipt_role', shipment_receipt_id || ' / ' || party_id || ' / 
 from shipment_receipt_role
 group by shipment_receipt_id, party_id, shipment_receipt_role_type_id
 having count(*) > 1;
+
+-- ============================================================
+-- Fig 5.5 — Item issuance for outgoing shipments
+-- ============================================================
+
+-- name: 5.5 — Item issuances as Table 5.9 shows them: each line, its packages and the issuances that pulled it
+-- Packages and issuances meet only at the shipment line (NOTES, point 27),
+-- so each gets its own column rather than a pairing the model can't hold.
+select si.shipment_id, si.shipment_item_seq_id as line, si.quantity, p.name as product,
+       (select string_agg(pc.shipment_package_id || ': ' || pc.quantity, ', ' order by pc.shipment_package_id)
+        from packaging_content pc where pc.shipment_item_id = si.shipment_item_id) as packages,
+       (select string_agg(ii.item_issuance_id || ': ' || ii.quantity, ', ' order by ii.item_issuance_id)
+        from item_issuance ii where ii.shipment_item_id = si.shipment_item_id)      as issuances
+from shipment_item si
+join product p on p.product_id = si.product_id
+where si.shipment_id in (9000, 9200)
+order by si.shipment_id, si.shipment_item_seq_id;
+
+-- name: 5.5 — Each outgoing shipment line: shipped, picked, issued and packed (the plan beside the facts)
+-- Picked: the picklist items its issuances followed (each counted once).
+-- Outgoing: the type's from_internal flag (5.1).
+with issued as (
+  select shipment_item_id, sum(quantity) as issued
+  from item_issuance
+  group by shipment_item_id
+),
+picked as (
+  select x.shipment_item_id, sum(pi.quantity) as picked
+  from (select distinct shipment_item_id, picklist_item_id from item_issuance where picklist_item_id is not null) x
+  join picklist_item pi on pi.picklist_item_id = x.picklist_item_id
+  group by x.shipment_item_id
+),
+packed as (
+  select shipment_item_id, sum(quantity) as packed
+  from packaging_content
+  group by shipment_item_id
+)
+select si.shipment_id, st.description as shipment_type, si.shipment_item_seq_id as line,
+       coalesce(p.name, si.shipment_contents_description) as contents, si.quantity as shipped,
+       k.picked, coalesce(i.issued, 0) as issued, coalesce(c.packed, 0) as packed
+from shipment_item si
+join shipment sh        on sh.shipment_id = si.shipment_id
+join shipment_type st   on st.shipment_type_id = sh.shipment_type_id
+left join product p     on p.product_id = si.product_id
+left join picked k      on k.shipment_item_id = si.shipment_item_id
+left join issued i      on i.shipment_item_id = si.shipment_item_id
+left join packed c      on c.shipment_item_id = si.shipment_item_id
+where st.from_internal
+order by si.shipment_id, si.shipment_item_seq_id;
+
+-- name: 5.5 — Each picklist: what it said to pull and from where, what was pulled, and the shipments it served
+-- A picklist has no shipment of its own: they come through its issuances.
+select pl.picklist_id, pl.date_created, pi.picklist_item_id, pi.inventory_item_id as stock, g.name as good,
+       pi.quantity as to_pick, coalesce(sum(ii.quantity), 0) as issued,
+       string_agg(distinct si.shipment_id::text, ', ') as shipments
+from picklist pl
+join picklist_item pi      on pi.picklist_id = pl.picklist_id
+join inventory_item inv    on inv.inventory_item_id = pi.inventory_item_id
+join product g             on g.product_id = inv.product_id
+left join item_issuance ii on ii.picklist_item_id = pi.picklist_item_id
+left join shipment_item si on si.shipment_item_id = ii.shipment_item_id
+group by pl.picklist_id, pl.date_created, pi.picklist_item_id, pi.inventory_item_id, g.name, pi.quantity
+order by pl.picklist_id, pi.picklist_item_id;
+
+-- name: 5.5 — The stock ledger: each inventory item's counts, receipts and issues, its balance and its quantity on hand
+-- Ch 3's vocabulary: qoh is the stored cache, the balance the sum of the
+-- movements from zero. Only items with a known starting point: a receipt,
+-- an issuance or an opening count.
+with moves as (
+  select inventory_item_id, quantity as counted, 0 as received, 0 as issued from inventory_item_variance
+  union all
+  select inventory_item_id, 0, quantity_accepted, 0 from shipment_receipt where inventory_item_id is not null
+  union all
+  select inventory_item_id, 0, 0, quantity from item_issuance
+)
+select inv.inventory_item_id as stock, g.name as good,
+       coalesce(f.description, cf.description || ', ' || c.description) as place,
+       sum(m.counted) as counted, sum(m.received) as received, sum(m.issued) as issued,
+       sum(m.counted + m.received - m.issued) as balance, inv.quantity_on_hand as qoh
+from inventory_item inv
+join moves m             on m.inventory_item_id = inv.inventory_item_id
+join product g           on g.product_id = inv.product_id
+left join facility f     on f.facility_id = inv.facility_id
+left join container c    on c.container_id = inv.container_id
+left join facility cf    on cf.facility_id = c.facility_id
+where exists (select 1 from shipment_receipt r where r.inventory_item_id = inv.inventory_item_id)
+   or exists (select 1 from item_issuance ii where ii.inventory_item_id = inv.inventory_item_id)
+   or exists (select 1 from inventory_item_variance v where v.inventory_item_id = inv.inventory_item_id and v.reason_id = 'OPENING_COUNT')
+group by inv.inventory_item_id, g.name, f.description, cf.description, c.description, inv.quantity_on_hand
+order by inv.inventory_item_id;
+
+-- name: 5.5 — Who pulled and approved each issuance
+select ii.item_issuance_id as issuance, si.shipment_id, ii.quantity,
+       string_agg(t.description || ': ' || n.name, '; ' order by t.description) as people
+from item_issuance ii
+left join shipment_item si             on si.shipment_item_id = ii.shipment_item_id
+left join item_issuance_role ro        on ro.item_issuance_id = ii.item_issuance_id
+left join item_issuance_role_type t    on t.item_issuance_role_type_id = ro.item_issuance_role_type_id
+left join party_display_name n         on n.party_id = ro.party_id
+group by ii.item_issuance_id, si.shipment_id, ii.quantity
+order by ii.item_issuance_id;
+
+-- name: 5.5 — Data-quality check: issuances pulling a good other than their shipment line's (should be empty)
+select ii.item_issuance_id as issuance, si.shipment_id, si.shipment_item_seq_id as line,
+       lp.name as line_good, sp.name as stock_good
+from item_issuance ii
+join shipment_item si   on si.shipment_item_id = ii.shipment_item_id
+join inventory_item inv on inv.inventory_item_id = ii.inventory_item_id
+join product sp         on sp.product_id = inv.product_id
+left join product lp    on lp.product_id = si.product_id
+where si.product_id is distinct from inv.product_id;
+
+-- name: 5.5 — Data-quality check: shipment lines issued for more than they carry (should be empty)
+select si.shipment_id, si.shipment_item_seq_id as line, si.quantity as carries, sum(ii.quantity) as issued
+from shipment_item si
+join item_issuance ii on ii.shipment_item_id = si.shipment_item_id
+group by si.shipment_item_id, si.shipment_id, si.shipment_item_seq_id, si.quantity
+having sum(ii.quantity) > si.quantity;
+
+-- name: 5.5 — Data-quality check: issuances drawing on other stock than their picklist item names (should be empty)
+-- The direct line to the inventory item against the path through the
+-- picklist item.
+select ii.item_issuance_id as issuance, ii.inventory_item_id as issued_from, pi.inventory_item_id as picklist_says,
+       pi.picklist_id
+from item_issuance ii
+join picklist_item pi on pi.picklist_item_id = ii.picklist_item_id
+where pi.inventory_item_id <> ii.inventory_item_id;
+
+-- name: 5.5 — Data-quality check: issuances for a shipment that doesn't leave one of ours (should be empty)
+-- Fig 5.5 is for outgoing shipments: the type's from_internal flag (5.1).
+select ii.item_issuance_id as issuance, sh.shipment_id, t.description as shipment_type
+from item_issuance ii
+join shipment_item si  on si.shipment_item_id = ii.shipment_item_id
+join shipment sh       on sh.shipment_id = si.shipment_id
+join shipment_type t   on t.shipment_type_id = sh.shipment_type_id
+where t.from_internal is not true;
+
+-- name: 5.5 — Data-quality check: outgoing issuances from stock away from the shipment's ship-from address (should be empty)
+-- The stock's facility (or its container's) must have the address on file
+-- on the issue date (Ch 2's facility_contact_mechanism).
+select ii.item_issuance_id as issuance, sh.shipment_id, f.description as stock_at,
+       sh.shipped_from_contact_mechanism_id as ships_from
+from item_issuance ii
+join shipment_item si   on si.shipment_item_id = ii.shipment_item_id
+join shipment sh        on sh.shipment_id = si.shipment_id
+join shipment_type t    on t.shipment_type_id = sh.shipment_type_id
+join inventory_item inv on inv.inventory_item_id = ii.inventory_item_id
+left join container c   on c.container_id = inv.container_id
+join facility f         on f.facility_id = coalesce(inv.facility_id, c.facility_id)
+where t.from_internal
+  and not exists (select 1
+                  from facility_contact_mechanism fcm
+                  where fcm.facility_id = f.facility_id
+                    and fcm.contact_mechanism_id = sh.shipped_from_contact_mechanism_id
+                    and fcm.from_date <= ii.issued_datetime::date
+                    and (fcm.thru_date is null or fcm.thru_date > ii.issued_datetime::date));
+
+-- name: 5.5 — Data-quality check: quantity on hand that isn't the balance of the movements (should be empty)
+-- Ch 3's qoh = balance, now that receipts and issuances exist: accepted −
+-- issued + variances, from zero, for items with a receipt, an issuance or
+-- an opening count.
+with moves as (
+  select inventory_item_id, quantity as delta from inventory_item_variance
+  union all
+  select inventory_item_id, quantity_accepted from shipment_receipt where inventory_item_id is not null
+  union all
+  select inventory_item_id, -quantity from item_issuance
+)
+select inv.inventory_item_id as stock, inv.quantity_on_hand as qoh, sum(m.delta) as balance
+from inventory_item inv
+join moves m on m.inventory_item_id = inv.inventory_item_id
+where exists (select 1 from shipment_receipt r where r.inventory_item_id = inv.inventory_item_id)
+   or exists (select 1 from item_issuance ii where ii.inventory_item_id = inv.inventory_item_id)
+   or exists (select 1 from inventory_item_variance v where v.inventory_item_id = inv.inventory_item_id and v.reason_id = 'OPENING_COUNT')
+group by inv.inventory_item_id, inv.quantity_on_hand
+having inv.quantity_on_hand is distinct from sum(m.delta);
+
+-- name: 5.5 — Data-quality check: the same row twice, in picklist_item or item_issuance_role (should be empty)
+select 'picklist_item' as table_name, picklist_id || ' / stock ' || inventory_item_id as pair, count(*) as times
+from picklist_item
+group by picklist_id, inventory_item_id
+having count(*) > 1
+union all
+select 'item_issuance_role', item_issuance_id || ' / ' || party_id || ' / ' || item_issuance_role_type_id, count(*)
+from item_issuance_role
+group by item_issuance_id, party_id, item_issuance_role_type_id
+having count(*) > 1;

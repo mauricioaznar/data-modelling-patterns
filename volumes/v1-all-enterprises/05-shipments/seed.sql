@@ -347,7 +347,7 @@ insert into shipment_package (shipment_package_id, date_created) values
 select setval(pg_get_serial_sequence('shipment_package', 'shipment_package_id'), (select max(shipment_package_id) from shipment_package));
 
 -- Shipment lines: 8, 17, 18 on 1146; 9, 10, 19 on 1149; 13 on 3485; 15 on
--- 9600; 11 on 1578; 22, 23 on 9500; 3 on 9000.
+-- 9600; 11 on 1578; 22, 23 on 9500; 7 on 9400.
 insert into packaging_content (packaging_content_id, shipment_package_id, shipment_item_id, quantity) values
   (1,  52000, 8,  1000),   -- Table 5.8: 1146's pencils in two cartons
   (2,  52001, 8,  1000),
@@ -362,7 +362,7 @@ insert into packaging_content (packaging_content_id, shipment_package_id, shipme
   (11, 51578, 11, 100),
   (12, 59500, 22, 100),
   (13, 59500, 23, 60),     -- DATA ERROR: 60 packed for a line of 50 (caught by a query)
-  (14, 52002, 3,  10);     -- DATA ERROR: ten of 9000's diskettes in 1146's carton of pens (caught by a query)
+  (14, 52002, 7,  10);     -- DATA ERROR: ten of 9400's pencils in 1146's carton of pens (caught by a query)
 
 select setval(pg_get_serial_sequence('packaging_content', 'packaging_content_id'), (select max(packaging_content_id) from packaging_content));
 
@@ -415,3 +415,143 @@ insert into shipment_receipt_role (shipment_receipt_role_id, shipment_receipt_id
   (12, 19600, 13, 'INSPECTOR');
 
 select setval(pg_get_serial_sequence('shipment_receipt_role', 'shipment_receipt_role_id'), (select max(shipment_receipt_role_id) from shipment_receipt_role));
+
+-- ============================================================
+-- Fig 5.5 — Item issuance for outgoing shipments
+-- ============================================================
+-- Rosa Diaz, ABC Subsidiary's warehouse clerk, pulls the stock.
+insert into party (party_id, party_kind) values
+  (50, 'PERSON');
+
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into person (party_id, gender_type_id) values
+  (50, 'FEMALE');
+
+insert into person_name (party_id, person_name_type_id, from_date, thru_date, name) values
+  (50, 'FIRST', '1999-01-01', null, 'Rosa'),
+  (50, 'LAST',  '1999-01-01', null, 'Diaz');
+
+-- Two bins in ABC Subsidiary's warehouse (facility 12, 300 Main Street).
+insert into container (container_id, container_type_id, facility_id, description) values
+  (4, 'BIN', 12, 'Bin P-1'),
+  (5, 'BIN', 12, 'Bin P-2');
+
+select setval(pg_get_serial_sequence('container', 'container_id'), (select max(container_id) from container));
+
+-- The stock 9000, 9200, 9400 and 9500 leave from. Each quantity on hand is
+-- what's left after the issues below, the wrong ones included (a cache that
+-- applied every row written), except item 19's.
+insert into inventory_item (inventory_item_id, inventory_item_kind, product_id, inventory_item_status_type_id, lot_id, facility_id, container_id, serial_num, quantity_on_hand) values
+  (16, 'NON_SERIALIZED', 20, 'GOOD', null, 12,   null, null, 440),    -- pencils, floor stock
+  (17, 'NON_SERIALIZED', 2,  'GOOD', null, 12,   null, null, 0),      -- pens, floor stock
+  (18, 'NON_SERIALIZED', 2,  'GOOD', null, null, 5,    null, 300),    -- pens, bin P-2
+  (19, 'NON_SERIALIZED', 3,  'GOOD', null, 12,   null, null, 400),    -- diskettes. DATA ERROR: 9200's 100 never subtracted, the balance is 300 (caught by a query)
+  (20, 'NON_SERIALIZED', 21, 'GOOD', null, 12,   null, null, 85),     -- erasers
+  (21, 'NON_SERIALIZED', 20, 'GOOD', null, null, 4,    null, 1000);   -- pencils, bin P-1
+
+select setval(pg_get_serial_sequence('inventory_item', 'inventory_item_id'), (select max(inventory_item_id) from inventory_item));
+
+-- Opening stock: counted when the items were set up, a variance against
+-- zero (NOTES, point 32), so the balance has a starting point.
+insert into reason (reason_id, description) values
+  ('OPENING_COUNT', 'First count when the stock was set up');
+
+insert into inventory_item_variance (inventory_item_id, physical_inventory_date, quantity, reason_id, comment) values
+  (16, '2001-03-01', 3500, 'OPENING_COUNT', null),
+  (17, '2001-03-01', 800,  'OPENING_COUNT', null),
+  (18, '2001-03-01', 500,  'OPENING_COUNT', null),
+  (19, '2001-03-01', 500,  'OPENING_COUNT', null),
+  (20, '2001-03-01', 600,  'OPENING_COUNT', null),
+  (21, '2001-03-01', 1000, 'OPENING_COUNT', null);
+
+-- ABC Corporation's stock (Fig 5.4) after the issues below: pencils 2,150
+-- received (12950's extra 50 included) less 620 issued; erasers 200 less 150.
+update inventory_item set quantity_on_hand = 1530 where inventory_item_id = 10;
+update inventory_item set quantity_on_hand = 50   where inventory_item_id = 13;
+
+-- Table 5.9's packages (dates ours: the day before each shipment left).
+insert into shipment_package (shipment_package_id, date_created) values
+  (62000, '2001-03-06'),
+  (62001, '2001-03-11'),
+  (62002, '2001-03-11'),
+  (62003, '2001-03-11');
+
+-- Shipment lines: 1-3 on 9000; 4-6 on 9200.
+insert into packaging_content (packaging_content_id, shipment_package_id, shipment_item_id, quantity) values
+  (15, 62000, 1, 1000),
+  (16, 62000, 2, 1000),
+  (17, 62000, 3, 100),
+  (18, 62001, 4, 350),
+  (19, 62002, 5, 100),
+  (20, 62002, 6, 1000),   -- printed 1,500 (NOTES, point 28)
+  (21, 62003, 6, 500);
+
+select setval(pg_get_serial_sequence('packaging_content', 'packaging_content_id'), (select max(packaging_content_id) from packaging_content));
+
+-- Ours: what to pull, for 9000, 9200 and 9400.
+insert into picklist (picklist_id, date_created) values
+  (1, '2001-03-06'),
+  (2, '2001-03-11'),
+  (3, '2001-03-21');
+
+select setval(pg_get_serial_sequence('picklist', 'picklist_id'), (select max(picklist_id) from picklist));
+
+insert into picklist_item (picklist_item_id, picklist_id, inventory_item_id, quantity) values
+  (1, 1, 16, 1000),
+  (2, 1, 17, 800),
+  (3, 1, 18, 200),
+  (4, 1, 19, 100),
+  (5, 2, 20, 350),
+  (6, 2, 19, 100),
+  (7, 2, 16, 1500),   -- one pick, two issuances (13802, 13803)
+  (8, 2, 19, 100),    -- DATA ERROR: the diskette stock listed twice on one picklist (caught by a query)
+  (9, 3, 21, 500);    -- 9400's pencils from bin P-1
+
+select setval(pg_get_serial_sequence('picklist_item', 'picklist_item_id'), (select max(picklist_item_id) from picklist_item));
+
+-- Table 5.9's issuances, then ours. Shipment lines: 7 on 9400, 13 on 3485,
+-- 11 on 1578, 21-24 on 9500, 8 on 1146. Stock: 16-21 above, 10 and 13 ABC
+-- Corporation's (Fig 5.4). Times are ours.
+insert into item_issuance (item_issuance_id, inventory_item_id, shipment_item_id, picklist_item_id, issued_datetime, quantity) values
+  (12900, 16, 1,    1,    '2001-03-06 14:00+00', 1000),
+  (12901, 17, 2,    2,    '2001-03-06 14:10+00', 800),    -- 9000's pens, from two stocks ...
+  (13100, 18, 2,    3,    '2001-03-06 14:30+00', 200),    --   ... the floor and bin P-2
+  (12902, 19, 3,    4,    '2001-03-06 14:20+00', 100),
+  (13800, 20, 4,    5,    '2001-03-11 09:00+00', 350),
+  (13801, 19, 5,    6,    '2001-03-11 09:10+00', 100),
+  (13802, 16, 6,    7,    '2001-03-11 09:20+00', 1000),
+  (13803, 16, 6,    7,    '2001-03-11 09:40+00', 500),
+  (14000, 10, 13,   null, '2001-06-22 14:00+00', 500),    -- ours from here: the transfer Fig 5.4 received, leaving ABC Corporation
+  (15800, 10, 11,   null, '2001-04-08 10:00+00', 100),    -- our return to General Goods
+  (13960, 20, null, null, '2001-03-15 11:00+00', 5),      -- five erasers for our own office: no shipment line
+  (13953, 20, 24,   null, '2001-03-27 09:30+00', 60),
+  (13900, 16, 7,    9,    '2001-03-21 10:00+00', 500),    -- DATA ERROR: floor stock, though the picklist named bin P-1 (caught by a query)
+  (13950, 13, 21,   null, '2001-03-27 09:00+00', 150),    -- DATA ERROR: ABC Corporation's erasers for a shipment leaving 300 Main Street (caught by a query)
+  (13951, 20, 22,   null, '2001-03-27 09:10+00', 100),    -- DATA ERROR: erasers pulled for a pencil line (caught by a query)
+  (13952, 16, 23,   null, '2001-03-27 09:20+00', 60),     -- DATA ERROR: 60 for a line of 50 (caught by a query)
+  (11460, 10, 8,    null, '2001-03-20 11:00+00', 20);     -- DATA ERROR: keyed against 1146, which came in (caught by a query)
+
+select setval(pg_get_serial_sequence('item_issuance', 'item_issuance_id'), (select max(item_issuance_id) from item_issuance));
+
+insert into item_issuance_role_type (item_issuance_role_type_id, description) values
+  ('ISSUER',   'Pulled the goods from stock'),
+  ('APPROVER', 'Approved the goods leaving stock');
+
+-- Parties: 50 Rosa Diaz (ABC Subsidiary), 47 William Jones (ABC Corporation).
+insert into item_issuance_role (item_issuance_role_id, item_issuance_id, party_id, item_issuance_role_type_id) values
+  (1,  12900, 50, 'ISSUER'),
+  (2,  12900, 50, 'ISSUER'),     -- DATA ERROR: the same party in the same role twice (caught by a query)
+  (3,  12901, 50, 'ISSUER'),
+  (4,  13100, 50, 'ISSUER'),
+  (5,  12902, 50, 'ISSUER'),
+  (6,  13800, 50, 'ISSUER'),
+  (7,  13801, 50, 'ISSUER'),
+  (8,  13802, 50, 'ISSUER'),
+  (9,  13803, 50, 'ISSUER'),
+  (10, 14000, 47, 'ISSUER'),
+  (11, 15800, 47, 'ISSUER'),
+  (12, 15800, 47, 'APPROVER'),   -- William pulls and approves his own return: the model allows it
+  (13, 13960, 50, 'ISSUER');
+
+select setval(pg_get_serial_sequence('item_issuance_role', 'item_issuance_role_id'), (select max(item_issuance_role_id) from item_issuance_role));
