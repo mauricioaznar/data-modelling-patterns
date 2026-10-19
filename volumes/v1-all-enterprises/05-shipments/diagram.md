@@ -91,4 +91,18 @@ erDiagram
   ITEM_ISSUANCE              ||--o{ ITEM_ISSUANCE_ROLE    : "involving"
   PARTY                      ||--o{ ITEM_ISSUANCE_ROLE    : "involved in (Ch 2)"
   ITEM_ISSUANCE_ROLE_TYPE    ||--o{ ITEM_ISSUANCE_ROLE    : "the description for"
+
+  %% Fig 5.6 — Shipping documents (the eight kinds are document_type rows)
+  SHIPPING_DOCUMENT {
+    int document_id PK "and FK to DOCUMENT"
+    int shipment_id FK "or null"
+    int shipment_item_id FK "or null"
+    int shipment_package_id FK "or null"
+  }
+  DOCUMENT_TYPE              ||--o{ DOCUMENT              : "the description for"
+  DOCUMENT_TYPE              |o--o{ DOCUMENT_TYPE         : "groups"
+  DOCUMENT                   ||--o| SHIPPING_DOCUMENT     : "is a"
+  SHIPMENT                   |o--o{ SHIPPING_DOCUMENT     : "having"
+  SHIPMENT_ITEM              |o--o{ SHIPPING_DOCUMENT     : "having"
+  SHIPMENT_PACKAGE           |o--o{ SHIPPING_DOCUMENT     : "having"
 ```

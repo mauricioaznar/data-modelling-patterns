@@ -749,3 +749,68 @@ select 'item_issuance_role', item_issuance_id || ' / ' || party_id || ' / ' || i
 from item_issuance_role
 group by item_issuance_id, party_id, item_issuance_role_type_id
 having count(*) > 1;
+
+-- ============================================================
+-- Fig 5.6 — Shipping documents
+-- ============================================================
+
+-- name: 5.6 — Every shipping document: its kind and the level it covers
+select d.document_id, t.description as kind, d.description,
+       case when sd.shipment_package_id is not null then 'package ' || sd.shipment_package_id
+            when sd.shipment_item_id is not null    then 'line ' || si.shipment_id || '/' || si.shipment_item_seq_id
+            when sd.shipment_id is not null         then 'shipment ' || sd.shipment_id
+       end as covers,
+       num_nonnulls(sd.shipment_id, sd.shipment_item_id, sd.shipment_package_id) as levels_named
+from document d
+join document_type t           on t.document_type_id = d.document_type_id
+left join shipping_document sd on sd.document_id = d.document_id
+left join shipment_item si     on si.shipment_item_id = sd.shipment_item_id
+order by d.document_id;
+
+-- name: 5.6 — A shipment's paperwork at every level: the shipment, its lines and its packages
+-- The package's shipment comes from its contents (5.4's view).
+with covered as (
+  select sd.document_id, sd.shipment_id, 'shipment' as level from shipping_document sd where sd.shipment_id is not null
+  union
+  select sd.document_id, si.shipment_id, 'line ' || si.shipment_item_seq_id
+  from shipping_document sd join shipment_item si on si.shipment_item_id = sd.shipment_item_id
+  union
+  select sd.document_id, ps.shipment_id, 'package ' || sd.shipment_package_id
+  from shipping_document sd join shipment_package_shipment ps on ps.shipment_package_id = sd.shipment_package_id
+)
+select c.shipment_id, c.level, t.description as kind, d.description
+from covered c
+join document d       on d.document_id = c.document_id
+join document_type t  on t.document_type_id = d.document_type_id
+order by c.shipment_id, c.level, d.document_id;
+
+-- name: 5.6 — Data-quality check: shipping documents that cover nothing (should be empty)
+select d.document_id, d.description
+from shipping_document sd
+join document d on d.document_id = sd.document_id
+where num_nonnulls(sd.shipment_id, sd.shipment_item_id, sd.shipment_package_id) = 0;
+
+-- name: 5.6 — Data-quality check: a document's type and its shipping_document row disagree (should be empty)
+-- A row exactly when the type is a leaf under SHIPPING_DOCUMENT.
+select d.document_id, d.document_type_id,
+       (sd.document_id is not null) as has_shipping_row
+from document d
+join document_type t           on t.document_type_id = d.document_type_id
+left join shipping_document sd on sd.document_id = d.document_id
+where (sd.document_id is not null)
+   <> (t.parent_type_id = 'SHIPPING_DOCUMENT'
+       and not exists (select 1 from document_type c where c.parent_type_id = t.document_type_id));
+
+-- name: 5.6 — Data-quality check: shipping documents naming levels that contradict each other (should be empty)
+-- The line's shipment and the package's must be the document's shipment,
+-- and the line must be in the package.
+select sd.document_id, sd.shipment_id, sd.shipment_item_id, sd.shipment_package_id
+from shipping_document sd
+left join shipment_item si on si.shipment_item_id = sd.shipment_item_id
+where (sd.shipment_id is not null and sd.shipment_item_id is not null and si.shipment_id <> sd.shipment_id)
+   or (sd.shipment_id is not null and sd.shipment_package_id is not null
+       and not exists (select 1 from shipment_package_shipment ps
+                       where ps.shipment_package_id = sd.shipment_package_id and ps.shipment_id = sd.shipment_id))
+   or (sd.shipment_item_id is not null and sd.shipment_package_id is not null
+       and not exists (select 1 from packaging_content pc
+                       where pc.shipment_package_id = sd.shipment_package_id and pc.shipment_item_id = sd.shipment_item_id));

@@ -31,6 +31,11 @@ an item-to-item link carrying its own quantity.
    line, how much and by whom, according to which picklist; and does the quantity on hand
    still match what came in, went out and was counted?
 
+5. **Shipping documents and route segments** (Figs 5.6–5.7): what travels with the shipment
+   and how it travels: which papers go with the whole shipment, a line or a box; which legs
+   it takes, from which facility to which, by which carrier, method and vehicle, planned
+   against actual?
+
 Later figures join a submodel when they answer the same questions, or start one.
 
 ## Figures
@@ -493,6 +498,52 @@ goods from stock.
   with an opening count, a variance against zero. (Ponder 5.)
 - **Who pulled it** is a scoped role again, now the ninth role-type lookup.
 
+### Fig 5.6 — Shipping documents
+**Transcription** (accepted: ☐; one photo, no table; open points under "To check against the
+book")
+
+```
+DOCUMENT
+  # document_id
+  * description
+  -> DOCUMENT TYPE           (many "described by" 1 type; type "the description for" many)
+  subtype SHIPPING DOCUMENT, with its own subtypes (no attributes on any): BILL OF LADING,
+    PACKAGING SLIP, EXPORT DOCUMENTATION, MANIFEST, PORT CHARGES DOCUMENT, TAX AND TARIFF
+    DOCUMENT, HAZARDOUS MATERIALS DOCUMENT, OTHER SHIPPING DOCUMENT
+
+SHIPPING DOCUMENT            (all three lines dashed at both ends; no arc)
+  -> SHIPMENT PACKAGE        (many "for" 1 package; package "having" many)
+  -> SHIPMENT ITEM           (many "for" 1 item; item "having" many)
+  -> SHIPMENT                (many "for" 1 shipment; shipment "having" many)
+
+DOCUMENT TYPE
+  # document_type_id
+  * description
+
+SHIPMENT (5.1's attributes), SHIPMENT ITEM (-> GOOD, "part of" SHIPMENT), SHIPMENT PACKAGE,
+PACKAGING CONTENT: as before.
+```
+
+**To check against the book**
+- No arc across the three lines: a document may name more than one level (point 34).
+- DOCUMENT TYPE beside the drawn subtypes (point 35).
+- DOCUMENT carries only a description: no date, no issuer, no number of its own.
+
+**Discussion**
+- **Paperwork comes at three levels.** A bill of lading or a manifest covers the whole
+  shipment, a packing slip one box, a hazardous-materials sheet or an export licence one
+  line (one good). So the document names what it covers, and the three lines are optional.
+  (Ponder 1.)
+- **A supertype with a type hierarchy again.** The eight kinds carry no attributes of their
+  own: they're rows of DOCUMENT TYPE. SHIPPING DOCUMENT is a real subtype because it has the
+  lines; DOCUMENT is left open for other kinds of paper elsewhere. (Ponder 2.)
+- **No arc, so the levels must agree.** A packing slip naming package 62001 and shipment
+  9000 contradicts itself: 62001 holds 9200's erasers. Naming two levels is allowed, a
+  contradiction isn't (a check).
+- **The naive model** puts a `bill_of_lading_no` column on SHIPMENT. That holds one kind of
+  paper at one level; the next kind (a manifest, a packing slip per box) needs another
+  column, and per-line papers have nowhere to go.
+
 ### Points to discuss after the overview (Figs 5.1–5.5 so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -599,6 +650,14 @@ the literal drawing. The list moves under the chapter's last figure as figures a
     OPENING_COUNT reason of ours, so qoh = balance can be checked from zero.
 33. **5.5, PICKLIST with no line to a shipment, facility or party:** kept. Its shipments come
     through its issuances; which warehouse it's for follows from its picked stock.
+34. **5.6, no arc across a shipping document's three lines:** read as "at least one, and
+    they agree" (a document for nothing and a document naming levels that contradict are
+    data-quality queries). If an arc was meant, a document names exactly one level, and a
+    packing slip that also names its shipment becomes an error.
+35. **5.6, DOCUMENT TYPE beside the drawn subtypes:** the eight attribute-less kinds become
+    rows of `document_type` under a SHIPPING_DOCUMENT grouping row; SHIPPING DOCUMENT is a
+    subtype table because it carries the lines. The type and the subtype row must agree (a
+    data-quality query).
 
 ## Design decisions (book → SQL)
 
@@ -767,6 +826,27 @@ the literal drawing. The list moves under the chapter's last figure as figures a
   received), 1578 (our return to General Goods) and five erasers for our own use with no
   shipment line; and the six rows that carry the mistakes. Times, roles and stock are ours.
 
+### Fig 5.6
+- **`document_type`: a text key and a parent** (point 35): SHIPPING_DOCUMENT is a grouping
+  row over the eight kinds. It's the first DOCUMENT in the repo; a later chapter that draws
+  DOCUMENT adds its kinds here.
+- **`document`** (its id, a type, a description) and **`shipping_document`**, a subtype
+  table sharing its key, with three nullable FKs: `shipment_id`, `shipment_item_id`,
+  `shipment_package_id` (all dashed, point 34).
+- **A shipping document must name at least one level** (data-quality query; seed: document
+  8, a packing slip found loose on the dock).
+- **The type and the subtype row agree:** a document has a `shipping_document` row exactly
+  when its type is a leaf under SHIPPING_DOCUMENT (data-quality query; seed: document 7, a
+  bill of lading for 9400 with no row saying what it covers).
+- **The levels named must agree:** the line's shipment and the package's (worked out from
+  its contents) must be the document's shipment, and the line must be in the package
+  (data-quality query; seed: document 9, a packing slip for 9200's package 62001 that also
+  names 9000).
+- **Seed** (no table in the book; all ours): a bill of lading for 9000, packing slips for
+  62000 and 52000, one for 62002 that also names its shipment (two levels that agree), Very
+  Reliable Parcel Service's manifest for 9200, a certificate of conformity for 1146's
+  diskette line, and the three rows that carry the mistakes.
+
 ## When NOT to use this
 - **A shop that ships each order once, whole, to one address** can keep a ship date and a
   tracking number on the order. The separate shipment pays off when shipments and orders
@@ -778,5 +858,10 @@ the literal drawing. The list moves under the chapter's last figure as figures a
   order line says the same with one table less.
 - **The shipped features** matter where substitutes happen and get billed or returned. A
   warehouse that never ships anything but what was ordered can drop SHIPMENT ITEM FEATURE.
+- **Picklists** pay off in a warehouse big enough that the person planning the pull isn't
+  the person pulling. A shop that pulls straight from the order can issue without them.
+- **Shipping documents as rows** matter when several kinds of paper, at several levels,
+  must be found again (customs, hazardous goods, claims). One bill of lading per shipment,
+  never searched, fits in a column.
 
 ## Open questions

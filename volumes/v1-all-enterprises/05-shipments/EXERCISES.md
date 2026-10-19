@@ -14,6 +14,7 @@ every row scores 3+ and its scenario holds up.
 2. **Shipments and orders** (Fig 5.3). ~3 h
 3. **Packages and receipts** (Fig 5.4). ~3 h
 4. **Issuances and picklists** (Fig 5.5). ~3 h
+5. **Shipping documents and route segments** (Figs 5.6–5.7). ~3 h
 
 ## Progress
 
@@ -96,6 +97,14 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 5. **[5.5]** Ch 3 stored a quantity on hand and promised a check once receipts and
    issuances existed. Say the balance in words, why the stock 9000 drew on needs an opening
    count, and what the check finding item 19 means.
+
+### Submodel 5: shipping documents and route segments
+1. **[5.6]** A bill of lading covers the shipment, a packing slip one box, a
+   hazardous-materials sheet one line. Why three optional lines rather than one to
+   SHIPMENT, and what would one line lose?
+2. **[5.6]** The eight kinds of shipping document are drawn as subtypes but become rows of
+   DOCUMENT TYPE, while SHIPPING DOCUMENT gets a table of its own. What decides which way a
+   subtype goes?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

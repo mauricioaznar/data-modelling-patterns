@@ -555,3 +555,43 @@ insert into item_issuance_role (item_issuance_role_id, item_issuance_id, party_i
   (13, 13960, 50, 'ISSUER');
 
 select setval(pg_get_serial_sequence('item_issuance_role', 'item_issuance_role_id'), (select max(item_issuance_role_id) from item_issuance_role));
+
+-- ============================================================
+-- Fig 5.6 — Shipping documents
+-- ============================================================
+insert into document_type (document_type_id, parent_type_id, description) values
+  ('SHIPPING_DOCUMENT',            null,                'Shipping document'),
+  ('BILL_OF_LADING',               'SHIPPING_DOCUMENT', 'Bill of lading'),
+  ('PACKAGING_SLIP',               'SHIPPING_DOCUMENT', 'Packaging slip'),
+  ('EXPORT_DOCUMENTATION',         'SHIPPING_DOCUMENT', 'Export documentation'),
+  ('MANIFEST',                     'SHIPPING_DOCUMENT', 'Manifest'),
+  ('PORT_CHARGES_DOCUMENT',        'SHIPPING_DOCUMENT', 'Port charges document'),
+  ('TAX_AND_TARIFF_DOCUMENT',      'SHIPPING_DOCUMENT', 'Tax and tariff document'),
+  ('HAZARDOUS_MATERIALS_DOCUMENT', 'SHIPPING_DOCUMENT', 'Hazardous materials document'),
+  ('OTHER_SHIPPING_DOCUMENT',      'SHIPPING_DOCUMENT', 'Other shipping document');
+
+-- All ours: the book shows no table of documents.
+insert into document (document_id, document_type_id, description) values
+  (1, 'BILL_OF_LADING',          'Bill of lading, shipment 9000'),
+  (2, 'PACKAGING_SLIP',          'Packing slip, package 62000'),
+  (3, 'PACKAGING_SLIP',          'Packing slip, package 62002'),
+  (4, 'MANIFEST',                'Very Reliable Parcel Service manifest, 2001-03-12'),
+  (5, 'OTHER_SHIPPING_DOCUMENT', 'Certificate of conformity, HD diskettes'),
+  (6, 'PACKAGING_SLIP',          'General Goods packing slip, carton 52000'),
+  (7, 'BILL_OF_LADING',          'Bill of lading, shipment 9400'),     -- DATA ERROR: no shipping_document row says what it covers (caught by a query)
+  (8, 'PACKAGING_SLIP',          'Packing slip found loose on the dock'),
+  (9, 'PACKAGING_SLIP',          'Packing slip, package 62001');
+
+select setval(pg_get_serial_sequence('document', 'document_id'), (select max(document_id) from document));
+
+-- Shipment lines: 18 is 1146's diskettes. Packages: 62000 (9000), 62001 and
+-- 62002 (9200), 52000 (1146).
+insert into shipping_document (document_id, shipment_id, shipment_item_id, shipment_package_id) values
+  (1, 9000, null, null),    -- the whole shipment
+  (2, null, null, 62000),   -- one box
+  (3, 9200, null, 62002),   -- a box and its shipment: two levels that agree
+  (4, 9200, null, null),
+  (5, null, 18,   null),    -- one line
+  (6, null, null, 52000),
+  (8, null, null, null),    -- DATA ERROR: covers nothing (caught by a query)
+  (9, 9000, null, 62001);   -- DATA ERROR: 62001 holds 9200's erasers, not 9000's goods (caught by a query)
