@@ -13,8 +13,8 @@ Architecture figure:
 |---|---|---|---|---|---|---|
 | 1 | Work requirements and roles | 6.1–6.2 | 2026-10-19 | | | |
 | 2 | Work effort generation | 6.3a | 2026-10-19 | | | |
-| 3 | Work effort breakdown | 6.4 | | | | |
-| 4 | Work effort assignments and time | 6.5–6.6 | | | | |
+| 3 | Work effort breakdown | 6.4 | 2026-10-19 | | | |
+| 4 | Work effort assignments and time | 6.5–6.6 | 2026-10-19 | | | |
 | A | Architecture | | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 6.1–6.2)`; the `A` row's matches the
@@ -28,11 +28,16 @@ architecture card's `(Fig N.M)`.
 | 6.2 | built | 1 | ✓ | ✓ | ✓ | ✓ | – |
 | 6.3a | built | 2 | ✓ | ✓ | ✓ | ✓ | – |
 | 6.3b | not built | – | ✓ | – | – | – | – |
+| 6.4 | built | 3 | ✓ | ✓ | ✓ | ✓ | – |
+| 6.5 | built | 4 | ✓ | ✓ | ✓ | ✓ | – |
+| 6.6 | built | 4 | ✓ | ✓ | ✓ | ✓ | – |
 
 | # | Submodel | Figures built | Card | Ponders |
 |---|---|---|---|---|
 | 1 | Work requirements and roles | ✓ | Card 22 | 3 |
 | 2 | Work effort generation | ✓ | Card 23 | 5 |
+| 3 | Work effort breakdown | ✓ | Card 24 | 3 |
+| 4 | Work effort assignments and time | ✓ | Card 25 | 4 |
 
 Last check: 0 ✗ · 1 !
 <!-- check:end -->

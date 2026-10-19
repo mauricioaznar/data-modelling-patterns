@@ -25,8 +25,30 @@ and any decisions made.
   cards. Design reference: entries *Work requirements and roles* and *Work effort generation*
   (drafts), Core patterns gains a Ch 6 column and a pattern (need apart from what fills it),
   two question index rows, roadmap Ch 6 In progress.
+- Figs 6.4, 6.5 and 6.6 with Tables 6.6–6.10 (photos), transcribed with points 15–27.
+- Fig 6.4 built: `work_effort_association` (breakdown, precedency, concurrency as a type
+  hierarchy), `version_of_work_effort_id`, and Ch 2's `work_effort_type` gains a parent so the
+  levels (plus JOB) group the kinds of work with their standard hours. Table 6.6 seeded; the
+  set-up 120001 serves runs #1 and #2. Three checks.
+- Fig 6.5 built: `work_effort_party_assignment`, `skill_type` + `party_skill`,
+  `work_effort_status` (Ch 2's status types, a new group). Tables 6.7–6.9 with Bob Jenkins,
+  Jane Smith and USA Consulting; the plan 39409 gets its parts. Five checks.
+- Fig 6.6 built: WORKER over Ch 2's EMPLOYEE and CONTRACTOR, `timesheet`, `time_entry`,
+  `timesheet_role` + type. Table 6.10 seeded; a review lists time no assignment covers. Four
+  checks.
+- Submodels 3 (breakdown) and 4 (assignments and time); ponders 1–3 and 1–4; cards 24–25,
+  Anki export 37 cards. Design reference: two draft entries, Ch 6 examples on eight Core
+  patterns rows, two question index rows, roadmap "4 submodels so far".
 
 **Decisions**
+- WORK EFFORT TYPE read as a catalogue of kinds of work (Table 6.6 gives standard hours per
+  activity), the levels its grouping rows (point 16); a sixth level, JOB, and the runs
+  retyped JOB (points 10 and 15).
+- Jane Smith's from date read as Aug 6, 2001, covering John Smith's vacation (point 21); the
+  two 29005s split, team-member work seeded as 29006 (point 23).
+- Run #1 (28045) is in progress per Table 6.9, so our invented completion and yield for it
+  are removed.
+- Submodel 4 holds Figs 6.5–6.6 for now; rates (6.7) may join it (point 26).
 - Build 6.3a, not 6.3b: it holds both the direct order-to-work path and the path through a
   requirement; the chapter's overall figure decides (point 11).
 - REQUIREMENT TYPE drawn mandatory, built nullable: Ch 4's product requirements have no type
@@ -36,7 +58,7 @@ and any decisions made.
 - Work effort purpose optional; production runs typed PROJECT for want of a level in the book.
 
 **Next**
-- The rest of Ch 6's figures; then the Ch 4, 5 and 6 overviews.
+- The rest of Ch 6's figures (rates, asset assignments, the overall figure); then the Ch 4, 5 and 6 overviews.
 
 ## 2026-10-18
 

@@ -31,7 +31,7 @@ volumes. Vol 2's industry models can therefore extend Vol 1's `party` directly.
 | 1 | 03 | [Products](volumes/v1-all-enterprises/03-products/NOTES.md) | every figure built (3.9b and 3.10a alternates; 3.11 is the architecture figure, no SQL); doc drafts and cards for all 5 submodels; overview next, then practice |
 | 1 | 04 | [Ordering Products](volumes/v1-all-enterprises/04-ordering-products/NOTES.md) | Figs 4.1–4.17 in (4.1 not built, 4.17 the architecture); submodels 1–7 and the architecture drafted and carded; overview started (point 1 of 40) |
 | 1 | 05 | [Shipments](volumes/v1-all-enterprises/05-shipments/NOTES.md) | Figs 5.1–5.8 in (5.8 the architecture, no SQL); submodels 1–5 and the architecture drafted and carded; overview next (44 points) |
-| 1 | 06 | [Work Effort](volumes/v1-all-enterprises/06-work-effort/NOTES.md) | Figs 6.1–6.3b in (6.3b the alternate, not built); submodels 1–2 drafted and carded; more figures to come |
+| 1 | 06 | [Work Effort](volumes/v1-all-enterprises/06-work-effort/NOTES.md) | Figs 6.1–6.6 in (6.3b the alternate, not built); submodels 1–4 drafted and carded; more figures to come |
 
 Each chapter folder contains:
 

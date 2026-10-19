@@ -775,6 +775,66 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
+### Card 24 · V1 Ch 6 · Work effort breakdown (Fig 6.4)
+- **Cue:** "What is this work made of, which parts serve two jobs, what must finish before what or run alongside, which effort redoes which, and what's the standard time for each kind of work?"
+- **Hook:** a Gantt chart pinned on the factory wall: bars nested under bars, arrows from
+  one bar's end to the next one's start, and one set-up bar with two parents
+  *(Claude's, drafted when the figures landed)*
+- **Mantra:** Efforts link to efforts: part-of, before, alongside, one typed dated table.
+  Kinds of work carry standard hours.
+
+<details><summary>Key</summary>
+
+- **S:** `work_effort_association` (from effort, to effort, `from_date`, `thru_date`) typed
+  by `work_effort_association_type` (BREAKDOWN; DEPENDENCY over PRECEDENCY and CONCURRENCY)
+  · `work_effort.version_of_work_effort_id` ("redone via") · Ch 2's `work_effort_type`
+  gains a parent: the levels (PROGRAM to ACTIVITY, plus JOB) group the kinds of work, each
+  with its standard hours.
+- **W:** a `parent_id` on the effort: Table 6.6's set-up 120001 serves runs #1 and #2, and
+  "set-up before operating" has nowhere to go.
+- **T:** *(the naive-model trap until practice gives yours)* reading a concurrency from one
+  end only; a breakdown that loops back on itself.
+- **D:** work_effort_association → work_effort (from), → work_effort (to), →
+  work_effort_association_type (→ parent); work_effort → work_effort (version of, optional),
+  → work_effort_type (→ parent, the level). Checks: no grouping row as a type; no cycle; a
+  precedency's second effort not scheduled before the first ends.
+</details>
+
+---
+
+### Card 25 · V1 Ch 6 · Work effort assignments and time (Figs 6.5–6.6)
+- **Cue:** "Who works on this effort, as what, where and when; what can each party do; what state is the work in; and who spent how many hours on which effort, on whose approved timesheet?"
+- **Hook:** a project room door with a roster of dated name badges (one a consulting firm's
+  logo), a skills chart beside it, and a punch clock whose cards are stamped with job
+  numbers *(Claude's, drafted when the figures landed)*
+- **Mantra:** Parties take efforts in dated roles; skills describe the party. Workers book
+  hours on efforts, gathered per timesheet.
+
+<details><summary>Key</summary>
+
+- **S:** `work_effort_party_assignment` (effort, party, `work_effort_role_type`, optional
+  facility, from, thru, comment) · `party_skill` (years, rating) + `skill_type` ·
+  `work_effort_status` (a dated history, Ch 2's `status_type` under WORK_EFFORT_STATUS) ·
+  `timesheet` (a WORKER party role, a period) · `time_entry` (timesheet, effort, from and
+  thru datetimes, hours) · `timesheet_role` + type (approver, keyed in by) · WORKER over
+  Ch 2's EMPLOYEE and CONTRACTOR.
+- **W:** an `assigned_to` and an `hours` column on the job: one person, no role, no dates,
+  no "when" for the hours; John Smith's return after his vacation and USA Consulting
+  can't be held.
+- **T:** *(the naive-model trap until practice gives yours)* hanging time on the assignment
+  (it hangs on the effort, so time without an assignment slips through); PERSON where the
+  book says PARTY.
+- **D:** work_effort_party_assignment → work_effort, → party (Ch 2), → work_effort_role_type,
+  → facility (Ch 2, optional); party_skill → party, → skill_type; work_effort_status →
+  work_effort, → status_type (Ch 2); timesheet → party_role (Ch 2, a WORKER); time_entry →
+  timesheet, → work_effort; timesheet_role → timesheet, → party, → timesheet_role_type.
+  Checks: no overlapping assignment; a skill once; statuses from the group, once each,
+  completed after started; worker timesheets; entries inside their sheet and their span; no
+  self-approval.
+</details>
+
+---
+
 ## Deck: architecture
 
 One card per chapter, from its architecture figure (the last, overall one): how the chapter's
