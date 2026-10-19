@@ -64,6 +64,12 @@ join organization_gl_account a2 on a2.internal_organization_party_id = a1.intern
                                and a2.organization_gl_account_id > a1.organization_gl_account_id
                                and a2.from_date < coalesce(a1.thru_date, 'infinity')
                                and a1.from_date < coalesce(a2.thru_date, 'infinity')
+                               -- Fig 8.4: subsidiaries share their parent's number, so a duplicate also shares what it tracks
+                               and a2.subsidiary_of_organization_gl_account_id is not distinct from a1.subsidiary_of_organization_gl_account_id
+                               and a2.supplier_party_role_id is not distinct from a1.supplier_party_role_id
+                               and a2.bill_to_customer_party_role_id is not distinct from a1.bill_to_customer_party_role_id
+                               and a2.product_category_id is not distinct from a1.product_category_id
+                               and a2.product_id is not distinct from a1.product_id
 join organization n            on n.party_id = a1.internal_organization_party_id
 join general_ledger_account a  on a.general_ledger_account_id = a1.general_ledger_account_id;
 
@@ -278,3 +284,96 @@ join accounting_period p       on p.accounting_period_id = b.accounting_period_i
 join organization na           on na.party_id = o.internal_organization_party_id
 join organization np           on np.party_id = p.internal_organization_party_id
 where o.internal_organization_party_id <> p.internal_organization_party_id;
+
+-- ============================================================
+-- Fig 8.4 — General ledger account associations and subsidiary ledger accounts
+-- ============================================================
+
+-- name: 8.4 — Control accounts as trees: each control account, its subsidiaries, and what each one is about
+with recursive tree as (
+  select o.organization_gl_account_id, 0 as depth, lpad(o.organization_gl_account_id::text, 4) as path
+  from organization_gl_account o
+  where o.subsidiary_of_organization_gl_account_id is null
+    and exists (select 1 from organization_gl_account x where x.subsidiary_of_organization_gl_account_id = o.organization_gl_account_id)
+  union all
+  select c.organization_gl_account_id, t.depth + 1, t.path || '/' || lpad(c.organization_gl_account_id::text, 4)
+  from organization_gl_account c join tree t on t.organization_gl_account_id = c.subsidiary_of_organization_gl_account_id
+)
+select n.name as organization, repeat('  ', t.depth) || a.general_ledger_account_id || ' ' || a.name as account,
+       coalesce('supplier ' || s.name, 'customer ' || b.name, 'category ' || pc.description, 'product ' || p.name) as about,
+       o.organization_gl_account_id, o.from_date
+from tree t
+join organization_gl_account o     on o.organization_gl_account_id = t.organization_gl_account_id
+join organization n                on n.party_id = o.internal_organization_party_id
+join general_ledger_account a      on a.general_ledger_account_id = o.general_ledger_account_id
+left join party_role sr            on sr.party_role_id = o.supplier_party_role_id
+left join party_display_name s     on s.party_id = sr.party_id
+left join party_role br            on br.party_role_id = o.bill_to_customer_party_role_id
+left join party_display_name b     on b.party_id = br.party_id
+left join product_category pc      on pc.product_category_id = o.product_category_id
+left join product p                on p.product_id = o.product_id
+order by t.path;
+
+-- name: 8.4 — A control account's balance is its own postings plus its subsidiaries' (debits − credits, all time)
+with recursive under as (
+  select o.organization_gl_account_id as control_id, o.organization_gl_account_id as account_id
+  from organization_gl_account o
+  where o.subsidiary_of_organization_gl_account_id is null
+  union all
+  select u.control_id, c.organization_gl_account_id
+  from under u join organization_gl_account c on c.subsidiary_of_organization_gl_account_id = u.account_id
+),
+posted as (
+  select organization_gl_account_id,
+         sum(case debit_credit_flag when 'DEBIT' then amount else -amount end) as balance
+  from transaction_detail group by organization_gl_account_id
+)
+select n.name as organization, a.general_ledger_account_id || ' ' || a.name as control_account,
+       coalesce(sum(p.balance) filter (where u.account_id = u.control_id), 0)  as own_postings,
+       coalesce(sum(p.balance) filter (where u.account_id <> u.control_id), 0) as subsidiaries,
+       coalesce(sum(p.balance), 0)                                             as balance
+from under u
+join organization_gl_account o on o.organization_gl_account_id = u.control_id
+join organization n            on n.party_id = o.internal_organization_party_id
+join general_ledger_account a  on a.general_ledger_account_id = o.general_ledger_account_id
+left join posted p             on p.organization_gl_account_id = u.account_id
+group by n.name, a.general_ledger_account_id, a.name, u.control_id
+having count(*) > 1
+order by n.name, a.general_ledger_account_id;
+
+-- name: 8.4 — What does ACME owe ABC Subsidiary? The balance of the receivable account that references ACME's bill-to role
+select n.name as organization, d.name as customer, o.organization_gl_account_id as account,
+       sum(case t.debit_credit_flag when 'DEBIT' then t.amount else -t.amount end) as owed
+from organization_gl_account o
+join organization n          on n.party_id = o.internal_organization_party_id
+join party_role r            on r.party_role_id = o.bill_to_customer_party_role_id
+join party_display_name d    on d.party_id = r.party_id
+join transaction_detail t    on t.organization_gl_account_id = o.organization_gl_account_id
+where o.internal_organization_party_id = 13 and o.general_ledger_account_id = 120
+group by n.name, d.name, o.organization_gl_account_id;
+
+-- name: 8.4 — Data-quality check: subsidiary accounts of another organization or another account number, or outside their control account's dates (should be empty)
+select c.organization_gl_account_id as subsidiary, c.internal_organization_party_id as sub_org, c.general_ledger_account_id as sub_account,
+       p.organization_gl_account_id as control, p.internal_organization_party_id as control_org, p.general_ledger_account_id as control_account,
+       c.from_date, p.from_date as control_from
+from organization_gl_account c
+join organization_gl_account p on p.organization_gl_account_id = c.subsidiary_of_organization_gl_account_id
+where c.internal_organization_party_id <> p.internal_organization_party_id
+   or c.general_ledger_account_id <> p.general_ledger_account_id
+   or c.from_date < p.from_date
+   or coalesce(c.thru_date, 'infinity') > coalesce(p.thru_date, 'infinity');
+
+-- name: 8.4 — Data-quality check: supplier and customer references whose party role is something else (should be empty)
+select o.organization_gl_account_id, d.name as party, r.role_type_id,
+       case when o.supplier_party_role_id = r.party_role_id then 'SUPPLIER' else 'BILL_TO_CUSTOMER' end as expected
+from organization_gl_account o
+join party_role r          on r.party_role_id in (o.supplier_party_role_id, o.bill_to_customer_party_role_id)
+join party_display_name d  on d.party_id = r.party_id
+where (o.supplier_party_role_id = r.party_role_id and r.role_type_id <> 'SUPPLIER')
+   or (o.bill_to_customer_party_role_id = r.party_role_id and r.role_type_id <> 'BILL_TO_CUSTOMER');
+
+-- name: 8.4 — Review: accounts that reference more than one thing (no arc drawn, NOTES point 13)
+select o.organization_gl_account_id,
+       num_nonnulls(o.supplier_party_role_id, o.bill_to_customer_party_role_id, o.product_category_id, o.product_id) as references_count
+from organization_gl_account o
+where num_nonnulls(o.supplier_party_role_id, o.bill_to_customer_party_role_id, o.product_category_id, o.product_id) > 1;

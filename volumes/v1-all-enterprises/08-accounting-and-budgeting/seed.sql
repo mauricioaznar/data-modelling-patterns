@@ -224,3 +224,32 @@ insert into organization_gl_account_balance (organization_gl_account_id, account
   (14, 1, 250),
   (15, 1, 18),
   (21, 1, 0);       -- DATA ERROR: ABC Subsidiary's cash in ABC Corporation's year
+
+-- ============================================================
+-- Fig 8.4 — General ledger account associations and subsidiary ledger accounts
+-- ============================================================
+-- Ours: ABC Corporation's payables per supplier and sales per product line;
+-- ABC Subsidiary's receivables per customer. Party roles (Ch 2–4): 37
+-- Fantastic Supplies supplier, 38 Johnson Paper Mills supplier, 67 ACME
+-- bill-to customer. Categories (Ch 3): 2 paper, 4 writing instruments;
+-- product 22 the engraved black pen with gold trim (Ch 6).
+insert into general_ledger_account (general_ledger_account_id, general_ledger_account_type_id, name, description) values
+  (210, 'LIABILITY', 'Accounts payable', 'What we owe suppliers');
+
+insert into organization_gl_account (organization_gl_account_id, internal_organization_party_id, general_ledger_account_id, from_date, thru_date,
+                                     subsidiary_of_organization_gl_account_id, supplier_party_role_id, bill_to_customer_party_role_id,
+                                     product_category_id, product_id) values
+  (16, 12, 210, '1995-01-01', null, null, null, null, null, null),   -- the control account
+  (41, 12, 210, '2001-04-05', null, 16,   37,   null, null, null),   -- payables: Fantastic Supplies
+  (42, 12, 410, '1999-01-01', null, 12,   null, null, 4,    null),   -- sales: writing instruments
+  (43, 12, 410, '2000-01-01', null, 42,   null, null, null, 22),     --   and within it, the engraved pen
+  (44, 12, 410, '1999-01-01', null, 12,   null, null, 2,    null),   -- sales: paper
+  (45, 13, 120, '1999-01-01', null, 22,   null, 67,   null, null),   -- ABC Subsidiary's receivables: ACME
+  (46, 12, 120, '1999-01-01', null, 22,   null, 67,   null, null),   -- DATA ERROR: ABC Corporation's row under ABC Subsidiary's receivables
+  (47, 12, 120, '1999-01-01', null, 2,    null, 38,   null, null);   -- DATA ERROR: the "customer" is Johnson Paper Mills's supplier role
+
+select setval(pg_get_serial_sequence('organization_gl_account', 'organization_gl_account_id'), (select max(organization_gl_account_id) from organization_gl_account));
+
+-- ABC Subsidiary now keeps receivables per customer: its ACME invoice and
+-- payment (Fig 8.3a) post to ACME's subsidiary account, not the control.
+update transaction_detail set organization_gl_account_id = 45 where transaction_detail_id in (610011, 610022);

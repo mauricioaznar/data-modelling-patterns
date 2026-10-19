@@ -13,19 +13,26 @@ ACCOUNT) and switched on per internal organization for a time (ORGANIZATION GL A
 **accounting periods** per organization, nested; and the **accounting transaction**, typed
 by the business event that caused it and tied to its source document (invoice, payment,
 inventory variance), broken into **debit and credit details** that each post to one
-organization's account.
+organization's account. **Budgets** are the other half: the money each department plans
+to spend, item by item, with its approval history and its revisions.
 
-## Submodels (proposed 2026-10-19, from the first four figures; budgeting comes later)
-1. **Chart of accounts** (Fig 8.1): which ledger accounts exist and what kind each is
+## Submodels (proposed 2026-10-19; Figs 8.4–8.7 added the same day)
+1. **Chart of accounts** (Figs 8.1, 8.4): which ledger accounts exist and what kind each is
    (asset, liability, equity, revenue, expense); which of them each internal organization
-   uses, and since when; how each organization cuts its time into fiscal years, quarters
-   and months?
+   uses, and since when; which subsidiary accounts break a control account down, and which
+   customer, supplier, product or category each one is about; how each organization cuts
+   its time into fiscal years, quarters and months?
 
-2. **Accounting transactions** (Figs 8.2–8.3b): what business events hit the books, of
+2. **Accounting transactions** (Figs 8.2–8.3b, 8.5): what business events hit the books, of
    which kind (internal: depreciation, variances; external: invoices, credit memos,
    payments), between whom, from which invoice or payment; how each one splits into debits
    and credits on which organization's accounts, which credit settles which debit, and what
-   each account's balance is for a period?
+   each account's balance is for a period? Which asset a depreciation is of, and which
+   method worked it out that year?
+
+3. **Budgets** (Figs 8.6–8.7b): who asks for how much money, for which period, for what
+   items and why; what stage each budget has reached; how it was revised, item by item,
+   and why?
 
 ## Figures
 
@@ -288,7 +295,262 @@ ACCOUNTING TRANSACTION, its subtypes and its type as in 8.3a
 - **Hanging details on the balance** means the posting already knows its period; the
   balance row is "this account, this period", and its amount is the sum of its details.
 
-### Points to discuss after the overview (Figs 8.1–8.3b, so far)
+### Fig 8.4 — General ledger account associations and subsidiary ledger accounts
+**Transcription** (accepted: ☐; photo)
+
+```
+ORGANIZATION GL ACCOUNT (8.1's: * from date, o thru date)
+  -> ORGANIZATION GL ACCOUNT   (dashed, recursive: "a subsidiary account of" / "comprised of")
+  -> SUPPLIER                  (dashed, many "referencing" 1; supplier "referenced by" many)
+  -> BILL TO CUSTOMER          (dashed, many "referencing" 1; customer "referenced by" many)
+  -> PRODUCT CATEGORY          (dashed, many "referencing" 1; category "referenced by" many)
+  -> PRODUCT                   (dashed, many "referencing" 1; product "referenced by" many)
+
+SUPPLIER, BILL TO CUSTOMER     (Ch 2's party roles, no attributes drawn)
+PRODUCT CATEGORY (Ch 3: # id, * description)
+PRODUCT (Ch 3: # id, * name, o introduction, sales and support discontinuation dates,
+         o comment; GOOD, SERVICE)
+```
+
+**To check against the book**
+- No arc across the four "referencing" lines. Read as: an account usually references one
+  of them, but nothing in the drawing forbids two (point 13).
+- What GL account a subsidiary row carries. Read as its parent's: "accounts receivable,
+  ACME" is ABC Subsidiary's 120 again, narrowed to one customer, not a new number in the
+  enterprise's chart (point 14).
+- The "referencing" lines look dashed at both ends: every reference optional.
+
+**Discussion**
+- **Control and subsidiary accounts.** Accounts receivable in the general ledger is one
+  number, but the business needs it per customer; accounts payable per supplier; sales per
+  product line. The control account stays in the ledger, and its subsidiary accounts
+  (recursive, any depth) carry the detail. The control's balance is its subsidiaries'.
+- **What the account is about** is a plain reference to the thing it tracks: the customer,
+  the supplier, the product or the category. So "how much does ACME owe?" is the balance of
+  the account that references ACME's bill-to role, not a search through invoices.
+- **The naive model** opens a GL account per customer ("120-ACME", "120-Contoso") in the
+  chart. The chart then grows with every customer, the enterprise's account list mixes
+  structure with business partners, and nothing says that 120-ACME is about ACME.
+
+### Fig 8.5 — Asset depreciation
+**Transcription** (accepted: ☐; photo with Table 8.6)
+
+```
+ACCOUNTING TRANSACTION (8.2's: # transaction id, * transaction date, * entry date,
+                        * description)
+  INTERNAL ACCT TRANS
+    DEPRECIATION -> FIXED ASSET (many "for" 1; asset "depreciated via" many)
+
+FIXED ASSET
+  # fixed_asset_id
+  * name
+  * date_acquired
+  o date_last_serviced
+  o date_next_service
+  o production_capacity
+  o description
+  subtypes: PROPERTY, VEHICLE, EQUIPMENT, OTHER ASSET
+
+FIXED ASSET DEPRECIATION METHOD    (identified by both parents: tildes)
+  * from_date
+  o thru_date
+  -> FIXED ASSET               (many "for" 1, tilde; asset "depreciated via" many)
+  -> DEPRECIATION METHOD       (many "defined by" 1, tilde; method "used to define" many)
+
+DEPRECIATION METHOD
+  # depreciation_method_id
+  * description
+  o formula
+```
+
+**Table 8.6, fixed asset depreciation method** (asset · method · formula · from–thru)
+- Pen engraver · double-declining balance · (cost − salvage) × (1 / life in years) × 2 ·
+  Jan 1, 1999–Dec 31, 1999
+- Pen engraver · straight-line · (cost − salvage) / life in years · from Jan 1, 2000
+
+**To check against the book**
+- Is DEPRECIATION's "for" line solid at the transaction end? Read as mandatory: a
+  depreciation is always of some asset.
+- DATE ACQUIRED is starred here; Ch 6 added it as optional, and Ch 5's trucks have none
+  (point 16).
+- The pen engraver is sold on Oct 11, 2000 (Table 8.3's 47874), yet its straight-line row
+  has no thru date (point 17).
+
+**Discussion**
+- **One subtype gets a line.** Of all the internal transactions, only DEPRECIATION names
+  its asset; the others stay as 8.2 drew them. That's the pattern again: a subtype exists
+  because it has a line the others don't.
+- **Methods change over time per asset.** The engraver was depreciated double-declining in
+  1999 and straight-line from 2000. The dated association keeps both, so last year's
+  depreciation can be recomputed the way it was computed then.
+- **The formula is data,** a description of how the amount is worked out, not something
+  the model runs; the book leaves the arithmetic to the accountants.
+- **The naive model** puts `depreciation_method` on FIXED ASSET, so changing the method
+  rewrites history: 1999's figures then look straight-line too.
+
+### Fig 8.6 — Budget definition
+**Transcription** (accepted: ☐; photo with Tables 8.7–8.9)
+
+```
+BUDGET
+  # budget_id
+  o comment
+  subtypes: OPERATING BUDGET, CAPITAL BUDGET
+  -> BUDGET TYPE               (many "described by" 1; type "describing" many)
+  -> STANDARD TIME PERIOD      (many "associated with" 1; period "the budget period for" many)
+
+BUDGET TYPE
+  # budget_type_id
+  o description
+
+BUDGET ITEM                    (identified by its budget + seq id: tilde on "part of")
+  # budget_item_seq_id
+  * amount
+  o purpose
+  o justification
+  -> BUDGET                    (many "part of" 1, tilde; budget "composed of" many)
+  -> BUDGET ITEM TYPE          (many "described by" 1; type "used to describe" many)
+  -> BUDGET ITEM               (dashed, recursive: "part of" / "comprised of")
+
+BUDGET ITEM TYPE
+  # budget_item_type_id
+  * description
+
+BUDGET STATUS                  (identified by its budget and type: tildes)
+  * status_date
+  o comment
+  -> BUDGET                    (many "the status for" 1, tilde; budget "described by" many)
+  -> BUDGET STATUS TYPE        (many "defined by" 1, tilde; type "used to define" many)
+
+BUDGET ROLE                    (identified by its three parents: tildes)
+  -> BUDGET                    (many "involved in" 1; budget "involving" many)
+  -> PARTY                     (many "for" 1; party "involved in" many)
+  -> BUDGET ROLE TYPE          (many "for" 1; type "used in" many)
+
+STANDARD TIME PERIOD
+  # standard_time_period_id
+  * from_date
+  * thru_date
+  -> PERIOD TYPE               (many "described by" 1; type "used to describe" many)
+
+PERIOD TYPE (8.1's: # id, * description); BUDGET STATUS TYPE (a STATUS TYPE subtype,
+per the text); BUDGET ROLE TYPE, PARTY (# party id)
+```
+
+**Table 8.7, budgets** (id · type · party the budget is for · period · period type ·
+description)
+- 29839 · operating · marketing department · 1/1/2001–12/31/2001 · year · marketing
+  budget
+- 38576 · operating · administration department · 6/1/2002–6/30/2002 · month · office
+  expenses budget
+- 39908 · capital · manufacturing operations · 1/1/2001–12/31/2001 · year · new
+  manufacturing machines needed
+
+**Table 8.8, budget items** (budget · seq · item · amount · purpose and justification
+in our words)
+- 29839 · 1 · trade shows · $20,000 · meet markets directly; last year's spend brought
+  three clients
+- 29839 · 2 · advertising · $30,000 · make the products known; competitors force it
+- 29839 · 3 · direct mail · $15,000 · sales leads; about 50 leads per $5,000
+- 38576 · 1 · office supplies · $5,000 · day-to-day admin; same as last year
+- 38576 · 2 · furniture · $10,000 · the new Benjamin Street facility needs basics
+
+**Table 8.9, budget status** (29839 only)
+- Oct 15, 2000 created · Nov 1 submitted · Nov 15 sent back for modifications
+  (management accepted the kinds of items but wanted every amount lower) · Nov 20
+  submitted · Nov 30 approved
+
+**To check against the book**
+- Tables 8.7–8.8 show a budget *description*; the entity has only a comment. Read as the
+  comment (point 18).
+- BUDGET TYPE's description is drawn optional (o), unlike every other type's. Built not
+  null like the others; no row lacks one.
+- Is BUDGET ROLE identified by its three parents? The tildes sit on "for", "for" and
+  "involved in"; read so, with no dates drawn.
+- The status line "the status for" has its tilde on the BUDGET STATUS side; read as
+  budget + type + date identifying it, like Ch 7's invoice status.
+
+**Discussion**
+- **A budget is a plan with the same shape as an order:** a header (whose, which period,
+  which kind) and items (what, how much, why). Purpose and justification are the
+  budgeting part: why we need it, and why this amount.
+- **For a party, at the lowest level.** The text asks for budgets per department, so they
+  roll up through Ch 2's organization structure to divisions and the company.
+- **Statuses are history**, as with orders and invoices: Table 8.9 shows 29839 going
+  round the loop (submitted, sent back, submitted, approved).
+- **STANDARD TIME PERIOD** is a calendar period (2001, June 2002) typed by 8.1's PERIOD
+  TYPE, not an organization's accounting period (point 19).
+- **Items nest:** an item may be part of a bigger one, so a capital budget can say
+  "machines: $60,000" and break it down.
+- **The naive model** is a spreadsheet per department: one row per line and a total. It
+  can't say whose budget it is in the organization tree, what stage it's at, or what kind
+  of item each line is across departments ("all trade show money in 2001").
+
+### Fig 8.7a — Budget revisions: a new budget per revision (not built)
+**Transcription** (accepted: ☐; photo, the top half of Fig 8.7)
+
+```
+BUDGET
+  # budget_id
+  o comment
+  -> BUDGET                    (dashed, recursive: "a revision for" / "the revision of")
+```
+
+**Discussion**
+- The simple option: every revision is a whole new budget, linked to the one it revises.
+  Easy, but every unchanged item is recorded again, and what changed (and why) has to be
+  worked out by comparing two budgets. The text keeps it for organizations with simple
+  budgets. Not built: 8.7b holds the history of changes (point 20).
+
+### Fig 8.7b — Budget revisions: revisions and their impacts
+**Transcription** (accepted: ☐; photo, the bottom half of Fig 8.7, with Table 8.10)
+
+```
+BUDGET REVISION                (identified by its budget + seq: tilde on "a revision for")
+  # revision_seq
+  * date_revised
+  -> BUDGET                    (many "a revision for" 1, tilde; budget "revised with" many)
+
+BUDGET REVISION IMPACT         (identified by its item and revision: tildes)
+  o revised_amount
+  o add_delete_flag
+  o revision_reason
+  -> BUDGET ITEM               (many "affecting" 1, tilde; item "affected by" many)
+  -> BUDGET REVISION           (many "from" 1, tilde; revision "affecting" many)
+
+BUDGET ITEM (8.6's: # seq id, * amount, o purpose, o justification)
+  -> BUDGET                    (many "part of" 1, tilde; "composed of" many)
+BUDGET (# id, o comment)
+```
+
+**Table 8.10, budget revision impacts** (budget 29839, marketing; revision · item ·
+change · flag · reason in our words)
+- 1.1 · item 2 · −$10,000 · · a big cut to advertising
+- 1.1 · item 3 · −$7,000 · · a big cut to direct mail
+- 1.1 · item 4 · +$5,000 · added · a new item for Internet advertising
+- 1.2 · item 3 · −$2,000 · · direct mail still too high
+
+**To check against the book**
+- Table 8.10's "a revision of" column repeats the budget id, and the revision numbers
+  read 1.1 and 1.2. Read as the budget plus revision seq 1 and 2, printed "1.N" (point
+  21).
+- The table's last row says "items 3" and the third row "linternet": misprints.
+- The revised amount reads as the change (−$10,000), not the new amount ($20,000): Table
+  8.10's signs say so (point 22).
+- Item 4 isn't in Table 8.8. Read as the item the revision added (point 22).
+
+**Discussion**
+- **Revisions are many-to-many with items:** one revision cuts three items, and item 3 is
+  cut twice. The impact is the association, and it carries the change and its reason.
+- **The budget stays one budget.** Its history is the list of revisions, so "what did
+  marketing ask for first, and what did it end up with?" is a sum, not a comparison of two
+  documents.
+- **Table 8.9 meets Table 8.10:** management sent 29839 back on Nov 15 asking for lower
+  amounts; revisions 1.1 and 1.2 are that answer, before it was resubmitted on Nov 20.
+- **The naive model** overwrites the item's amount. The approved figure survives, but not
+  what was asked for or why it changed.
+
+### Points to discuss after the overview (Figs 8.1–8.7b, so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing.
@@ -329,6 +591,47 @@ the literal drawing.
     hierarchy whose top rows are the subtype tree (INTERNAL, EXTERNAL, OBLIGATION and
     PAYMENT as grouping rows) and Table 8.3's types below their subtype (an invoice under
     SALES, the two receipts under RECEIPT).
+
+Added with Figs 8.4–8.7b:
+
+13. **No arc on Fig 8.4's four references.** Built as four nullable columns with no rule
+    between them: an account could track a product *and* a customer (sales of pens to
+    ACME). Should it be at most one?
+14. **A subsidiary account carries its parent's GL account** (ABC Subsidiary's
+    receivables for ACME is 120 again), so 8.1's "same account twice" check now counts two
+    rows as duplicates only when they also share their parent and what they reference. A
+    second check: a subsidiary on another organization's or another number's account, or
+    outside its parent's dates.
+15. **Where 8.4 and 8.5 belong.** Not a submodel of their own: 8.4 is added to the chart of
+    accounts (submodel 1: what an account is about), 8.5 to accounting transactions
+    (submodel 2: what a depreciation is of, and how it's worked out). Cards 35 and 36
+    change their figures, so their Anki note ids change.
+16. **DATE ACQUIRED is starred** in 8.5, but Ch 6 built it optional and Ch 5's trucks have
+    none. Left nullable; a review lists assets with no acquisition date.
+17. **The engraver is sold on Oct 11, 2000** (47874), yet its straight-line method has no
+    thru date. Seeded as printed. Nothing in 8.5 links the sale to the asset (47874 is a
+    receipt, not a depreciation), so no check can see it.
+18. **Budget description = BUDGET's comment** (Tables 8.7–8.8 print a description; the
+    entity has only a comment).
+19. **STANDARD TIME PERIOD beside ACCOUNTING PERIOD.** Built as its own table: a calendar
+    period with no organization, typed by 8.1's PERIOD TYPE (we add YEAR and MONTH beside
+    the fiscal ones). Is ACCOUNTING PERIOD meant to be a subtype of it? The overall figure
+    may say.
+20. **8.7a not built:** the bottom model keeps the history of changes, and the text offers
+    the top one only for simple budgets. To confirm against the overall figure.
+21. **Revision numbers "1.1" and "1.2"** stored as revision seq 1 and 2 of budget 29839,
+    printed as the book does.
+22. **The revised amount is the change**, signed (−$10,000). An item's own amount is the
+    amount it was first entered with, by the budget or by the revision that added it (item
+    4, $5,000; Table 8.8 doesn't list it). An ADD impact isn't counted twice; a DELETE takes
+    the item to zero. The budget after each revision is a query.
+23. **Ours, for the budgets:** the three departments (Marketing, Administration,
+    Manufacturing operations, parties 65–67, rolling up to ABC Corporation), 39908's items
+    (the book gives none), the revision dates (Nov 17 and 19, 2000, between the send-back
+    and the resubmission), and the budget role types (only "budget for" is used).
+24. **An item's parts add up to it** (ours): a parent item holds the total and its parts
+    break it down, so a budget's total sums only its top items, and a check catches parts
+    that don't add up.
 
 ## Design decisions (book → SQL)
 
@@ -398,6 +701,24 @@ the literal drawing.
 - **Seed:** ABC Corporation's 2000 closing (ours). Bad rows: cash stored $100 high, ABC
   Subsidiary's cash in ABC Corporation's year.
 
+### Fig 8.4
+- **Five nullable columns on `organization_gl_account`:** the parent
+  (`subsidiary_of_organization_gl_account_id`), the supplier and bill-to customer as Ch 2
+  party roles, the product category and the product. No arc (point 13); a review lists
+  rows with more than one.
+- **A subsidiary keeps its parent's number** (point 14), so 8.1's duplicate check now
+  compares parent and references too.
+- **Checks:** a subsidiary on another organization's or another number's account, or
+  outside its parent's dates; a supplier or customer reference whose role is something
+  else. **Queries:** the control accounts as trees with what each row is about; a control
+  account's balance as its own postings plus its subsidiaries'; what ACME owes ABC
+  Subsidiary, read off ACME's account.
+- **Seed (ours):** accounts payable (210, new) per supplier at ABC Corporation, sales
+  revenue per category and, inside writing instruments, for the engraved pen; ABC
+  Subsidiary's receivables for ACME, where its invoice 30002 and payment now post. Bad
+  rows: ABC Corporation's row under ABC Subsidiary's receivables, a "customer" that is a
+  supplier role.
+
 ## When NOT to use this
 - **One company, one ledger:** a single small business can key the chart and the books
   together; ORGANIZATION GL ACCOUNT earns its keep with several internal organizations.
@@ -406,5 +727,6 @@ the literal drawing.
   which transaction) in their own models.
 
 ## Open questions
-- What the budgeting figures add, and what the chapter's overall figure keeps from 8.3a
-  and 8.3b (point 9).
+- What the rest of budgeting adds (reviews, scenarios, how budgets are used and funded,
+  their tie to the ledger), and what the overall figure keeps from 8.3a and 8.3b (point 9)
+  and from 8.7 (point 20).

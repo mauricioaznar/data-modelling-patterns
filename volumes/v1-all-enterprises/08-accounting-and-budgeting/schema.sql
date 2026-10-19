@@ -150,3 +150,21 @@ create table organization_gl_account_balance (
   amount                             numeric not null,   -- debits − credits, USD
   unique (organization_gl_account_id, accounting_period_id)
 );
+
+-- ============================================================
+-- Fig 8.4 — General ledger account associations and subsidiary ledger accounts
+-- ============================================================
+-- A control account (receivables) breaks down into subsidiary accounts (per
+-- customer), to any depth: the recursion. A subsidiary row keeps its
+-- parent's organization and GL account number, narrowed to what it is about
+-- (NOTES, point 14): a supplier or bill-to customer (Ch 2 party roles), a
+-- product or a product category (Ch 3). All optional, no arc drawn (point
+-- 13). Same organization, same number and dates inside the parent's are a
+-- query, as is the role behind each party-role reference.
+alter table organization_gl_account
+  add column subsidiary_of_organization_gl_account_id integer references organization_gl_account,   -- "a subsidiary account of"
+  add column supplier_party_role_id                   integer references party_role,                -- "referencing" SUPPLIER
+  add column bill_to_customer_party_role_id           integer references party_role,                -- "referencing" BILL TO CUSTOMER
+  add column product_category_id                      integer references product_category,          -- "referencing"
+  add column product_id                               integer references product,                   -- "referencing"
+  add check (subsidiary_of_organization_gl_account_id <> organization_gl_account_id);

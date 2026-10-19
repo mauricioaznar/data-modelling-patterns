@@ -10,8 +10,9 @@ The sections below are a menu of formats, not a list to complete. A submodel is 
 every row scores 3+ and its scenario holds up.
 
 **Submodels:**
-1. Chart of accounts (Fig 8.1)
-2. Accounting transactions (Figs 8.2–8.3b)
+1. Chart of accounts (Figs 8.1, 8.4)
+2. Accounting transactions (Figs 8.2–8.3b, 8.5)
+3. Budgets (Figs 8.6–8.7b)
 
 ## Progress
 
@@ -45,6 +46,12 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    the enterprise? Give a case where two organizations' "2001" can't be the same row.
 3. *(8.1)* The type (asset, liability, equity, revenue, expense) sits on the chart's
    account, not on the organization's. When could that be wrong, and what would you do?
+4. *(8.4)* Why break receivables down by subsidiary accounts that reference the customer,
+   instead of opening "120-ACME" in the chart? What does the chart look like after 5,000
+   customers either way?
+5. *(8.4)* ABC Subsidiary's receivables control account has its own postings *and*
+   subsidiaries (the 8.4 balance query). Should a control account ever be posted to
+   directly? What would you change to stop it?
 
 ### Submodel 2: accounting transactions
 1. *(8.2)* A depreciation has no "to" party, an invoice has both. Why does the book split

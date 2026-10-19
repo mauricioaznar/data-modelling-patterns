@@ -5,14 +5,15 @@ when it doesn't apply, empty when not yet. `npm run check -- vN/NN` checks them 
 repo and rewrites the generated tables at the bottom. The design reference doc lives on
 claude.ai, so its columns (Doc draft, Doc done) are on trust.
 
-Not built (alternates): none
+Not built (alternates): 8.7a
 Architecture figure:
 
 ## Submodels
 | # | Submodel | Figs | Doc draft | Overview | Practice | Doc done |
 |---|---|---|---|---|---|---|
-| 1 | Chart of accounts | 8.1 | 2026-10-19 | | | |
-| 2 | Accounting transactions | 8.2–8.3b | 2026-10-19 | | | |
+| 1 | Chart of accounts | 8.1, 8.4 | 2026-10-19 | | | |
+| 2 | Accounting transactions | 8.2–8.3b, 8.5 | 2026-10-19 | | | |
+| 3 | Budgets | 8.6–8.7b | | | | |
 | A | Architecture | | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs N.1–N.3)`; the `A` row's matches the
