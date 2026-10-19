@@ -633,7 +633,7 @@ insert into fixed_asset (fixed_asset_id, fixed_asset_type_id, name, date_acquire
   (1000, 'PENCIL_MAKING_MACHINE', 'Pencil labeler #1', '2000-06-12', '2000-06-12', '2001-06-12', 1000000, 'PENS_PER_DAY', null),
   (2266, 'FORK_LIFT',             'Fork lift #25',     '1999-03-01', '2001-03-15', '2001-08-01', 5,       'PEOPLE',       null),
   (3002, 'EQUIPMENT',             'Office laptop #2',  '2000-06-01', null,         null,         null,    null,           'Laptop at the head office'),
-  -- ours, with one mistake
+  -- ours, each with one mistake
   (3003, 'FORK_LIFT',             'Fork lift #26',     '2000-01-10', null,         null,         5,       null,           null);   -- DATA ERROR: a capacity with no unit
 
 select setval(pg_get_serial_sequence('fixed_asset', 'fixed_asset_id'), (select max(fixed_asset_id) from fixed_asset));
@@ -658,3 +658,31 @@ insert into work_effort_fixed_asset_assignment (work_effort_id, fixed_asset_id, 
   -- ours, each with one mistake
   (41001,   1000, 'ASSET_REQUESTED', '2000-06-14', '2000-06-15', null,    null),   -- DATA ERROR: the labeler is booked on 41002 then
   (120002,  5025, 'WORK_STARTED',    '2000-06-03', '2000-06-04', null,    null);   -- DATA ERROR: a work effort status on an asset booking
+
+-- ============================================================
+-- Fig 6.10 — Party fixed asset assignments
+-- ============================================================
+-- Car #25 is a car of its own, not Ch 5's Truck #25 (NOTES, point 33).
+insert into fixed_asset (fixed_asset_id, fixed_asset_type_id, name, date_acquired) values
+  (3004, 'CAR',       'Car #25',     '1999-06-01'),
+  (3005, 'EQUIPMENT', 'Tool set #5', '1998-02-01');
+
+select setval(pg_get_serial_sequence('fixed_asset', 'fixed_asset_id'), (select max(fixed_asset_id) from fixed_asset));
+
+insert into status_type (status_type_id, parent_type_id, description) values
+  ('PARTY_ASSET_ASSIGN_STATUS', null,                        'Party asset assignment status'),
+  ('ASSET_ACTIVE',              'PARTY_ASSET_ASSIGN_STATUS', 'Active'),
+  ('ASSET_LOST',                'PARTY_ASSET_ASSIGN_STATUS', 'Lost');
+
+-- Table 6.16, end dates +1 day (exclusive): Dick Jones had the tool set
+-- for one day.
+insert into party_fixed_asset_assignment (party_id, fixed_asset_id, status_type_id, from_date, thru_date, comment) values
+  (54, 3004, 'ASSET_ACTIVE',    '2000-01-01', '2001-01-02', null),
+  (56, 3005, 'ASSET_LOST',      '2000-03-15', '2000-03-16', null),
+  -- ours, each with one mistake
+  (58, 3004, 'ASSET_ACTIVE',    '2000-06-01', '2000-07-01', 'Borrowed for a sales trip'),   -- DATA ERROR: John Smith has the car then
+  (57, 3003, 'ASSET_REQUESTED', '2001-02-01', null,         null);                         -- DATA ERROR: a work effort booking status on a checkout
+
+-- Ours: the lost tool set booked on the December repair.
+insert into work_effort_fixed_asset_assignment (work_effort_id, fixed_asset_id, status_type_id, from_date, thru_date) values
+  (32898, 3005, 'ASSET_ASSIGNED', '2000-12-12', '2000-12-13');   -- DATA ERROR: lost in March

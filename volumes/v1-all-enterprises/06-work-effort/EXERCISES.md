@@ -102,6 +102,9 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 2. **[6.9]** FIXED ASSET has four subtypes and a FIXED ASSET TYPE that nests (vehicle,
    truck, 18-wheeler). Why both? And why is the overlap check stricter for an asset on work
    efforts than for a person on them (Fig 6.5)?
+3. **[6.10]** Dick Jones lost Tool set #5 on Mar 15, 2000. Where does the model record that
+   it's lost, and why not with a thru date alone? How would you stop it being booked on a
+   job in December?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

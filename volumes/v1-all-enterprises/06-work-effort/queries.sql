@@ -761,3 +761,65 @@ where s.parent_type_id is distinct from 'WORK_EFFORT_ASSET_ASSIGN_STATUS';
 select fixed_asset_id, name, production_capacity
 from fixed_asset
 where production_capacity is not null and capacity_uom_id is null;
+
+-- ============================================================
+-- Fig 6.10 — Party fixed asset assignments
+-- ============================================================
+-- name: 6.10 — Who holds which asset on Jun 15, 2000, and in what state
+select n.name as holder, fa.name as asset, s.description as status, pa.from_date, pa.thru_date
+from party_fixed_asset_assignment pa
+join party_display_name n on n.party_id = pa.party_id
+join fixed_asset fa       on fa.fixed_asset_id = pa.fixed_asset_id
+join status_type s        on s.status_type_id = pa.status_type_id
+where pa.from_date <= date '2000-06-15' and (pa.thru_date is null or pa.thru_date > date '2000-06-15')
+order by fa.name, n.name;
+
+-- name: 6.10 — Each asset's story: the jobs and the parties it went to, in date order
+select fa.name as asset, x.from_date, x.thru_date, x.went_to, x.who_or_what, s.description as status
+from (
+  select fixed_asset_id, from_date, thru_date, 'work effort' as went_to, we.name as who_or_what, b.status_type_id
+  from work_effort_fixed_asset_assignment b
+  join work_effort we on we.work_effort_id = b.work_effort_id
+  union all
+  select fixed_asset_id, from_date, thru_date, 'party', n.name, pa.status_type_id
+  from party_fixed_asset_assignment pa
+  join party_display_name n on n.party_id = pa.party_id
+) x
+join fixed_asset fa on fa.fixed_asset_id = x.fixed_asset_id
+join status_type s  on s.status_type_id = x.status_type_id
+order by fa.name, x.from_date;
+
+-- name: 6.10 — Data-quality check: one asset held by two parties at overlapping times (should be empty)
+select fa.name as asset, na.name as holder, a.from_date, a.thru_date,
+       nb.name as other_holder, b.from_date as other_from, b.thru_date as other_thru
+from party_fixed_asset_assignment a
+join party_fixed_asset_assignment b on b.fixed_asset_id = a.fixed_asset_id
+                                   and b.party_fixed_asset_assignment_id > a.party_fixed_asset_assignment_id
+join fixed_asset fa        on fa.fixed_asset_id = a.fixed_asset_id
+join party_display_name na on na.party_id = a.party_id
+join party_display_name nb on nb.party_id = b.party_id
+where a.from_date < coalesce(b.thru_date, 'infinity') and b.from_date < coalesce(a.thru_date, 'infinity');
+
+-- name: 6.10 — Data-quality check: an asset booked or handed out after it was lost (should be empty)
+with lost as (
+  select fixed_asset_id, min(thru_date) as lost_after
+  from party_fixed_asset_assignment
+  where status_type_id = 'ASSET_LOST'
+  group by fixed_asset_id
+)
+select fa.name as asset, l.lost_after, 'work effort ' || b.work_effort_id as used_by, b.from_date
+from lost l
+join work_effort_fixed_asset_assignment b on b.fixed_asset_id = l.fixed_asset_id and b.from_date >= l.lost_after
+join fixed_asset fa on fa.fixed_asset_id = l.fixed_asset_id
+union all
+select fa.name, l.lost_after, n.name, pa.from_date
+from lost l
+join party_fixed_asset_assignment pa on pa.fixed_asset_id = l.fixed_asset_id and pa.from_date >= l.lost_after
+join fixed_asset fa       on fa.fixed_asset_id = l.fixed_asset_id
+join party_display_name n on n.party_id = pa.party_id;
+
+-- name: 6.10 — Data-quality check: party asset assignments with a status outside their group (should be empty)
+select pa.party_fixed_asset_assignment_id, pa.party_id, pa.fixed_asset_id, pa.status_type_id
+from party_fixed_asset_assignment pa
+join status_type s on s.status_type_id = pa.status_type_id
+where s.parent_type_id is distinct from 'PARTY_ASSET_ASSIGN_STATUS';

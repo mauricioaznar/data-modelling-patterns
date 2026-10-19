@@ -1276,6 +1276,18 @@ the literal drawing.
   no unit; the labeler requested for 41001 while booked on 41002; a work effort status
   (STARTED) on a booking.
 
+### Fig 6.10
+- **`party_fixed_asset_assignment`**: party, asset, a status (a PARTY_ASSET_ASSIGN_STATUS
+  group in Ch 2's `status_type`: ACTIVE, LOST), from and thru dates, allocated cost,
+  comment. Surrogate key (point 31).
+- **Checks:** one asset held by two parties at once; an asset booked on a job or handed out
+  after it was lost (the lost date is the end of the checkout that lost it); a status from
+  outside the group.
+- **Seed:** Table 6.16, end dates +1 day. Car #25 (3004, a CAR) and Tool set #5 (3005) are
+  ours to number (point 33). Bad rows: Jane Smith with the car while John Smith has it; Bob
+  Jenkins on a REQUESTED status; the lost tool set booked on the December repair (32898).
+  A query tells each asset's story, jobs and holders in date order.
+
 ## When NOT to use this
 - **A shop that only sells** never generates work: a service it sells is a product line on
   an order (Ch 4), and nothing needs WORK EFFORT.
