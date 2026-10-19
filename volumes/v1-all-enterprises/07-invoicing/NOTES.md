@@ -26,6 +26,18 @@ party billed.
    (entered it, approved it) and when; which account a charge goes to, who pays on that
    account (primary, secondary) and since when, and where that account's bills go?
 
+3. **Invoice status and terms** (Fig 7.4, added 2026-10-19): where is this bill now
+   (approved, sent, void) and since when; what are its payment terms, late fees and
+   penalties, and which single line carries a term of its own (non-returnable)?
+
+4. **Billing for what was delivered** (Figs 7.5–7.7, added 2026-10-19): which shipment
+   lines, time entries, work efforts and order lines does this invoice line charge for, and
+   how much of each? What has been delivered, worked or ordered but not billed yet?
+
+5. **Payments** (Fig 7.8a, added 2026-10-19; Fig 7.8b not shared yet): who paid whom, how,
+   when and how much; which invoices (or which account, "on account") each payment settles
+   and how much of it; what is still outstanding on each invoice?
+
 ## Figures
 
 ### Fig 7.1a — Invoice and invoice items
@@ -303,7 +315,242 @@ parties.
 of our internal organizations, a purchase invoice to one). Whether the chapter's overall figure
 keeps 7.3a's lines to PARTY or 7.3b's to PARTY ROLE decides (point 11).
 
-### Points to discuss after the overview (Figs 7.1a–7.3b so far)
+### Fig 7.4 — Invoice status and terms
+**Transcription** (accepted: ☐; photo with Tables 7.7–7.8; open points under "To check
+against the book")
+
+```
+INVOICE STATUS                    (identified by invoice + type + date: tildes on both lines)
+  # status_date
+  -> INVOICE                   (many "a status for" 1; invoice "in the state of" many)
+  -> INVOICE STATUS TYPE       (many "described by" 1; type "the description for" many)
+
+INVOICE TERM
+  # invoice_term_id
+  * term_value
+  -> INVOICE                   } arc: many "a condition for" 1; invoice "subject to" many
+  -> INVOICE ITEM              }      many "a condition for" 1; item "subject to" many
+  -> TERM TYPE                 (many "described by" 1; type "the description for" many)
+
+TERM TYPE
+  # term_type_id
+  * description
+
+INVOICE, INVOICE ITEM          (7.1a's; INVOICE ITEM drawn with its SALES and PURCHASE
+                                subtypes, "part of" INVOICE)
+```
+
+**Table 7.7, invoice statuses** (invoice · status type · date)
+- 30002 · Approved · May 25, 2001
+- 30002 · Sent · May 30, 2001
+- 30005 · Sent · Jun 5, 2001
+- 30005 · Void · Jun 6, 2001
+
+**Table 7.8, invoice terms** (invoice · item seq · term type · value)
+- 30002 · · Payment, net days · 30
+- 30002 · · Late fee, percent · 2
+- 30002 · · Penalty for collection agency, percent · 5
+- 30002 · 2 · Non-returnable sales item ·
+
+**To check against the book**
+- Is term value mandatory (`*`)? Read so from the photo, but Table 7.8's last row has no
+  value (point 13).
+- The status line's tilde: drawn at the INVOICE STATUS end of both lines, so the status is
+  identified by invoice, type and date. Read so.
+- The text below the figure: the current status is the one with the latest date, and a
+  physical model may denormalize a few statuses into dates on INVOICE (approved, sent, void).
+
+**Discussion**
+- **Status as history, not a column.** Same move as Ch 4's ORDER STATUS and Ch 5's SHIPMENT
+  STATUS: a row per event, with its date. A `status` column on INVOICE says where the bill is
+  and forgets how it got there: was 30005 ever sent before it was voided?
+- **Terms on the bill or on one line**, never both: the arc. The same shape as Ch 4's ORDER
+  TERM (which had no arc drawn) and AGREEMENT TERM, and the same shared TERM TYPE list.
+- **Terms copy, they don't point.** The payment term on 30002 may well have come from an
+  agreement (Ch 4) or the order, but the invoice keeps its own row: the bill must stand on
+  its own if the agreement changes later.
+- **The naive model**: `payment_terms text` and `status` on INVOICE. Two late-fee rules, or a
+  term on one line, have nowhere to go, and a bare text can't be computed with (is it late?).
+
+### Fig 7.5 — Billing for shipment items
+**Transcription** (accepted: ☐; photo with the first row of Table 7.9; the rest of the table
+is cut off)
+
+```
+SHIPMENT ITEM BILLING             (no attributes; identified by both lines: tildes)
+  -> SHIPMENT ITEM             (many "of" 1; item "billed via" many)
+  -> INVOICE ITEM              (many "for" 1; item "the billing for" many)
+
+SHIPMENT ITEM (Ch 5's: seq id, quantity, shipment contents description), "part of" SHIPMENT
+(Ch 5's attributes); INVOICE ITEM "part of" INVOICE (7.1a's)
+```
+
+**Table 7.9, shipment invoice data** (shipment · shipment item seq · invoice · invoice item
+seq · quantity, from the invoice item), first row only
+- 1235 · 1 · 30002 · 1 · 1000
+- 1235 · 2 · … (cut off)
+
+**To check against the book**
+- The rest of Table 7.9 (point 14).
+- Table 7.9 shows quantity 1000 for 30002's line 1, which Table 7.2 bills as 10 reams
+  (point 14).
+
+**Discussion**
+- **Many to many, both ways.** One invoice line can bill several shipment lines (10 reams
+  sent in two boxes on two shipments), and one shipment line can be billed on several
+  invoice lines (half now, half when the customer accepts). The naive model, a
+  `shipment_item_id` on the invoice line, holds only the first.
+- **Why through the shipment, not the order:** a business that bills what it ships (most
+  goods sellers) wants the invoice to follow the truck, not the promise. Fig 7.7 offers the
+  order route for the others.
+- **No quantity on the link**, unlike Ch 5's ORDER SHIPMENT: the book assumes each shipment
+  line is billed whole. Partial billing would need one.
+
+### Fig 7.6 — Billing of time entries and work efforts
+**Transcription** (accepted: ☐; photo, no table)
+
+```
+TIME ENTRY BILLING                (no attributes; identified by both lines: tildes)
+  -> TIME ENTRY                (many "of" 1; entry "billed via" many)
+  -> INVOICE ITEM              (many "for" 1; item "the billing for" many)
+
+WORK EFFORT BILLING               (identified by both lines: tildes)
+  o percentage
+  -> WORK EFFORT               (many "of" 1; effort "billed via" many)
+  -> INVOICE ITEM              (many "for" 1; item "the billing for" many)
+
+TIME ENTRY (Ch 6's: id, from date, thru date, hours, comment)
+WORK EFFORT (Ch 6's attributes, 6.3a's set); INVOICE ITEM (7.1a's)
+```
+
+**To check against the book**
+- The text under the figure: if a time entry can be billed over more than one invoice item,
+  an **hours** attribute could be added to TIME ENTRY BILLING. Not drawn; read as a
+  suggestion (point 15).
+- The percentage: read as the share of the effort's agreed price this invoice line bills (a
+  milestone: 50% at kick-off, 50% at delivery).
+
+**Discussion**
+- **Two ways to bill services:** by the hour (each time entry on the line) or by the job
+  (the whole effort, or a percentage of it at each milestone). The same invoice line type
+  (TIME_ENTRY_ITEM or WORK_EFFORT_ITEM, 7.1b's) says which.
+- **Why time entries, not assignments:** the entry is what was actually worked (Ch 6); the
+  assignment (6.5) is only who was on it. Bill what happened.
+- **The naive model**: an `invoiced` flag on TIME ENTRY. It can't say which bill, can't
+  split an entry, and loses the trail when a bill is voided.
+
+### Fig 7.7 — Billing for order items
+**Transcription** (accepted: ☐; photo with Table 7.10)
+
+```
+ORDER ITEM BILLING                (identified by both lines: tildes)
+  o quantity
+  o amount
+  -> ORDER ITEM                (many "of" 1; item "billed via" many)
+  -> INVOICE ITEM              (many "for" 1; item "the billing for" many)
+
+ORDER ITEM (Ch 4's: seq id, quantity, unit price, estimated delivery date, shipping
+instructions, item description, comment; SALES ORDER ITEM with corresponding purchase order
+id, PURCHASE ORDER ITEM), "part of" ORDER (with SALES ORDER, PURCHASE ORDER)
+INVOICE ITEM, INVOICE (7.1a's)
+```
+
+**Table 7.10, billing for order items** (purchase order · order item seq · quantity · unit
+price · invoice · invoice item seq · invoice quantity · billing quantity)
+- 10001 · 1 · 40 hours · $60 · 990023 · 1 · 100 · 40
+- 10002 · 1 · 40 hours · $60 · (990023 · 1) · · 40
+- 10003 · 1 · 40 hours · $60 · (990023 · 1) · · 20
+- 10003 · 1 · 40 hours · $60 · 990026 · 1 · 20 · 20
+
+Rows 2 and 3 leave the invoice blank; read as "same as above" (990023's one line of 100
+hours bills 40 + 40 + 20), since the billing quantities add up to its 100.
+
+**To check against the book**
+- Rows 2–3's blank invoice columns (read as above).
+- Whose purchase orders: the text speaks of a vendor and its customers' purchase orders.
+  Read as **our** purchases: we ordered accounting services three times and the supplier
+  billed them on two invoices of its own numbering (990023, 990026), which Table 7.11 shows
+  paid by one payment (point 16).
+- Is amount on the link per unit or the whole billed? Read as the amount billed for that
+  order line (quantity × the order's price unless agreed otherwise).
+
+**Discussion**
+- **For businesses that bill the order, not the delivery:** services with no shipment,
+  bill-in-advance, deposits. The link carries a quantity, so an order line can be billed in
+  parts (10003's 40 hours: 20 on each invoice) and one invoice line can gather several
+  orders (990023's 100 hours from three orders).
+- **The vendor's choice doesn't matter to the model:** one invoice per order, per month, or
+  per project: the link takes them all.
+- **Pick one route per business**, or a line billed both through its order and through its
+  shipment is counted twice (point 17).
+
+### Fig 7.8a — Invoice payments
+**Transcription** (accepted: ☐; photo with Table 7.11)
+
+```
+PAYMENT
+  # payment_id
+  * effective_date
+  * payment_ref_num
+  * amount
+  o comment
+  subtypes: RECEIPT, DISBURSEMENT
+  -> PAYMENT METHOD TYPE       (many "paid via" 1; type "the method for paying" many)
+  -> PARTY                     (many "from" 1; party "the payor of" many)
+  -> PARTY                     (many "to" 1; party "the receiver of" many)
+
+PAYMENT APPLICATION
+  # payment_application_id
+  * amount_applied
+  -> PAYMENT                   (many "applying" 1, tilde; payment "used to pay" many)
+  -> INVOICE                   (many "applied to" 1; invoice "paid via" many)
+  -> BILLING ACCOUNT           (dashed: many "applied to" 1; account "affected via" many)
+
+PAYMENT METHOD TYPE
+  # payment_method_type_id
+  * description
+
+INVOICE (7.1a's), BILLING ACCOUNT (7.3a's), PARTY (# party id)
+```
+
+**Table 7.11, invoice payments** (invoice · item seq · product · feature · adjustment ·
+quantity · unit price · payment application amount · payment · payment amount)
+- 30002 · · · · · · · $182.20 · 12298398 · $182.20
+- 30002 · 1 · Johnson fine grade 8½ by 11 bond paper · · · 10 · $8.00 · $12.84 ·
+  12298412 · $12.84
+- 30002 · 2 · · product quality, extra glossy finish · · · $2.00
+- 30002 · 3 · Goldstein Elite pens · · · 4 · $12.00
+- 30002 · 4 · HD 3½-inch diskettes · · · 6 · $7.00
+- 30002 · 5 · · · sales tax · · $12.04
+- 30002 · 6 · · · shipping and handling · · $16.00
+- 30002 · 7 · · · fee (order processing fee) · · $5.00
+- 990023 · 1 · accounting services · · · · $6,000 · $6,000 · 488893 · $7,000
+- 990026 · 1 · accounting services · · · · $1,200 · $1,000 · (488893)
+
+**To check against the book**
+- Is "applied to" INVOICE solid (mandatory)? The text says a payment may instead be applied
+  "on account", to a billing account and no invoice. Read as an arc: one or the other
+  (point 18).
+- Which row the $12.84 sits on: the rotated photo puts it on line 1's row, not the
+  invoice's (point 19).
+- Table 7.11's line order against Table 7.3: tax is line 5 at $12.04 here, line 7 at $25.65
+  there (point 20).
+- Payment ref num: read as the check number or the electronic transfer's reference.
+
+**Discussion**
+- **Payment and invoice are many to many.** One payment settles several bills (488893 pays
+  990023 and part of 990026), one bill is paid in parts (30002 by two payments). The
+  application holds how much of which payment went where. The naive model, `paid_date` and
+  `amount_paid` on INVOICE, can't hold either.
+- **RECEIPT or DISBURSEMENT** is direction: money in to one of our internal organizations,
+  or money out. Same entity, the way Ch 4 has SALES and PURCHASE ORDER.
+- **On account:** a customer pays $500 against the account before we know which bills it
+  covers. The application points at the BILLING ACCOUNT; it moves to invoices later (or
+  never, if the business runs balance-forward billing).
+- **Outstanding = invoice total − applications.** Nothing stores a balance; it is computed,
+  so it can't drift.
+
+### Points to discuss after the overview (Figs 7.1a–7.8a so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing.
@@ -347,6 +594,41 @@ the literal drawing.
 12. **Who's on the hook for an account invoice:** the arc lets an invoice be billed to an
     account with no party. "Who owes" is then the account's primary payer on the invoice date.
     Built as a query; an account with no primary payer on that date is a check.
+13. **7.4, term value drawn mandatory**, yet Table 7.8's non-returnable row has none (the
+    type says it all, as Ch 4's NO_EXCHANGE_OR_REFUND). Built nullable, like Ch 4's term
+    tables.
+14. **Table 7.9 is cut off** after its first row, which bills shipment 1235's line 1 on
+    30002's line 1 with quantity 1000, where Table 7.2 bills 10 reams. Shipment 1235 isn't
+    in Ch 5. Seeded as ours: 1235 sends 30002's paper, pens and diskettes to ACME, and its
+    line 1 is billed on 30002's line 1 (the 1000 not used). The rest of the table to come.
+15. **7.6, hours on TIME ENTRY BILLING:** the text offers it for an entry billed over more
+    than one line; not drawn, not built. A review lists TIME_ENTRY_ITEM lines whose quantity
+    differs from the hours of the entries they bill.
+16. **Table 7.10's purchase orders** read as ours: ABC Subsidiary bought accounting services
+    (40 hours a time) from a supplier, who billed them on its own invoices 990023 and 990026
+    (purchase invoices), and Table 7.11 shows us paying them. The supplier, "Hartley
+    Accounting", is ours.
+17. **Two billing routes for one line:** a goods line can be billed through its order
+    (7.7) or through its shipment (7.5). Both on one invoice line would count it twice.
+    Built: a check catches an invoice line linked both ways.
+18. **7.8a, "applied to" INVOICE is drawn solid**, but the text applies a payment "on
+    account", to a billing account with no invoice. Read as an arc: exactly one of the two,
+    a check constraint.
+19. **Table 7.11's $12.84 sits on line 1's row**, not the invoice's: maybe the second
+    payment settles one line (the paper). Fig 7.8b (not shared yet) is likely the alternate
+    applying payments to invoice items. Built at invoice level: both payments apply to 30002.
+20. **Table 7.11 against Table 7.3:** tax is line 5 at $12.04 there, line 7 at $25.65 in
+    Table 7.3. And the two payments (182.20 + 12.84 = 195.04) fit neither total: 218.65 with
+    Table 7.3's tax, 205.04 with Table 7.11's (the $2 finish counted once). Kept 7.3's lines
+    (built already) and seeded Table 7.11's payments, so 30002 shows 23.61 outstanding.
+21. **Table 7.11's 990023** shows no quantity and a unit price of $6,000; Table 7.10 bills
+    the same line as 100 hours. Seeded 100 × $60 = $6,000 (the same total).
+22. **No PAID status:** whether a bill is paid is computed from its payment applications.
+    Storing a PAID status too would let the two disagree. Seeded only the book's types
+    (approved, sent, void) plus our RECEIVED for purchase invoices.
+23. **Table 7.8's non-returnable term is on line 2**, the glossy-finish feature line, not on
+    a product. Seeded as printed, with Ch 4's NO_EXCHANGE_OR_REFUND type: TERM TYPE is one
+    list shared by orders, quotes, agreements and now invoices.
 
 ## Design decisions (book → SQL)
 
@@ -422,6 +704,22 @@ the literal drawing.
   30013 to 1459 (the family's phone bill). Bad rows: 30014, billed to 1459 in January 2000,
   before it opened; 30015, billed to 1295 but addressed to jsmith@us.com; Joe Smith as a
   second primary payer on 1459 from Jul 1, 2001, and his secondary role keyed in twice.
+
+### Fig 7.4
+- **`invoice_status`** (surrogate key, `status_date` a date as drawn) with its types as a new
+  INVOICE_STATUS group in Ch 2's `status_type`: APPROVED, SENT, VOID (the book's) and
+  RECEIVED (ours, for supplier bills). No PAID (point 22).
+- **`invoice_term`** with `term_type` from Ch 4 (shared with order, quote and agreement
+  terms), `term_value` nullable (point 13). The arc is drawn, so `num_nonnulls(invoice_id,
+  invoice_item_id) = 1` is a check constraint, unlike Ch 4's order terms, where no arc was
+  drawn and "exactly one" was a query.
+- **New term types** under FINANCIAL_TERM: LATE_FEE_PCT and COLLECTION_PENALTY_PCT. The
+  non-returnable term reuses Ch 4's NO_EXCHANGE_OR_REFUND (point 23).
+- **Checks:** a status outside the group; a status before the invoice date; anything after
+  a void; a status twice (invoice, type, date); one term type twice on an invoice or line.
+- **Seed:** Tables 7.7–7.8; ours: 30016 approved and sent, 30020 received, a 15-day term on
+  30005. Bad rows: 30011 sent before its date, 30005 sent again after its void, 30013 given an
+  order status, 30016's sent keyed twice, a second payment term (45 days) on 30002.
 
 ## When NOT to use this
 - **One line per product, no fees, one tax:** a small shop's invoice is fine with a total and

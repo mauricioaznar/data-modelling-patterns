@@ -60,6 +60,16 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 4. **[7.3a]** Table 7.5 gives ACME two accounts at the same address. Why not one account
    with two descriptions, or no accounts and a "cost centre" column on the invoice?
 
+### Submodel 3: invoice status and terms
+1. **[7.4]** The model keeps APPROVED, SENT and VOID as status rows but no PAID. Why is "paid"
+   a different kind of fact from "sent", and what goes wrong the day you store both?
+2. **[7.4]** 30002's payment term (30 days) probably came from ACME's agreement or the
+   order. Why does the invoice copy it into INVOICE TERM instead of pointing at the
+   agreement term?
+3. **[7.4]** Ch 4 had no arc on ORDER TERM and checked "order or item" with a query; Fig 7.4
+   draws one on INVOICE TERM, so here it's a check constraint. What decides when a rule can
+   live in the table and when it has to be a query?
+
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
 notation (entities, key attributes, relationships and cardinality). Then diff it against

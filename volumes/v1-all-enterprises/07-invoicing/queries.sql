@@ -260,3 +260,66 @@ select billing_account_id, party_id, billing_account_role_type_id, from_date, co
 from billing_account_role
 group by billing_account_id, party_id, billing_account_role_type_id, from_date
 having count(*) > 1;
+
+-- ============================================================
+-- Fig 7.4 — Invoice status and terms
+-- ============================================================
+
+-- name: 7.4 — Table 7.7: each invoice's status history, in order
+select s.invoice_id, t.description as status, s.status_date
+from invoice_status s
+join status_type t on t.status_type_id = s.status_type_id
+order by s.invoice_id, s.status_date, s.invoice_status_id;
+
+-- name: 7.4 — Where each invoice stands now: its latest status (30005 shows Sent, because of the bad row after its void)
+select distinct on (v.invoice_id) v.invoice_id, v.invoice_date, t.description as current_status, s.status_date as since
+from invoice v
+left join invoice_status s on s.invoice_id = v.invoice_id
+left join status_type t    on t.status_type_id = s.status_type_id
+order by v.invoice_id, s.status_date desc nulls last, s.invoice_status_id desc;
+
+-- name: 7.4 — Table 7.8: the terms on each invoice, and on its lines
+select coalesce(r.invoice_id, i.invoice_id) as invoice_id, i.invoice_item_seq_id as item_seq,
+       t.description as term, r.term_value
+from invoice_term r
+join term_type t         on t.term_type_id = r.term_type_id
+left join invoice_item i on i.invoice_item_id = r.invoice_item_id
+order by 1, 2 nulls first, t.description;
+
+-- name: 7.4 — Due dates: invoice date plus the payment term's net days, beside the date it was first sent
+select v.invoice_id, v.invoice_date, r.term_value as net_days,
+       (select min(s.status_date) from invoice_status s where s.invoice_id = v.invoice_id and s.status_type_id = 'INVOICE_SENT') as first_sent,
+       v.invoice_date + r.term_value::int as due_date
+from invoice v
+join invoice_term r on r.invoice_id = v.invoice_id and r.term_type_id = 'PAYMENT_DUE_DAYS'
+order by v.invoice_id, due_date;
+
+-- name: 7.4 — Data-quality check: invoice statuses that aren't invoice statuses (should be empty)
+select s.invoice_id, s.status_type_id, s.status_date
+from invoice_status s
+join status_type t on t.status_type_id = s.status_type_id
+where t.parent_type_id is distinct from 'INVOICE_STATUS';
+
+-- name: 7.4 — Data-quality check: statuses dated before the invoice itself (should be empty)
+select s.invoice_id, v.invoice_date, s.status_type_id, s.status_date
+from invoice_status s
+join invoice v on v.invoice_id = s.invoice_id
+where s.status_date < v.invoice_date;
+
+-- name: 7.4 — Data-quality check: anything after a void (should be empty)
+select s.invoice_id, x.status_date as voided, s.status_type_id, s.status_date
+from invoice_status s
+join invoice_status x on x.invoice_id = s.invoice_id and x.status_type_id = 'INVOICE_VOID'
+where s.status_date > x.status_date;
+
+-- name: 7.4 — Data-quality check: the same status twice on one day, against the book's identifier (should be empty)
+select invoice_id, status_type_id, status_date, count(*) as rows
+from invoice_status
+group by invoice_id, status_type_id, status_date
+having count(*) > 1;
+
+-- name: 7.4 — Data-quality check: one term type twice on the same invoice or line (should be empty)
+select invoice_id, invoice_item_id, term_type_id, count(*) as rows, string_agg(coalesce(term_value::text, '-'), ', ') as term_values
+from invoice_term
+group by invoice_id, invoice_item_id, term_type_id
+having count(*) > 1;

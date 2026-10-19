@@ -212,3 +212,44 @@ insert into invoice_item (invoice_id, invoice_item_seq_id, invoice_item_type_id,
   (30013, 1, 'PRODUCT_ITEM', null, true,  null, 45.00, 'Phone service, June 2001'),
   (30014, 1, 'PRODUCT_ITEM', null, true,  null, 45.00, 'Phone service, December 1999'),
   (30015, 1, 'PRODUCT_ITEM', 1,    true,  5,    8.00,  null);
+
+-- ============================================================
+-- Fig 7.4 — Invoice status and terms
+-- ============================================================
+-- A new group in Ch 2's shared status_type: the book's three, and RECEIVED
+-- (ours) for the supplier bills we get. No PAID (NOTES, point 22).
+insert into status_type (status_type_id, parent_type_id, description) values
+  ('INVOICE_STATUS',   null,             'Invoice status'),
+  ('INVOICE_APPROVED', 'INVOICE_STATUS', 'Approved'),
+  ('INVOICE_SENT',     'INVOICE_STATUS', 'Sent'),
+  ('INVOICE_VOID',     'INVOICE_STATUS', 'Void'),
+  ('INVOICE_RECEIVED', 'INVOICE_STATUS', 'Received (a supplier''s bill)');
+
+-- Table 7.7, then ours.
+insert into invoice_status (invoice_id, status_type_id, status_date) values
+  (30002, 'INVOICE_APPROVED', '2001-05-25'),
+  (30002, 'INVOICE_SENT',     '2001-05-30'),
+  (30005, 'INVOICE_SENT',     '2001-06-05'),
+  (30005, 'INVOICE_VOID',     '2001-06-06'),
+  (30016, 'INVOICE_APPROVED', '2001-06-10'),
+  (30016, 'INVOICE_SENT',     '2001-06-11'),
+  (30020, 'INVOICE_RECEIVED', '2001-06-01'),
+  (30011, 'INVOICE_SENT',     '2001-06-10'),   -- DATA ERROR: sent two days before the invoice's own date (caught by a query)
+  (30005, 'INVOICE_SENT',     '2001-06-08'),   -- DATA ERROR: sent again after it was voided (caught by a query)
+  (30013, 'ORDER_SHIPPED',    '2001-07-02'),   -- DATA ERROR: an order status on an invoice (caught by a query)
+  (30016, 'INVOICE_SENT',     '2001-06-11');   -- DATA ERROR: the same event keyed in twice (caught by a query)
+
+-- Table 7.8's new term types, filed under Ch 4's FINANCIAL_TERM. Its
+-- "non-returnable sales item" is Ch 4's NO_EXCHANGE_OR_REFUND (point 23).
+insert into term_type (term_type_id, parent_type_id, description) values
+  ('LATE_FEE_PCT',           'FINANCIAL_TERM', 'Percentage late fee added when the invoice is paid late'),
+  ('COLLECTION_PENALTY_PCT', 'FINANCIAL_TERM', 'Percentage added to the amount due if the invoice goes to a collection agency');
+
+-- Table 7.8; item 2 is 30002's glossy finish line.
+insert into invoice_term (term_type_id, invoice_id, invoice_item_id, term_value) values
+  ('PAYMENT_DUE_DAYS',       30002, null, 30),
+  ('LATE_FEE_PCT',           30002, null, 2),
+  ('COLLECTION_PENALTY_PCT', 30002, null, 5),
+  ('NO_EXCHANGE_OR_REFUND',  null,  2,    null),
+  ('PAYMENT_DUE_DAYS',       30005, null, 15),   -- ours
+  ('PAYMENT_DUE_DAYS',       30002, null, 45);   -- DATA ERROR: a second payment term on 30002 (caught by a query)
