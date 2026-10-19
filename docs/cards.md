@@ -286,9 +286,10 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 8 · V1 Ch 3 · Pricing and costing (Figs 3.7–3.8)
 - **Cue:** "What do we charge, under which conditions, and what does it cost us?"
-- **Hook:** the price is a recipe *(Claude's, drafted when the figures landed)*
-- **Mantra:** Price components are conditional rules; the most specific base wins, matching
-  discounts and surcharges adjust it; cost estimates hit a product or feature, never both.
+- **Hook:** the price recipe *(the user's rewrite, 2026-10-19)*
+- **Mantra:** Price components are conditional rules: the most specific base wins, matching
+  discounts and surcharges stack on it per unit; cost estimates hit a product or a feature,
+  never both. *(the user's rewrite, 2026-10-19)*
 
 <details><summary>Key</summary>
 
@@ -313,9 +314,10 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 9 · V1 Ch 3 · Product associations and parts (Figs 3.9–3.10)
 - **Cue:** "Which products go with, replace, clash with or are built from which others?"
-- **Hook:** the product family tree *(Claude's, drafted when the figures landed)*
-- **Mantra:** One dated, typed link joins product to product: component (a package or an
-  assembly), substitute, successor, complement or clash; components explode level by level.
+- **Hook:** the product tree family *(the user's rewrite, 2026-10-19)*
+- **Mantra:** A typed, dated link joins two products: component (package or assembly),
+  substitute, successor, complement, clash. Components explode level by level. *(the user's
+  rewrite, 2026-10-19)*
 
 <details><summary>Key</summary>
 

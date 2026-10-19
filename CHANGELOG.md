@@ -137,8 +137,14 @@ and any decisions made.
   35–36 revised, card 37 new, Anki export 51 cards. Design reference: both Ch 8 entries
   revised, a Budgets draft entry, Ch 8 examples on ten Core patterns rows, a question index
   row, the roadmap row.
+- Ch 3 cards 8 and 9 rewritten in the user's words (overview step 2), checked against the
+  keys; Anki export regenerated (51 cards).
 
 **Decisions**
+- Card 8: hook "the price recipe" (the user's "product recipe" would cue card 9's bill of
+  materials); discounts and surcharges "stack per unit", the twist on the user's per-line
+  slip at the overview. Card 9: package and component stay one COMPONENT type (point 11),
+  "dated" kept, "replacement" dropped (it named the successor on 10-17).
 - Ch 8: no amount on the accounting transaction, it is worth its debits (Table 8.3's
   $1,200 fits; 39776's $700 against $900 is point 4).
 - Ch 8: the subtype tree becomes the top rows of ACCOUNTING TRANSACTION TYPE, with a view
