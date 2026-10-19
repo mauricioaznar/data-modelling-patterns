@@ -546,6 +546,16 @@ insert into product_association (product_association_type_id, from_product_id, t
   ('INCOMPATIBILITY',   4,  2,  '2022-01-01', null, 'DATA ERROR: contradicts the pen/forms complement, the other way round (caught by a query)', null, null, null),
   ('COMPLEMENT',        6,  1,  '2024-01-01', null, 'DATA ERROR: the copier/paper complement again, overlapping (caught by a query)', null, null, null);
 
+-- The kit is a product with its own price (Fig 3.7), not the sum of its parts:
+-- the association carries no price. Bought alone, its parts come to 109.00
+-- (two reams at 42, ten pens at 2.50; the claim forms have no list price);
+-- the kit sells for less.
+insert into price_component (price_component_id, price_component_type_id, charge_kind, from_date, price, currency_uom_id,
+                             product_id, pricer_party_id, comment) values
+  (41, 'BASE_PRICE', 'ONE_TIME', '2024-01-01', 99.00, 'USD', 11, 4, 'Office starter kit, below its parts bought alone');
+
+select setval(pg_get_serial_sequence('price_component', 'price_component_id'), (select max(price_component_id) from price_component));
+
 -- ============================================================
 -- Fig 3.10a — Products and parts
 -- ============================================================
