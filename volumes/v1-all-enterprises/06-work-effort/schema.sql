@@ -51,3 +51,13 @@ create table work_requirement (
   fixed_asset_id integer references fixed_asset,   -- "related to"
   deliverable_id integer references deliverable    -- "for work to produce"
 );
+
+-- ============================================================
+-- Fig 6.2 — Work requirement roles
+-- ============================================================
+-- Ch 4's REQUIREMENT ROLE, redrawn with a comment. The book's identifier
+-- (requirement, party, role type, from date) is a data-quality query beside
+-- the surrogate key; so is one responsible party at a time (our reading of
+-- Table 6.3). The new role types are rows of Ch 4's requirement_role_type.
+alter table requirement_role
+  add column comment text;

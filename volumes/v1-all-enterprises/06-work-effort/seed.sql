@@ -94,3 +94,50 @@ insert into work_requirement (requirement_id, product_id, fixed_asset_id, delive
 
 insert into product_requirement (requirement_id, product_id) values
   (70504, null);
+
+-- ============================================================
+-- Fig 6.2 — Work requirement roles
+-- ============================================================
+-- John Smith, Sam Bossman and Dick Jones, at ABC Manufacturing.
+insert into party (party_id, party_kind) values
+  (54, 'PERSON'),
+  (55, 'PERSON'),
+  (56, 'PERSON');
+
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into person (party_id, gender_type_id) values
+  (54, 'MALE'),
+  (55, 'MALE'),
+  (56, 'MALE');
+
+insert into person_name (party_id, person_name_type_id, from_date, thru_date, name) values
+  (54, 'FIRST', '1995-01-01', null, 'John'),
+  (54, 'LAST',  '1995-01-01', null, 'Smith'),
+  (55, 'FIRST', '1995-01-01', null, 'Sam'),
+  (55, 'LAST',  '1995-01-01', null, 'Bossman'),
+  (56, 'FIRST', '1995-01-01', null, 'Dick'),
+  (56, 'LAST',  '1995-01-01', null, 'Jones');
+
+-- Table 6.3's role types, beside Ch 4's OWNER, REQUESTER and APPROVER (NOTES, point 14).
+insert into requirement_role_type (requirement_role_type_id, description) values
+  ('CREATED_FOR',     'Created for: whose need it is'),
+  ('CREATED_BY',      'Created by: who recorded it'),
+  ('RESPONSIBLE_FOR', 'Responsible for seeing it filled'),
+  ('AUTHORIZED_BY',   'Authorized it');
+
+-- Table 6.3, thru dates +1 day (exclusive). Dick Jones's dates read as Dec 16,
+-- 2000 and John Smith's return as Feb 21, 2001 (NOTES, point 4). 60102's
+-- roles predate its creation as printed (point 5).
+insert into requirement_role (requirement_id, party_id, requirement_role_type_id, from_date, thru_date, comment) values
+  (50985, 53, 'CREATED_FOR',     '2000-07-05', null,         null),
+  (50985, 54, 'CREATED_BY',      '2000-07-05', null,         null),
+  (50985, 54, 'RESPONSIBLE_FOR', '2000-07-05', '2000-12-16', null),
+  (50985, 55, 'AUTHORIZED_BY',   '2000-07-08', null,         null),
+  (50985, 56, 'RESPONSIBLE_FOR', '2000-12-16', '2001-02-21', 'Covers while John Smith is on leave'),   -- the comment is ours
+  (50985, 54, 'RESPONSIBLE_FOR', '2001-02-21', null,         null),
+  (60102, 55, 'CREATED_FOR',     '2000-06-10', null,         null),
+  (60102, 56, 'RESPONSIBLE_FOR', '2000-06-15', '2001-01-02', null),
+  -- ours
+  (50985, 55, 'RESPONSIBLE_FOR', '2001-01-15', '2001-02-01', null),   -- DATA ERROR: inside Dick Jones's period
+  (50985, 53, 'CREATED_FOR',     '2000-07-05', null,         null);   -- DATA ERROR: Table 6.3's first row keyed in twice

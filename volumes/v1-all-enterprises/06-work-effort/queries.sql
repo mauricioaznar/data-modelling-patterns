@@ -85,3 +85,60 @@ where r.requirement_type_id = 'PRODUCTION_RUN' and (w.product_id is null or r.qu
 select fixed_asset_id, name
 from fixed_asset
 where date_acquired is null;
+
+-- ============================================================
+-- Fig 6.2 — Work requirement roles
+-- ============================================================
+
+-- name: 6.2 — Table 6.3: every party on work requirements 50985 and 60102, in which role and when
+select ro.requirement_id, n.name as party, t.description as role_type, ro.from_date,
+       ro.thru_date - 1 as last_day, ro.comment
+from requirement_role ro
+join party_display_name n     on n.party_id = ro.party_id
+join requirement_role_type t  on t.requirement_role_type_id = ro.requirement_role_type_id
+where ro.requirement_id in (50985, 60102)
+order by ro.requirement_id, ro.from_date, ro.requirement_role_type_id;
+
+-- name: 6.2 — Who was responsible for 50985 on a given day (Jan 10, 2001: Dick Jones, covering)
+select ro.requirement_id, n.name as responsible
+from requirement_role ro
+join party_display_name n on n.party_id = ro.party_id
+where ro.requirement_id = 50985 and ro.requirement_role_type_id = 'RESPONSIBLE_FOR'
+  and ro.from_date <= date '2001-01-10' and (ro.thru_date is null or ro.thru_date > date '2001-01-10');
+
+-- name: 6.2 — Each work requirement's people today: whose need, who keyed it, who answers for it, who authorised it
+select r.requirement_id, r.description,
+       string_agg(distinct case when ro.requirement_role_type_id = 'CREATED_FOR'     then n.name end, ', ') as created_for,
+       string_agg(distinct case when ro.requirement_role_type_id = 'CREATED_BY'      then n.name end, ', ') as created_by,
+       string_agg(distinct case when ro.requirement_role_type_id = 'RESPONSIBLE_FOR' then n.name end, ', ') as responsible,
+       string_agg(distinct case when ro.requirement_role_type_id = 'AUTHORIZED_BY'   then n.name end, ', ') as authorized_by
+from requirement r
+join requirement_role ro  on ro.requirement_id = r.requirement_id
+                         and ro.from_date <= current_date and (ro.thru_date is null or ro.thru_date > current_date)
+join party_display_name n on n.party_id = ro.party_id
+where r.requirement_kind = 'WORK'
+group by r.requirement_id, r.description
+order by r.requirement_id;
+
+-- name: 6.2 — Review: roles dated before their requirement was created (Table 6.3's 60102: NOTES, point 5)
+select ro.requirement_id, r.requirement_creation_date, n.name as party, ro.requirement_role_type_id, ro.from_date
+from requirement_role ro
+join requirement r        on r.requirement_id = ro.requirement_id
+join party_display_name n on n.party_id = ro.party_id
+where ro.from_date < r.requirement_creation_date
+order by ro.requirement_id, ro.from_date;
+
+-- name: 6.2 — Data-quality check: the same party in the same role on the same requirement from the same day, twice (should be empty)
+select requirement_id, party_id, requirement_role_type_id, from_date, count(*) as rows
+from requirement_role
+group by requirement_id, party_id, requirement_role_type_id, from_date
+having count(*) > 1;
+
+-- name: 6.2 — Data-quality check: two responsible parties at once on one requirement (should be empty)
+select a.requirement_id, a.party_id as one, b.party_id as other,
+       greatest(a.from_date, b.from_date) as overlap_from
+from requirement_role a
+join requirement_role b on b.requirement_id = a.requirement_id
+                       and b.requirement_role_id > a.requirement_role_id
+where a.requirement_role_type_id = 'RESPONSIBLE_FOR' and b.requirement_role_type_id = 'RESPONSIBLE_FOR'
+  and a.from_date < coalesce(b.thru_date, 'infinity') and b.from_date < coalesce(a.thru_date, 'infinity');

@@ -43,6 +43,9 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    does that rule live if not in the foreign keys?
 2. **[6.1]** A work requirement names at most one FIXED ASSET. What do you do with Ch 4's
    "Repair 14 PCs" (24905)? Give two ways to fix it, and say which one the model favours.
+3. **[6.2]** Table 6.3 passes 50985 from John Smith to Dick Jones and back. What would a
+   `responsible_party_id` column on REQUIREMENT lose, and which question could you no longer
+   answer?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
