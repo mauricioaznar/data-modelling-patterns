@@ -443,3 +443,54 @@ from work_effort_billing eb
 join work_effort w on w.work_effort_id = eb.work_effort_id
 group by w.work_effort_id, w.name
 having sum(eb.percentage) > 100;
+
+-- ============================================================
+-- Fig 7.7 — Billing for order items
+-- ============================================================
+
+-- name: 7.7 — Table 7.10: each purchase order line beside the invoice lines that bill it, with how much of it each bills
+select oi.order_id as purchase_order_id, oi.order_item_seq_id as order_seq, oi.quantity, oi.unit_price,
+       ii.invoice_id, ii.invoice_item_seq_id as invoice_seq, ii.quantity as invoice_quantity, b.quantity as billing_quantity, b.amount
+from order_item_billing b
+join order_item oi   on oi.order_item_id = b.order_item_id
+join invoice_item ii on ii.invoice_item_id = b.invoice_item_id
+where oi.order_id between 10001 and 10003
+order by oi.order_id, ii.invoice_id;
+
+-- name: 7.7 — Ordered against billed, per order line billed through its order (10002 shows the over-billing)
+select oi.order_id, o.order_kind, oi.order_item_seq_id as seq, oi.quantity as ordered, sum(b.quantity) as billed,
+       oi.quantity - sum(b.quantity) as left_to_bill
+from order_item oi
+join "order" o            on o.order_id = oi.order_id
+join order_item_billing b on b.order_item_id = oi.order_item_id
+group by oi.order_item_id, oi.order_id, o.order_kind, oi.order_item_seq_id, oi.quantity
+order by oi.order_id, oi.order_item_seq_id;
+
+-- name: 7.7 — Review: invoice lines whose quantity isn't the sum of the order quantities they bill
+select ii.invoice_id, ii.invoice_item_seq_id as seq, ii.quantity as invoice_quantity, sum(b.quantity) as order_quantities
+from invoice_item ii
+join order_item_billing b on b.invoice_item_id = ii.invoice_item_id
+group by ii.invoice_item_id, ii.invoice_id, ii.invoice_item_seq_id, ii.quantity
+having ii.quantity is distinct from sum(b.quantity);
+
+-- name: 7.7 — Data-quality check: order lines billed for more than was ordered (should be empty)
+select oi.order_id, oi.order_item_seq_id as seq, oi.quantity as ordered, sum(b.quantity) as billed
+from order_item_billing b
+join order_item oi on oi.order_item_id = b.order_item_id
+group by oi.order_item_id, oi.order_id, oi.order_item_seq_id, oi.quantity
+having sum(b.quantity) > oi.quantity;
+
+-- name: 7.7 — Data-quality check: order lines billed on the other kind of invoice: a sales order on a purchase invoice or back (should be empty)
+select oi.order_id, o.order_kind, ii.invoice_id, v.invoice_kind
+from order_item_billing b
+join order_item oi   on oi.order_item_id = b.order_item_id
+join "order" o       on o.order_id = oi.order_id
+join invoice_item ii on ii.invoice_item_id = b.invoice_item_id
+join invoice v       on v.invoice_id = ii.invoice_id
+where o.order_kind <> v.invoice_kind;
+
+-- name: 7.7 — Data-quality check: invoice lines billed both through an order and through a shipment, counted twice (should be empty)
+select ii.invoice_id, ii.invoice_item_seq_id as seq
+from invoice_item ii
+where exists (select 1 from order_item_billing b where b.invoice_item_id = ii.invoice_item_id)
+  and exists (select 1 from shipment_item_billing s where s.invoice_item_id = ii.invoice_item_id);

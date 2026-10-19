@@ -70,6 +70,17 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    draws one on INVOICE TERM, so here it's a check constraint. What decides when a rule can
    live in the table and when it has to be a query?
 
+### Submodel 4: billing for what was delivered
+1. **[7.5–7.7]** Four link tables (shipment item, time entry, work effort, order item
+   billing) instead of four nullable FKs on INVOICE ITEM. Give one business case per link
+   that the FK version can't hold.
+2. **[7.5]** 1330's three books are billed on 30005, which was voided. Are they billed? What
+   does your "shipped but not billed" query need to know, and from which figure?
+3. **[7.7]** A goods seller bills through shipments, a consultancy through orders or time.
+   Why does the model offer both routes, and what goes wrong if one line uses both?
+4. **[7.6]** Time entry 3 (30 hours) is billed 20 hours now and 10 next month. What does the
+   model lack today, and which one-attribute fix does the book suggest?
+
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
 notation (entities, key attributes, relationships and cardinality). Then diff it against

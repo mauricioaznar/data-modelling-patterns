@@ -908,6 +908,20 @@ the literal drawing.
   Bad rows: entry 3 billed again on 30012's product line, and a second plan line at 60%
   (110% in all).
 
+### Fig 7.7
+- **`order_item_billing`** with `quantity` (non-zero: a credit may bill a negative part) and
+  `amount`, both optional as drawn.
+- **Checks:** an order line billed for more than was ordered; an order billed on the other
+  kind of invoice (sales on purchase, or back); an invoice line billed both through its
+  order and through its shipment (point 17). **Review:** invoice lines whose quantity isn't
+  the sum of what they bill.
+- **Seed:** Table 7.10 as our purchases (point 16): Hartley Accounting (63, ours) as a
+  SUPPLIER, the service "Accounting services" (27), purchase orders 10001–10003 placed by
+  ABC Subsidiary's buyer role, Hartley's invoices 990023 (100 hours) and 990026 (20). Bad
+  rows: 10002 billed 10 more hours on 990026; 12560's paper billed through its order on
+  30002's line 1, which its shipment already bills; purchase order 12570's paper on sales
+  invoice 30015.
+
 ## When NOT to use this
 - **One line per product, no fees, one tax:** a small shop's invoice is fine with a total and
   a tax column; the typed items earn their keep when new charges keep appearing.

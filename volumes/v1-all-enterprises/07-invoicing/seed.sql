@@ -322,3 +322,70 @@ insert into time_entry_billing (time_entry_id, invoice_item_id) values
 insert into work_effort_billing (work_effort_id, invoice_item_id, percentage) values
   (29000, 41, 50),
   (29000, 42, 60);   -- DATA ERROR: the plan billed 110% in all (caught by a query)
+
+-- ============================================================
+-- Fig 7.7 — Billing for order items
+-- ============================================================
+-- Table 7.10, read as our purchases (NOTES, point 16): ABC Subsidiary orders
+-- 40 hours of accounting a time from Hartley Accounting (63, ours), which
+-- bills them on its own invoices 990023 and 990026.
+insert into party (party_id, party_kind) values (63, 'ORGANIZATION');
+
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into organization (party_id, organization_type_id, name) values
+  (63, 'CORPORATION', 'Hartley Accounting');
+
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (84, 63, 'SUPPLIER', '2000-01-01', null);
+
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+insert into product (product_id, product_kind, name, introduction_date) values
+  (27, 'SERVICE', 'Accounting services', '1990-01-01');
+
+select setval(pg_get_serial_sequence('product', 'product_id'), (select max(product_id) from product));
+
+insert into "order" (order_id, order_kind, order_date, entry_date) values
+  (10001, 'PURCHASE', '2001-04-02', '2001-04-02'),
+  (10002, 'PURCHASE', '2001-05-01', '2001-05-01'),
+  (10003, 'PURCHASE', '2001-06-01', '2001-06-01');
+
+insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, quantity, unit_price, item_description) values
+  (51, 10001, 1, 27, 40, 60.00, 'Accounting, hours'),
+  (52, 10002, 1, 27, 40, 60.00, 'Accounting, hours'),
+  (53, 10003, 1, 27, 40, 60.00, 'Accounting, hours');
+
+select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max(order_item_id) from order_item));
+
+-- 69 is ABC Subsidiary's PLACING_BUYER role (Ch 4).
+insert into purchase_order (order_id, placed_by_party_role_id, taken_by_party_role_id) values
+  (10001, 69, 84),
+  (10002, 69, 84),
+  (10003, 69, 84);
+
+-- Hartley's bills, addressed to ABC Subsidiary's billing office (46).
+insert into invoice (invoice_id, invoice_kind, invoice_date, description, billed_to_party_id, billed_from_party_id,
+                     addressed_to_contact_mechanism_id) values
+  (990023, 'PURCHASE', '2001-06-15', 'Accounting services', 13, 63, 46),
+  (990026, 'PURCHASE', '2001-07-15', 'Accounting services', 13, 63, 46);
+
+-- Table 7.11 shows no quantity and $6,000 for 990023's line; Table 7.10
+-- bills it as 100 hours. Seeded 100 x $60 (point 21).
+insert into invoice_item (invoice_item_id, invoice_id, invoice_item_seq_id, invoice_item_type_id, product_id, taxable_flag, quantity, amount) values
+  (43, 990023, 1, 'PRODUCT_ITEM', 27, false, 100, 60.00),
+  (44, 990026, 1, 'PRODUCT_ITEM', 27, false, 20,  60.00);
+
+select setval(pg_get_serial_sequence('invoice_item', 'invoice_item_id'), (select max(invoice_item_id) from invoice_item));
+
+-- Table 7.10. Order item 1 is 12560's paper (Ch 4), which 30002's line 1
+-- already bills through shipment 1235; 24 is purchase order 12570's paper;
+-- invoice item 24 is 30015's paper line (a sale).
+insert into order_item_billing (order_item_id, invoice_item_id, quantity, amount) values
+  (51, 43, 40, 2400.00),
+  (52, 43, 40, 2400.00),
+  (53, 43, 20, 1200.00),
+  (53, 44, 20, 1200.00),
+  (52, 44, 10, 600.00),    -- DATA ERROR: 10002 billed 50 hours of its 40 (caught by a query)
+  (1,  1,  10, 80.00),     -- DATA ERROR: 30002's paper billed through its order as well as its shipment (caught by a query)
+  (24, 24, 5,  40.00);     -- DATA ERROR: a purchase order line billed on a sales invoice (caught by a query)
