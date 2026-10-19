@@ -1310,6 +1310,18 @@ the literal drawing.
   association; erasers twice in the pencil run's standards. Queries compare the standards
   with stock and assets: the pencil job is short of labels and erasers.
 
+### Fig 6.12
+- **`work_effort_inventory_produced`** and **`work_effort_deliverable_produced`**: an effort
+  and what it made, nothing else (point 38). Surrogate keys.
+- **`work_effort.repaired_fixed_asset_id`**, optional. That it matches the asset named by
+  the need the effort fills (Fig 6.1) is a check.
+- **Seed (all ours, the book gives none):** December's two pen runs (51285, 51298) both fill
+  stock item 33 at the plant; the plan (39409) produced the 2001 plan, its project plan task
+  (29000) a project plan, the market research (29005) a report; the repair 32898 fixed
+  5025. Bad row: a second visit (32899) for need 70485 that repairs the dock conveyor.
+- **Queries:** results per effort, results rolled up a breakdown, stock against what the
+  runs say they made, and a review of results against Fig 6.11's "what the kind is for".
+
 ## When NOT to use this
 - **A shop that only sells** never generates work: a service it sells is a product line on
   an order (Ch 4), and nothing needs WORK EFFORT.

@@ -901,3 +901,81 @@ from work_effort_good_standard group by work_effort_type_id, product_id having c
 union all
 select 'fixed asset', work_effort_type_id, fixed_asset_type_id, count(*)
 from work_effort_fixed_asset_standard group by work_effort_type_id, fixed_asset_type_id having count(*) > 1;
+
+-- ============================================================
+-- Fig 6.12 — Work effort results
+-- ============================================================
+-- name: 6.12 — What each effort produced or repaired
+select r.work_effort_id, we.name as effort, r.result, r.what
+from (
+  select ip.work_effort_id, 'stock produced' as result,
+         p.name || ' (item ' || ii.inventory_item_id || ', ' || ii.quantity_on_hand || ' on hand)' as what
+  from work_effort_inventory_produced ip
+  join inventory_item ii on ii.inventory_item_id = ip.inventory_item_id
+  join product p         on p.product_id = ii.product_id
+  union all
+  select dp.work_effort_id, 'deliverable produced', d.name
+  from work_effort_deliverable_produced dp
+  join deliverable d on d.deliverable_id = dp.deliverable_id
+  union all
+  select we.work_effort_id, 'asset repaired', fa.name
+  from work_effort we
+  join fixed_asset fa on fa.fixed_asset_id = we.repaired_fixed_asset_id
+) r
+join work_effort we on we.work_effort_id = r.work_effort_id
+order by r.work_effort_id, r.result;
+
+-- name: 6.12 — Results rolled up to the top: everything the sales and marketing plan (39409) and its parts produced
+with recursive part (work_effort_id, depth) as (
+  select 39409, 0
+  union
+  select a.to_work_effort_id, p.depth + 1
+  from part p
+  join work_effort_association a on a.from_work_effort_id = p.work_effort_id and a.work_effort_association_type_id = 'BREAKDOWN'
+  where p.depth < 5
+)
+select part.work_effort_id, we.name as produced_by, d.name as deliverable, dt.description as deliverable_type
+from part
+join work_effort_deliverable_produced dp on dp.work_effort_id = part.work_effort_id
+join work_effort we                      on we.work_effort_id = part.work_effort_id
+join deliverable d                       on d.deliverable_id = dp.deliverable_id
+join deliverable_type dt                 on dt.deliverable_type_id = d.deliverable_type_id
+order by part.depth, part.work_effort_id;
+
+-- name: 6.12 — Stock produced against what the runs say they produced: one pile, two runs (NOTES, point 38)
+select ii.inventory_item_id, p.name as good, ii.quantity_on_hand,
+       string_agg(ip.work_effort_id::text, ', ' order by ip.work_effort_id) as produced_by,
+       sum(pr.quantity_produced) as runs_say_produced
+from work_effort_inventory_produced ip
+join inventory_item ii       on ii.inventory_item_id = ip.inventory_item_id
+join product p               on p.product_id = ii.product_id
+left join production_run pr  on pr.work_effort_id = ip.work_effort_id
+group by ii.inventory_item_id, p.name, ii.quantity_on_hand;
+
+-- name: 6.12 — Review: results against what the kind of work is for (Fig 6.11's arc), where the type says
+select we.work_effort_id, we.name as effort, t.description as kind_of_work,
+       coalesce('repair a ' || fat.description, 'produce a ' || dt.description, 'produce ' || p.name) as meant_to,
+       coalesce(rfa.name, (select string_agg(d.name, ', ') from work_effort_deliverable_produced dp
+                           join deliverable d on d.deliverable_id = dp.deliverable_id
+                           where dp.work_effort_id = we.work_effort_id),
+                (select string_agg(pp.name, ', ') from work_effort_inventory_produced ip
+                 join inventory_item ii on ii.inventory_item_id = ip.inventory_item_id
+                 join product pp on pp.product_id = ii.product_id
+                 where ip.work_effort_id = we.work_effort_id)) as actually
+from work_effort we
+join work_effort_type t        on t.work_effort_type_id = we.work_effort_type_id
+left join fixed_asset_type fat on fat.fixed_asset_type_id = t.fixed_asset_type_id
+left join deliverable_type dt  on dt.deliverable_type_id = t.deliverable_type_id
+left join product p            on p.product_id = t.product_id
+left join fixed_asset rfa      on rfa.fixed_asset_id = we.repaired_fixed_asset_id
+where num_nonnulls(t.fixed_asset_type_id, t.deliverable_type_id, t.product_id) = 1
+order by we.work_effort_id;
+
+-- name: 6.12 — Data-quality check: an effort repairing a different asset from the one the need it fills names (should be empty)
+select we.work_effort_id, we.name as effort, rfa.name as repaired, wr.requirement_id, nfa.name as need_names
+from work_effort we
+join work_requirement_fulfillment f on f.work_effort_id = we.work_effort_id
+join work_requirement wr            on wr.requirement_id = f.requirement_id
+join fixed_asset rfa                on rfa.fixed_asset_id = we.repaired_fixed_asset_id
+join fixed_asset nfa                on nfa.fixed_asset_id = wr.fixed_asset_id
+where we.repaired_fixed_asset_id <> wr.fixed_asset_id;

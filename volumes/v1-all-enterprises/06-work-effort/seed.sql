@@ -757,3 +757,44 @@ insert into work_effort_good_standard (work_effort_type_id, product_id, estimate
 insert into work_effort_fixed_asset_standard (work_effort_type_id, fixed_asset_type_id, estimated_quantity, estimated_duration) values
   ('LARGE_PENCIL_RUN', 'PENCIL_LABELER', 1, '10 days'),
   ('LARGE_PENCIL_RUN', 'FORK_LIFT',      2, '5 days');
+
+-- ============================================================
+-- Fig 6.12 — Work effort results
+-- ============================================================
+-- No sample data in the book: all ours. December's two pen runs fill one
+-- stock pile at the plant (point 38).
+insert into inventory_item (inventory_item_id, inventory_item_kind, product_id, inventory_item_status_type_id, facility_id, quantity_on_hand) values
+  (33, 'NON_SERIALIZED', 22, 'GOOD', 15, 2990);   -- 1,490 + 1,500 engraved pens
+
+select setval(pg_get_serial_sequence('inventory_item', 'inventory_item_id'), (select max(inventory_item_id) from inventory_item));
+
+insert into work_effort_inventory_produced (work_effort_id, inventory_item_id) values
+  (51285, 33),
+  (51298, 33);
+
+-- The plan's results, hung on the efforts that made them.
+insert into deliverable (deliverable_id, deliverable_type_id, name, description) values
+  (2, 'PLAN',              'Project plan for the sales and marketing plan', null),
+  (3, 'ANALYSIS_DOCUMENT', 'Market research report',                        'USA Consulting''s findings');
+
+select setval(pg_get_serial_sequence('deliverable', 'deliverable_id'), (select max(deliverable_id) from deliverable));
+
+insert into work_effort_deliverable_produced (work_effort_id, deliverable_id) values
+  (39409, 1),
+  (29000, 2),
+  (29005, 3);
+
+-- Table 6.4's repair fixed the engraving machine 70485 asked about.
+update work_effort set repaired_fixed_asset_id = 5025 where work_effort_id = 32898;
+
+-- Ours, with one mistake: a second visit for the same need, logged against
+-- the wrong machine.
+insert into work_effort (work_effort_id, work_effort_type_id, work_effort_purpose_type_id, facility_id, name, description,
+                         scheduled_start_date, scheduled_completion_date, repaired_fixed_asset_id) values
+  (32899, 'REPAIR_PEN_MACHINE', 'MAINTENANCE', 15, 'Fix engraving machine, second visit', 'Replace the engraving head',
+          '2000-12-19', '2000-12-19', 3);   -- DATA ERROR: repairs the dock conveyor; 70485 named machine 5025
+
+select setval(pg_get_serial_sequence('work_effort', 'work_effort_id'), (select max(work_effort_id) from work_effort));
+
+insert into work_requirement_fulfillment (work_effort_id, requirement_id) values
+  (32899, 70485);

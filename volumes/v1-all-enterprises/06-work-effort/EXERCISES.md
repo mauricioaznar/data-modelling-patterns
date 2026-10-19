@@ -113,6 +113,11 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 2. **[6.11]** WORK EFFORT TYPE now has a parent (Fig 6.4's levels) and a type association
    (Fig 6.11's breakdown). Both look like trees of types. What does each one say, and give
    a question only the second can answer.
+3. **[6.12]** Two pen runs fill one stock item, and WORK EFFORT INVENTORY PRODUCED has no
+   quantity. How do you find out how many pens each run made? Would you add a quantity to
+   the link, and what would it then duplicate?
+4. **[6.12]** The text says to hang results on the lowest efforts. Why not on the project at
+   the top? What does a query have to do once results sit low?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
