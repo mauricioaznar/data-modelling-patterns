@@ -364,6 +364,9 @@ insert into purchase_order (order_id, placed_by_party_role_id, taken_by_party_ro
   (10002, 69, 84),
   (10003, 69, 84);
 
+-- A service: nothing to ship, so no ship-to.
+insert into purchase_order_item (order_item_id) values (51), (52), (53);
+
 -- Hartley's bills, addressed to ABC Subsidiary's billing office (46).
 insert into invoice (invoice_id, invoice_kind, invoice_date, description, billed_to_party_id, billed_from_party_id,
                      addressed_to_contact_mechanism_id) values
@@ -389,3 +392,38 @@ insert into order_item_billing (order_item_id, invoice_item_id, quantity, amount
   (52, 44, 10, 600.00),    -- DATA ERROR: 10002 billed 50 hours of its 40 (caught by a query)
   (1,  1,  10, 80.00),     -- DATA ERROR: 30002's paper billed through its order as well as its shipment (caught by a query)
   (24, 24, 5,  40.00);     -- DATA ERROR: a purchase order line billed on a sales invoice (caught by a query)
+
+-- ============================================================
+-- Fig 7.8a — Invoice payments
+-- ============================================================
+insert into payment_method_type (payment_method_type_id, description) values
+  ('CASH',        'Cash'),
+  ('CHECK',       'Check'),
+  ('CREDIT_CARD', 'Credit card'),
+  ('ELECTRONIC',  'Electronic funds transfer');
+
+-- Table 7.11's three payments (dates and refs ours), then Table 7.12's four
+-- others, ours in detail (NOTES, point 28).
+insert into payment (payment_id, payment_kind, payment_method_type_id, from_party_id, to_party_id, effective_date, payment_ref_num, amount, comment) values
+  (12298398, 'RECEIPT',      'CHECK',      16, 13, '2001-06-20', 'ACME check 5521',    182.20,  null),
+  (12298412, 'RECEIPT',      'CHECK',      16, 13, '2001-06-28', 'ACME check 5560',    12.84,   'The rest, once the paper count was settled'),
+  (488893,   'DISBURSEMENT', 'CHECK',      13, 63, '2001-07-20', 'ABC check 7012',     7000.00, 'Hartley: 990023 and part of 990026'),
+  (394789,   'RECEIPT',      'ELECTRONIC', 16, 13, '2001-07-01', 'ACH 20010701-88',    343.00,  null),
+  (97873,    'RECEIPT',      'CHECK',      58, 13, '2001-07-01', 'Smith check 311',    379.00,  'On account: not tied to a bill yet'),
+  (88394,    'DISBURSEMENT', 'CHECK',      13, 18, '2001-07-03', 'ABC check 7001',     480.00,  'Fantastic Supplies: 30020 and an advance'),
+  (88756,    'DISBURSEMENT', 'CHECK',      13, 63, '2001-07-05', 'ABC check 7002',     670.00,  'Advance to Hartley'),
+  (12298500, 'RECEIPT',      'CASH',       16, 13, '2001-07-10', 'Cash slip 18',       50.00,   null),   -- its application below is wrong
+  (12298502, 'RECEIPT',      'CHECK',      13, 16, '2001-07-10', 'ABC check 7015',     25.00,   'DATA ERROR: our refund to ACME typed as a receipt (caught by a query)');
+
+-- Table 7.11: 30002 paid in two parts, one payment over 990023 and part of
+-- 990026. Ours: 394789 pays part of 30012, 97873 goes on account 1459.
+insert into payment_application (payment_id, invoice_id, billing_account_id, amount_applied) values
+  (12298398, 30002,  null, 182.20),
+  (12298412, 30002,  null, 12.84),
+  (488893,   990023, null, 6000.00),
+  (488893,   990026, null, 1000.00),
+  (394789,   30012,  null, 343.00),
+  (97873,    null,   1459, 379.00),
+  (88394,    30020,  null, 120.00),
+  (12298500, 30020,  null, 50.00),   -- DATA ERROR: a receipt from ACME applied to our purchase invoice (caught by a query)
+  (88756,    990026, null, 700.00);  -- DATA ERROR: more than the payment's 670, and 990026 paid past its 1,200 (caught by queries)

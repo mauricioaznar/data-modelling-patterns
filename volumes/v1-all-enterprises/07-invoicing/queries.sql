@@ -494,3 +494,82 @@ select ii.invoice_id, ii.invoice_item_seq_id as seq
 from invoice_item ii
 where exists (select 1 from order_item_billing b where b.invoice_item_id = ii.invoice_item_id)
   and exists (select 1 from shipment_item_billing s where s.invoice_item_id = ii.invoice_item_id);
+
+-- ============================================================
+-- Fig 7.8a — Invoice payments
+-- ============================================================
+
+-- name: 7.8a — Table 7.11: each invoice's payments, with how much of each payment went to it
+select a.invoice_id, t.total_due, a.payment_id, p.effective_date, a.amount_applied, p.amount as payment_amount
+from payment_application a
+join payment p        on p.payment_id = a.payment_id
+join invoice_total t  on t.invoice_id = a.invoice_id
+where a.invoice_id in (30002, 990023, 990026)
+order by a.invoice_id, p.effective_date;
+
+-- name: 7.8a — What's still owed on each invoice: total, paid, outstanding, and whether it's past its due date on Jul 31, 2001 (void invoices left out)
+select v.invoice_id, v.invoice_kind, v.invoice_date, t.total_due, x.paid, t.total_due - x.paid as outstanding,
+       d.due_date, coalesce(d.due_date < date '2001-07-31', false) and t.total_due - x.paid > 0 as overdue
+from invoice v
+join invoice_total t on t.invoice_id = v.invoice_id
+cross join lateral (select coalesce(sum(a.amount_applied), 0) as paid
+                    from payment_application a where a.invoice_id = v.invoice_id) x
+cross join lateral (select v.invoice_date + min(r.term_value)::int as due_date   -- the strictest term if two were keyed
+                    from invoice_term r where r.invoice_id = v.invoice_id and r.term_type_id = 'PAYMENT_DUE_DAYS') d
+where not exists (select 1 from invoice_status s where s.invoice_id = v.invoice_id and s.status_type_id = 'INVOICE_VOID')
+order by v.invoice_id;
+
+-- name: 7.8a — Each payment: who paid whom, how, and how much of it is applied to bills, on account, or not yet at all
+select p.payment_id, p.payment_kind, m.description as method, f.name as payor, r.name as receiver, p.effective_date, p.amount,
+       coalesce(sum(a.amount_applied) filter (where a.invoice_id is not null), 0) as to_invoices,
+       coalesce(sum(a.amount_applied) filter (where a.billing_account_id is not null), 0) as on_account,
+       p.amount - coalesce(sum(a.amount_applied), 0) as unapplied
+from payment p
+join payment_method_type m      on m.payment_method_type_id = p.payment_method_type_id
+join party_display_name f       on f.party_id = p.from_party_id
+join party_display_name r       on r.party_id = p.to_party_id
+left join payment_application a on a.payment_id = p.payment_id
+group by p.payment_id, p.payment_kind, m.description, f.name, r.name, p.effective_date, p.amount
+order by p.effective_date, p.payment_id;
+
+-- name: 7.8a — Review: payments applied to an invoice billed to someone else than the payor (a parent paying for a child is fine; a stranger is a question)
+select a.payment_id, f.name as payor, v.invoice_id, coalesce(b.name, 'account ' || v.billing_account_id) as billed_to
+from payment_application a
+join payment p             on p.payment_id = a.payment_id
+join invoice v             on v.invoice_id = a.invoice_id
+join party_display_name f  on f.party_id = p.from_party_id
+left join party_display_name b on b.party_id = v.billed_to_party_id
+where v.billed_to_party_id is distinct from p.from_party_id
+  and not exists (select 1 from billing_account_role r
+                  where r.billing_account_id = v.billing_account_id and r.party_id = p.from_party_id);
+
+-- name: 7.8a — Data-quality check: payments going the wrong way: a receipt not received by one of our internal organizations, or a disbursement not paid by one (should be empty)
+select p.payment_id, p.payment_kind, f.name as payor, r.name as receiver
+from payment p
+join party_display_name f on f.party_id = p.from_party_id
+join party_display_name r on r.party_id = p.to_party_id
+where not exists (select 1 from party_role pr
+                  where pr.party_id = case p.payment_kind when 'RECEIPT' then p.to_party_id else p.from_party_id end
+                    and pr.role_type_id = 'INTERNAL_ORGANIZATION'
+                    and pr.from_date <= p.effective_date and (pr.thru_date is null or pr.thru_date > p.effective_date));
+
+-- name: 7.8a — Data-quality check: payments applied for more than they're worth (should be empty)
+select p.payment_id, p.amount, sum(a.amount_applied) as applied
+from payment p
+join payment_application a on a.payment_id = p.payment_id
+group by p.payment_id, p.amount
+having sum(a.amount_applied) > p.amount;
+
+-- name: 7.8a — Data-quality check: invoices paid past their total (should be empty)
+select a.invoice_id, t.total_due, sum(a.amount_applied) as paid
+from payment_application a
+join invoice_total t on t.invoice_id = a.invoice_id
+group by a.invoice_id, t.total_due
+having sum(a.amount_applied) > t.total_due;
+
+-- name: 7.8a — Data-quality check: receipts applied to purchase invoices, or disbursements to sales invoices (should be empty)
+select a.payment_id, p.payment_kind, a.invoice_id, v.invoice_kind
+from payment_application a
+join payment p on p.payment_id = a.payment_id
+join invoice v on v.invoice_id = a.invoice_id
+where (p.payment_kind = 'RECEIPT') <> (v.invoice_kind = 'SALES');

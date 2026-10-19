@@ -920,7 +920,29 @@ the literal drawing.
   ABC Subsidiary's buyer role, Hartley's invoices 990023 (100 hours) and 990026 (20). Bad
   rows: 10002 billed 10 more hours on 990026; 12560's paper billed through its order on
   30002's line 1, which its shipment already bills; purchase order 12570's paper on sales
-  invoice 30015.
+  invoice 30015. Purchase lines get their `purchase_order_item` rows (Ch 4's rule), with no
+  ship-to: a service ships nothing.
+
+### Fig 7.8a
+- **`payment`** with a `payment_kind` discriminator (RECEIPT, DISBURSEMENT: no attributes of
+  their own), `payment_method_type` (not null: drawn solid), `from_party_id` and
+  `to_party_id` (not null, not the same party), `payment_ref_num` as text (a check number,
+  an electronic reference).
+- **`payment_application`** with the arc as a check constraint (point 18): an invoice or a
+  billing account, exactly one.
+- **`invoice_total`, a view:** 7.1a's total (discounts lower it), so balances are computed
+  and can't drift from the lines.
+- **Checks:** a payment the wrong way round (a receipt not received by an internal
+  organization, a disbursement not paid by one); a payment applied past its amount; an
+  invoice paid past its total; a receipt on a purchase invoice or a disbursement on a sales
+  one. **Review:** payments applied to bills of someone other than the payor (allowed: a
+  parent pays; a question when it's a stranger).
+- **Seed:** Table 7.11 (30002's two payments; 488893 over 990023 and part of 990026) and
+  Table 7.12's other four, ours (point 28): 394789 pays part of 30012, 97873 is Jane Smith's
+  check on account 1459, 88394 pays 30020 and leaves $360 unapplied, 88756 is an advance to
+  Hartley. 30002 ends 23.61 short (point 20). Bad rows: ACME's cash applied to our purchase
+  invoice 30020, 88756 applied for 700 of its 670 (and past 990026's total), our refund to
+  ACME typed as a receipt.
 
 ## When NOT to use this
 - **One line per product, no fees, one tax:** a small shop's invoice is fine with a total and
