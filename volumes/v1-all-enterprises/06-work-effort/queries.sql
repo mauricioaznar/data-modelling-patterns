@@ -823,3 +823,81 @@ select pa.party_fixed_asset_assignment_id, pa.party_id, pa.fixed_asset_id, pa.st
 from party_fixed_asset_assignment pa
 join status_type s on s.status_type_id = pa.status_type_id
 where s.parent_type_id is distinct from 'PARTY_ASSET_ASSIGN_STATUS';
+
+-- ============================================================
+-- Fig 6.11 — Work effort type standards
+-- ============================================================
+-- name: 6.11 — Everything a large production run of pencils normally needs: people, goods and assets
+select 'skill' as kind, s.description as what, ss.estimated_num_people as quantity, ss.estimated_duration as duration, ss.estimated_cost
+from work_effort_skill_standard ss
+join skill_type s on s.skill_type_id = ss.skill_type_id
+where ss.work_effort_type_id = 'LARGE_PENCIL_RUN'
+union all
+select 'good', p.name, gs.estimated_quantity, null, gs.estimated_cost
+from work_effort_good_standard gs
+join product p on p.product_id = gs.product_id
+where gs.work_effort_type_id = 'LARGE_PENCIL_RUN'
+union all
+select 'fixed asset type', t.description, fs.estimated_quantity, fs.estimated_duration, fs.estimated_cost
+from work_effort_fixed_asset_standard fs
+join fixed_asset_type t on t.fixed_asset_type_id = fs.fixed_asset_type_id
+where fs.work_effort_type_id = 'LARGE_PENCIL_RUN'
+order by kind, what;
+
+-- name: 6.11 — Enough stock for each planned job? Its kind's goods standards against stock at the job's plant
+select we.work_effort_id, we.name as job, p.name as good, sum(gs.estimated_quantity) as needed,
+       coalesce((select sum(ii.quantity_on_hand) from inventory_item ii
+                 where ii.product_id = gs.product_id and ii.facility_id = we.facility_id), 0) as on_hand
+from work_effort we
+join work_effort_good_standard gs on gs.work_effort_type_id = we.work_effort_type_id
+join product p                    on p.product_id = gs.product_id
+group by we.work_effort_id, we.name, we.facility_id, gs.product_id, p.name
+order by we.work_effort_id, p.name;
+
+-- name: 6.11 — Enough assets for each planned job? Assets of the needed kind or any kind below it
+with recursive below (top_id, fixed_asset_type_id) as (
+  select fixed_asset_type_id, fixed_asset_type_id from fixed_asset_type
+  union
+  select b.top_id, t.fixed_asset_type_id
+  from below b
+  join fixed_asset_type t on t.parent_type_id = b.fixed_asset_type_id
+)
+select we.work_effort_id, we.name as job, at.description as asset_type, fs.estimated_quantity as needed,
+       fs.estimated_duration, count(fa.fixed_asset_id) as owned,
+       string_agg(fa.name, ', ' order by fa.name) as assets
+from work_effort we
+join work_effort_fixed_asset_standard fs on fs.work_effort_type_id = we.work_effort_type_id
+join fixed_asset_type at                 on at.fixed_asset_type_id = fs.fixed_asset_type_id
+left join below b                        on b.top_id = fs.fixed_asset_type_id
+left join fixed_asset fa                 on fa.fixed_asset_type_id = b.fixed_asset_type_id
+group by we.work_effort_id, we.name, at.description, fs.estimated_quantity, fs.estimated_duration
+order by we.work_effort_id, at.description;
+
+-- name: 6.11 — The standard plan of each kind of work beside what each kind is for
+select t.description as kind_of_work, a.work_effort_association_type_id as link, t2.description as other_kind,
+       coalesce('repairs ' || fat.description, 'produces ' || dt.description, 'produces ' || p.name) as is_for
+from work_effort_type t
+left join work_effort_type_association a on a.from_work_effort_type_id = t.work_effort_type_id
+left join work_effort_type t2            on t2.work_effort_type_id = a.to_work_effort_type_id
+left join fixed_asset_type fat           on fat.fixed_asset_type_id = t.fixed_asset_type_id
+left join deliverable_type dt            on dt.deliverable_type_id = t.deliverable_type_id
+left join product p                      on p.product_id = t.product_id
+where a.work_effort_type_association_id is not null
+   or num_nonnulls(t.fixed_asset_type_id, t.deliverable_type_id, t.product_id) = 1
+order by t.description, a.work_effort_association_type_id, t2.description;
+
+-- name: 6.11 — Data-quality check: type associations typed with the DEPENDENCY grouping row (should be empty)
+select from_work_effort_type_id, to_work_effort_type_id, work_effort_association_type_id
+from work_effort_type_association a
+where exists (select 1 from work_effort_association_type c
+              where c.parent_type_id = a.work_effort_association_type_id);
+
+-- name: 6.11 — Data-quality check: the same skill, good or asset type twice in one kind of work's standards (should be empty)
+select 'skill' as standard, work_effort_type_id, skill_type_id as what, count(*) as rows
+from work_effort_skill_standard group by work_effort_type_id, skill_type_id having count(*) > 1
+union all
+select 'good', work_effort_type_id, product_id::text, count(*)
+from work_effort_good_standard group by work_effort_type_id, product_id having count(*) > 1
+union all
+select 'fixed asset', work_effort_type_id, fixed_asset_type_id, count(*)
+from work_effort_fixed_asset_standard group by work_effort_type_id, fixed_asset_type_id having count(*) > 1;

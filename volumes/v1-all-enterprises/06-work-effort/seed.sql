@@ -686,3 +686,74 @@ insert into party_fixed_asset_assignment (party_id, fixed_asset_id, status_type_
 -- Ours: the lost tool set booked on the December repair.
 insert into work_effort_fixed_asset_assignment (work_effort_id, fixed_asset_id, status_type_id, from_date, thru_date) values
   (32898, 3005, 'ASSET_ASSIGNED', '2000-12-12', '2000-12-13');   -- DATA ERROR: lost in March
+
+-- ============================================================
+-- Fig 6.11 — Work effort type standards
+-- ============================================================
+-- Table 6.18's pencil labeler as a type, and labeler #1 typed with it
+-- (NOTES, point 35).
+insert into fixed_asset_type (fixed_asset_type_id, parent_type_id, description) values
+  ('PENCIL_LABELER', 'PENCIL_MAKING_MACHINE', 'Pencil labeler');
+
+update fixed_asset set fixed_asset_type_id = 'PENCIL_LABELER' where fixed_asset_id = 1000;
+
+-- Table 6.17's ink cartridges, a new raw material.
+insert into product (product_id, product_kind, name, introduction_date, uom_id) values
+  (26, 'GOOD', 'Ink cartridge', '1995-01-01', 'EA');
+
+select setval(pg_get_serial_sequence('product', 'product_id'), (select max(product_id) from product));
+
+insert into good (product_id, good_kind) values
+  (26, 'RAW_MATERIAL');
+
+-- Kinds of work with what each is for: Tables 6.17–6.18's two runs, and
+-- ours for the other two arms of the arc.
+insert into work_effort_type (work_effort_type_id, parent_type_id, description, standard_work_hours,
+                              fixed_asset_type_id, deliverable_type_id, product_id) values
+  ('LARGE_PENCIL_RUN',     'JOB',     'Large production run of pencils', 80,   null,                 null,   20),
+  ('LARGE_PEN_RUN',        'JOB',     'Large production run of pens',    100,  null,                 null,   22),
+  ('REPAIR_PEN_MACHINE',   'TASK',    'Repair a pen-making machine',     4,    'PEN_MAKING_MACHINE', null,   null),
+  ('WRITE_MARKETING_PLAN', 'PROJECT', 'Write a sales and marketing plan', 400, null,                 'PLAN', null);
+
+-- The pencil job, the repair and the plan get their kind of work.
+update work_effort set work_effort_type_id = 'LARGE_PENCIL_RUN'     where work_effort_id = 41000;
+update work_effort set work_effort_type_id = 'REPAIR_PEN_MACHINE'   where work_effort_id = 32898;
+update work_effort set work_effort_type_id = 'WRITE_MARKETING_PLAN' where work_effort_id = 39409;
+
+-- The standard plan of a large pencil run (ours, after Table 6.6).
+insert into work_effort_type_association (work_effort_association_type_id, from_work_effort_type_id, to_work_effort_type_id) values
+  ('BREAKDOWN',   'LARGE_PENCIL_RUN',       'SET_UP_PRODUCTION_LINE'),
+  ('BREAKDOWN',   'LARGE_PENCIL_RUN',       'OPERATE_MACHINERY'),
+  ('BREAKDOWN',   'LARGE_PENCIL_RUN',       'CLEAN_UP_MACHINERY'),
+  ('BREAKDOWN',   'LARGE_PENCIL_RUN',       'QUALITY_ASSURE_GOODS'),
+  ('BREAKDOWN',   'SET_UP_PRODUCTION_LINE', 'MOVE_RAW_MATERIALS'),
+  ('PRECEDENCY',  'SET_UP_PRODUCTION_LINE', 'OPERATE_MACHINERY'),
+  ('PRECEDENCY',  'OPERATE_MACHINERY',      'CLEAN_UP_MACHINERY'),
+  ('CONCURRENCY', 'OPERATE_MACHINERY',      'QUALITY_ASSURE_GOODS'),
+  -- ours, with one mistake
+  ('DEPENDENCY',  'MOVE_RAW_MATERIALS',     'SET_UP_ROLLERS');   -- DATA ERROR: typed with the grouping row
+
+insert into skill_type (skill_type_id, description) values
+  ('MACHINE_OPERATION', 'Machine operation'),
+  ('QUALITY_ASSURANCE', 'Quality assurance');
+
+-- No sample data in the book: ours.
+insert into work_effort_skill_standard (work_effort_type_id, skill_type_id, estimated_num_people, estimated_duration, estimated_cost) values
+  ('LARGE_PENCIL_RUN',     'MACHINE_OPERATION',  3, '10 days', 6000.00),
+  ('LARGE_PENCIL_RUN',     'QUALITY_ASSURANCE',  1, '3 days',  null),
+  ('WRITE_MARKETING_PLAN', 'MARKET_RESEARCH',    1, '60 days', null),
+  ('WRITE_MARKETING_PLAN', 'PROJECT_MANAGEMENT', 1, '90 days', null);
+
+-- Table 6.17, then ours.
+insert into work_effort_good_standard (work_effort_type_id, product_id, estimated_quantity, estimated_cost) values
+  ('LARGE_PENCIL_RUN', 21, 1000, 2500.00),
+  ('LARGE_PENCIL_RUN', 25, 1000, 2000.00),
+  ('LARGE_PEN_RUN',    26, 2000, 3000.00),
+  ('LARGE_PENCIL_RUN', 24, 1000, null),
+  -- ours, with one mistake
+  ('LARGE_PENCIL_RUN', 21, 500,  null);   -- DATA ERROR: erasers twice on one kind of work
+
+-- Table 6.18.
+insert into work_effort_fixed_asset_standard (work_effort_type_id, fixed_asset_type_id, estimated_quantity, estimated_duration) values
+  ('LARGE_PENCIL_RUN', 'PENCIL_LABELER', 1, '10 days'),
+  ('LARGE_PENCIL_RUN', 'FORK_LIFT',      2, '5 days');

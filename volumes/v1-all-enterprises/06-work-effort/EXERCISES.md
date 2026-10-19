@@ -106,6 +106,14 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    it's lost, and why not with a thru date alone? How would you stop it being booked on a
    job in December?
 
+### Submodel 7: work effort standards and results
+1. **[6.11]** Table 6.17 says a large pencil run needs 1,000 erasers. Why does the standard
+   hang on WORK EFFORT TYPE and point at GOOD, while Table 6.12's use hangs on WORK EFFORT
+   and points at INVENTORY ITEM? Say what each side answers.
+2. **[6.11]** WORK EFFORT TYPE now has a parent (Fig 6.4's levels) and a type association
+   (Fig 6.11's breakdown). Both look like trees of types. What does each one say, and give
+   a question only the second can answer.
+
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
 notation (entities, key attributes, relationships and cardinality). Then diff it against

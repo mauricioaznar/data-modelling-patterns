@@ -1288,6 +1288,28 @@ the literal drawing.
   Jenkins on a REQUESTED status; the lost tool set booked on the December repair (32898).
   A query tells each asset's story, jobs and holders in date order.
 
+### Fig 6.11
+- **What a kind of work is for:** `work_effort_type` gains `fixed_asset_type_id` (repairs),
+  `deliverable_type_id` and `product_id` (produces). The arc is a single-row rule, so a
+  check constraint: at most one (point 36).
+- **`work_effort_type_association`**: from and to work effort type, typed with 6.4's
+  `work_effort_association_type`. No dates drawn, none built. DEPENDENCY, a grouping row
+  there, is a check. Kept apart from `parent_type_id`: one says "a kind of", the other
+  "made of".
+- **Three standards, one shape:** `work_effort_skill_standard` (people, duration, cost),
+  `work_effort_good_standard` (quantity, cost; on GOOD, not inventory item),
+  `work_effort_fixed_asset_standard` (quantity, duration, cost; on FIXED ASSET TYPE, point
+  39). Durations as `interval`. Surrogate keys; a kind twice in one type's standards is a
+  check.
+- **Seed:** Tables 6.17–6.18 on two new kinds of work under JOB, LARGE_PENCIL_RUN (makes
+  the Jones #2 pencil) and LARGE_PEN_RUN (the engraved pen). Ours: REPAIR_PEN_MACHINE and
+  WRITE_MARKETING_PLAN, the skill standards, the pencil cartridges standard and the large
+  run's standard plan. Retyped with their kind of work: the pencil job (41000), the repair
+  (32898) and the plan (39409). PENCIL_LABELER joins the asset types and labeler #1 takes it
+  (point 35). Ink cartridges (26) are a new raw material. Bad rows: a DEPENDENCY type
+  association; erasers twice in the pencil run's standards. Queries compare the standards
+  with stock and assets: the pencil job is short of labels and erasers.
+
 ## When NOT to use this
 - **A shop that only sells** never generates work: a service it sells is a product line on
   an order (Ch 4), and nothing needs WORK EFFORT.
