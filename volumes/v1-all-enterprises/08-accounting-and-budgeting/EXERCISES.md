@@ -46,6 +46,12 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 3. *(8.1)* The type (asset, liability, equity, revenue, expense) sits on the chart's
    account, not on the organization's. When could that be wrong, and what would you do?
 
+### Submodel 2: accounting transactions
+1. *(8.2)* A depreciation has no "to" party, an invoice has both. Why does the book split
+   INTERNAL and EXTERNAL instead of making "to" optional on every transaction?
+2. *(8.2)* Why point the transaction at its invoice or payment, when the invoice already
+   holds the amounts? What question can't you answer without that line?
+
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
 notation (entities, key attributes, relationships and cardinality). Then diff it against

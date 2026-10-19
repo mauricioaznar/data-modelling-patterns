@@ -347,6 +347,27 @@ the literal drawing.
   keeping cash, ABC Corporation's office supplies twice, April inside Q1, ABC Subsidiary's
   quarter inside ABC Corporation's year.
 
+### Fig 8.2
+- **The subtype tree in the type table** (point 12): `accounting_transaction_type` is a
+  hierarchy whose top rows are the book's subtypes; the view
+  `accounting_transaction_type_class` gives each type its root (INTERNAL, EXTERNAL), its
+  subtype leaf and its group (OBLIGATION, PAYMENT). No discriminator column: the type
+  already says it, and two columns could disagree.
+- **One `from_party_id`** for both "from" lines (internal: the organization affected;
+  external: the sender), `to_party_id` for the receiver. The book's internal line goes to
+  a PARTY ROLE; ours goes to the party, and "is an internal organization that day" is a
+  check, as in Ch 3 and Ch 7.
+- **Source documents** as three nullable FKs, at most one (a check constraint), each on its
+  own subtype (a query). A payment's kind must match the subtype (RECEIPT, DISBURSEMENT).
+- **No amount column** (point 3).
+- **Checks:** a grouping row used as a type; parties that don't fit the subtype; a document
+  on the wrong subtype. **Review:** sales and payment transactions with no document.
+- **Seed:** Table 8.3 (46325 as a disbursement, point 6), Table 8.5's three (dates ours),
+  ABC Subsidiary's posting of Ch 7's invoice 30002 and payment 12298398. Johnson Recycling
+  is new (party 64). No item variance transaction yet: the Ch 3 counts have no cost to post.
+  Bad rows: a depreciation with a receiver, an invoice transaction posting a payment, a
+  transaction typed EXTERNAL.
+
 ## When NOT to use this
 - **One company, one ledger:** a single small business can key the chart and the books
   together; ORGANIZATION GL ACCOUNT earns its keep with several internal organizations.

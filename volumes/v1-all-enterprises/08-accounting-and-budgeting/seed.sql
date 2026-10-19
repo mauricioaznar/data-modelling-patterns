@@ -91,3 +91,53 @@ insert into accounting_period (accounting_period_id, internal_organization_party
   (9, 13, 'FISCAL_QUARTER', 2,    1,    '2001-01-01', '2001-04-01');   -- DATA ERROR: ABC Subsidiary's quarter inside ABC Corporation's year
 
 select setval(pg_get_serial_sequence('accounting_period', 'accounting_period_id'), (select max(accounting_period_id) from accounting_period));
+
+-- ============================================================
+-- Fig 8.2 — Accounting transactions
+-- ============================================================
+-- The book's subtype tree first (grouping rows have no parent or sit under
+-- EXTERNAL), then Table 8.3's types under their subtype.
+insert into accounting_transaction_type (accounting_transaction_type_id, parent_type_id, description) values
+  ('INTERNAL',               null,           'Internal accounting transaction (grouping row)'),
+  ('DEPRECIATION',           'INTERNAL',     'Depreciation'),
+  ('CAPITALIZATION',         'INTERNAL',     'Capitalization'),
+  ('AMORTIZATION',           'INTERNAL',     'Amortization'),
+  ('ITEM_VARIANCE',          'INTERNAL',     'Inventory item variance'),
+  ('OTHER_INTERNAL',         'INTERNAL',     'Other internal accounting transaction'),
+  ('EXTERNAL',               null,           'External accounting transaction (grouping row)'),
+  ('OBLIGATION',             'EXTERNAL',     'Obligation (grouping row)'),
+  ('NOTE',                   'OBLIGATION',   'Note'),
+  ('TAX_DUE',                'OBLIGATION',   'Tax due'),
+  ('OTHER_OBLIGATION',       'OBLIGATION',   'Other obligation'),
+  ('CREDIT_MEMO',            'OBLIGATION',   'Credit memo'),
+  ('CREDIT_LINE',            'OBLIGATION',   'Credit line'),
+  ('SALES',                  'OBLIGATION',   'Sales accounting transaction'),
+  ('PAYMENT',                'EXTERNAL',     'Payment (grouping row)'),
+  ('RECEIPT',                'PAYMENT',      'Receipt'),
+  ('DISBURSEMENT',           'PAYMENT',      'Disbursement'),
+  ('INVOICE',                'SALES',        'Invoice'),
+  ('RECEIPT_FOR_INVOICES',   'RECEIPT',      'Payment receipt for invoices'),
+  ('RECEIPT_FOR_ASSET_SALE', 'RECEIPT',      'Payment receipt for asset sale'),
+  ('RETURNED_PAYMENT',       'DISBURSEMENT', 'Returned payment');   -- ours (NOTES, point 6)
+
+-- Table 8.3 (entry dates ours), Table 8.5's three (dates ours), and ABC
+-- Subsidiary posting Ch 7's invoice 30002 and payment 12298398 (ours).
+insert into accounting_transaction (accounting_transaction_id, accounting_transaction_type_id, from_party_id, to_party_id,
+                                    invoice_id, payment_id, inventory_item_variance_id, transaction_date, entry_date, description) values
+  (32389, 'DEPRECIATION',           12, null, null,  null,     null, '2000-01-01', '2000-01-05', 'Depreciation on the pen engraver'),
+  (38948, 'INVOICE',                12, 16,   null,  null,     null, '2000-05-31', '2000-06-01', 'Invoiced amount due'),
+  (39776, 'RECEIPT_FOR_INVOICES',   16, 12,   null,  null,     null, '2000-06-13', '2000-06-13', 'Payment against invoice'),
+  (45783, 'CREDIT_MEMO',            12, 16,   null,  null,     null, '2000-07-02', '2000-07-03', 'Credit to an invoice'),
+  (45894, 'RECEIPT_FOR_INVOICES',   16, 12,   null,  null,     null, '2000-08-13', '2000-08-14', 'Payment made on account with an invoice in mind'),
+  (46325, 'RETURNED_PAYMENT',       12, 16,   null,  null,     null, '2000-10-10', '2000-10-10', 'Returned payment for moneys held with no invoice'),
+  (47874, 'RECEIPT_FOR_ASSET_SALE', 64, 12,   null,  null,     null, '2000-10-11', '2000-10-12', 'Payment received for sale of the pen engraver'),
+  (50984, 'INVOICE',                12, 16,   null,  null,     null, '2000-06-20', '2000-06-20', 'Invoiced amount due'),
+  (50999, 'INVOICE',                12, 16,   null,  null,     null, '2000-06-25', '2000-06-26', 'Invoiced amount due'),
+  (60985, 'RECEIPT_FOR_INVOICES',   16, 12,   null,  null,     null, '2000-09-15', '2000-09-15', 'Payment against two invoices'),
+  (61001, 'INVOICE',                13, 16,   30002, null,     null, '2001-05-25', '2001-05-28', 'Office supply order, invoice 30002'),
+  (61002, 'RECEIPT_FOR_INVOICES',   16, 13,   null,  12298398, null, '2001-06-20', '2001-06-21', 'ACME pays most of invoice 30002'),
+  (32390, 'DEPRECIATION',           12, 16,   null,  null,     null, '2000-12-31', '2001-01-03', 'Depreciation on the delivery van'),   -- DATA ERROR: an internal transaction with a receiver
+  (61004, 'INVOICE',                13, 16,   null,  12298412, null, '2001-06-28', '2001-06-28', 'Second payment on invoice 30002'),    -- DATA ERROR: an invoice transaction posting a payment
+  (61005, 'EXTERNAL',               16, 13,   null,  null,     null, '2001-07-01', '2001-07-01', 'Cash from ACME, not yet classified'); -- DATA ERROR: typed with a grouping row
+
+select setval(pg_get_serial_sequence('accounting_transaction', 'accounting_transaction_id'), (select max(accounting_transaction_id) from accounting_transaction));

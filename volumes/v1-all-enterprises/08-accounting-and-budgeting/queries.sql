@@ -75,3 +75,80 @@ from accounting_period c
 join accounting_period p on p.accounting_period_id = c.within_accounting_period_id
 where c.internal_organization_party_id <> p.internal_organization_party_id
    or c.from_date < p.from_date or c.thru_date > p.thru_date;
+
+-- ============================================================
+-- Fig 8.2 — Accounting transactions
+-- ============================================================
+
+-- name: 8.2 — Table 8.3: each transaction with its sender and receiver, its type and the book's subtype it falls under
+select x.accounting_transaction_id as transaction, f.name as from_party, t.name as to_party,
+       x.transaction_date, x.entry_date, y.description as type, c.subtype_id, c.root_id, x.description
+from accounting_transaction x
+join accounting_transaction_type y       on y.accounting_transaction_type_id = x.accounting_transaction_type_id
+join accounting_transaction_type_class c on c.type_id = x.accounting_transaction_type_id
+join party_display_name f                on f.party_id = x.from_party_id
+left join party_display_name t           on t.party_id = x.to_party_id
+order by x.transaction_date, x.accounting_transaction_id;
+
+-- name: 8.2 — The type tree: every type under its subtype and group, with how many transactions use it
+select c.root_id, c.external_group_id, c.subtype_id, y.accounting_transaction_type_id as type, y.description,
+       count(x.accounting_transaction_id) as transactions
+from accounting_transaction_type y
+join accounting_transaction_type_class c on c.type_id = y.accounting_transaction_type_id
+left join accounting_transaction x       on x.accounting_transaction_type_id = y.accounting_transaction_type_id
+group by c.root_id, c.external_group_id, c.subtype_id, y.accounting_transaction_type_id, y.description
+order by c.root_id, c.external_group_id nulls first, c.subtype_id nulls first, y.accounting_transaction_type_id;
+
+-- name: 8.2 — From the ledger back to the document: each transaction with the invoice, payment or count it posts
+select x.accounting_transaction_id as transaction, c.subtype_id,
+       coalesce('invoice ' || x.invoice_id, 'payment ' || x.payment_id, 'variance ' || x.inventory_item_variance_id) as document,
+       coalesce(v.invoice_date, p.effective_date, iv.physical_inventory_date) as document_date,
+       coalesce(it.total_due, p.amount) as document_amount, x.transaction_date
+from accounting_transaction x
+join accounting_transaction_type_class c on c.type_id = x.accounting_transaction_type_id
+left join invoice v                      on v.invoice_id = x.invoice_id
+left join invoice_total it               on it.invoice_id = x.invoice_id
+left join payment p                      on p.payment_id = x.payment_id
+left join inventory_item_variance iv     on iv.inventory_item_variance_id = x.inventory_item_variance_id
+where num_nonnulls(x.invoice_id, x.payment_id, x.inventory_item_variance_id) = 1
+order by x.accounting_transaction_id;
+
+-- name: 8.2 — Review: sales, payment and variance transactions with no source document (Table 8.3's: the book names none; NOTES, point 5)
+select x.accounting_transaction_id as transaction, c.subtype_id, x.transaction_date, x.description
+from accounting_transaction x
+join accounting_transaction_type_class c on c.type_id = x.accounting_transaction_type_id
+where c.subtype_id in ('SALES', 'RECEIPT', 'DISBURSEMENT', 'ITEM_VARIANCE')
+  and num_nonnulls(x.invoice_id, x.payment_id, x.inventory_item_variance_id) = 0
+order by x.accounting_transaction_id;
+
+-- name: 8.2 — Data-quality check: transactions typed with a grouping row (INTERNAL, EXTERNAL, OBLIGATION, PAYMENT) instead of a kind of event (should be empty)
+select x.accounting_transaction_id, x.accounting_transaction_type_id, x.description
+from accounting_transaction x
+join accounting_transaction_type_class c on c.type_id = x.accounting_transaction_type_id
+where c.subtype_id is null;
+
+-- name: 8.2 — Data-quality check: parties that don't fit the subtype: an internal transaction with a receiver or not from one of our organizations, an external one with no receiver or none of our organizations at either end (should be empty)
+select x.accounting_transaction_id, c.root_id, f.name as from_party, t.name as to_party
+from accounting_transaction x
+join accounting_transaction_type_class c on c.type_id = x.accounting_transaction_type_id
+join party_display_name f                on f.party_id = x.from_party_id
+left join party_display_name t           on t.party_id = x.to_party_id
+where (c.root_id = 'INTERNAL'
+       and (x.to_party_id is not null
+            or not exists (select 1 from party_role r
+                           where r.party_id = x.from_party_id and r.role_type_id = 'INTERNAL_ORGANIZATION'
+                             and r.from_date <= x.transaction_date and (r.thru_date is null or r.thru_date > x.transaction_date))))
+   or (c.root_id = 'EXTERNAL'
+       and (x.to_party_id is null
+            or not exists (select 1 from party_role r
+                           where r.party_id in (x.from_party_id, x.to_party_id) and r.role_type_id = 'INTERNAL_ORGANIZATION'
+                             and r.from_date <= x.transaction_date and (r.thru_date is null or r.thru_date > x.transaction_date))));
+
+-- name: 8.2 — Data-quality check: source documents on the wrong subtype: an invoice not on a sales transaction, a payment not on a receipt or disbursement of its own kind, a variance not on an item variance (should be empty)
+select x.accounting_transaction_id, c.subtype_id, x.invoice_id, x.payment_id, p.payment_kind, x.inventory_item_variance_id
+from accounting_transaction x
+join accounting_transaction_type_class c on c.type_id = x.accounting_transaction_type_id
+left join payment p                      on p.payment_id = x.payment_id
+where (x.invoice_id is not null and c.subtype_id is distinct from 'SALES')
+   or (x.payment_id is not null and c.subtype_id is distinct from p.payment_kind)
+   or (x.inventory_item_variance_id is not null and c.subtype_id is distinct from 'ITEM_VARIANCE');
