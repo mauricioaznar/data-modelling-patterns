@@ -841,6 +841,11 @@ Silverston intended, not at the literal drawing.
    - *Parked by the user:* discounts and surcharges. The user wants it never empty; Claude
      holds that empty means "any charge", as for every other condition (a 3% category discount
      should reach both a one-time ream and a monthly plan without two rows).
+     → **Settled 2026-10-19 (overview): optional.** Worked through a 5% LOYAL discount over a
+     one-time ream and a monthly plan: one row with an empty charge kind prices both lines; the
+     never-empty rule needs one identical row per charge kind, which drift apart on a change and
+     need a new row for every new charge kind. Base and suggested must carry it, discount and
+     surcharge may leave it empty (= any charge). Cards: no fix (card 8 doesn't mention it).
    - *Proposed, unconfirmed:* split `per_uom_id` into `per_time_frequency_id` (RECURRING, a
      plain FK to `time_frequency_measure`, as point 2's line) and `per_uom_id` (UTILIZATION),
      from the user's worry that one shared column reads vaguely.
