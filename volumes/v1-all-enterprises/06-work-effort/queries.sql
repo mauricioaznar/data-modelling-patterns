@@ -142,3 +142,127 @@ join requirement_role b on b.requirement_id = a.requirement_id
                        and b.requirement_role_id > a.requirement_role_id
 where a.requirement_role_type_id = 'RESPONSIBLE_FOR' and b.requirement_role_type_id = 'RESPONSIBLE_FOR'
   and a.from_date < coalesce(b.thru_date, 'infinity') and b.from_date < coalesce(a.thru_date, 'infinity');
+
+-- ============================================================
+-- Fig 6.3a — Work effort generation
+-- ============================================================
+
+-- name: 6.3a — Table 6.4: work efforts and the work requirements each one fills
+select we.work_effort_id, we.name, we.description, we.scheduled_start_date,
+       string_agg(distinct r.requirement_id || ' ' || r.description, '; ') as fills
+from work_effort we
+join work_requirement_fulfillment f on f.work_effort_id = we.work_effort_id
+join requirement r                  on r.requirement_id = f.requirement_id
+group by we.work_effort_id, we.name, we.description, we.scheduled_start_date
+order by we.scheduled_start_date, we.work_effort_id;
+
+-- name: 6.3a — Table 6.5: work efforts started from order lines, with the need each line is committed to
+select we.work_effort_id, we.name, we.description, we.scheduled_start_date,
+       o.order_id, oi.order_item_seq_id, p.name as ordered, oi.quantity as ordered_quantity,
+       r.requirement_id, r.description as requirement
+from work_order_item_fulfillment f
+join work_effort we                          on we.work_effort_id = f.work_effort_id
+join order_item oi                           on oi.order_item_id = f.order_item_id
+join "order" o                               on o.order_id = oi.order_id
+left join product p                          on p.product_id = oi.product_id
+left join order_requirement_commitment c     on c.order_item_id = oi.order_item_id
+left join requirement r                      on r.requirement_id = c.requirement_id
+where oi.order_item_kind = 'WORK'
+order by we.scheduled_start_date;
+
+-- name: 6.3a — All the work behind order 23500, by either path: straight from a WORK line, or through the need a line is committed to
+select oi.order_item_id, 'direct (work order item fulfillment)' as path, we.work_effort_id, we.name
+from order_item oi
+join work_order_item_fulfillment f on f.order_item_id = oi.order_item_id
+join work_effort we                on we.work_effort_id = f.work_effort_id
+where oi.order_id = 23500
+union
+select oi.order_item_id, 'via requirement ' || c.requirement_id, we.work_effort_id, we.name
+from order_item oi
+join order_requirement_commitment c  on c.order_item_id = oi.order_item_id
+join work_requirement_fulfillment f  on f.requirement_id = c.requirement_id
+join work_effort we                  on we.work_effort_id = f.work_effort_id
+where oi.order_id = 23500
+order by 2, 3;
+
+-- name: 6.3a — Does the planned output cover each production need? Runs that fill several needs are counted in full against each, so they're flagged
+select r.requirement_id, r.quantity as needed,
+       string_agg(pr.work_effort_id::text, ', ' order by pr.work_effort_id) as runs,
+       sum(pr.quantity_to_produce) as planned,
+       bool_or((select count(*) from work_requirement_fulfillment f2 where f2.work_effort_id = pr.work_effort_id) > 1) as a_run_is_shared
+from requirement r
+join (select distinct work_effort_id, requirement_id from work_requirement_fulfillment) f on f.requirement_id = r.requirement_id
+join production_run pr on pr.work_effort_id = f.work_effort_id
+where r.requirement_type_id = 'PRODUCTION_RUN'
+group by r.requirement_id, r.quantity
+order by r.requirement_id;
+
+-- name: 6.3a — Does the planned output cover each WORK order line (Table 6.5: 1,500 + 1,000 for 2,500)?
+select oi.order_item_id, p.name as product, oi.quantity as ordered,
+       count(pr.work_effort_id) as runs, sum(pr.quantity_to_produce) as planned
+from order_item oi
+join product p                     on p.product_id = oi.product_id
+join work_order_item_fulfillment f on f.order_item_id = oi.order_item_id
+join production_run pr             on pr.work_effort_id = f.work_effort_id
+where oi.order_item_kind = 'WORK'
+group by oi.order_item_id, p.name, oi.quantity;
+
+-- name: 6.3a — Production yield for the runs already done: produced, rejected, and the reject rate
+select we.work_effort_id, we.description, pr.quantity_to_produce, pr.quantity_produced, pr.quantity_rejected,
+       round(100.0 * pr.quantity_rejected / nullif(pr.quantity_produced + pr.quantity_rejected, 0), 1) as reject_pct,
+       we.actual_hours
+from production_run pr
+join work_effort we on we.work_effort_id = pr.work_effort_id
+where pr.quantity_produced is not null
+order by we.actual_start_datetime;
+
+-- name: 6.3a — Every work effort by level and by purpose: the two subtype sets are independent
+select coalesce(pt.description, '(no purpose)') as purpose, t.description as level, count(*) as efforts
+from work_effort we
+join work_effort_type t               on t.work_effort_type_id = we.work_effort_type_id
+left join work_effort_purpose_type pt on pt.work_effort_purpose_type_id = we.work_effort_purpose_type_id
+group by 1, 2
+order by 1, 2;
+
+-- name: 6.3a — Where the work happens, and how long it took against the plan
+select we.work_effort_id, we.name, coalesce(f.description, '(the parent''s site, or it doesn''t matter)') as performed_at,
+       we.scheduled_start_date, we.scheduled_completion_date,
+       we.actual_start_datetime, we.actual_completion_datetime, we.actual_hours
+from work_effort we
+left join facility f on f.facility_id = we.facility_id
+where we.work_effort_id >= 28000
+order by we.scheduled_start_date;
+
+-- name: 6.3a — Review: work scheduled to start after the need it fills was due (Table 6.4's 32898: NOTES, point 9)
+select we.work_effort_id, we.name, we.scheduled_start_date, r.requirement_id, r.required_by_date,
+       we.scheduled_start_date - r.required_by_date as days_late
+from work_requirement_fulfillment f
+join work_effort we on we.work_effort_id = f.work_effort_id
+join requirement r  on r.requirement_id = f.requirement_id
+where we.scheduled_start_date > r.required_by_date
+group by we.work_effort_id, we.name, we.scheduled_start_date, r.requirement_id, r.required_by_date;
+
+-- name: 6.3a — Data-quality check: production_run rows that disagree with the effort's purpose, either way (should be empty)
+select we.work_effort_id, we.name, we.work_effort_purpose_type_id,
+       case when pr.work_effort_id is null then 'PRODUCTION_RUN with no production_run row'
+            else 'production_run row on a ' || coalesce(we.work_effort_purpose_type_id, 'purposeless') || ' effort' end as problem
+from work_effort we
+left join production_run pr on pr.work_effort_id = we.work_effort_id
+where (we.work_effort_purpose_type_id is not distinct from 'PRODUCTION_RUN') <> (pr.work_effort_id is not null);
+
+-- name: 6.3a — Data-quality check: work order item fulfillments on a line that isn't a WORK item (should be empty)
+select f.work_effort_id, f.order_item_id, oi.order_id, oi.order_item_kind, oi.item_description
+from work_order_item_fulfillment f
+join order_item oi on oi.order_item_id = f.order_item_id
+where oi.order_item_kind <> 'WORK';
+
+-- name: 6.3a — Data-quality check: the same effort linked to the same need or order line twice (should be empty)
+select 'work requirement' as link, work_effort_id, requirement_id as linked_to, count(*) as rows
+from work_requirement_fulfillment
+group by work_effort_id, requirement_id
+having count(*) > 1
+union all
+select 'work order item', work_effort_id, order_item_id, count(*)
+from work_order_item_fulfillment
+group by work_effort_id, order_item_id
+having count(*) > 1;

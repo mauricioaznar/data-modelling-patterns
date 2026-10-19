@@ -47,6 +47,22 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    `responsible_party_id` column on REQUIREMENT lose, and which question could you no longer
    answer?
 
+### Submodel 2: work effort generation
+1. **[6.3a]** ORDER REQUIREMENT COMMITMENT carries a quantity; WORK REQUIREMENT FULFILLMENT
+   carries none. Where does Table 6.4's 28045 record how much of its 3,500 goes to 50985 and
+   how much to 51245, and does it need to?
+2. **[6.3a]** Order 23500 reaches its work two ways: line 1 straight through WORK ORDER ITEM
+   FULFILLMENT, line 2 through a requirement. Fig 6.3b keeps only the second. What does each
+   choice cost, and which kind of business would pick each?
+3. **[6.3a]** PRODUCTION RUN has quantities but no line to PRODUCT. How does a run know what
+   it makes, and what happens to a run that fills neither a need nor an order line?
+4. **[6.3a]** WORK EFFORT has two subtype sets: level (program to activity) and purpose
+   (production run to research). Give a question only the first answers and one only the
+   second answers. Why does only PRODUCTION RUN get a table of its own?
+5. **[6.3a]** The facility is optional, and an effort without one is taken to happen where
+   its parent does. What would a mandatory facility force you to record, and when would
+   that be wrong?
+
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
 notation (entities, key attributes, relationships and cardinality). Then diff it against

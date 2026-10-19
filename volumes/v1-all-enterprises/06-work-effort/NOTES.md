@@ -423,7 +423,9 @@ the literal drawing.
   Manufacturing's pen plant (facility 15) or its head office (16). Actuals ours for the
   runs already done. Requirement 52001, "need for customised pens" (a customer need), and
   sales order 23500 with its line for 2,500 customised engraved pens (product 23, a WORK
-  item) committed to it. Bad rows: effort 29900, a research job with a `production_run` row;
+  item) committed to it; the order (ACME's, ours) also takes 500 plain engraved pens (line 2,
+  a PRODUCT line) committed to the forecast 51285, so its work is reached through the need:
+  both paths on one order. Bad rows: effort 29900, a research job with a `production_run` row;
   51298 also linked to Ch 4's order line 1 (a product line); 28045's link to 50985 twice.
 
 ## When NOT to use this

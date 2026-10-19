@@ -141,3 +141,105 @@ insert into requirement_role (requirement_id, party_id, requirement_role_type_id
   -- ours
   (50985, 55, 'RESPONSIBLE_FOR', '2001-01-15', '2001-02-01', null),   -- DATA ERROR: inside Dick Jones's period
   (50985, 53, 'CREATED_FOR',     '2000-07-05', null,         null);   -- DATA ERROR: Table 6.3's first row keyed in twice
+
+-- ============================================================
+-- Fig 6.3a — Work effort generation
+-- ============================================================
+insert into facility (facility_id, facility_type_id, part_of_facility_id, description, square_footage) values
+  (15, 'PLANT',    null, 'ABC Manufacturing pen plant',   45000),
+  (16, 'BUILDING', null, 'ABC Manufacturing head office', 20000);
+
+select setval(pg_get_serial_sequence('facility', 'facility_id'), (select max(facility_id) from facility));
+
+insert into work_effort_purpose_type (work_effort_purpose_type_id, description) values
+  ('PRODUCTION_RUN', 'Production run'),
+  ('MAINTENANCE',    'Maintenance'),
+  ('WORK_FLOW',      'Work flow'),
+  ('RESEARCH',       'Research');
+
+-- Table 6.5's product: the customised pen a customer ordered.
+insert into product (product_id, product_kind, name, introduction_date, uom_id) values
+  (23, 'GOOD', 'Customized engraved pen with gold lettering', '2001-01-01', 'EA');
+
+select setval(pg_get_serial_sequence('product', 'product_id'), (select max(product_id) from product));
+
+insert into good (product_id) values (23);
+
+-- Table 6.5's "need for customized pens": a customer's need, ours to number.
+insert into requirement (requirement_id, requirement_origin, requirement_kind, requirement_type_id, description,
+                         requirement_creation_date, required_by_date, quantity) values
+  (52001, 'CUSTOMER', 'WORK', 'PRODUCTION_RUN', 'Need for customized pens', '2001-02-05', '2001-04-30', 2500);
+
+insert into work_requirement (requirement_id, product_id) values
+  (52001, 23);
+
+-- The sales order behind Table 6.5 (ours): ACME (placing customer, party
+-- role 60) orders 2,500 customised pens from ABC Manufacturing (80). A WORK line.
+insert into "order" (order_id, order_kind, order_date, entry_date) values
+  (23500, 'SALES', '2001-02-05', '2001-02-05');
+
+insert into sales_order (order_id, placed_by_party_role_id, taken_by_party_role_id) values
+  (23500, 60, 80);
+
+insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, quantity, unit_price, estimated_delivery_date, order_item_kind) values
+  (49, 23500, 1, 23, 2500, 2.40, '2001-04-30', 'WORK'),
+  (50, 23500, 2, 22, 500,  1.90, '2001-04-30', 'PRODUCT');   -- plain pens from stock, made against the forecast 51285
+
+select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max(order_item_id) from order_item));
+
+insert into sales_order_item (order_item_id, corresponding_po_id) values
+  (49, 'ACME-PO-7741'),
+  (50, 'ACME-PO-7741');
+
+insert into order_requirement_commitment (order_item_id, requirement_id, quantity) values
+  (49, 52001, 2500),
+  (50, 51285, 500);    -- the order uses up 500 of the 3,000 forecast: work reached through the need
+
+-- Tables 6.4–6.5, with their ids. No types in the book (NOTES, point 10):
+-- runs and the plan typed PROJECT, the repair a TASK. "Pencils" as printed
+-- (point 7). Places, completion dates and actuals ours.
+insert into work_effort (work_effort_id, work_effort_type_id, work_effort_purpose_type_id, facility_id, name, description,
+                         scheduled_start_date, scheduled_completion_date, actual_start_datetime, actual_completion_datetime, actual_hours) values
+  (28045, 'PROJECT', 'PRODUCTION_RUN', 15, 'Production run',                       'Production run of 3,500 pencils',
+          '2000-06-01', '2000-06-09', '2000-06-01 08:00', '2000-06-08 17:00', 62),
+  (51285, 'PROJECT', 'PRODUCTION_RUN', 15, 'Production run',                       'Production run of 1,500 pencils',
+          '2000-12-05', '2000-12-05', '2000-12-05 08:00', '2000-12-05 18:00', 10),
+  (51298, 'PROJECT', 'PRODUCTION_RUN', 15, 'Production run',                       'Production run of 1,500 pencils',
+          '2000-12-06', '2000-12-06', '2000-12-06 08:00', '2000-12-06 17:30', 9.5),
+  (32898, 'TASK',    'MAINTENANCE',    15, 'Fix engraving machine',                'Repair engraving machine #12 because it may not be powered up',
+          '2000-12-12', '2000-12-12', '2000-12-12 09:00', '2000-12-12 13:30', 4.5),
+  (39409, 'PROJECT', null,             16, 'Sales and marketing plan development', 'Develop a sales and marketing plan for 2002 including sales projections, channel distribution strategy, and competitive analysis',
+          '2000-12-15', '2001-02-15', '2000-12-18 09:00', null,               null),
+  (29534, 'PROJECT', 'PRODUCTION_RUN', 15, 'Production run #1 of pens',            'Production of 1,500 customized engraved pens with gold lettering',
+          '2001-02-23', '2001-02-24', null,               null,               null),
+  (29874, 'PROJECT', 'PRODUCTION_RUN', 15, 'Production run #2 of pens',            'Production of 1,000 customized engraved pens with gold lettering',
+          '2001-03-23', '2001-03-23', null,               null,               null),
+  -- ours
+  (29900, 'TASK',    'RESEARCH',       15, 'Engrave sample pens',                  'Try the new gold lettering on 50 sample pens',
+          '2001-01-10', '2001-01-10', '2001-01-10 10:00', '2001-01-10 12:00', 2);
+
+select setval(pg_get_serial_sequence('work_effort', 'work_effort_id'), (select max(work_effort_id) from work_effort));
+
+insert into production_run (work_effort_id, quantity_to_produce, quantity_produced, quantity_rejected) values
+  (28045, 3500, 3460, 40),
+  (51285, 1500, 1490, 10),
+  (51298, 1500, 1500, 0),
+  (29534, 1500, null, null),
+  (29874, 1000, null, null),
+  (29900, 50,   50,   0);    -- DATA ERROR: a research job with a production-run row
+
+-- Table 6.4. 51298's blank read as "same as above": it fills 51285 too (point 8).
+insert into work_requirement_fulfillment (work_effort_id, requirement_id) values
+  (28045, 50985),
+  (28045, 51245),
+  (51285, 51285),
+  (51298, 51285),
+  (32898, 70485),
+  (39409, 60102),
+  (28045, 50985);   -- DATA ERROR: the first link keyed in twice
+
+-- Table 6.5: both runs fill the one sales line.
+insert into work_order_item_fulfillment (work_effort_id, order_item_id) values
+  (29534, 49),
+  (29874, 49),
+  (51298, 1);       -- DATA ERROR: Ch 4's line 1 is ACME's bond paper, a PRODUCT line
