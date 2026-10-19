@@ -1104,67 +1104,110 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
-### Card 35 · V1 Ch 8 · Chart of accounts (Fig 8.1)
-- **Cue:** "Which ledger accounts does each of our organizations keep, since when, of which kind, and how does each cut its year into periods?"
+### Card 35 · V1 Ch 8 · Chart of accounts (Figs 8.1, 8.4)
+- **Cue:** "Which ledger accounts does each of our organizations keep, since when, of which kind, broken down by which customer, supplier or product, and how does each cut its year into periods?"
 - **Hook:** one printed chart of accounts pinned on the wall of two offices, with a
-  different set of lines highlighted in each and "marketing" crossed out in only one
-  *(Claude's, drafted when the figures landed)*
-- **Mantra:** One chart for everyone; each organization switches accounts on and off by
-  date, and cuts its own years into periods.
+  different set of lines highlighted in each and "marketing" crossed out in only one; under
+  "receivables", a sticky note per customer *(Claude's, drafted when the figures landed)*
+- **Mantra:** One chart for everyone; each organization switches accounts on by date,
+  splits them into subsidiaries about someone, and cuts its own periods.
 
 <details><summary>Key</summary>
 
 - **S:** `general_ledger_account` (the account number as id: 110 cash; name, description,
   type) · `general_ledger_account_type` (asset, liability, owners equity, revenue,
-  expense) · `organization_gl_account` (internal organization, account, from, thru) ·
-  `accounting_period` (internal organization, period type, within, number, from, thru) ·
-  `period_type` (fiscal year, quarter, month).
+  expense) · `organization_gl_account` (internal organization, account, from, thru;
+  subsidiary of another, referencing a supplier or bill-to customer role, a product
+  category or a product) · `accounting_period` (internal organization, period type,
+  within, number, from, thru) · `period_type` (fiscal year, quarter, month).
 - **W:** an account name typed on each ledger line, or one chart per company: renaming
   breaks history, two companies' "cash" can't be added up, and one company's split of an
-  account changes the other's.
+  account changes the other's. "120-ACME" in the chart: the chart grows with every customer
+  and nothing says the account is about ACME.
 - **T:** *(the naive-model trap until practice gives yours)* ending an account in the chart
   when only one organization stopped using it; periods for the enterprise when fiscal
-  years differ; a quarter "within" another organization's year.
+  years differ; a new chart number per customer instead of a subsidiary account.
 - **D:** **organization** (Ch 2, an INTERNAL_ORGANIZATION role) ← organization_gl_account →
-  general_ledger_account → general_ledger_account_type; **organization** ←
-  accounting_period → period_type, ↺ within. Checks: an account kept by an organization
-  that was never internal; the same account twice at once; a period inside another
+  general_ledger_account → general_ledger_account_type; organization_gl_account ↺
+  subsidiary of, → **party_role** (supplier, bill-to customer), **product_category**,
+  **product** (Ch 3; all optional); **organization** ← accounting_period → period_type, ↺
+  within. Checks: an account kept by an organization that was never internal; the same
+  account twice at once; a subsidiary of another organization or number, or outside its
+  parent's dates; a "customer" whose role is something else; a period inside another
   organization's or outside its parent's dates.
 </details>
 
 ---
 
-### Card 36 · V1 Ch 8 · Accounting transactions (Figs 8.2–8.3b)
-- **Cue:** "What did each business event do to the books: which debits and credits on which accounts, from which invoice or payment, which credit settled which debit, and what was each account's balance for a period?"
+### Card 36 · V1 Ch 8 · Accounting transactions (Figs 8.2–8.3b, 8.5)
+- **Cue:** "What did each business event do to the books: which debits and credits on which accounts, from which invoice, payment or asset, which credit settled which debit, and what was each account's balance for a period?"
 - **Hook:** a cash register receipt for $900 stapled to a ledger page where it becomes three
-  lines: $882 cash and $18 discount on the left, $900 receivables on the right
-  *(Claude's, drafted when the figures landed)*
-- **Mantra:** One event, typed and traced to its document, splits into debits and credits
-  that cancel; balances are sums, stored only as checked caches.
+  lines: $882 cash and $18 discount on the left, $900 receivables on the right; beside it a
+  machine's tag reading "1999 double-declining, 2000 straight-line" *(Claude's, drafted
+  when the figures landed)*
+- **Mantra:** One event, typed and traced to its document or asset, splits into debits and
+  credits that cancel; balances are sums, stored only as checked caches.
 
 <details><summary>Key</summary>
 
 - **S:** `accounting_transaction` (type, from party, to party for external ones, at most
-  one of invoice, payment, inventory item variance; transaction and entry date,
-  description; no amount) · `accounting_transaction_type` (a hierarchy: INTERNAL,
-  EXTERNAL → OBLIGATION, PAYMENT over the book's subtypes, Table 8.3's types below) ·
-  `transaction_detail` (transaction, seq, organization GL account, amount, debit or credit,
-  associated with another detail) · `organization_gl_account_balance` (account, period,
-  amount).
+  one of invoice, payment, inventory item variance; the fixed asset for a depreciation;
+  transaction and entry date, description; no amount) · `accounting_transaction_type` (a
+  hierarchy: INTERNAL, EXTERNAL → OBLIGATION, PAYMENT over the book's subtypes, Table 8.3's
+  types below) · `transaction_detail` (transaction, seq, organization GL account, amount,
+  debit or credit, associated with another detail) · `organization_gl_account_balance`
+  (account, period, amount) · `depreciation_method` (description, formula) ·
+  `fixed_asset_depreciation_method` (asset, method, from, thru).
 - **W:** one ledger row with an account, an amount and an optional `invoice_id`: a split
   payment or an asset sale becomes several unrelated rows, nothing proves they balance, and
-  no line says which payment settled which invoice.
+  no line says which payment settled which invoice. A `depreciation_method` column on the
+  asset rewrites last year's figures when the method changes.
 - **T:** *(the naive-model trap until practice gives yours)* an amount on the transaction
   that can disagree with its details; a stored balance with no check against its postings;
-  a depreciation with a receiver.
+  a depreciation with a receiver, or of no asset.
 - **D:** **party** (from, to) ← accounting_transaction → accounting_transaction_type (↺),
-  → **invoice**, **payment** (Ch 7), **inventory_item_variance** (Ch 3);
-  accounting_transaction ← transaction_detail (↺ associated with) →
+  → **invoice**, **payment** (Ch 7), **inventory_item_variance** (Ch 3), **fixed_asset**
+  (Ch 5–6); accounting_transaction ← transaction_detail (↺ associated with) →
   **organization_gl_account** (8.1); organization_gl_account_balance →
-  organization_gl_account, **accounting_period** (8.1). Checks: a grouping row as type;
-  parties or documents that don't fit the subtype; debits ≠ credits; a posting to a
-  closed account or another organization's books; a stored balance off its postings, or in
-  another organization's period.
+  organization_gl_account, **accounting_period** (8.1); **fixed_asset** ←
+  fixed_asset_depreciation_method → depreciation_method. Checks: a grouping row as type;
+  parties, documents or an asset that don't fit the subtype; debits ≠ credits; a posting to
+  a closed account or another organization's books; a stored balance off its postings; a
+  depreciation with no method that day; two methods at once.
+</details>
+
+---
+
+### Card 37 · V1 Ch 8 · Budgets (Figs 8.6–8.7b)
+- **Cue:** "Who asks for how much money, for which period, for what and why; where is each budget in its approval; and how was it revised, item by item?"
+- **Hook:** a department's budget sheet with a "why" column, a rubber stamp trail down the
+  margin (created, submitted, SENT BACK, submitted, approved), and red pencil deltas beside
+  three lines *(Claude's, drafted when the figures landed)*
+- **Mantra:** A budget is for a party and a period; items say what and why; statuses
+  track approval; revisions record deltas, never overwrite.
+
+<details><summary>Key</summary>
+
+- **S:** `budget` (type, standard time period, comment) · `budget_type` (operating,
+  capital: the subtypes as rows) · `standard_time_period` (period type, from, thru) ·
+  `budget_item` (budget + seq, item type, part of another item, amount, purpose,
+  justification) · `budget_item_type` · `budget_status` (Ch 2 status types under
+  BUDGET_STATUS, date, comment) · `budget_role` + `budget_role_type` (the party it's for,
+  the initiator) · `budget_revision` (budget + seq, date) · `budget_revision_impact`
+  (revision, item, signed change, add/delete flag, reason).
+- **W:** a spreadsheet per department with a total: no place in the organization tree to
+  roll up, no approval history, no item kinds to compare across departments, and each
+  revision overwrites what was asked for and why it changed.
+- **T:** *(the naive-model trap until practice gives yours)* overwriting an item's amount
+  on revision; summing a parent item and its parts; counting an added item twice; a
+  department column on the budget instead of a role.
+- **D:** **standard_time_period** → **period_type** (8.1) ← budget → budget_type; budget ←
+  budget_item (↺ part of) → budget_item_type; budget ← budget_status → **status_type**
+  (Ch 2); budget ← budget_role → **party** (Ch 2, rolling up through ORGANIZATION_ROLLUP),
+  budget_role_type; budget ← budget_revision ← budget_revision_impact → budget_item.
+  Checks: a status of another group; a budget with no items or for no one; parts that don't
+  add up to their parent; a revision touching another budget's item; an item revised below
+  zero.
 </details>
 
 ---

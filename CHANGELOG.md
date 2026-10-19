@@ -120,6 +120,23 @@ and any decisions made.
   ER diagram; cards 35–36, Anki export 50 cards. Design reference: two draft entries, Core
   patterns gains a Ch 8 column (nine rows) and a pattern (event and its balanced
   postings), two question index rows, roadmap Ch 8 In progress.
+- Figs 8.4, 8.5, 8.6 and 8.7 with Tables 8.6–8.10 (photos), transcribed with points 13–24.
+- Fig 8.4 built: `organization_gl_account` gains a parent and references to a supplier or
+  bill-to customer role, a product category and a product; payables per supplier, sales per
+  category and product, ABC Subsidiary's receivables for ACME. Control balances with their
+  subsidiaries. Two checks; 8.1's duplicate check now compares what an account tracks.
+- Fig 8.5 built: the depreciated fixed asset on `accounting_transaction`,
+  `depreciation_method`, `fixed_asset_depreciation_method`; Table 8.6 with the pen engraver
+  (new). Three checks and a review.
+- Fig 8.6 built: `standard_time_period`, `budget` with operating and capital as type rows,
+  nested `budget_item`, `budget_status`, `budget_role`; Tables 8.7–8.9 with three
+  departments of ABC Corporation (ours); budgets rolled up the organization. Three checks.
+- Fig 8.7b built: `budget_revision`, `budget_revision_impact`; Table 8.10, the marketing
+  budget after each revision (65,000 → 53,000 → 51,000). Two checks. 8.7a not built.
+- Submodel 3 (budgets); ponders 4–5 (submodel 1) and 1–5 (submodel 3); ER diagram; cards
+  35–36 revised, card 37 new, Anki export 51 cards. Design reference: both Ch 8 entries
+  revised, a Budgets draft entry, Ch 8 examples on ten Core patterns rows, a question index
+  row, the roadmap row.
 
 **Decisions**
 - Ch 8: no amount on the accounting transaction, it is worth its debits (Table 8.3's
@@ -128,6 +145,10 @@ and any decisions made.
   for each type's subtype; one from party for both "from" lines (point 12).
 - Ch 8: 46325's −$300 "receipt" built as a returned-payment disbursement (point 6); the
   detail's account read as mandatory (point 7); the debit/credit flag kept (point 8).
+- Ch 8: Figs 8.4 and 8.5 join submodels 1 and 2 instead of making a fourth (point 15), so
+  cards 35 and 36 change their figures and their Anki note ids.
+- Ch 8: a subsidiary account keeps its parent's GL number (point 14); a revision's amount
+  is the signed change, an added item its own row (point 22); 8.7b over 8.7a (point 20).
 - Ch 8: 8.3b's balance built beside 8.3a, not instead of it; the overall figure decides
   (point 9).
 - Ch 7: Table 7.9's 30002 isn't Table 7.2's, so its links are built to its intention
@@ -168,10 +189,11 @@ and any decisions made.
 - Work effort purpose optional; production runs typed PROJECT for want of a level in the book.
 
 **Next**
-- Ch 8's remaining figures (budgeting, the overall model) when shared.
+- Ch 8's remaining figures (budget review, scenarios, usage and sources, the tie to the
+  ledger, the overall model) when shared.
 - The Ch 4, 5, 6 and 7 overviews (Ch 6: 42 points, Ch 7: 29); then practice, submodel by
-  submodel. Re-import the Anki export (50 cards; cards 31–36 and the Ch 7 architecture
-  card land in Drafts).
+  submodel. Re-import the Anki export (51 cards; cards 31–37 and the Ch 7 architecture
+  card land in Drafts; delete the old notes of cards 35 and 36, whose ids changed).
 
 ## 2026-10-18
 
