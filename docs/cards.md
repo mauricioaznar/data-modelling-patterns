@@ -614,6 +614,39 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
+### Card 19 · V1 Ch 5 · Packages and receipts (Fig 5.4)
+- **Cue:** "Which packages hold which lines, how much of an incoming package was accepted or rejected and why, where did it go, and which order line does it settle?"
+- **Hook:** a clerk on the receiving dock with a box cutter and a clipboard, ticking
+  "accepted" and "rejected" carton by carton *(Claude's, drafted when the figures landed)*
+- **Mantra:** Lines ride in packages; receipts count one good per package, accept or reject,
+  stock it, settle an order line.
+
+<details><summary>Key</summary>
+
+- **S:** `shipment_package` (the date it was made up; no FK to `shipment`) ·
+  `packaging_content` (a shipment line in a package, with the quantity packed) ·
+  `shipment_receipt` (within a package; of a `good`, stored into an `inventory_item`,
+  applied to an `order_item`, all three optional; time, what the receiver wrote, quantity
+  accepted, quantity rejected, a `rejection_reason`) · `shipment_receipt_role` + type
+  (receiver, inspector) · the view `shipment_package_shipment` (a package's shipment, from
+  its contents).
+- **W:** a "received" tick or a received quantity on the order line or the shipment line:
+  nothing says which box, how much was rejected and why, who signed, or where it was put
+  away, and each partial delivery overwrites the last.
+- **T:** *(the naive-model trap until practice gives yours)* counting receipts per shipment
+  line and forgetting the package: 1149's three lines share one box, 1146's pencils fill two.
+  And trusting the receipt's own order line without checking it against ORDER SHIPMENT.
+- **D:** shipment_item ← packaging_content → shipment_package ← shipment_receipt → good
+  (Ch 3), → inventory_item (Ch 3), → order_item (Ch 4), → rejection_reason;
+  shipment_receipt ← shipment_receipt_role → party (Ch 2), → role type. Derived: a package's
+  shipment, through its contents. Checks: one shipment per package; no more packed than the
+  line carries; the receipt's good in its package; no more counted than it holds; a
+  rejection needs a reason; the receipt's order line tied to its shipment line by ORDER
+  SHIPMENT; receipts only on shipments that end at one of ours.
+</details>
+
+---
+
 ## Deck: architecture
 
 One card per chapter, from its architecture figure (the last, overall one): how the chapter's
