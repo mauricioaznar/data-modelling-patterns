@@ -287,23 +287,25 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 8 · V1 Ch 3 · Pricing and costing (Figs 3.7–3.8)
 - **Cue:** "What do we charge, under which conditions, and what does it cost us?"
 - **Hook:** the price is a recipe *(Claude's, drafted when the figures landed)*
-- **Mantra:** Price components are conditional rules; matching ones add up to the price; cost
-  estimates hit a product or feature, never both.
+- **Mantra:** Price components are conditional rules; the most specific base wins, matching
+  discounts and surcharges adjust it; cost estimates hit a product or feature, never both.
 
 <details><summary>Key</summary>
 
 - **S:** `price_component` (one pricing rule: base price, discount, surcharge or suggested
   price; for a product and/or a feature; optional "based on" conditions: region, party type,
-  category, quantity break, order value, sale type, organization; optionally a one-time,
-  recurring or usage charge) · `quantity_break` and `order_value` (ranges, exclusive thru) ·
-  `estimated_product_cost` (a dated estimate per cost component type, for a product **or** a
+  category, quantity break, order value, sale type, organization; a charge kind, required on a
+  base or suggested price and optional (= any) on a discount or surcharge; recurring is "per" a
+  time frequency, usage "per" a unit of measure, two columns) · `quantity_break` and
+  `order_value` (ranges, exclusive thru) · `estimated_product_cost` (a dated estimate per cost component type, for a product **or** a
   feature) · `cost_component_type` (a hierarchy under materials, labour, other) · currency
   and time-frequency units of measure.
 - **W:** a `price` column on the product: one number, so no discounts, regions, quantity breaks
   or history. One `cost` number gives no margin by materials or labour.
 - **T:** *(the naive-model trap until practice gives yours)* looking up "the price" of a
-  product: there isn't one. A price is computed per order line from every component whose
-  conditions all hold.
+  product: there isn't one. A price is computed per order line: base prices compete (one wins,
+  plus one per chosen feature), every matching discount and surcharge adjusts it per unit, and
+  the suggested price never enters.
 - **D:** product and/or feature ← price_component → region / party type / category / quantity
   break / order value / sale type / organization (all optional), → currency; product | feature
   ← estimated_product_cost → cost_component_type.

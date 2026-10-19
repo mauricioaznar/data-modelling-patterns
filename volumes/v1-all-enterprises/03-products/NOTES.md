@@ -846,6 +846,21 @@ Silverston intended, not at the literal drawing.
      never-empty rule needs one identical row per charge kind, which drift apart on a change and
      need a new row for every new charge kind. Base and suggested must carry it, discount and
      surcharge may leave it empty (= any charge). Cards: no fix (card 8 doesn't mention it).
+     How components combine (the user's question, 2026-10-19): base prices compete (one wins),
+     feature bases add, discounts and surcharges stack on the winner per unit, MSRP never
+     enters; one-time × quantity, recurring is a rate per period, utilization × measured use.
+     The user picked the base and dropped the MSRP, but applied the 2.00 surcharge as a
+     multiplier and the adjustments once per line instead of per unit (38.86 × 250 = 9,715).
+     **Card fix:** card 8's mantra said matching components "add up"; it becomes "the most
+     specific base wins, matching discounts and surcharges adjust it".
+   - **Settled 2026-10-19 (overview): split.** `per_time_frequency_id` → `time_frequency_measure`
+     (RECURRING, the line point 2 confirmed) and `per_uom_id` → `unit_of_measure` (UTILIZATION):
+     two lines in the book, two columns, and a plain FK replaces part of the data-quality check.
+     Cards: card 8's key gains the two "per" columns.
+   - **Settled 2026-10-19 (overview): keep count, then lowest** (the user's call). Depth would
+     be more specific (Jalisco over Mexico) but is logic we don't need yet; the selection rule
+     belongs to the application, which decides when one is built. The query says so in a
+     comment. Cards: no fix.
    - *Proposed, unconfirmed:* split `per_uom_id` into `per_time_frequency_id` (RECURRING, a
      plain FK to `time_frequency_measure`, as point 2's line) and `per_uom_id` (UTILIZATION),
      from the user's worry that one shared column reads vaguely.
@@ -916,6 +931,12 @@ Silverston intended, not at the literal drawing.
       equal stores one fact twice.
     - *Gap found, seed:* the starter kit (product 11) has no price component, so it can't be
       priced. Refactor candidate: give it a base price (no change until the user agrees).
+    → **Settled 2026-10-19 (overview): the kit gets a BASE, ONE_TIME price, nothing more.** Our
+      seed's gap, not the book's. The "product with no base price" check was withdrawn: raw
+      materials, quote- or agreement-priced products and BOM-only subassemblies rightly have
+      none. No double counting: a price is charged only for the product on an order line; the
+      kit's price and its parts' prices (each bought alone) are two separate facts the model
+      never compares. Choices the customer adds are features, priced on top (3.7). Cards: no fix.
 
 ## Design decisions (book → SQL)
 
@@ -1041,12 +1062,13 @@ Silverston intended, not at the literal drawing.
 - **First subtype set → `price_component_type`** lookup rows (BASE_PRICE, DISCOUNT, SURCHARGE,
   MSRP), mandatory.
 - **Second subtype set → `charge_kind`** (ONE_TIME / RECURRING / UTILIZATION) plus nullable
-  `per_uom_id` and `quantity`, as in 3.6. Nullable, because a ream of paper's base price is no
-  kind of charge (discussion point 1). A data-quality query checks the combination (seed: a
-  recurring charge "per each").
-- **One `per_uom_id` for both "per" lines:** the figure draws two relationships (from RECURRING
-  and from UTILIZATION) for one role. It references `unit_of_measure`, and the data-quality
-  query requires a time frequency for RECURRING (discussion point 2).
+  "per" columns and `quantity`, as in 3.6. Nullable as a condition (overview, 2026-10-19): a
+  base or suggested price must carry it (the ream's 42 is ONE_TIME), while a discount or
+  surcharge with none applies to any charge. A data-quality query checks the kind against its
+  "per" columns (seed: a base price with no kind; a recurring charge "per each").
+- **Two "per" columns, one per line** (overview, 2026-10-19; was one shared `per_uom_id`):
+  `per_time_frequency_id` → `time_frequency_measure` for RECURRING (the line point 2
+  confirmed) and `per_uom_id` → `unit_of_measure` for UTILIZATION.
 - **UTILIZATION's `quantity`** (our reading): per how many units, as in 5 USD per 1,000 pages;
   null means 1.
 - **Price or percent:** both optional in the book. A data-quality query checks them per type
@@ -1057,9 +1079,12 @@ Silverston intended, not at the literal drawing.
 - **No arc between product and feature,** unlike 3.8: a component may name both.
 - **`pricer_party_id`** for the organization ("specified for" / "the pricer of"), named like
   `manufacturer_party_id` and `supplier_party_id`.
-- **The combining rules in the "Price a line" query are ours,** not the book's: the most
-  specific base price wins (most conditions met, then the lowest), percents apply to that base
-  without compounding, amounts are per unit, and the suggested price is left out.
+- **The combining rules in the "Price two lines" query are ours,** not the book's: each line
+  prices one charge kind; the most specific base price wins (most conditions met, then the
+  lowest), one for the product and one per chosen feature, and the winners add up; percents
+  apply to that sum without compounding, amounts are per unit, and the suggested price is left
+  out. Depth in a hierarchy (Jalisco over Mexico) doesn't break ties: the application decides
+  (overview, 2026-10-19).
 - **Duplicate rules** (same type and conditions, overlapping periods) are a data-quality query
   (seed: the pen at 2.50 and 2.75).
 

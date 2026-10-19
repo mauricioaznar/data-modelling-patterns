@@ -409,7 +409,12 @@ create table price_component_type (
 -- independent axis (discussion point 1 in NOTES). Two of the three carry
 -- something (a "per" unit, a quantity), so it becomes a discriminator plus
 -- nullable columns, as in Fig 3.6; a data-quality query checks the combination.
--- Nullable: a ream of paper's base price is no kind of charge.
+-- The two "per" lines end at different boxes (TIME FREQUENCY MEASURE for
+-- recurring, UNIT OF MEASURE for utilization), so they are two columns, and a
+-- plain FK holds a recurring charge to a time frequency (overview, 2026-10-19).
+-- Nullable, as a condition: a base or suggested price always says its kind
+-- (the ream's 42 is ONE_TIME; a data-quality query checks it), while a
+-- discount or surcharge with none applies to any charge (overview, 2026-10-19).
 --
 -- price vs percent: a base or suggested price is an amount; a discount or
 -- surcharge is an amount or a percent, stored positive (the type says which
@@ -438,7 +443,8 @@ create table price_component (
   order_value_id          integer references order_value,
   sale_type_id            text    references sale_type,
   -- second subtype set
-  per_uom_id              text    references unit_of_measure,       -- RECURRING (a time frequency) or UTILIZATION: "per"
+  per_time_frequency_id   text    references time_frequency_measure, -- RECURRING only: "per" (a month, a year)
+  per_uom_id              text    references unit_of_measure,       -- UTILIZATION only: "per" (an hour, a page)
   quantity                numeric check (quantity > 0),             -- UTILIZATION only: per how many units (null = 1)
   comment                 text,
   check (thru_date is null or thru_date > from_date)

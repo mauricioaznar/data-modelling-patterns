@@ -1053,12 +1053,12 @@ insert into price_component (price_component_id, price_component_type_id, charge
                              product_id, product_feature_id, pricer_party_id,
                              geographic_boundary_id, party_type_id, product_category_id, quantity_break_id, order_value_id, sale_type_id,
                              per_uom_id, quantity, comment, agreement_item_id) values
-  (26, 'BASE_PRICE', null, '2002-01-01', '2002-12-31', 7.00, null, 'USD', 1, null, 12, 40,   null, null, null, null, null, null, null, 'Table 4.19: Eastern region', 9),
-  (27, 'BASE_PRICE', null, '2002-01-01', '2002-12-31', 7.50, null, 'USD', 1, null, 12, 41,   null, null, null, null, null, null, null, 'Table 4.19: Western region', 9),
-  (28, 'DISCOUNT',   null, '2002-01-01', '2002-12-31', null, 2,    null,  1, null, 12, null, null, null, 3,    null, null, null, null, 'Table 4.19: 2% off from 1,000 reams', 9),
-  (29, 'BASE_PRICE', null, '2025-01-01', '2026-01-01', 2.25, null, 'USD', 2, null, 4,  11,   null, null, null, null, null, null, null, 'Contoso''s pens, delivered in Missouri', 5),
-  (30, 'BASE_PRICE', null, '2001-01-01', '2002-01-01', 6.80, null, 'USD', 1, null, 12, 40,   null, null, null, null, null, null, null, 'DATA ERROR: last year''s price, keyed on the 2002 program (caught by a query)', 9),
-  (31, 'BASE_PRICE', null, '2002-01-01', '2002-12-31', 6.50, null, 'USD', 3, null, 12, null, null, null, null, null, null, null, null, 'DATA ERROR: the diskettes priced on the paper program (caught by a query)', 9);
+  (26, 'BASE_PRICE', 'ONE_TIME', '2002-01-01', '2002-12-31', 7.00, null, 'USD', 1, null, 12, 40,   null, null, null, null, null, null, null, 'Table 4.19: Eastern region',                                                    9),
+  (27, 'BASE_PRICE', 'ONE_TIME', '2002-01-01', '2002-12-31', 7.50, null, 'USD', 1, null, 12, 41,   null, null, null, null, null, null, null, 'Table 4.19: Western region',                                                    9),
+  (28, 'DISCOUNT',   null,       '2002-01-01', '2002-12-31', null, 2,    null,  1, null, 12, null, null, null, 3,    null, null, null, null, 'Table 4.19: 2% off from 1,000 reams',                                           9),
+  (29, 'BASE_PRICE', 'ONE_TIME', '2025-01-01', '2026-01-01', 2.25, null, 'USD', 2, null, 4,  11,   null, null, null, null, null, null, null, 'Contoso''s pens, delivered in Missouri',                                        5),
+  (30, 'BASE_PRICE', 'ONE_TIME', '2001-01-01', '2002-01-01', 6.80, null, 'USD', 1, null, 12, 40,   null, null, null, null, null, null, null, 'DATA ERROR: last year''s price, keyed on the 2002 program (caught by a query)', 9),
+  (31, 'BASE_PRICE', 'ONE_TIME', '2002-01-01', '2002-12-31', 6.50, null, 'USD', 3, null, 12, null, null, null, null, null, null, null, null, 'DATA ERROR: the diskettes priced on the paper program (caught by a query)',     9);
 
 select setval(pg_get_serial_sequence('price_component', 'price_component_id'), (select max(price_component_id) from price_component));
 

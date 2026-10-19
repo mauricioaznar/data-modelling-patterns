@@ -14,7 +14,7 @@ Architecture figure: 3.11
 | 1 | Product definition, categories and identification | 3.1–3.3 | 2026-10-16 | | | |
 | 2 | Product features | 3.4 | 2026-10-16 | | | |
 | 3 | Suppliers and inventory | 3.5–3.6 | 2026-10-16 | | | |
-| 4 | Pricing and costing | 3.7–3.8 | 2026-10-16 | | | |
+| 4 | Pricing and costing | 3.7–3.8 | 2026-10-16 | 2026-10-19 | | |
 | 5 | Product associations and parts | 3.9–3.10 | 2026-10-16 | | | |
 | A | Architecture | 3.11 | 2026-10-16 | | – | – |
 
