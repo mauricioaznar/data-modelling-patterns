@@ -169,6 +169,30 @@ and any decisions made.
   (draft), Core patterns gains a pattern (shortcut line checked against the path) and Ch 5
   examples on six rows, a question index row, roadmap "3 submodels so far". Card 19; Anki
   export 30 cards.
+- Figs 5.5–5.8 with Tables 5.9–5.11 (photos), the rest of Ch 5:
+  - 5.5 built as submodel 4, *issuances and picklists*: `item_issuance` (from an inventory
+    item, for a shipment line or none, by a picklist item), `picklist` + `picklist_item`,
+    `item_issuance_role` + type. Table 5.9's issuances and packages; ABC Subsidiary's stock
+    (six inventory items, two bins) with opening counts as variances; Rosa Diaz. Queries for
+    Table 5.9, picked against issued and packed, each picklist's shipments, the stock ledger,
+    who pulled what; seven checks, among them Ch 3's promised qoh = balance. 5.4's
+    mixed-package bad row moved to 9400's pencils so each check still catches one row.
+  - 5.6 built as the first half of submodel 5: `document` + `document_type` (the eight
+    kinds as rows under SHIPPING_DOCUMENT) and `shipping_document` for a shipment, a line or
+    a package. Documents all ours; three checks.
+  - 5.7 built as the second half: `shipment_route_segment` (a leg, numbered within its
+    shipment, facility to facility, estimated beside actual, mileage, fuel),
+    `shipment_method_type`, CARRIER as a Ch 2 role type with `carrier_shipment_method`,
+    `fixed_asset` + type (VEHICLE, ahead of Ch 8). Tables 5.10–5.11; 9002 seeded as a
+    transfer on Truck #1's run with 9000; status times moved to match the trucks. Five
+    checks, and a review query showing the shared run counted twice per truck.
+  - 5.8 transcribed as the architecture figure (no SQL), with its How it flows; the Vol 1
+    MAP's Ch 5 section rewritten from it and marked ✓, the hub table updated.
+- Ponders 1–5 for submodels 4 and 5; ER diagram extended. Design reference: entries
+  *Issuances and picklists*, *Shipping documents and route segments* (drafts) and *Ch 5
+  architecture*; Core patterns gains a pattern (cached balance beside its movements) and
+  Ch 5 examples on thirteen rows; three question index rows; roadmap "5 submodels +
+  architecture". Cards 20, 21 and the Ch 5 architecture card; Anki export 33 cards.
 
 **Decisions**
 - A card joins the morning study loop at its chapter's overview, not when its figures are
@@ -237,14 +261,29 @@ and any decisions made.
   readings for the overview in Ch 5 NOTES, points 17–26: a package's shipment derived from
   its contents, the second 12901 read as 12902, 1146's diskettes in two packages, the
   receipt's order line checked against ORDER SHIPMENT, receipts on incoming shipments only.
+- Fig 5.5 is its own submodel 4 (issuances and picklists), not part of submodel 3: stock
+  going out answers different questions from stock coming in, and submodel 3's five ponders
+  were taken. Figs 5.6–5.7 share submodel 5 (what travels with a shipment and how): 5.6
+  alone would be too thin for three hours of practice.
+- Fig 5.5's two labels with no line ("issued via", "created to send") are read as
+  leftovers, and Fig 5.8, which draws neither line, backs that. Table 5.9's 1,500 packed in
+  62002 is read as 1,000; it also confirms 9200's 1,500-pencil line (point 13).
+- The qoh check covers only items with a known starting point: a receipt, an issuance or
+  an opening count. Ch 3's own items keep variances only and stay out.
+- Readings left for the overview (Ch 5 NOTES, points 27–44), among them: issuances only on
+  outgoing shipments and from stock at the ship-from address; no arc on a shipping
+  document's three lines (at least one, and they agree); the leg's number within its
+  shipment; CARRIER as a party role; VEHICLE built ahead of Ch 8; 9002 as ours; 5.8's
+  document line drawn the other way, kept as 5.6.
 
 **Next**
-- More Ch 5 figures (`/figures`), up to the chapter's overall figure.
+- The Ch 5 overview (`/overview`): 44 points, five doc drafts, the architecture entry and
+  the cards. Or the Ch 4 overview first, which started at point 1.
 - The Ch 4 overview, from point 1 (keep Fig 4.1 unbuilt?): the 40 points, the seven doc
   drafts, the architecture entry and the cards (`/overview`).
-- Re-import `docs/cards-anki.txt` in Anki (cards 11–19 and the Ch 4 architecture card are
-  new; card 10's note id changed with its figures, so delete the old card 10 note), then the
-  one-time deck setup and moves in TODO.md (Cards).
+- Re-import `docs/cards-anki.txt` in Anki (cards 11–21 and the Ch 4 and Ch 5 architecture
+  cards are new; card 10's note id changed with its figures, so delete the old card 10
+  note), then the one-time deck setup and moves in TODO.md (Cards).
 - Still open from 2026-10-17: the associations walk-through (substitute direction), the pricing
   column review, and the Ch 3 overview discussion.
 

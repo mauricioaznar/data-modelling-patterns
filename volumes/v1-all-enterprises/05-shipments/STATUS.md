@@ -14,9 +14,9 @@ Architecture figure: 5.8
 | 1 | Shipments, items and status | 5.1–5.2 | 2026-10-18 | | | |
 | 2 | Shipments and orders | 5.3 | 2026-10-18 | | | |
 | 3 | Packages and receipts | 5.4 | 2026-10-18 | | | |
-| 4 | Issuances and picklists | 5.5 | | | | |
-| 5 | Shipping documents and route segments | 5.6–5.7 | | | | |
-| A | Architecture | 5.8 | | | – | – |
+| 4 | Issuances and picklists | 5.5 | 2026-10-18 | | | |
+| 5 | Shipping documents and route segments | 5.6–5.7 | 2026-10-18 | | | |
+| A | Architecture | 5.8 | 2026-10-18 | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 5.1–5.2)`; the `A` row's matches the
 architecture card's `(Fig N.M)`.
@@ -39,9 +39,9 @@ architecture card's `(Fig N.M)`.
 | 1 | Shipments, items and status | ✓ | Card 17 | 5 |
 | 2 | Shipments and orders | ✓ | Card 18 | 4 |
 | 3 | Packages and receipts | ✓ | Card 19 | 5 |
-| 4 | Issuances and picklists | ✓ | ✗ | 5 |
-| 5 | Shipping documents and route segments | ✓ | ✗ | 5 |
-| A | Architecture | – | ✗ | – |
+| 4 | Issuances and picklists | ✓ | Card 20 | 5 |
+| 5 | Shipping documents and route segments | ✓ | Card 21 | 5 |
+| A | Architecture | – | Architecture | – |
 
-Last check: 6 ✗ · 0 !
+Last check: 0 ✗ · 0 !
 <!-- check:end -->

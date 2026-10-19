@@ -647,6 +647,70 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
+### Card 20 · V1 Ch 5 · Issuances and picklists (Fig 5.5)
+- **Cue:** "Which stock was pulled for each outgoing line, by whom and from which picklist, and does each quantity on hand still match its movements?"
+- **Hook:** a picker with a pick sheet, pulling 800 pens off the floor and 200 from bin P-2,
+  while a ledger on the wall must still balance *(Claude's, drafted when the figures landed)*
+- **Mantra:** Picklist plans; each issuance pulls from one stock for a line; on hand equals
+  received minus issued plus counted.
+
+<details><summary>Key</summary>
+
+- **S:** `item_issuance` (from an `inventory_item`; for a `shipment_item` and by a
+  `picklist_item`, both optional; issued datetime, quantity) · `picklist` (date created) +
+  `picklist_item` (an inventory item and a quantity to pick) · `item_issuance_role` + type
+  (issuer, approver).
+- **W:** a "quantity shipped" on the shipment line and a quantity on hand typed over by
+  hand: nothing says which stock was drained, who pulled it or whether the pick was
+  followed, and the stored total drifts from what really came and went without anyone
+  noticing.
+- **T:** *(the naive-model trap until practice gives yours)* tying an issuance to its box
+  (the figure's stray label) or a picklist to one shipment; and checking the quantity on
+  hand from zero when the stock predates the system, with no opening count.
+- **D:** inventory_item (Ch 3) ← item_issuance → shipment_item (optional), → picklist_item
+  (optional) → picklist; picklist_item → inventory_item; item_issuance ←
+  item_issuance_role → party (Ch 2), → role type. Derived: a picklist's shipments, through
+  its issuances. Checks: the issued good is the line's; no more issued than the line
+  carries; the issuance's stock is its picklist item's; issuances only on shipments that
+  leave one of ours, from stock at the ship-from address; qoh = receipts − issues +
+  variances.
+</details>
+
+---
+
+### Card 21 · V1 Ch 5 · Shipping documents and route segments (Figs 5.6–5.7)
+- **Cue:** "Which papers go with a shipment, a line or a box, and which legs, carriers and vehicles does it travel by, planned against actual?"
+- **Hook:** a relay race: at the hand-over depot one driver passes a clipboard of papers
+  (bill of lading, packing slips) to the next truck *(Claude's, drafted when the figures
+  landed)*
+- **Mantra:** Papers name their level: shipment, line or box. Legs chain facility to
+  facility: carrier, method, vehicle, plan beside actual.
+
+<details><summary>Key</summary>
+
+- **S:** `document` + `document_type` (SHIPPING_DOCUMENT over eight kinds as rows) ·
+  `shipping_document` (for a `shipment`, a `shipment_item` or a `shipment_package`, all
+  optional) · `shipment_route_segment` (a leg numbered within its shipment; method, carrier
+  role, vehicle, from and to facility; estimated and actual start and arrival; mileage,
+  fuel) · `shipment_method_type` · `carrier_shipment_method` (what each carrier offers) ·
+  `fixed_asset` + type (VEHICLE, ahead of Ch 8).
+- **W:** a bill-of-lading number, a carrier and a tracking number as columns on SHIPMENT:
+  one kind of paper at one level, one carrier for the whole trip, and no way to tell which
+  truck or leg ran late.
+- **T:** *(the naive-model trap until practice gives yours)* putting facilities on the
+  shipment instead of its legs; summing fuel per truck when one run carries two shipments
+  (Truck #1 with 9000 and 9002).
+- **D:** document → document_type; shipping_document (is a document) → shipment |
+  shipment_item | shipment_package (no arc); shipment ← shipment_route_segment →
+  shipment_method_type, → party_role (Ch 2, CARRIER), → fixed_asset (Ch 8, VEHICLE), →
+  facility (Ch 2) twice; carrier_shipment_method → party_role, → shipment_method_type.
+  Checks: a document covers something; its type agrees with its subtype row; its levels
+  agree; the carrier offers the leg's method; the asset is a vehicle; times and mileage run
+  forward; legs chain; no duplicates.
+</details>
+
+---
+
 ## Deck: architecture
 
 One card per chapter, from its architecture figure (the last, overall one): how the chapter's
@@ -749,6 +813,38 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
   **party**, → **party_relationship**; agreement ← agreement_item (nested) ← agreement_term,
   ← **price_component**; order_item ⇢ agreement_item (derived). Bold = from Ch 2 and Ch 3.
   Kept: 4.2's one ORDER over 4.1's twins, 4.5's generic parties over 4.3's columns.
+</details>
+
+### Architecture · V1 Ch 5 · Shipments (Fig 5.8)
+- **Cue:** "Everything about goods on the move, from order line to box, stock, paper and road, in one picture."
+- **Hook:** a loading dock seen from above: order lines arriving on one side, boxes and stock
+  shelves on the other, a truck backing up to the door *(Claude's, drafted when the figure
+  landed)*
+- **Mantra:** The shipment line in the middle: orders fill it, boxes hold it, stock feeds or
+  takes it, papers and legs carry it.
+
+<details><summary>Key</summary>
+
+- **S:** `shipment` + `shipment_item` (typed by direction; a party and an address at each
+  end; the plan on the header, a `shipment_status` history).
+- **W:** order lines meet shipment lines through ORDER SHIPMENT, with a quantity, and the
+  features that went out; lines go into packages through PACKAGING CONTENT; incoming
+  packages turn into stock through SHIPMENT RECEIPT, and stock leaves for outgoing lines
+  through ITEM ISSUANCE (by picklist), the quantity on hand checked against both; the
+  shipment, a line or a box carry SHIPPING DOCUMENTs; the shipment travels in ROUTE
+  SEGMENTs (carrier, method, vehicle, facility to facility).
+- **T:** *(the naive-model trap until practice gives yours)* shipping as columns on the
+  order (ship date, carrier, tracking number, quantity shipped), which breaks when a line
+  ships in parts, a truck carries several orders, or goods move with no order at all.
+- **D:** **order_item** ← order_shipment → shipment_item → shipment, → **good**;
+  shipment_item ← shipment_item_feature → **product_feature**; shipment_item ←
+  packaging_content → shipment_package ← shipment_receipt → **inventory_item**;
+  **inventory_item** ← item_issuance → shipment_item; shipment | shipment_item |
+  shipment_package ← shipping_document; shipment ← shipment_route_segment → **facility**,
+  carrier (**party_role**), vehicle (**fixed_asset**); shipment → **party**,
+  **contact_mechanism**. Bold = from Ch 2, 3 and 4 (and Ch 8's fixed asset, built early).
+  Kept: every submodel; no line from a package to its shipment, none from an issuance to a
+  package.
 </details>
 
 ---
