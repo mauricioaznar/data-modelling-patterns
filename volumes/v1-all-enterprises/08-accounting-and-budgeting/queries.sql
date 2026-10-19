@@ -377,3 +377,56 @@ select o.organization_gl_account_id,
        num_nonnulls(o.supplier_party_role_id, o.bill_to_customer_party_role_id, o.product_category_id, o.product_id) as references_count
 from organization_gl_account o
 where num_nonnulls(o.supplier_party_role_id, o.bill_to_customer_party_role_id, o.product_category_id, o.product_id) > 1;
+
+-- ============================================================
+-- Fig 8.5 — Asset depreciation
+-- ============================================================
+
+-- name: 8.5 — Table 8.6: each asset's depreciation methods over time (thru shown inclusive)
+select a.name as fixed_asset, m.description as method, m.formula, d.from_date, d.thru_date - 1 as thru_inclusive
+from fixed_asset_depreciation_method d
+join fixed_asset a          on a.fixed_asset_id = d.fixed_asset_id
+join depreciation_method m  on m.depreciation_method_id = d.depreciation_method_id
+order by a.name, d.from_date;
+
+-- name: 8.5 — Each depreciation with its asset, its amount and the method in force for that asset on the day
+select x.accounting_transaction_id as transaction, x.transaction_date, a.name as fixed_asset,
+       (select sum(t.amount) from transaction_detail t
+        where t.accounting_transaction_id = x.accounting_transaction_id and t.debit_credit_flag = 'DEBIT') as amount,
+       m.description as method_that_day
+from accounting_transaction x
+left join fixed_asset a on a.fixed_asset_id = x.fixed_asset_id
+left join fixed_asset_depreciation_method d on d.fixed_asset_id = x.fixed_asset_id
+                                           and d.from_date <= x.transaction_date and (d.thru_date is null or d.thru_date > x.transaction_date)
+left join depreciation_method m on m.depreciation_method_id = d.depreciation_method_id
+where x.accounting_transaction_type_id = 'DEPRECIATION'
+order by x.transaction_date;
+
+-- name: 8.5 — Data-quality check: depreciations of no asset, and assets on transactions that aren't depreciations (should be empty)
+select x.accounting_transaction_id, x.accounting_transaction_type_id, x.fixed_asset_id, x.description
+from accounting_transaction x
+where (x.accounting_transaction_type_id = 'DEPRECIATION') <> (x.fixed_asset_id is not null);
+
+-- name: 8.5 — Data-quality check: depreciations of an asset with no method in force that day (should be empty)
+select x.accounting_transaction_id, x.transaction_date, a.name as fixed_asset
+from accounting_transaction x
+join fixed_asset a on a.fixed_asset_id = x.fixed_asset_id
+where x.accounting_transaction_type_id = 'DEPRECIATION'
+  and not exists (select 1 from fixed_asset_depreciation_method d
+                  where d.fixed_asset_id = x.fixed_asset_id
+                    and d.from_date <= x.transaction_date and (d.thru_date is null or d.thru_date > x.transaction_date));
+
+-- name: 8.5 — Data-quality check: an asset depreciated by two methods at once (should be empty)
+select a.name as fixed_asset, d1.depreciation_method_id as first_method, d1.from_date as first_from,
+       d2.depreciation_method_id as second_method, d2.from_date as second_from
+from fixed_asset_depreciation_method d1
+join fixed_asset_depreciation_method d2 on d2.fixed_asset_id = d1.fixed_asset_id
+                                       and d2.fixed_asset_depreciation_method_id > d1.fixed_asset_depreciation_method_id
+                                       and d2.from_date < coalesce(d1.thru_date, 'infinity')
+                                       and d1.from_date < coalesce(d2.thru_date, 'infinity')
+join fixed_asset a on a.fixed_asset_id = d1.fixed_asset_id;
+
+-- name: 8.5 — Review: fixed assets with no acquisition date, starred in Fig 8.5 (NOTES, point 16)
+select fixed_asset_id, name, fixed_asset_type_id
+from fixed_asset
+where date_acquired is null;

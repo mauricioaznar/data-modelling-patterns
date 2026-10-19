@@ -253,3 +253,45 @@ select setval(pg_get_serial_sequence('organization_gl_account', 'organization_gl
 -- ABC Subsidiary now keeps receivables per customer: its ACME invoice and
 -- payment (Fig 8.3a) post to ACME's subsidiary account, not the control.
 update transaction_detail set organization_gl_account_id = 45 where transaction_detail_id in (610011, 610022);
+
+-- ============================================================
+-- Fig 8.5 — Asset depreciation
+-- ============================================================
+-- The pen engraver (new, cost $800 by Table 8.4's sale; acquired ours).
+-- Fixed assets from Chs 5–6: 1 Truck #1, 3 Dock conveyor C-2, 5025
+-- Engraving machine #12.
+insert into fixed_asset (fixed_asset_id, fixed_asset_type_id, name, date_acquired, description) values
+  (5030, 'EQUIPMENT', 'Pen engraver', '1998-07-01', 'Engraves names on pens; sold to Johnson Recycling in Oct 2000');
+
+insert into depreciation_method (depreciation_method_id, description, formula) values
+  ('DOUBLE_DECLINING_BALANCE', 'Double-declining balance depreciation', '(purchase cost - salvage cost) * (1 / estimated life in years) * 2'),
+  ('STRAIGHT_LINE',            'Straight-line depreciation',            '(purchase cost - salvage cost) / estimated life in years'),
+  ('UNITS_OF_PRODUCTION',      'Units-of-production depreciation',      null);   -- ours: no formula recorded yet
+
+-- Table 8.6 (thru +1 day), then ours.
+insert into fixed_asset_depreciation_method (fixed_asset_depreciation_method_id, fixed_asset_id, depreciation_method_id, from_date, thru_date) values
+  (1, 5030, 'DOUBLE_DECLINING_BALANCE', '1999-01-01', '2000-01-01'),
+  (2, 5030, 'STRAIGHT_LINE',            '2000-01-01', null),           -- still open after the sale (NOTES, point 17)
+  (3, 1,    'STRAIGHT_LINE',            '1999-01-01', null),
+  (4, 5025, 'STRAIGHT_LINE',            '1997-03-10', null),
+  (5, 5025, 'UNITS_OF_PRODUCTION',      '2000-01-01', null);           -- DATA ERROR: the old method was never ended
+
+select setval(pg_get_serial_sequence('fixed_asset_depreciation_method', 'fixed_asset_depreciation_method_id'), (select max(fixed_asset_depreciation_method_id) from fixed_asset_depreciation_method));
+
+-- Fig 8.2's depreciations name their asset: 32389 the engraver (Table 8.3),
+-- 32390 (a bad row of 8.2's) Truck #1, the "delivery van".
+update accounting_transaction set fixed_asset_id = 5030 where accounting_transaction_id = 32389;
+update accounting_transaction set fixed_asset_id = 1    where accounting_transaction_id = 32390;
+
+-- Two more depreciations, each with one mistake (ours, 2001, balanced).
+insert into accounting_transaction (accounting_transaction_id, accounting_transaction_type_id, from_party_id, to_party_id,
+                                    fixed_asset_id, transaction_date, entry_date, description) values
+  (32392, 'DEPRECIATION', 12, null, 3,    '2001-03-31', '2001-04-02', 'Depreciation on the dock conveyor'),   -- DATA ERROR: no method in force for the conveyor
+  (32393, 'DEPRECIATION', 12, null, null, '2001-06-30', '2001-07-02', 'Depreciation, second quarter');        -- DATA ERROR: depreciation of no asset
+
+insert into transaction_detail (transaction_detail_id, accounting_transaction_id, trans_detail_seq_id, organization_gl_account_id,
+                                amount, debit_credit_flag, associated_with_transaction_detail_id) values
+  (323921, 32392, 1, 14, 75, 'DEBIT',  null),
+  (323922, 32392, 2, 11, 75, 'CREDIT', null),
+  (323931, 32393, 1, 14, 60, 'DEBIT',  null),
+  (323932, 32393, 2, 11, 60, 'CREDIT', null);

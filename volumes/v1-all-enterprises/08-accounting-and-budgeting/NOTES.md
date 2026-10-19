@@ -371,8 +371,8 @@ DEPRECIATION METHOD
 **To check against the book**
 - Is DEPRECIATION's "for" line solid at the transaction end? Read as mandatory: a
   depreciation is always of some asset.
-- DATE ACQUIRED is starred here; Ch 6 added it as optional, and Ch 5's trucks have none
-  (point 16).
+- DATE ACQUIRED is starred here; Ch 6 added it as optional, and Ch 5's dock conveyor has
+  none (point 16).
 - The pen engraver is sold on Oct 11, 2000 (Table 8.3's 47874), yet its straight-line row
   has no thru date (point 17).
 
@@ -606,7 +606,7 @@ Added with Figs 8.4–8.7b:
     accounts (submodel 1: what an account is about), 8.5 to accounting transactions
     (submodel 2: what a depreciation is of, and how it's worked out). Cards 35 and 36
     change their figures, so their Anki note ids change.
-16. **DATE ACQUIRED is starred** in 8.5, but Ch 6 built it optional and Ch 5's trucks have
+16. **DATE ACQUIRED is starred** in 8.5, but Ch 6 built it optional and Ch 5's dock conveyor has
     none. Left nullable; a review lists assets with no acquisition date.
 17. **The engraver is sold on Oct 11, 2000** (47874), yet its straight-line method has no
     thru date. Seeded as printed. Nothing in 8.5 links the sale to the asset (47874 is a
@@ -718,6 +718,24 @@ Added with Figs 8.4–8.7b:
   Subsidiary's receivables for ACME, where its invoice 30002 and payment now post. Bad
   rows: ABC Corporation's row under ABC Subsidiary's receivables, a "customer" that is a
   supplier role.
+
+### Fig 8.5
+- **`accounting_transaction.fixed_asset_id`**, nullable like the source documents; that
+  DEPRECIATION has one and nothing else does is a check (the type already says which
+  subtype it is, point 12).
+- **`depreciation_method`** a lookup keyed on a code, the formula as text (optional).
+  **`fixed_asset_depreciation_method`** dated, surrogate key; two methods at once is a
+  check.
+- **Fixed asset unchanged:** Ch 5 and Ch 6 already gave it every attribute 8.5 draws, and
+  its subtypes are `fixed_asset_type` rows. `date_acquired` stays nullable (point 16).
+- **Checks:** a depreciation of no asset, or an asset on another kind of transaction; a
+  depreciation with no method in force that day; two methods at once. **Queries:** Table
+  8.6; each depreciation with the method in force that day. **Review:** assets with no
+  acquisition date.
+- **Seed:** the pen engraver (5030, new; cost $800 from Table 8.4, acquired 1998 ours) and
+  Table 8.6; 32389 and 32390 now name their assets. Bad rows: the engraving machine's old
+  method never ended, a depreciation of the dock conveyor (no method), a depreciation of no
+  asset. Both new depreciations are dated 2001, so 2000's stored balances still agree.
 
 ## When NOT to use this
 - **One company, one ledger:** a single small business can key the chart and the books
