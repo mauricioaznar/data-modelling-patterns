@@ -8,7 +8,7 @@ points to. Every line carries a tag:
   what to build. The book wins: when a chapter's figures land, its section is rewritten from
   its "How it flows" and marked ✓, and any ~ line it contradicts is fixed or dropped.
 
-As of 2026-10-18: Ch 2, Ch 3 and Ch 4 whole.
+As of 2026-10-18: Ch 2 to Ch 5 whole.
 
 ## The chain
 
@@ -19,7 +19,7 @@ As of 2026-10-18: Ch 2, Ch 3 and Ch 4 whole.
                  \                               /
 need ─────► ask ─────► offer ─────► commitment ─────► fulfilment ─────► bill ─────► settle ─────► book
 REQUIREMENT REQUEST    QUOTE        ORDER, under an   SHIPMENT (goods)  INVOICE     PAYMENT      ACCOUNTING
- 4 ✓        4 ✓        4 ✓          AGREEMENT 4 ✓     5 ~               7 ~         7 ~          TRANSACTION 8 ~
+ 4 ✓        4 ✓        4 ✓          AGREEMENT 4 ✓     5 ✓               7 ~         7 ~          TRANSACTION 8 ~
                                                       WORK EFFORT
                                                       (services, production) 6 ~
 people: EMPLOYMENT and POSITION 9 ~, paid by PAYCHECK (a payment) 9 ~, funded by BUDGET ITEM 8 ~
@@ -27,12 +27,15 @@ people: EMPLOYMENT and POSITION 9 ~, paid by PAYCHECK (a payment) 9 ~, funded by
 
 Three shapes repeat down the chain:
 
-- **Header + items:** ORDER, REQUEST, QUOTE and AGREEMENT with their items ✓; SHIPMENT,
+- **Header + items:** ORDER, REQUEST, QUOTE, AGREEMENT and SHIPMENT with their items ✓;
   INVOICE, ACCOUNTING TRANSACTION (its details) and BUDGET with their items ~.
 - **Each header gets** typed rows, a scoped role table, a status history and terms on TERM
-  TYPE ✓ (Ch 4); shipments, invoices and budgets repeat this ~.
+  TYPE ✓ (Ch 4). Shipments take the typed rows and the status history, point at parties
+  directly and put their scoped roles on receipts and issuances, with no terms ✓ (Ch 5);
+  invoices and budgets ~.
 - **Hand-overs are item-to-item links with their own quantity:** ORDER REQUIREMENT COMMITMENT
-  ✓; ORDER SHIPMENT, WORK ORDER ITEM FULFILLMENT, the invoice item BILLING links and PAYMENT
+  and ORDER SHIPMENT ✓, and Ch 5's SHIPMENT RECEIPT and ITEM ISSUANCE between a shipment
+  and Ch 3's stock ✓; WORK ORDER ITEM FULFILLMENT, the invoice item BILLING links and PAYMENT
   APPLICATION ~. That is how one order line can ship in parts and be billed in parts.
 
 ## Chapter by chapter
@@ -65,18 +68,22 @@ From Ch 2: PARTY, PARTY ROLE, PARTY RELATIONSHIP, CONTACT MECHANISM, FACILITY, G
 BOUNDARY (tax, applicability, regional prices), WORK EFFORT (quote items). From Ch 3: PRODUCT,
 PRODUCT FEATURE, PRODUCT CATEGORY (tax), PRICE COMPONENT.
 
-### Ch 5 Shipments ~
-- SHIPMENT (customer, purchase, transfer, returns, drop ship as types) + SHIPMENT ITEM; shipped
-  from and to a party, a facility and a postal address; a status history.
-- ORDER SHIPMENT: order item ↔ shipment item with a quantity, many to many (a line shipped in
-  parts, a shipment covering several orders).
-- Packing and moving: SHIPMENT PACKAGE, PACKAGING CONTENT, SHIPMENT ROUTE SEGMENT (carrier,
-  vehicle, from and to facility), shipping documents.
-- Stock: ITEM ISSUANCE (an inventory item picked for a shipment item, through picklists) going
-  out; SHIPMENT RECEIPT (a package's content received into an inventory item, with
-  rejections) coming in. TODO holds the check against Ch 3's INVENTORY ITEM.
-- From: PARTY, FACILITY, CONTACT MECHANISM (2); PRODUCT, FEATURE, INVENTORY ITEM (3); ORDER
-  ITEM (4).
+### Ch 5 Shipments ✓ (Figs 5.1–5.8)
+Hub SHIPMENT + SHIPMENT ITEMs (each a GOOD or a description), typed by direction (customer,
+purchase, both returns, transfer, drop ship as type rows), from a party and postal address to
+a party and postal address, the plan on the header beside a dated SHIPMENT STATUS history.
+To orders: ORDER SHIPMENT ties order items to shipment items with a quantity, many to many;
+SHIPMENT ITEM FEATURE says which features actually shipped. Handling: PACKAGING CONTENT puts
+line quantities into SHIPMENT PACKAGEs (a package's shipment follows from its contents). To
+Ch 3's stock: SHIPMENT RECEIPT counts a good out of an incoming package into an INVENTORY
+ITEM, accepted or rejected, checked against an order line; ITEM ISSUANCE pulls from an
+inventory item for an outgoing line, as a PICKLIST planned; both carry scoped roles, and the
+stored quantity on hand must equal their balance. Paperwork: SHIPPING DOCUMENT (a DOCUMENT
+with a DOCUMENT TYPE) for the shipment, a line or a package. Travel: SHIPMENT ROUTE SEGMENTs,
+facility to facility, by a CARRIER (a party role, with the methods it offers), a SHIPMENT
+METHOD TYPE and a VEHICLE, estimates beside actuals. From Ch 2: PARTY, PARTY ROLE, CONTACT
+MECHANISM, FACILITY. From Ch 3: GOOD, PRODUCT FEATURE, INVENTORY ITEM. From Ch 4: ORDER ITEM.
+From Ch 8, ahead of time: FIXED ASSET (VEHICLE).
 
 ### Ch 6 Work effort ~
 - A work requirement (Ch 4's REQUIREMENT, work kind) is fulfilled by WORK EFFORTs (project,
@@ -131,17 +138,19 @@ PRODUCT FEATURE, PRODUCT CATEGORY (tax), PRICE COMPONENT.
 
 | Entity (chapter) | Used by |
 |---|---|
-| PARTY, PARTY ROLE (2) | 3 suppliers ✓ · 4 orders, requests, quotes, agreements ✓ · 5 shipments ~ · 6 assignments ~ · 7 invoices ~ · 8 the internal organization's books ~ · 9 employment ~ |
+| PARTY, PARTY ROLE (2) | 3 suppliers ✓ · 4 orders, requests, quotes, agreements ✓ · 5 shipments (sender, receiver), receipt and issuance roles, carriers ✓ · 6 assignments ~ · 7 invoices ~ · 8 the internal organization's books ~ · 9 employment ~ |
 | PARTY RELATIONSHIP (2) | 2 communication events ✓ · 4 agreements ✓ · 9 employment ~ |
-| CONTACT MECHANISM (2) | 4 order and request mechanisms ✓ · 5 ship from and to ~ · 7 invoice sent to ~ |
-| FACILITY (2) | 3 inventory ✓ · 4 requirements ✓ · 5 shipments and routes ~ · 6 work at a place ~ |
+| CONTACT MECHANISM (2) | 4 order and request mechanisms ✓ · 5 ship from and to, inquiries and receiving ✓ · 7 invoice sent to ~ |
+| FACILITY (2) | 3 inventory ✓ · 4 requirements ✓ · 5 route segments (from, to; not the shipment itself), stock that issues must sit at the ship-from address ✓ · 6 work at a place ~ |
 | GEOGRAPHIC BOUNDARY (2) | 3 prices ✓ · 4 sales tax, agreement applicability, regional agreement prices ✓ |
-| PRODUCT, FEATURE (3) | 4 order, quote and agreement items, requirements ✓ · 5 shipment items ~ · 6 standards ~ · 7 invoice items ~ · 8 GL accounts ~ |
-| INVENTORY ITEM (3) | 5 issuance and receipt ~ · 6 consumed and produced ~ · 8 variances ~ |
+| PRODUCT, FEATURE (3) | 4 order, quote and agreement items, requirements ✓ · 5 shipment items (GOOD), shipped features, receipts ✓ · 6 standards ~ · 7 invoice items ~ · 8 GL accounts ~ |
+| INVENTORY ITEM (3) | 5 issuance and receipt, qoh = their balance ✓ · 6 consumed and produced ~ · 8 variances ~ |
 | PRICE COMPONENT (3) | 4 agreement pricing ✓ |
-| ORDER ITEM (4) | 5 shipments ~ · 6 fulfilment ~ · 7 billing ~ · 8 budget allocation ~ |
+| ORDER ITEM (4) | 5 ORDER SHIPMENT, receipts checked against it ✓ · 6 fulfilment ~ · 7 billing ~ · 8 budget allocation ~ |
 | REQUIREMENT (4) | 6 work requirements ~ · 8 budget allocation ~ |
 | TERM TYPE (4) | 4 order, quote and agreement terms ✓ · 7 invoice terms ~ |
+| DOCUMENT (5) | 5 shipping documents ✓ |
+| FIXED ASSET (8, built ahead in 5) | 5 vehicles on route segments ✓ · 8 the chapter that defines it ~ |
 | WORK EFFORT (2, 4, 6) | 2 case follow-ups ✓ · 4 quote items ✓ · 6 the whole chapter ~ · 7 billing ~ |
 | PAYMENT (7) | 8 accounting transactions ~ · 9 paychecks ~ |
 | BUDGET ITEM (8) | 9 positions ~ |

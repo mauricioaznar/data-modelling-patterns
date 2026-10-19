@@ -6,7 +6,7 @@ repo and rewrites the generated tables at the bottom. The design reference doc l
 claude.ai, so its columns (Doc draft, Doc done) are on trust.
 
 Not built (alternates): none
-Architecture figure:
+Architecture figure: 5.8
 
 ## Submodels
 | # | Submodel | Figs | Doc draft | Overview | Practice | Doc done |
@@ -16,6 +16,7 @@ Architecture figure:
 | 3 | Packages and receipts | 5.4 | 2026-10-18 | | | |
 | 4 | Issuances and picklists | 5.5 | | | | |
 | 5 | Shipping documents and route segments | 5.6–5.7 | | | | |
+| A | Architecture | 5.8 | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 5.1–5.2)`; the `A` row's matches the
 architecture card's `(Fig N.M)`.
@@ -31,6 +32,7 @@ architecture card's `(Fig N.M)`.
 | 5.5 | built | 4 | ✓ | ✓ | ✓ | ✓ | – |
 | 5.6 | built | 5 | ✓ | ✓ | ✓ | ✓ | – |
 | 5.7 | built | 5 | ✓ | ✓ | ✓ | ✓ | – |
+| 5.8 | architecture | – | ✓ | – | – | – | ✓ |
 
 | # | Submodel | Figures built | Card | Ponders |
 |---|---|---|---|---|
@@ -39,6 +41,7 @@ architecture card's `(Fig N.M)`.
 | 3 | Packages and receipts | ✓ | Card 19 | 5 |
 | 4 | Issuances and picklists | ✓ | ✗ | 5 |
 | 5 | Shipping documents and route segments | ✓ | ✗ | 5 |
+| A | Architecture | – | ✗ | – |
 
-Last check: 4 ✗ · 1 !
+Last check: 6 ✗ · 0 !
 <!-- check:end -->

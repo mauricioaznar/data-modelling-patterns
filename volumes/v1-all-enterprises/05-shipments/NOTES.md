@@ -14,7 +14,7 @@ several orders. The recurring moves: header + items again, subtypes that are rea
 directions, estimates beside a history of actuals, and the hand-over between two chapters as
 an item-to-item link carrying its own quantity.
 
-## Submodels (proposed 2026-10-18, from the figures shared so far)
+## Submodels (proposed 2026-10-18, all figures shared)
 1. **Shipments, items and status** (Figs 5.1–5.2): what is being shipped, which goods and how
    many, from whom and where to whom and where, of which kind (customer, purchase, return,
    transfer, drop ship), when it was expected and what actually happened?
@@ -35,8 +35,6 @@ an item-to-item link carrying its own quantity.
    and how it travels: which papers go with the whole shipment, a line or a box; which legs
    it takes, from which facility to which, by which carrier, method and vehicle, planned
    against actual?
-
-Later figures join a submodel when they answer the same questions, or start one.
 
 ## Figures
 
@@ -634,10 +632,74 @@ whether a shipment runs late.
 - **VEHICLE borrows from Ch 8:** a FIXED ASSET subtype, built here with just a name and a
   type, for Ch 8 to extend.
 
-### Points to discuss after the overview (Figs 5.1–5.5 so far)
+### Fig 5.8 — Overall shipments model
+**Transcription** (accepted: ☐; one photo; identifiers only, no attributes; open points
+under "Points to discuss after the overview")
+
+```
+Shown, all from Figs 5.1–5.7:
+  SHIPMENT, SHIPMENT ITEM (loop), SHIPMENT STATUS, ORDER SHIPMENT, ORDER ITEM,
+  SHIPMENT ITEM FEATURE, PRODUCT FEATURE, GOOD, PACKAGING CONTENT, SHIPMENT PACKAGE,
+  SHIPMENT RECEIPT, SHIPMENT RECEIPT ROLE, ITEM ISSUANCE, ITEM ISSUANCE ROLE, INVENTORY ITEM,
+  SHIPMENT DOCUMENT, SHIPMENT ROUTE SEGMENT, SHIPMENT METHOD TYPE, CARRIER SHIPMENT METHOD,
+  CARRIER, VEHICLE, FACILITY, PARTY, CONTACT MECHANISM
+
+Lines, as read:
+  SHIPMENT ITEM -> SHIPMENT (bar); -> GOOD; loop "in response to" (dashed)
+  SHIPMENT STATUS -> SHIPMENT (bar)
+  SHIPMENT -> PARTY (two lines); -> CONTACT MECHANISM (four lines)
+  ORDER SHIPMENT -> ORDER ITEM, SHIPMENT ITEM (bars)
+  SHIPMENT ITEM FEATURE -> SHIPMENT ITEM, PRODUCT FEATURE (bars);  ORDER ITEM -> PRODUCT FEATURE
+  PACKAGING CONTENT -> SHIPMENT ITEM, SHIPMENT PACKAGE (bars)
+  SHIPMENT RECEIPT -> SHIPMENT PACKAGE, INVENTORY ITEM;  SHIPMENT RECEIPT ROLE -> RECEIPT (bar)
+  ITEM ISSUANCE -> SHIPMENT ITEM (dashed), INVENTORY ITEM;  ITEM ISSUANCE ROLE -> ISSUANCE (bar)
+  INVENTORY ITEM -> GOOD
+  SHIPMENT DOCUMENT -> SHIPMENT, SHIPMENT PACKAGE (crow's foot at the document);
+                    -- SHIPMENT ITEM (crow's foot at the item end)
+  SHIPMENT ROUTE SEGMENT -> SHIPMENT (bar), SHIPMENT METHOD TYPE, VEHICLE, FACILITY (two
+                    lines), CARRIER
+  CARRIER SHIPMENT METHOD -> SHIPMENT METHOD TYPE, CARRIER (bars)
+  No line from SHIPMENT PACKAGE to SHIPMENT, none from ITEM ISSUANCE to PACKAGING CONTENT.
+```
+
+What it adds or settles:
+- **Points 17 and 27 hold:** no line from a package to its shipment and none from an
+  issuance to a package, so the stray labels of Fig 5.5 were leftovers.
+- **SHIPPING DOCUMENT is called SHIPMENT DOCUMENT** here, and its line to SHIPMENT ITEM has
+  the crow's foot at the item end, the reverse of Fig 5.6 (point 43).
+- **Facilities stay on the route segment:** SHIPMENT itself still goes from party and contact
+  mechanism to party and contact mechanism (point 3).
+- Left out: PICKLIST and PICKLIST ITEM, REJECTION REASON, the receipt's lines to GOOD and
+  ORDER ITEM, every role type and status type, SHIPMENT's types, DOCUMENT and DOCUMENT TYPE,
+  FIXED ASSET and ORGANIZATION ROLE (VEHICLE and CARRIER stand alone), and 5.1's address and
+  phone subtypes (four lines to CONTACT MECHANISM). Read as abbreviation, as for Figs 3.11
+  and 4.17, not removal (point 44).
+
+**How it flows** (architecture figure: no SQL, on assumptions until the overview)
+- **One hub, header + items:** SHIPMENT and its SHIPMENT ITEMs, each a GOOD or a description,
+  typed by direction, sent from a party and address to a party and address. The plan sits on
+  the header; what happened, in SHIPMENT STATUS.
+- **From orders (Ch 4):** ORDER SHIPMENT ties each order item to the shipment items that
+  fill it, with a quantity; SHIPMENT ITEM FEATURE says which features really went out.
+- **Into boxes:** PACKAGING CONTENT puts line quantities into SHIPMENT PACKAGEs; a package
+  knows its shipment only through its contents.
+- **To and from stock (Ch 3):** coming in, a SHIPMENT RECEIPT counts a good out of a package
+  into an INVENTORY ITEM, accepted or rejected, checked against an order line; going out, an
+  ITEM ISSUANCE pulls from an inventory item for a shipment line, as a PICKLIST planned. The
+  stored quantity on hand must equal their balance. Both carry scoped roles.
+- **Paper and travel:** SHIPMENT DOCUMENTs for the shipment, a line or a box; SHIPMENT ROUTE
+  SEGMENTs, facility to facility, by CARRIER (a party role, with the methods it offers),
+  method and VEHICLE, estimates beside actuals.
+- **From Ch 2:** PARTY, PARTY ROLE (carriers), CONTACT MECHANISM, FACILITY. **From Ch 3:**
+  GOOD, PRODUCT FEATURE, INVENTORY ITEM. **From Ch 4:** ORDER ITEM. **From Ch 8, early:**
+  FIXED ASSET (VEHICLE).
+- **Alternates:** none drawn as a/b in Ch 5. The overall model keeps every submodel and
+  trims only detail.
+
+### Points to discuss after the overview (Figs 5.1–5.8)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
-the literal drawing. The list moves under the chapter's last figure as figures arrive.
+the literal drawing.
 
 1. **5.1, optionality:** the photo can't settle which halves are dashed. Read as sender and
    receiver mandatory (`not null`), the two addresses, the inquiry mechanism and the
@@ -769,6 +831,15 @@ the literal drawing. The list moves under the chapter's last figure as figures a
 42. **Tables 5.10–5.11 against our status times:** the statuses' times were ours, so 9000's
     shipped and received move to 10:00 and 20:30 to match its trucks, 9200's shipped to
     13:00 and 1146's to 16:00. The dates stay.
+43. **5.8, SHIPMENT DOCUMENT and its line to SHIPMENT ITEM:** a new name for 5.6's SHIPPING
+    DOCUMENT, and the crow's foot drawn at the item end (one document, many items: a
+    packing list?) where 5.6 has many documents per item. Kept as 5.6 draws it, the
+    detailed figure. If 5.8 is right, a document covering several lines needs a link
+    table, since each line can have many documents too.
+44. **5.8 leaves out** the picklist, the rejection reason, the receipt's lines to GOOD and
+    ORDER ITEM, the type lookups, DOCUMENT, FIXED ASSET and ORGANIZATION ROLE, and draws
+    SHIPMENT's four mechanism lines to CONTACT MECHANISM. Read as abbreviation, not removal:
+    the SQL keeps the detailed figures. If any omission is a real drop, its table goes.
 
 ## Design decisions (book → SQL)
 
