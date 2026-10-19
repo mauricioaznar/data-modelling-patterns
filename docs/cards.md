@@ -1104,6 +1104,71 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
+### Card 35 · V1 Ch 8 · Chart of accounts (Fig 8.1)
+- **Cue:** "Which ledger accounts does each of our organizations keep, since when, of which kind, and how does each cut its year into periods?"
+- **Hook:** one printed chart of accounts pinned on the wall of two offices, with a
+  different set of lines highlighted in each and "marketing" crossed out in only one
+  *(Claude's, drafted when the figures landed)*
+- **Mantra:** One chart for everyone; each organization switches accounts on and off by
+  date, and cuts its own years into periods.
+
+<details><summary>Key</summary>
+
+- **S:** `general_ledger_account` (the account number as id: 110 cash; name, description,
+  type) · `general_ledger_account_type` (asset, liability, owners equity, revenue,
+  expense) · `organization_gl_account` (internal organization, account, from, thru) ·
+  `accounting_period` (internal organization, period type, within, number, from, thru) ·
+  `period_type` (fiscal year, quarter, month).
+- **W:** an account name typed on each ledger line, or one chart per company: renaming
+  breaks history, two companies' "cash" can't be added up, and one company's split of an
+  account changes the other's.
+- **T:** *(the naive-model trap until practice gives yours)* ending an account in the chart
+  when only one organization stopped using it; periods for the enterprise when fiscal
+  years differ; a quarter "within" another organization's year.
+- **D:** **organization** (Ch 2, an INTERNAL_ORGANIZATION role) ← organization_gl_account →
+  general_ledger_account → general_ledger_account_type; **organization** ←
+  accounting_period → period_type, ↺ within. Checks: an account kept by an organization
+  that was never internal; the same account twice at once; a period inside another
+  organization's or outside its parent's dates.
+</details>
+
+---
+
+### Card 36 · V1 Ch 8 · Accounting transactions (Figs 8.2–8.3b)
+- **Cue:** "What did each business event do to the books: which debits and credits on which accounts, from which invoice or payment, which credit settled which debit, and what was each account's balance for a period?"
+- **Hook:** a cash register receipt for $900 stapled to a ledger page where it becomes three
+  lines: $882 cash and $18 discount on the left, $900 receivables on the right
+  *(Claude's, drafted when the figures landed)*
+- **Mantra:** One event, typed and traced to its document, splits into debits and credits
+  that cancel; balances are sums, stored only as checked caches.
+
+<details><summary>Key</summary>
+
+- **S:** `accounting_transaction` (type, from party, to party for external ones, at most
+  one of invoice, payment, inventory item variance; transaction and entry date,
+  description; no amount) · `accounting_transaction_type` (a hierarchy: INTERNAL,
+  EXTERNAL → OBLIGATION, PAYMENT over the book's subtypes, Table 8.3's types below) ·
+  `transaction_detail` (transaction, seq, organization GL account, amount, debit or credit,
+  associated with another detail) · `organization_gl_account_balance` (account, period,
+  amount).
+- **W:** one ledger row with an account, an amount and an optional `invoice_id`: a split
+  payment or an asset sale becomes several unrelated rows, nothing proves they balance, and
+  no line says which payment settled which invoice.
+- **T:** *(the naive-model trap until practice gives yours)* an amount on the transaction
+  that can disagree with its details; a stored balance with no check against its postings;
+  a depreciation with a receiver.
+- **D:** **party** (from, to) ← accounting_transaction → accounting_transaction_type (↺),
+  → **invoice**, **payment** (Ch 7), **inventory_item_variance** (Ch 3);
+  accounting_transaction ← transaction_detail (↺ associated with) →
+  **organization_gl_account** (8.1); organization_gl_account_balance →
+  organization_gl_account, **accounting_period** (8.1). Checks: a grouping row as type;
+  parties or documents that don't fit the subtype; debits ≠ credits; a posting to a
+  closed account or another organization's books; a stored balance off its postings, or in
+  another organization's period.
+</details>
+
+---
+
 ## Deck: architecture
 
 One card per chapter, from its architecture figure (the last, overall one): how the chapter's

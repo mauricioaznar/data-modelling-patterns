@@ -102,8 +102,34 @@ and any decisions made.
   architecture card, Anki export 48 cards. Design reference: four draft entries and the Ch 7
   architecture entry, Ch 7 examples on eleven Core patterns rows, four question index rows,
   roadmap "6 submodels + architecture".
+- Ch 8 (Accounting and Budgeting) started from the template, with Figs 8.1, 8.2, 8.3a and
+  8.3b and Tables 8.1–8.5 (photos), transcribed with 12 points to discuss.
+- Fig 8.1 built: `general_ledger_account` keyed on the account number, its type,
+  `organization_gl_account` dated per internal organization, `period_type` and nested
+  `accounting_period`. Tables 8.1–8.2 with eight accounts of ours. Three checks.
+- Fig 8.2 built: `accounting_transaction_type` holding the book's subtype tree, a class
+  view, `accounting_transaction` with from/to parties and one source document. Table 8.3,
+  Table 8.5's three, and ABC Subsidiary posting Ch 7's invoice 30002 and payment 12298398;
+  Johnson Recycling new. Three checks and a review.
+- Fig 8.3a built: `transaction_detail` with a debit/credit flag and the detail it settles.
+  Tables 8.4–8.5 and the rest of Table 8.3; open receivables, a trial balance that nets to
+  zero. Three checks.
+- Fig 8.3b built: `organization_gl_account_balance` for ABC Corporation's 2000 closing,
+  statements and profit from it. Two checks.
+- Submodels 1 (chart of accounts) and 2 (accounting transactions); ponders 1–3 and 1–5;
+  ER diagram; cards 35–36, Anki export 50 cards. Design reference: two draft entries, Core
+  patterns gains a Ch 8 column (nine rows) and a pattern (event and its balanced
+  postings), two question index rows, roadmap Ch 8 In progress.
 
 **Decisions**
+- Ch 8: no amount on the accounting transaction, it is worth its debits (Table 8.3's
+  $1,200 fits; 39776's $700 against $900 is point 4).
+- Ch 8: the subtype tree becomes the top rows of ACCOUNTING TRANSACTION TYPE, with a view
+  for each type's subtype; one from party for both "from" lines (point 12).
+- Ch 8: 46325's −$300 "receipt" built as a returned-payment disbursement (point 6); the
+  detail's account read as mandatory (point 7); the debit/credit flag kept (point 8).
+- Ch 8: 8.3b's balance built beside 8.3a, not instead of it; the overall figure decides
+  (point 9).
 - Ch 7: Table 7.9's 30002 isn't Table 7.2's, so its links are built to its intention
   with our shipments (point 14); Table 7.10's purchase orders read as ours (point 16).
 - Ch 7: no PAID status; balances, deposit amounts and "unbilled" are all computed, never
@@ -142,8 +168,9 @@ and any decisions made.
 - Work effort purpose optional; production runs typed PROJECT for want of a level in the book.
 
 **Next**
+- Ch 8's remaining figures (budgeting, the overall model) when shared.
 - The Ch 4, 5, 6 and 7 overviews (Ch 6: 42 points, Ch 7: 29); then practice, submodel by
-  submodel. Re-import the Anki export (48 cards; cards 31–34 and the Ch 7 architecture
+  submodel. Re-import the Anki export (50 cards; cards 31–36 and the Ch 7 architecture
   card land in Drafts).
 
 ## 2026-10-18
