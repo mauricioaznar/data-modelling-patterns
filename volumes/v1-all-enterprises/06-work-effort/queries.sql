@@ -694,3 +694,70 @@ join inventory_item ii on ii.inventory_item_id = ia.inventory_item_id
 where ii.inventory_item_kind = 'SERIALIZED'
   and ia.quantity is distinct from 1
   and ia.quantity is not null;
+
+-- ============================================================
+-- Fig 6.9 — Fixed asset assignments
+-- ============================================================
+-- name: 6.9 — The fixed asset type tree, with the assets of each type
+with recursive tree (fixed_asset_type_id, depth, path) as (
+  select fixed_asset_type_id, 0, description
+  from fixed_asset_type where parent_type_id is null
+  union all
+  select t.fixed_asset_type_id, tree.depth + 1, tree.path || ' > ' || t.description
+  from fixed_asset_type t
+  join tree on t.parent_type_id = tree.fixed_asset_type_id
+)
+select tree.path, string_agg(fa.name, ', ' order by fa.name) as assets
+from tree
+left join fixed_asset fa on fa.fixed_asset_type_id = tree.fixed_asset_type_id
+group by tree.path
+order by tree.path;
+
+-- name: 6.9 — Assets booked on work efforts: when, in what state, at what cost
+select fa.name as asset, t.description as asset_type, we.name as effort, s.description as status,
+       b.from_date, b.thru_date, b.allocated_cost, b.comment
+from work_effort_fixed_asset_assignment b
+join fixed_asset fa      on fa.fixed_asset_id = b.fixed_asset_id
+join fixed_asset_type t  on t.fixed_asset_type_id = fa.fixed_asset_type_id
+join work_effort we      on we.work_effort_id = b.work_effort_id
+join status_type s       on s.status_type_id = b.status_type_id
+order by fa.name, b.from_date;
+
+-- name: 6.9 — Fixed assets free of work on Jun 14, 2000
+select fa.fixed_asset_id, fa.name, t.description as asset_type
+from fixed_asset fa
+join fixed_asset_type t on t.fixed_asset_type_id = fa.fixed_asset_type_id
+where fa.date_acquired <= date '2000-06-14'
+  and not exists (select 1 from work_effort_fixed_asset_assignment b
+                  where b.fixed_asset_id = fa.fixed_asset_id
+                    and b.from_date <= date '2000-06-14' and (b.thru_date is null or b.thru_date > date '2000-06-14'))
+order by fa.name;
+
+-- name: 6.9 — Review: asset bookings outside their effort's schedule (NOTES, point 34)
+select we.work_effort_id, we.name as effort, we.scheduled_start_date, we.scheduled_completion_date,
+       fa.name as asset, b.from_date, b.thru_date
+from work_effort_fixed_asset_assignment b
+join work_effort we on we.work_effort_id = b.work_effort_id
+join fixed_asset fa on fa.fixed_asset_id = b.fixed_asset_id
+where b.from_date > we.scheduled_completion_date
+   or coalesce(b.thru_date, 'infinity') <= we.scheduled_start_date;
+
+-- name: 6.9 — Data-quality check: one fixed asset booked on two efforts at overlapping times (should be empty)
+select fa.name as asset, a.work_effort_id, a.from_date, a.thru_date,
+       b.work_effort_id as other_effort, b.from_date as other_from, b.thru_date as other_thru
+from work_effort_fixed_asset_assignment a
+join work_effort_fixed_asset_assignment b on b.fixed_asset_id = a.fixed_asset_id
+                                         and b.work_effort_fixed_asset_assignment_id > a.work_effort_fixed_asset_assignment_id
+join fixed_asset fa on fa.fixed_asset_id = a.fixed_asset_id
+where a.from_date < coalesce(b.thru_date, 'infinity') and b.from_date < coalesce(a.thru_date, 'infinity');
+
+-- name: 6.9 — Data-quality check: asset bookings with a status outside the booking statuses (should be empty)
+select b.work_effort_fixed_asset_assignment_id, b.work_effort_id, b.fixed_asset_id, b.status_type_id
+from work_effort_fixed_asset_assignment b
+join status_type s on s.status_type_id = b.status_type_id
+where s.parent_type_id is distinct from 'WORK_EFFORT_ASSET_ASSIGN_STATUS';
+
+-- name: 6.9 — Data-quality check: a production capacity with no unit of measure (should be empty)
+select fixed_asset_id, name, production_capacity
+from fixed_asset
+where production_capacity is not null and capacity_uom_id is null;

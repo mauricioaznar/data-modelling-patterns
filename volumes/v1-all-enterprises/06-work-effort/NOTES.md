@@ -1258,6 +1258,24 @@ the literal drawing.
   plant, quantities ours. Bad rows: erasers twice on 41001; Ch 3's serialized copier used
   three times on the sample-pen research task.
 
+### Fig 6.9
+- **FIXED ASSET's subtypes are type rows:** Ch 5's `fixed_asset_type` gains a parent, and
+  PROPERTY, VEHICLE, EQUIPMENT and OTHER_FIXED_ASSET are its top rows; Table 6.14 nests
+  below them. Text ids as in Ch 5, the book's numbers in seed comments.
+- **`fixed_asset`** gains a description and `capacity_uom_id` (Ch 3's unit of measure). A
+  capacity with no unit is a check.
+- **`work_effort_fixed_asset_assignment`**: effort, asset, a status (Ch 2's `status_type`
+  under a WORK_EFFORT_ASSET_ASSIGN_STATUS group, point 41), from and thru dates, allocated
+  cost, comment. Surrogate key (point 31). Checks: one asset on two efforts at overlapping
+  times, and a status from outside the group. A review lists bookings outside their effort's
+  schedule (point 34).
+- **Seed:** Tables 6.13–6.15 with the book's asset ids. The engraving machine 5025 becomes a
+  pen-making machine measured in pens an hour; Ch 5's trucks stay VEHICLE, since Ch 5's
+  queries test that type by name. "Test database tool" (41100) and Office laptop #2 (3002)
+  are ours to number. Statuses and costs ours. Bad rows: Fork lift #26 with a capacity and
+  no unit; the labeler requested for 41001 while booked on 41002; a work effort status
+  (STARTED) on a booking.
+
 ## When NOT to use this
 - **A shop that only sells** never generates work: a service it sells is a product line on
   an order (Ch 4), and nothing needs WORK EFFORT.

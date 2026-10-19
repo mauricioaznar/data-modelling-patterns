@@ -597,3 +597,64 @@ insert into work_effort_inventory_assignment (work_effort_id, inventory_item_id,
   -- ours, each with one mistake
   (41001, 31, 50),    -- DATA ERROR: erasers twice on one task (the key is item and effort)
   (29900, 5,  3);     -- DATA ERROR: Ch 3's serialized copier used three times over
+
+-- ============================================================
+-- Fig 6.9 — Fixed asset assignments
+-- ============================================================
+-- Table 6.14 (the book's numeric ids in the comments). Ch 5's VEHICLE and
+-- EQUIPMENT are 2000 and 1000; PROPERTY and OTHER complete the subtypes.
+insert into fixed_asset_type (fixed_asset_type_id, parent_type_id, description) values
+  ('PROPERTY',              null,                    'Property'),
+  ('OTHER_FIXED_ASSET',     null,                    'Other fixed asset'),
+  ('PENCIL_MAKING_MACHINE', 'EQUIPMENT',             'Pencil-making machine'),   -- 1390
+  ('PEN_MAKING_MACHINE',    'EQUIPMENT',             'Pen-making machine'),      -- 1458
+  ('PAPER_MAKING_MACHINE',  'EQUIPMENT',             'Paper-making machine'),    -- 1532
+  ('TRUCK',                 'VEHICLE',               'Truck'),                   -- 2019
+  ('MAC_TRUCK_18_WHEELS',   'TRUCK',                 'Mac truck, 18 wheels'),    -- 2188
+  ('FORK_LIFT',             'VEHICLE',               'Fork lift'),               -- 2266
+  ('JET_AIRPLANE',          'VEHICLE',               'Jet airplane'),            -- 2356
+  ('CAR',                   'VEHICLE',               'Car');                     -- 2567
+
+-- The engraving machine makes pens. Ch 5's trucks stay VEHICLE: Ch 5's
+-- queries test that type by name.
+update fixed_asset set fixed_asset_type_id = 'PEN_MAKING_MACHINE' where fixed_asset_id = 5025;
+
+-- Table 6.13's units, as printed (NOTES, point 32).
+insert into unit_of_measure (uom_id, abbreviation, description) values
+  ('PENS_PER_DAY',  'pens/day', 'Pens per day'),
+  ('PENS_PER_HOUR', 'pens/hr',  'Pens per hour'),
+  ('PEOPLE',        'people',   'People');
+
+update fixed_asset set capacity_uom_id = 'PENS_PER_HOUR' where fixed_asset_id = 5025;
+
+-- Table 6.13 with its ids, then ours.
+insert into fixed_asset (fixed_asset_id, fixed_asset_type_id, name, date_acquired, date_last_serviced, date_next_service,
+                         production_capacity, capacity_uom_id, description) values
+  (1000, 'PENCIL_MAKING_MACHINE', 'Pencil labeler #1', '2000-06-12', '2000-06-12', '2001-06-12', 1000000, 'PENS_PER_DAY', null),
+  (2266, 'FORK_LIFT',             'Fork lift #25',     '1999-03-01', '2001-03-15', '2001-08-01', 5,       'PEOPLE',       null),
+  (3002, 'EQUIPMENT',             'Office laptop #2',  '2000-06-01', null,         null,         null,    null,           'Laptop at the head office'),
+  -- ours, with one mistake
+  (3003, 'FORK_LIFT',             'Fork lift #26',     '2000-01-10', null,         null,         5,       null,           null);   -- DATA ERROR: a capacity with no unit
+
+select setval(pg_get_serial_sequence('fixed_asset', 'fixed_asset_id'), (select max(fixed_asset_id) from fixed_asset));
+
+insert into status_type (status_type_id, parent_type_id, description) values
+  ('WORK_EFFORT_ASSET_ASSIGN_STATUS', null,                              'Work effort asset assignment status'),
+  ('ASSET_REQUESTED',                 'WORK_EFFORT_ASSET_ASSIGN_STATUS', 'Requested'),
+  ('ASSET_ASSIGNED',                  'WORK_EFFORT_ASSET_ASSIGN_STATUS', 'Assigned');
+
+-- Table 6.15's database test (ours to type and date).
+insert into work_effort (work_effort_id, work_effort_type_id, work_effort_purpose_type_id, facility_id, name, description, scheduled_start_date) values
+  (41100, 'ACTIVITY', 'RESEARCH', 16, 'Test database tool', 'Test a new database tool', '2000-07-01');
+
+select setval(pg_get_serial_sequence('work_effort', 'work_effort_id'), (select max(work_effort_id) from work_effort));
+
+-- Table 6.15, thru dates +1 day (exclusive). Moving raw materials is Table
+-- 6.6's 3454588 (point 34). Statuses and costs ours.
+insert into work_effort_fixed_asset_assignment (work_effort_id, fixed_asset_id, status_type_id, from_date, thru_date, allocated_cost, comment) values
+  (41002,   1000, 'ASSET_ASSIGNED',  '2000-06-12', '2000-06-16', 1200.00, null),
+  (3454588, 2266, 'ASSET_ASSIGNED',  '2000-04-15', '2000-05-16', 800.00,  'May need for longer time'),
+  (41100,   3002, 'ASSET_ASSIGNED',  '2000-07-01', null,         null,    'Ongoing effort'),
+  -- ours, each with one mistake
+  (41001,   1000, 'ASSET_REQUESTED', '2000-06-14', '2000-06-15', null,    null),   -- DATA ERROR: the labeler is booked on 41002 then
+  (120002,  5025, 'WORK_STARTED',    '2000-06-03', '2000-06-04', null,    null);   -- DATA ERROR: a work effort status on an asset booking

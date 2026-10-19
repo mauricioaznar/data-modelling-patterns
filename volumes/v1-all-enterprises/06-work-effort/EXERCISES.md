@@ -95,6 +95,14 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 3. **[6.7]** After his raise, Gary Smith's overtime pay equals his regular pay. Why record
    an overtime rate at all instead of leaving it out?
 
+### Submodel 6: inventory and fixed asset assignments
+1. **[6.8]** WORK EFFORT INVENTORY ASSIGNMENT points at an INVENTORY ITEM, while Fig 6.11's
+   plan points at a GOOD. Why the item here? What could you no longer answer if it pointed
+   at the good?
+2. **[6.9]** FIXED ASSET has four subtypes and a FIXED ASSET TYPE that nests (vehicle,
+   truck, 18-wheeler). Why both? And why is the overlap check stricter for an asset on work
+   efforts than for a person on them (Fig 6.5)?
+
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
 notation (entities, key attributes, relationships and cardinality). Then diff it against
