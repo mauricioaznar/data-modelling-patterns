@@ -387,6 +387,17 @@ the literal drawing.
   the year at −800 (the engraver's cost was booked before our data). The trial balance
   still sums to zero.
 
+### Fig 8.3b
+- **`organization_gl_account_balance`** (account, period, amount as debits − credits),
+  unique per account and period: the book's key, kept as a constraint because it's one
+  row, one rule. Built beside 8.3a, not instead of it (point 9).
+- **Checks:** a stored balance that disagrees with its period's postings; a balance whose
+  period belongs to another organization.
+- **Queries:** the 2000 closing grouped as the statements read it; the year's profit from
+  the stored balances.
+- **Seed:** ABC Corporation's 2000 closing (ours). Bad rows: cash stored $100 high, ABC
+  Subsidiary's cash in ABC Corporation's year.
+
 ## When NOT to use this
 - **One company, one ledger:** a single small business can key the chart and the books
   together; ORGANIZATION GL ACCOUNT earns its keep with several internal organizations.

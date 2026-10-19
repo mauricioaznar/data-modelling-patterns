@@ -233,3 +233,48 @@ join organization n              on n.party_id = o.internal_organization_party_i
 join party_display_name f        on f.party_id = x.from_party_id
 left join party_display_name t   on t.party_id = x.to_party_id
 where o.internal_organization_party_id not in (x.from_party_id, coalesce(x.to_party_id, x.from_party_id));
+
+-- ============================================================
+-- Fig 8.3b — Accounting transaction detail with account balances
+-- ============================================================
+
+-- name: 8.3b — ABC Corporation's 2000 closing as stored, grouped the way the statements read it (balance sheet: assets, liabilities, equity; income statement: revenue, expense)
+select case when a.general_ledger_account_type_id in ('REVENUE', 'EXPENSE') then 'Income statement' else 'Balance sheet' end as statement,
+       t.description as account_type, a.general_ledger_account_id as account, a.name, b.amount as stored_balance
+from organization_gl_account_balance b
+join organization_gl_account o       on o.organization_gl_account_id = b.organization_gl_account_id
+join general_ledger_account a        on a.general_ledger_account_id = o.general_ledger_account_id
+join general_ledger_account_type t   on t.general_ledger_account_type_id = a.general_ledger_account_type_id
+where b.accounting_period_id = 1 and o.internal_organization_party_id = 12
+order by statement, a.general_ledger_account_id;
+
+-- name: 8.3b — ABC Corporation's 2000 profit from the stored balances: revenue less expense (credits are negative, so the sign flips)
+select -sum(b.amount) as profit_2000
+from organization_gl_account_balance b
+join organization_gl_account o on o.organization_gl_account_id = b.organization_gl_account_id
+join general_ledger_account a  on a.general_ledger_account_id = o.general_ledger_account_id
+where b.accounting_period_id = 1 and o.internal_organization_party_id = 12
+  and a.general_ledger_account_type_id in ('REVENUE', 'EXPENSE');
+
+-- name: 8.3b — Data-quality check: stored balances that disagree with the postings of their period (should be empty)
+select b.organization_gl_account_balance_id, a.name as account, p.from_date, p.thru_date, b.amount as stored,
+       coalesce(sum(case d.debit_credit_flag when 'DEBIT' then d.amount else -d.amount end), 0) as from_postings
+from organization_gl_account_balance b
+join accounting_period p             on p.accounting_period_id = b.accounting_period_id
+join organization_gl_account o       on o.organization_gl_account_id = b.organization_gl_account_id
+join general_ledger_account a        on a.general_ledger_account_id = o.general_ledger_account_id
+left join transaction_detail d       on d.organization_gl_account_id = b.organization_gl_account_id
+                                    and exists (select 1 from accounting_transaction x
+                                                where x.accounting_transaction_id = d.accounting_transaction_id
+                                                  and x.transaction_date >= p.from_date and x.transaction_date < p.thru_date)
+group by b.organization_gl_account_balance_id, a.name, p.from_date, p.thru_date, b.amount
+having b.amount <> coalesce(sum(case d.debit_credit_flag when 'DEBIT' then d.amount else -d.amount end), 0);
+
+-- name: 8.3b — Data-quality check: balances whose period belongs to another organization than the account (should be empty)
+select b.organization_gl_account_balance_id, na.name as account_of, np.name as period_of, p.period_type_id, p.acctg_period_num
+from organization_gl_account_balance b
+join organization_gl_account o on o.organization_gl_account_id = b.organization_gl_account_id
+join accounting_period p       on p.accounting_period_id = b.accounting_period_id
+join organization na           on na.party_id = o.internal_organization_party_id
+join organization np           on np.party_id = p.internal_organization_party_id
+where o.internal_organization_party_id <> p.internal_organization_party_id;

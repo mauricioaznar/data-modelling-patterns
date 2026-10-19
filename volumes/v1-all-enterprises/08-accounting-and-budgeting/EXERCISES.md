@@ -55,6 +55,8 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    it with one amount on the transaction instead of details: what is lost?
 4. *(8.3a)* How does "associated with" let you list open invoices without an "amount
    paid" column? What breaks if a customer pays on account, as ACME did in 45894?
+5. *(8.3b)* Stored balances are derived data. When is storing them right, and what must
+   be true of a period before you trust its stored balance over its postings?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

@@ -208,3 +208,19 @@ insert into transaction_detail (transaction_detail_id, accounting_transaction_id
   (610072, 61007, 2, 22,  40,     'CREDIT', null);
 
 select setval(pg_get_serial_sequence('transaction_detail', 'transaction_detail_id'), (select max(transaction_detail_id) from transaction_detail));
+
+-- ============================================================
+-- Fig 8.3b — Accounting transaction detail with account balances
+-- ============================================================
+-- ABC Corporation closes 2000 (period 1) and stores its balances (ours).
+insert into organization_gl_account_balance (organization_gl_account_id, accounting_period_id, amount) values
+  (1,  1, 4832),    -- DATA ERROR: cash is 4732 by its postings
+  (2,  1, -200),
+  (6,  1, 150),
+  (10, 1, -800),
+  (11, 1, -50),
+  (12, 1, -3700),
+  (13, 1, -400),
+  (14, 1, 250),
+  (15, 1, 18),
+  (21, 1, 0);       -- DATA ERROR: ABC Subsidiary's cash in ABC Corporation's year
