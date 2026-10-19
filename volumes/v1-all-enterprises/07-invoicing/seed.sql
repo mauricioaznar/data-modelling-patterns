@@ -95,3 +95,64 @@ insert into invoice_item (invoice_item_id, invoice_id, invoice_item_seq_id, invo
   (20, 30011, 6, 'SALES_TAX',             null, null, null, 1,    null, false, null, 1.20,    'DATA ERROR: tax on a line of invoice 30002 (caught by a query)');
 
 select setval(pg_get_serial_sequence('invoice_item', 'invoice_item_id'), (select max(invoice_item_id) from invoice_item));
+
+-- ============================================================
+-- Fig 7.2 — Invoice parties
+-- ============================================================
+-- Table 7.4's mechanisms (NOTES, point 5): 45 ACME's billing address, 46 ABC
+-- Subsidiary's, 47-49 the three e-mails.
+insert into contact_mechanism (contact_mechanism_id, contact_mechanism_kind, contact_mechanism_type_id) values
+  (45, 'POSTAL_ADDRESS',     'POSTAL_ADDRESS'),
+  (46, 'POSTAL_ADDRESS',     'POSTAL_ADDRESS'),
+  (47, 'ELECTRONIC_ADDRESS', 'EMAIL'),
+  (48, 'ELECTRONIC_ADDRESS', 'EMAIL'),
+  (49, 'ELECTRONIC_ADDRESS', 'EMAIL');
+
+select setval(pg_get_serial_sequence('contact_mechanism', 'contact_mechanism_id'), (select max(contact_mechanism_id) from contact_mechanism));
+
+insert into postal_address (contact_mechanism_id, address1, address2, directions) values
+  (45, '123 Main Street',   null, null),
+  (46, '100 Bridge Street', null, null);
+
+insert into electronic_address (contact_mechanism_id, electronic_address_string) values
+  (47, 'jsmith@us.com'),
+  (48, '1235,678@cis.com'),   -- as printed: an old CompuServe-style address
+  (49, 'acorp@acme.com');
+
+insert into party_contact_mechanism (party_contact_mechanism_id, party_id, contact_mechanism_id, from_date, thru_date, non_solicitation_ind, role_type_id, comment) values
+  (46, 16, 45, '1999-01-01', null, false, null, 'Accounts payable'),
+  (47, 13, 46, '1999-01-01', null, false, null, 'Billing office'),
+  (48, 54, 47, '1998-01-01', null, false, null, null),
+  (49, 62, 48, '1997-01-01', null, false, null, null),
+  (50, 16, 49, '1999-01-01', null, false, null, null);
+
+select setval(pg_get_serial_sequence('party_contact_mechanism', 'party_contact_mechanism_id'), (select max(party_contact_mechanism_id) from party_contact_mechanism));
+
+-- Where each party wants its bills.
+insert into party_contact_mechanism_purpose (party_contact_mechanism_id, contact_mechanism_purpose_type_id, from_date, thru_date) values
+  (46, 'BILLING', '1999-01-01', null),
+  (47, 'BILLING', '1999-01-01', null),
+  (48, 'BILLING', '1998-01-01', null),
+  (49, 'BILLING', '1997-01-01', null),
+  (50, 'BILLING', '1999-01-01', null);
+
+-- Table 7.4; 30011's address is wrong on purpose.
+update invoice set addressed_to_contact_mechanism_id = 45, sent_from_contact_mechanism_id = 46 where invoice_id in (30002, 30016);
+update invoice set addressed_to_contact_mechanism_id = 47, sent_from_contact_mechanism_id = 46 where invoice_id = 30005;
+update invoice set addressed_to_contact_mechanism_id = 48, sent_from_contact_mechanism_id = 49 where invoice_id = 30010;
+update invoice set addressed_to_contact_mechanism_id = 45, sent_from_contact_mechanism_id = 46 where invoice_id = 30011;   -- DATA ERROR: John Smith's bill sent to ACME's billing address (caught by a query)
+
+-- The text's four role types.
+insert into invoice_role_type (invoice_role_type_id, description) values
+  ('ENTERED_BY', 'Entered by'),
+  ('APPROVER',   'Approver'),
+  ('SENDER',     'Sender'),
+  ('RECEIVER',   'Receiver');
+
+-- Ours: Rosa Diaz keys in ABC Subsidiary's bills, William Jones (ABC
+-- Corporation) approves the big one.
+insert into invoice_role (invoice_id, party_id, invoice_role_type_id, role_datetime, percentage) values
+  (30002, 50, 'ENTERED_BY', '2001-05-25 09:10+00', null),
+  (30002, 47, 'APPROVER',   '2001-05-25 14:30+00', null),
+  (30005, 50, 'ENTERED_BY', '2001-06-05 10:00+00', null),
+  (30002, 50, 'ENTERED_BY', '2001-05-25 09:12+00', null);   -- DATA ERROR: Rosa entered 30002 twice (caught by a query)

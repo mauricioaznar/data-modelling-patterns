@@ -101,3 +101,75 @@ select i.invoice_id, i.invoice_item_seq_id, i.product_id, ii.inventory_item_id, 
 from invoice_item i
 join inventory_item ii on ii.inventory_item_id = i.inventory_item_id
 where i.product_id is distinct from ii.product_id;
+
+-- ============================================================
+-- Fig 7.2 — Invoice parties
+-- ============================================================
+
+-- name: 7.2 — Table 7.4: who each invoice is billed to and from, where it went and where it came from
+select v.invoice_id, v.invoice_date, v.invoice_kind,
+       coalesce(bt.name, 'account ' || v.billing_account_id) as billed_to, at.display_name as addressed_to,
+       bf.name as billed_from, sf.display_name as sent_from
+from invoice v
+left join party_display_name bt             on bt.party_id = v.billed_to_party_id
+join party_display_name bf                  on bf.party_id = v.billed_from_party_id
+left join contact_mechanism_display_name at on at.contact_mechanism_id = v.addressed_to_contact_mechanism_id
+left join contact_mechanism_display_name sf on sf.contact_mechanism_id = v.sent_from_contact_mechanism_id
+order by v.invoice_id;
+
+-- name: 7.2 — Invoices by channel: how many went by post and how many by e-mail
+select coalesce(cm.contact_mechanism_kind, '(not recorded)') as sent_as, count(*) as invoices
+from invoice v
+left join contact_mechanism cm on cm.contact_mechanism_id = v.addressed_to_contact_mechanism_id
+group by 1
+order by 1;
+
+-- name: 7.2 — Everyone else on each invoice: who entered it, who approved it, and when
+select r.invoice_id, t.description as role, p.name as party, r.role_datetime, r.percentage
+from invoice_role r
+join invoice_role_type t   on t.invoice_role_type_id = r.invoice_role_type_id
+join party_display_name p  on p.party_id = r.party_id
+order by r.invoice_id, r.role_datetime;
+
+-- name: 7.2 — Review: invoices where neither side is one of our internal organizations on the invoice date (Table 7.4's 30010: NOTES, point 7)
+select v.invoice_id, v.invoice_kind, v.invoice_date, bf.name as billed_from, bt.name as billed_to
+from invoice v
+join party_display_name bf      on bf.party_id = v.billed_from_party_id
+left join party_display_name bt on bt.party_id = v.billed_to_party_id
+where not exists (
+  select 1 from party_role pr
+  where pr.party_id = case v.invoice_kind when 'SALES' then v.billed_from_party_id else v.billed_to_party_id end
+    and pr.role_type_id = 'INTERNAL_ORGANIZATION'
+    and pr.from_date <= v.invoice_date and (pr.thru_date is null or pr.thru_date > v.invoice_date));
+
+-- name: 7.2 — Data-quality check: invoices billed to a party but addressed to a mechanism that party doesn't use for billing on the invoice date (should be empty)
+select v.invoice_id, v.invoice_date, p.name as billed_to, cm.display_name as addressed_to
+from invoice v
+join party_display_name p                   on p.party_id = v.billed_to_party_id
+join contact_mechanism_display_name cm      on cm.contact_mechanism_id = v.addressed_to_contact_mechanism_id
+where not exists (
+  select 1
+  from party_contact_mechanism pcm
+  join party_contact_mechanism_purpose pu on pu.party_contact_mechanism_id = pcm.party_contact_mechanism_id
+  where pcm.party_id = v.billed_to_party_id
+    and pcm.contact_mechanism_id = v.addressed_to_contact_mechanism_id
+    and pu.contact_mechanism_purpose_type_id = 'BILLING'
+    and pcm.from_date <= v.invoice_date and (pcm.thru_date is null or pcm.thru_date > v.invoice_date)
+    and pu.from_date  <= v.invoice_date and (pu.thru_date  is null or pu.thru_date  > v.invoice_date));
+
+-- name: 7.2 — Data-quality check: invoices sent from a mechanism the sender isn't linked to on the invoice date (should be empty)
+select v.invoice_id, v.invoice_date, p.name as billed_from, cm.display_name as sent_from
+from invoice v
+join party_display_name p              on p.party_id = v.billed_from_party_id
+join contact_mechanism_display_name cm on cm.contact_mechanism_id = v.sent_from_contact_mechanism_id
+where not exists (
+  select 1 from party_contact_mechanism pcm
+  where pcm.party_id = v.billed_from_party_id
+    and pcm.contact_mechanism_id = v.sent_from_contact_mechanism_id
+    and pcm.from_date <= v.invoice_date and (pcm.thru_date is null or pcm.thru_date > v.invoice_date));
+
+-- name: 7.2 — Data-quality check: the same party in the same role on one invoice twice (should be empty)
+select invoice_id, party_id, invoice_role_type_id, count(*) as rows
+from invoice_role
+group by invoice_id, party_id, invoice_role_type_id
+having count(*) > 1;
