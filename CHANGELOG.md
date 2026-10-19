@@ -3,6 +3,41 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-19
+
+**Built**
+- Pulled the branch (Chs 4–5 and the workflow tooling from the other machine).
+- Ch 6 (Work Effort) started from the template, with Figs 6.1, 6.2, 6.3a and 6.3b and Tables
+  6.1–6.5 (photos). All four transcribed into NOTES with "To check against the book" lists and
+  14 points to discuss.
+- Fig 6.1 built: `requirement_type` (a hierarchy over Ch 4's PRODUCT and WORK) on Ch 4's
+  `requirement`; `work_requirement`, a subtype table with optional product, fixed asset and
+  deliverable; `deliverable` + type; `fixed_asset` gains acquisition, service dates and capacity.
+  Tables 6.1–6.2 seeded with ABC Manufacturing, Inc., the engraved black pen and engraving
+  machine 5025; Ch 4's work requirements typed. Seven checks.
+- Fig 6.2 built: `requirement_role` gains a comment; four role types from Table 6.3; John
+  Smith, Sam Bossman and Dick Jones. Who was responsible on a day; two checks.
+- Fig 6.3a built: `work_effort` gains actuals, special terms, a facility and a purpose;
+  `work_effort_purpose_type`, `production_run`, `work_requirement_fulfillment`, `order_item_kind`
+  and `work_order_item_fulfillment`. Tables 6.4–6.5 seeded; sales order 23500 reaches its work
+  by both paths. Three checks. Fig 6.3b transcribed, not built.
+- Ponders 1–3 (submodel 1) and 1–5 (submodel 2); ER diagram; cards 22–23, Anki export 35
+  cards. Design reference: entries *Work requirements and roles* and *Work effort generation*
+  (drafts), Core patterns gains a Ch 6 column and a pattern (need apart from what fills it),
+  two question index rows, roadmap Ch 6 In progress.
+
+**Decisions**
+- Build 6.3a, not 6.3b: it holds both the direct order-to-work path and the path through a
+  requirement; the chapter's overall figure decides (point 11).
+- REQUIREMENT TYPE drawn mandatory, built nullable: Ch 4's product requirements have no type
+  yet; work requirements must have one (a check).
+- Table 6.3's impossible dates read as typos (Dec 16, 2000 and Feb 21, 2001); 51298's blank
+  requirement read as "same as above".
+- Work effort purpose optional; production runs typed PROJECT for want of a level in the book.
+
+**Next**
+- The rest of Ch 6's figures; then the Ch 4, 5 and 6 overviews.
+
 ## 2026-10-18
 
 **Built**

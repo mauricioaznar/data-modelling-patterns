@@ -711,6 +711,70 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
+### Card 22 · V1 Ch 6 · Work requirements and roles (Figs 6.1–6.2)
+- **Cue:** "What work is needed, of which type, to make which product, fix which machine or hand over which deliverable; and who asked, for whom, who answers for it and when?"
+- **Hook:** a workshop job board: each card says "make 2,000 pens", "fix engraving machine
+  #12" or "write the 2002 plan", with a row of dated name tags pinned beneath it
+  *(Claude's, drafted when the figures landed)*
+- **Mantra:** The need for work is typed; the type picks its target: product, machine or
+  deliverable. People pin on in dated roles.
+
+<details><summary>Key</summary>
+
+- **S:** `requirement_type` (a hierarchy: PRODUCT_REQUIREMENT and WORK_REQUIREMENT over
+  PRODUCTION_RUN, INTERNAL_PROJECT, MAINTENANCE, REPAIR) on Ch 4's `requirement` ·
+  `work_requirement` (a subtype table: an optional `product`, `fixed_asset` or
+  `deliverable`) · `deliverable` + type · `fixed_asset` gains acquired, last and next
+  service, capacity · Ch 4's `requirement_role` gains a comment, with CREATED_FOR,
+  CREATED_BY, RESPONSIBLE_FOR and AUTHORIZED_BY.
+- **W:** a `job` table with `product_id`, `machine_id`, `report_name` and
+  `responsible_party_id` columns: the need welded to the job that fills it, and only the
+  latest person responsible kept.
+- **T:** *(the naive-model trap until practice gives yours)* one fixed asset per need, so
+  "Repair 14 PCs" can't name its machines (split it into children); a type that says WORK
+  while the kind says PRODUCT.
+- **D:** requirement → requirement_type (→ parent); work_requirement (is a requirement) →
+  product (Ch 3) | fixed_asset (Ch 5) | deliverable → deliverable_type (all optional);
+  requirement_role → requirement, → party (Ch 2), → requirement_role_type (Ch 4). Checks: a
+  leaf type; type agrees with kind; work requirements typed and with their row; maintenance
+  or repair names a machine; a production run names a product and a quantity; assets dated;
+  a role row once; one responsible at a time.
+</details>
+
+---
+
+### Card 23 · V1 Ch 6 · Work effort generation (Fig 6.3a)
+- **Cue:** "What work is planned and done, at what level and for what purpose, where, which needs and order lines does it fill, and how many did a production run make and reject?"
+- **Hook:** a factory foreman holding two clipboards, "needs" and "orders", with strings
+  running from both to the same machines on the floor *(Claude's, drafted when the figures
+  landed)*
+- **Mantra:** Effort fills needs many to many, or order lines direct. Level and purpose are
+  two lookups; only a production run counts.
+
+<details><summary>Key</summary>
+
+- **S:** Ch 2's `work_effort` gains actual start, completion and hours, special terms, a
+  `facility` and a `work_effort_purpose_type` (PRODUCTION_RUN, MAINTENANCE, WORK_FLOW,
+  RESEARCH) beside its `work_effort_type` (PROGRAM to ACTIVITY, with standard hours) ·
+  `production_run` (to produce, produced, rejected) · `work_requirement_fulfillment` (effort
+  ↔ work requirement, nothing on it) · `order_item_kind` (PRODUCT or WORK) ·
+  `work_order_item_fulfillment` (effort ↔ WORK order line) · Ch 4's
+  `order_requirement_commitment`, the other path.
+- **W:** a job with one `requirement_id` and one `order_item_id`: 28045 fills two needs, and
+  ACME's line takes two runs.
+- **T:** *(the naive-model trap until practice gives yours)* looking for the product on the
+  production run (it comes through the need or the line); summing a shared run against each
+  need it fills.
+- **D:** work_effort → work_effort_type (Ch 2), → work_effort_purpose_type (optional), →
+  facility (Ch 2, optional); production_run (is a work_effort); work_requirement_fulfillment
+  → work_effort, → work_requirement; work_order_item_fulfillment → work_effort, →
+  order_item (Ch 4, WORK); order_requirement_commitment (Ch 4) → order_item, → requirement.
+  6.3b drops the direct path. Checks: production_run row matches the purpose; direct links
+  only to WORK lines; no link twice.
+</details>
+
+---
+
 ## Deck: architecture
 
 One card per chapter, from its architecture figure (the last, overall one): how the chapter's

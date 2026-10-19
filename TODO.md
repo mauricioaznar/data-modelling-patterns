@@ -99,7 +99,11 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [x] Vol 1 MAP: Ch 5's section rewritten from Fig 5.8's How it flows and marked ✓ (2026-10-18): facilities sit on the route segment, not the shipment; hub table updated, DOCUMENT and FIXED ASSET rows added
   - [x] Check SHIPMENT RECEIPT and ITEM ISSUANCE link to INVENTORY ITEM (recalled 2026-10-15); add the qoh = balance data-quality query (Ch 3 NOTES, Fig 3.6 vocabulary). Both confirmed (Figs 5.4, 5.5) and the query added at Fig 5.5, over items with a receipt, an issuance or an opening count (2026-10-18)
   - [ ] Ch 8: Fig 8.5 extends `fixed_asset` and `fixed_asset_type`, built early in Ch 5 for VEHICLE (Ch 5 NOTES, point 41)
-- [ ] Ch 06: Work Effort
+- [ ] Ch 06: Work Effort *(Figs 6.1–6.3b shared and built 2026-10-19; more figures to come)*
+  - [x] Figs 6.1–6.3b with Tables 6.1–6.5 (2026-10-19): 6.1–6.2 built as submodel 1, work requirements and roles (card 22), 6.3a as submodel 2, work effort generation (card 23); 6.3b transcribed, not built; doc drafts for both; Core patterns gains a Ch 6 column and a pattern (need apart from what fills it); ponders 1–3 and 1–5
+  - [ ] Share the rest of Ch 6's figures (work effort breakdown, party and asset assignments, time entries, rates, the overall figure)
+  - [ ] Ch 6 overview: the 14 points to discuss in NOTES (the type drawn mandatory, REQUIREMENT TYPE beside the kinds, 2001 or 2002, Table 6.3's dates and roles before creation, purpose optional, pencils, 51298's blank, 32898's date, no effort types, 6.3a or 6.3b, WORK ORDER ITEM as a subtype set, one fixed asset per need, the overlapping role types)
+  - [ ] Pattern card for "need apart from what fills it", at the Ch 6 card pass
 - [ ] Ch 07: Invoicing
 - [ ] Ch 08: Accounting and Budgeting
 - [ ] Ch 09: Human Resources

@@ -11,8 +11,8 @@ Architecture figure:
 ## Submodels
 | # | Submodel | Figs | Doc draft | Overview | Practice | Doc done |
 |---|---|---|---|---|---|---|
-| 1 | Work requirements and roles | 6.1–6.2 | | | | |
-| 2 | Work effort generation | 6.3a | | | | |
+| 1 | Work requirements and roles | 6.1–6.2 | 2026-10-19 | | | |
+| 2 | Work effort generation | 6.3a | 2026-10-19 | | | |
 | A | Architecture | | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 6.1–6.2)`; the `A` row's matches the
@@ -23,14 +23,14 @@ architecture card's `(Fig N.M)`.
 | Fig | Kind | Submodel | Transcribed | schema | seed | queries | How it flows |
 |---|---|---|---|---|---|---|---|
 | 6.1 | built | 1 | ✓ | ✓ | ✓ | ✓ | – |
-| 6.2 | built | 1 | ✓ | ✗ | ! | ! | – |
-| 6.3a | built | 2 | ✓ | ✗ | ! | ! | – |
+| 6.2 | built | 1 | ✓ | ✓ | ✓ | ✓ | – |
+| 6.3a | built | 2 | ✓ | ✓ | ✓ | ✓ | – |
 | 6.3b | not built | – | ✓ | – | – | – | – |
 
 | # | Submodel | Figures built | Card | Ponders |
 |---|---|---|---|---|
-| 1 | Work requirements and roles | ✓ | ✗ | 2 |
-| 2 | Work effort generation | – | – | 0 |
+| 1 | Work requirements and roles | ✓ | Card 22 | 3 |
+| 2 | Work effort generation | ✓ | Card 23 | 5 |
 
-Last check: 4 ✗ · 5 !
+Last check: 0 ✗ · 1 !
 <!-- check:end -->
