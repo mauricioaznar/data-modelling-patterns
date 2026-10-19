@@ -72,6 +72,10 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    What is a budget for, that it needs them? Write one pair for "a new laptop".
 3. *(8.6)* Budget periods are STANDARD TIME PERIODs, not 8.1's ACCOUNTING PERIODs. When
    would you want the budget tied to an organization's fiscal period instead?
+4. *(8.7)* 8.7a copies the whole budget per revision; 8.7b records impacts. Which
+   questions does each answer cheaply? Pick one for a 10-line team budget, and say why.
+5. *(8.7b)* Revision 1.1 *adds* item 4. Where does the $5,000 live, and why must the
+   "budget after each revision" query not count it twice?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

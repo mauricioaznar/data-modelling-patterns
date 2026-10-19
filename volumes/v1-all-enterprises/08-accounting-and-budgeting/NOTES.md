@@ -756,6 +756,21 @@ Added with Figs 8.4–8.7b:
   items, for no one), furniture parts adding to $12,000 of $10,000, an order status on
   39908.
 
+### Fig 8.7b
+- **8.7a not built** (point 20). **`budget_revision`** numbered within its budget, the
+  pair unique (point 21). **`budget_revision_impact`** between revision and item, one per
+  pair (the book's key, unique), carrying the signed change, an ADD/DELETE flag and the
+  reason (point 22).
+- **An added item is a `budget_item` row** with its own amount; the ADD impact records
+  when and why. So 8.6's two budget queries now leave such items out: they show the
+  budget as first entered.
+- **Checks:** a revision changing another budget's item; an item revised below zero, or
+  added with an amount other than its own. **Queries:** Table 8.10; the marketing budget
+  after each of its revisions (65,000 → 53,000 → 51,000).
+- **Seed:** Table 8.10 with item 4 (Internet advertising, $5,000) added by 1.1; revision
+  dates ours (point 23). Bad rows: a revision of the office budget that trims a marketing
+  item and cuts office supplies by $6,000 of $5,000.
+
 ## When NOT to use this
 - **One company, one ledger:** a single small business can key the chart and the books
   together; ORGANIZATION GL ACCOUNT earns its keep with several internal organizations.

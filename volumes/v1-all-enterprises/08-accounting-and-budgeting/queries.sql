@@ -446,10 +446,12 @@ left join budget_role r      on r.budget_id = b.budget_id and r.budget_role_type
 left join party_display_name d on d.party_id = r.party_id
 order by b.budget_id;
 
--- name: 8.6 — Table 8.8: each budget's items as a tree, and the budget's total (its top items only: parts break their parent down)
+-- name: 8.6 — Table 8.8: each budget's items as a tree, as first entered, and the budget's total (its top items only: parts break their parent down)
 with recursive tree as (
   select i.budget_item_id, 0 as depth, lpad(i.budget_item_seq_id::text, 3) as path
   from budget_item i where i.part_of_budget_item_id is null
+    -- Fig 8.7b: items a revision added are not in the budget as entered
+    and not exists (select 1 from budget_revision_impact x where x.budget_item_id = i.budget_item_id and x.add_delete_flag = 'ADD')
   union all
   select c.budget_item_id, t.depth + 1, t.path || '/' || lpad(c.budget_item_seq_id::text, 3)
   from budget_item c join tree t on t.budget_item_id = c.part_of_budget_item_id
@@ -470,12 +472,13 @@ from budget_status s
 join status_type t on t.status_type_id = s.status_type_id
 order by s.budget_id, s.status_date;
 
--- name: 8.6 — Budgets rolled up the organization: each 2001 budget's total, counted for its department and for every organization above it
+-- name: 8.6 — Budgets rolled up the organization: each 2001 budget's total as first entered, counted for its department and for every organization above it
 with recursive totals as (
   select b.budget_id, b.standard_time_period_id, r.party_id, sum(i.amount) as total
   from budget b
   join budget_role r on r.budget_id = b.budget_id and r.budget_role_type_id = 'BUDGET_FOR'
   join budget_item i on i.budget_id = b.budget_id and i.part_of_budget_item_id is null
+                    and not exists (select 1 from budget_revision_impact x where x.budget_item_id = i.budget_item_id and x.add_delete_flag = 'ADD')   -- Fig 8.7b
   group by b.budget_id, b.standard_time_period_id, r.party_id
 ),
 up as (
@@ -520,3 +523,64 @@ from budget_item p
 join budget_item c on c.part_of_budget_item_id = p.budget_item_id
 group by p.budget_item_id, p.budget_id, p.budget_item_seq_id, p.amount
 having sum(c.amount) <> p.amount or bool_or(c.budget_id <> p.budget_id);
+
+-- ============================================================
+-- Fig 8.7b — Budget revisions: revisions and their impacts
+-- ============================================================
+
+-- name: 8.7b — Table 8.10: each revision of a budget with the items it changed, by how much and why
+select r.budget_id, b.comment as budget, '1.' || r.revision_seq_id as revision, r.date_revised,
+       i.budget_id || ', item ' || i.budget_item_seq_id as item, y.description as item_type,
+       x.revised_amount, x.add_delete_flag, x.revision_reason
+from budget_revision_impact x
+join budget_revision r   on r.budget_revision_id = x.budget_revision_id
+join budget b            on b.budget_id = r.budget_id
+join budget_item i       on i.budget_item_id = x.budget_item_id
+join budget_item_type y  on y.budget_item_type_id = i.budget_item_type_id
+order by r.budget_id, r.revision_seq_id, i.budget_item_seq_id;
+
+-- name: 8.7b — The marketing budget after each of its revisions: every top item's amount and the total, from the original (0) on
+with steps as (
+  select 0 as seq union all select revision_seq_id from budget_revision where budget_id = 29839
+),
+item_at as (
+  select s.seq, i.budget_item_seq_id, y.description as item,
+         case
+           when exists (select 1 from budget_revision_impact x join budget_revision r on r.budget_revision_id = x.budget_revision_id
+                        where x.budget_item_id = i.budget_item_id and r.budget_id = i.budget_id and x.add_delete_flag = 'ADD' and r.revision_seq_id > s.seq) then null
+           when exists (select 1 from budget_revision_impact x join budget_revision r on r.budget_revision_id = x.budget_revision_id
+                        where x.budget_item_id = i.budget_item_id and r.budget_id = i.budget_id and x.add_delete_flag = 'DELETE' and r.revision_seq_id <= s.seq) then 0
+           else i.amount + coalesce((select sum(x.revised_amount) from budget_revision_impact x
+                                     join budget_revision r on r.budget_revision_id = x.budget_revision_id
+                                     where x.budget_item_id = i.budget_item_id and r.budget_id = i.budget_id and x.add_delete_flag is null
+                                       and r.revision_seq_id <= s.seq), 0)
+         end as amount
+  from steps s
+  cross join budget_item i
+  join budget_item_type y on y.budget_item_type_id = i.budget_item_type_id
+  where i.budget_id = 29839 and i.part_of_budget_item_id is null
+)
+select case seq when 0 then 'original' else '1.' || seq end as version,
+       string_agg(item || ' ' || amount, ', ' order by budget_item_seq_id) filter (where amount is not null) as items,
+       sum(amount) as total
+from item_at
+group by seq
+order by seq;
+
+-- name: 8.7b — Data-quality check: revisions that change an item of another budget (should be empty)
+select r.budget_id as revised_budget, '1.' || r.revision_seq_id as revision, i.budget_id as item_budget, i.budget_item_seq_id as item
+from budget_revision_impact x
+join budget_revision r on r.budget_revision_id = x.budget_revision_id
+join budget_item i     on i.budget_item_id = x.budget_item_id
+where i.budget_id <> r.budget_id;
+
+-- name: 8.7b — Data-quality check: items revised below zero, or added with an amount other than the item's own (should be empty)
+select i.budget_id, i.budget_item_seq_id as item, i.amount,
+       coalesce(sum(x.revised_amount) filter (where x.add_delete_flag is null), 0) as changes,
+       i.amount + coalesce(sum(x.revised_amount) filter (where x.add_delete_flag is null), 0) as after_all_revisions,
+       bool_or(x.add_delete_flag = 'ADD' and x.revised_amount is distinct from i.amount) as added_amount_differs
+from budget_item i
+join budget_revision_impact x on x.budget_item_id = i.budget_item_id
+group by i.budget_item_id, i.budget_id, i.budget_item_seq_id, i.amount
+having i.amount + coalesce(sum(x.revised_amount) filter (where x.add_delete_flag is null), 0) < 0
+    or bool_or(x.add_delete_flag = 'ADD' and x.revised_amount is distinct from i.amount);

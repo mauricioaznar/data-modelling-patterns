@@ -1,6 +1,6 @@
 # Vol 1, Chapter 8 — ER diagram
 
-Figs 8.1–8.3b. Tables from earlier chapters are shown by name only.
+Figs 8.1–8.7b (8.7a not built). Tables from earlier chapters are shown by name only.
 
 ```mermaid
 erDiagram
@@ -22,4 +22,25 @@ erDiagram
   transaction_detail |o--o{ transaction_detail : "associated with"
   organization_gl_account ||--o{ organization_gl_account_balance : "balance of"
   accounting_period ||--o{ organization_gl_account_balance : "for"
+  organization_gl_account |o--o{ organization_gl_account : "comprised of"
+  party_role |o--o{ organization_gl_account : "supplier or customer of"
+  product_category |o--o{ organization_gl_account : "referenced by"
+  product |o--o{ organization_gl_account : "referenced by"
+  fixed_asset |o--o{ accounting_transaction : "depreciated via"
+  fixed_asset ||--o{ fixed_asset_depreciation_method : "depreciated via"
+  depreciation_method ||--o{ fixed_asset_depreciation_method : "defines"
+  period_type ||--o{ standard_time_period : "describes"
+  standard_time_period ||--o{ budget : "period for"
+  budget_type ||--o{ budget : "describes"
+  budget ||--|{ budget_item : "composed of"
+  budget_item_type ||--o{ budget_item : "describes"
+  budget_item |o--o{ budget_item : "comprised of"
+  budget ||--o{ budget_status : "described by"
+  status_type ||--o{ budget_status : "defines"
+  budget ||--o{ budget_role : "involving"
+  party ||--o{ budget_role : "involved in"
+  budget_role_type ||--o{ budget_role : "used in"
+  budget ||--o{ budget_revision : "revised with"
+  budget_revision ||--|{ budget_revision_impact : "affecting"
+  budget_item ||--o{ budget_revision_impact : "affected by"
 ```

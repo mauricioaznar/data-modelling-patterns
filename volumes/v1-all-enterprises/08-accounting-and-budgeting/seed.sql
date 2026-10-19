@@ -403,3 +403,28 @@ insert into budget_role (budget_role_id, budget_id, party_id, budget_role_type_i
   (2, 38576, 66, 'BUDGET_FOR'),
   (3, 39908, 67, 'BUDGET_FOR');
 select setval(pg_get_serial_sequence('budget_role', 'budget_role_id'), (select max(budget_role_id) from budget_role));
+
+-- ============================================================
+-- Fig 8.7b — Budget revisions: revisions and their impacts
+-- ============================================================
+-- Item 4 of 29839 exists only through revision 1.1, which added it (NOTES,
+-- point 22).
+insert into budget_item (budget_item_id, budget_id, budget_item_seq_id, budget_item_type_id, part_of_budget_item_id, amount, purpose, justification) values
+  (298394, 29839, 4, 'INTERNET_ADVERTISING', null, 5000, 'Reach buyers online', 'Cheaper per lead than direct mail');
+
+-- Table 8.10's two revisions, dated between the send-back (Nov 15) and the
+-- resubmission (Nov 20), ours; then a bad revision of 38576.
+insert into budget_revision (budget_revision_id, budget_id, revision_seq_id, date_revised) values
+  (1, 29839, 1, '2000-11-17'),
+  (2, 29839, 2, '2000-11-19'),
+  (3, 38576, 1, '2002-05-20');
+select setval(pg_get_serial_sequence('budget_revision', 'budget_revision_id'), (select max(budget_revision_id) from budget_revision));
+
+insert into budget_revision_impact (budget_revision_impact_id, budget_revision_id, budget_item_id, revised_amount, add_delete_flag, revision_reason) values
+  (1, 1, 298392, -10000, null,  'Advertising had to be cut substantially'),
+  (2, 1, 298393, -7000,  null,  'Direct mail had to be cut substantially'),
+  (3, 1, 298394, 5000,   'ADD', 'A budget for Internet advertising is needed'),
+  (4, 2, 298393, -2000,  null,  'Direct mail still needs to come down'),
+  (5, 3, 298391, -1000,  null,  'Trade show stands paid from admin'),   -- DATA ERROR: an item of the marketing budget, revised in the office budget
+  (6, 3, 385761, -6000,  null,  'Supplies cut to the bone');           -- DATA ERROR: office supplies 5,000 cut by 6,000
+select setval(pg_get_serial_sequence('budget_revision_impact', 'budget_revision_impact_id'), (select max(budget_revision_impact_id) from budget_revision_impact));
