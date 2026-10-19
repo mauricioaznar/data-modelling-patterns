@@ -217,9 +217,10 @@ where pr.quantity_produced is not null
 order by we.actual_start_datetime;
 
 -- name: 6.3a — Every work effort by level and by purpose: the two subtype sets are independent
-select coalesce(pt.description, '(no purpose)') as purpose, t.description as level, count(*) as efforts
+select coalesce(pt.description, '(no purpose)') as purpose, coalesce(lv.description, t.description) as level, count(*) as efforts
 from work_effort we
 join work_effort_type t               on t.work_effort_type_id = we.work_effort_type_id
+left join work_effort_type lv         on lv.work_effort_type_id = t.parent_type_id   -- Fig 6.4: a kind of work sits under its level
 left join work_effort_purpose_type pt on pt.work_effort_purpose_type_id = we.work_effort_purpose_type_id
 group by 1, 2
 order by 1, 2;
@@ -266,3 +267,104 @@ select 'work order item', work_effort_id, order_item_id, count(*)
 from work_order_item_fulfillment
 group by work_effort_id, order_item_id
 having count(*) > 1;
+
+-- ============================================================
+-- Fig 6.4 — Work effort breakdown
+-- ============================================================
+
+-- name: 6.4 — Table 6.6: each effort with its level, the efforts it is part of, the standard hours for its kind of work, its schedule and estimate
+select we.work_effort_id, coalesce(lv.description, t.description) as level, we.description,
+       string_agg(a.from_work_effort_id || ' ' || p.name, '; ' order by a.from_work_effort_id) as part_of,
+       t.standard_work_hours, we.scheduled_start_date, we.scheduled_completion_date, we.estimated_hours
+from work_effort we
+join work_effort_type t       on t.work_effort_type_id = we.work_effort_type_id
+left join work_effort_type lv on lv.work_effort_type_id = t.parent_type_id
+left join work_effort_association a on a.to_work_effort_id = we.work_effort_id and a.work_effort_association_type_id = 'BREAKDOWN'
+                                   and a.from_work_effort_id <> 3454589   -- leave out the bad cycle row
+left join work_effort p       on p.work_effort_id = a.from_work_effort_id
+where we.work_effort_id in (28045, 120001, 120002, 120003, 120004, 3454587, 3454588, 3454589)
+group by we.work_effort_id, lv.description, t.description, we.description, t.standard_work_hours,
+         we.scheduled_start_date, we.scheduled_completion_date, we.estimated_hours
+order by we.work_effort_id;
+
+-- name: 6.4 — Production run #1 broken down, level by level, with the estimate of each part (the walk stops at depth 5, so a cycle can't run forever)
+with recursive tree (work_effort_id, depth, path) as (
+  select 28045, 0, '28045'
+  union all
+  select a.to_work_effort_id, t.depth + 1, t.path || ' > ' || a.to_work_effort_id
+  from tree t
+  join work_effort_association a on a.from_work_effort_id = t.work_effort_id and a.work_effort_association_type_id = 'BREAKDOWN'
+  where t.depth < 5 and a.to_work_effort_id <> 28045
+)
+select repeat('  ', t.depth) || we.description as effort, t.path, we.estimated_hours
+from tree t
+join work_effort we on we.work_effort_id = t.work_effort_id
+order by t.path;
+
+-- name: 6.4 — Shared parts: efforts that belong to more than one parent (Table 6.6's set-up serves both runs)
+select we.work_effort_id, we.description, count(*) as parents,
+       string_agg(p.work_effort_id || ' ' || p.name, '; ' order by p.work_effort_id) as part_of
+from work_effort_association a
+join work_effort we on we.work_effort_id = a.to_work_effort_id
+join work_effort p  on p.work_effort_id = a.from_work_effort_id
+where a.work_effort_association_type_id = 'BREAKDOWN'
+group by we.work_effort_id, we.description
+having count(*) > 1;
+
+-- name: 6.4 — What each effort waits for, and what runs alongside it (a concurrency read from both ends)
+select we.work_effort_id, we.description, 'waits for' as dependency, o.work_effort_id as other, o.description as other_effort
+from work_effort_association a
+join work_effort we on we.work_effort_id = a.to_work_effort_id
+join work_effort o  on o.work_effort_id = a.from_work_effort_id
+where a.work_effort_association_type_id = 'PRECEDENCY'
+union all
+select e.work_effort_id, e.description, 'runs alongside', o.work_effort_id, o.description
+from work_effort_association a
+cross join lateral (values (a.from_work_effort_id, a.to_work_effort_id), (a.to_work_effort_id, a.from_work_effort_id)) as ends (this_id, other_id)
+join work_effort e on e.work_effort_id = ends.this_id
+join work_effort o on o.work_effort_id = ends.other_id
+where a.work_effort_association_type_id = 'CONCURRENCY'
+order by 1, 3;
+
+-- name: 6.4 — Estimates against the standard for each kind of work: which efforts were planned below standard, and by how much
+select we.work_effort_id, we.description, t.description as kind_of_work, t.standard_work_hours, we.estimated_hours,
+       we.estimated_hours - t.standard_work_hours as against_standard
+from work_effort we
+join work_effort_type t on t.work_effort_type_id = we.work_effort_type_id
+where t.standard_work_hours is not null
+order by we.work_effort_id;
+
+-- name: 6.4 — Work done again: each redo beside the effort it redoes
+select r.work_effort_id as redo, r.description, r.scheduled_start_date,
+       o.work_effort_id as redoes, o.description as original, o.scheduled_start_date as original_start
+from work_effort r
+join work_effort o on o.work_effort_id = r.version_of_work_effort_id;
+
+-- name: 6.4 — Data-quality check: associations typed with the DEPENDENCY grouping row instead of precedency or concurrency (should be empty)
+select a.work_effort_association_id, a.from_work_effort_id, a.to_work_effort_id, a.work_effort_association_type_id
+from work_effort_association a
+where exists (select 1 from work_effort_association_type c where c.parent_type_id = a.work_effort_association_type_id);
+
+-- name: 6.4 — Data-quality check: efforts that end up inside their own breakdown, a cycle (should be empty)
+with recursive below (top_id, work_effort_id, depth) as (
+  select from_work_effort_id, to_work_effort_id, 1
+  from work_effort_association where work_effort_association_type_id = 'BREAKDOWN'
+  union all
+  select b.top_id, a.to_work_effort_id, b.depth + 1
+  from below b
+  join work_effort_association a on a.from_work_effort_id = b.work_effort_id and a.work_effort_association_type_id = 'BREAKDOWN'
+  where b.depth < 10 and b.work_effort_id <> b.top_id
+)
+select distinct b.top_id as work_effort_id, we.description
+from below b
+join work_effort we on we.work_effort_id = b.top_id
+where b.work_effort_id = b.top_id;
+
+-- name: 6.4 — Data-quality check: precedencies whose second effort is scheduled to start before the first is scheduled to finish (should be empty)
+select a.from_work_effort_id as first_id, f.description as first_effort, f.scheduled_completion_date as first_finishes,
+       a.to_work_effort_id as then_id, t.description as then_effort, t.scheduled_start_date as then_starts
+from work_effort_association a
+join work_effort f on f.work_effort_id = a.from_work_effort_id
+join work_effort t on t.work_effort_id = a.to_work_effort_id
+where a.work_effort_association_type_id = 'PRECEDENCY'
+  and t.scheduled_start_date < f.scheduled_completion_date;

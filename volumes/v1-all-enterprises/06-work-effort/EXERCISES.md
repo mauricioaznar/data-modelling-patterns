@@ -63,6 +63,17 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    its parent does. What would a mandatory facility force you to record, and when would
    that be wrong?
 
+### Submodel 3: work effort breakdown
+1. **[6.4]** Table 6.6's set-up (120001) is part of two production runs. What does a
+   `parent_work_effort_id` column on WORK EFFORT do with that row, and what would you have
+   to copy to make it fit?
+2. **[6.4]** Breakdown, precedency and concurrency all live in one association table. Which
+   earlier pattern is this, and what does a query need to know about a concurrency that it
+   doesn't need for a precedency?
+3. **[6.4]** Table 6.6 gives each activity its own standard hours, yet the attribute sits on
+   WORK EFFORT TYPE. What does that tell you about what WORK EFFORT TYPE really lists, and
+   why does it fight with Ch 2's PROGRAM…ACTIVITY rows?
+
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
 notation (entities, key attributes, relationships and cardinality). Then diff it against

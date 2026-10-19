@@ -243,3 +243,67 @@ insert into work_order_item_fulfillment (work_effort_id, order_item_id) values
   (29534, 49),
   (29874, 49),
   (51298, 1);       -- DATA ERROR: Ch 4's line 1 is ACME's bond paper, a PRODUCT line
+
+-- ============================================================
+-- Fig 6.4 — Work effort breakdown
+-- ============================================================
+-- JOB, a sixth level (NOTES, point 15), and Table 6.6's kinds of work, each
+-- under its level with its standard hours (point 16).
+insert into work_effort_type (work_effort_type_id, parent_type_id, description, standard_work_hours) values
+  ('JOB',                    null,       'Job',                                   null),
+  ('SET_UP_PRODUCTION_LINE', 'ACTIVITY', 'Set up production line',                20),
+  ('OPERATE_MACHINERY',      'ACTIVITY', 'Operate machinery',                     10),
+  ('CLEAN_UP_MACHINERY',     'ACTIVITY', 'Clean up machinery',                    5),
+  ('QUALITY_ASSURE_GOODS',   'ACTIVITY', 'Quality assure goods produced',         10),
+  ('MOVE_MACHINERY',         'TASK',     'Move manufacturing machinery in place', 5),
+  ('MOVE_RAW_MATERIALS',     'TASK',     'Move raw materials in place for a run', 8),
+  ('SET_UP_ROLLERS',         'TASK',     'Set up assembly line rollers',          7);
+
+-- Production runs are jobs (Tables 6.6 and 6.9); 28045's schedule as Table 6.6 prints it.
+update work_effort set work_effort_type_id = 'JOB' where work_effort_id in (28045, 51285, 51298, 29534, 29874);
+update work_effort set scheduled_completion_date = '2000-06-04' where work_effort_id = 28045;
+
+insert into work_effort_association_type (work_effort_association_type_id, parent_type_id, description) values
+  ('BREAKDOWN',   null,         'Breakdown: the "to" effort is part of the "from" effort'),
+  ('DEPENDENCY',  null,         'Dependency'),
+  ('PRECEDENCY',  'DEPENDENCY', 'Precedency: the "to" effort waits for the "from" effort to finish'),
+  ('CONCURRENCY', 'DEPENDENCY', 'Concurrency: the two efforts run at the same time');
+
+-- Table 6.6. 51245 is production run #2 (point 17); its dates and size are ours.
+-- Activities and tasks name no place: they happen where their job does.
+insert into work_effort (work_effort_id, work_effort_type_id, work_effort_purpose_type_id, facility_id, name, description,
+                         scheduled_start_date, scheduled_completion_date, estimated_hours, version_of_work_effort_id) values
+  (51245,   'JOB',                    'PRODUCTION_RUN', 15,   'Production run #2', 'Production run #2',                                 '2000-06-05', '2000-06-08', null, null),
+  (120001,  'SET_UP_PRODUCTION_LINE', null,             null, 'Set up',            'Set up production line',                            '2000-06-01', '2000-06-02', 20,   null),
+  (120002,  'OPERATE_MACHINERY',      null,             null, 'Operate',           'Operate machinery',                                 '2000-06-03', '2000-06-03', 10,   null),
+  (120003,  'CLEAN_UP_MACHINERY',     null,             null, 'Clean up',          'Clean up machinery',                                '2000-06-04', '2000-06-04', 5,    null),
+  (120004,  'QUALITY_ASSURE_GOODS',   null,             null, 'Quality assurance', 'Quality assure goods produced',                     '2000-06-03', '2000-06-04', 10,   null),
+  (3454587, 'MOVE_MACHINERY',         null,             null, 'Move machinery',    'Move pen manufacturing machinery in place',         '2000-06-01', '2000-06-01', 4,    null),
+  (3454588, 'MOVE_RAW_MATERIALS',     null,             null, 'Move materials',    'Move raw materials in place for production run',    '2000-06-01', '2000-06-01', 7,    null),
+  (3454589, 'SET_UP_ROLLERS',         null,             null, 'Set up rollers',    'Set up assembly line rollers',                      '2000-06-01', '2000-06-01', 6,    null),
+  -- ours: the clean-up done again
+  (120005,  'CLEAN_UP_MACHINERY',     null,             null, 'Clean up again',    'Clean up machinery again: ink left on the rollers', '2000-06-05', '2000-06-05', 3,    120003);
+
+select setval(pg_get_serial_sequence('work_effort', 'work_effort_id'), (select max(work_effort_id) from work_effort));
+
+insert into production_run (work_effort_id, quantity_to_produce) values
+  (51245, 1500);
+
+-- Table 6.6's breakdown ("1200" read as 120001, point 18); the dependencies and the from date are ours.
+insert into work_effort_association (work_effort_association_type_id, from_work_effort_id, to_work_effort_id, from_date) values
+  ('BREAKDOWN',   28045,   120001,  '2000-05-15'),
+  ('BREAKDOWN',   51245,   120001,  '2000-05-15'),   -- one set-up serves two runs
+  ('BREAKDOWN',   28045,   120002,  '2000-05-15'),
+  ('BREAKDOWN',   28045,   120003,  '2000-05-15'),
+  ('BREAKDOWN',   28045,   120004,  '2000-05-15'),
+  ('BREAKDOWN',   120001,  3454587, '2000-05-15'),
+  ('BREAKDOWN',   120001,  3454588, '2000-05-15'),
+  ('BREAKDOWN',   120001,  3454589, '2000-05-15'),
+  ('PRECEDENCY',  120001,  120002,  '2000-05-15'),   -- set up before operating
+  ('PRECEDENCY',  120002,  120003,  '2000-05-15'),   -- operate before cleaning up
+  ('PRECEDENCY',  3454587, 3454589, '2000-05-15'),   -- machinery in place before the rollers
+  ('CONCURRENCY', 120002,  120004,  '2000-05-15'),   -- QA while the machines run
+  -- ours, each with one mistake
+  ('BREAKDOWN',   3454589, 28045,   '2000-05-20'),   -- DATA ERROR: a task drawn as its own job's parent (a cycle)
+  ('DEPENDENCY',  120003,  120004,  '2000-05-20'),   -- DATA ERROR: typed with the grouping row
+  ('PRECEDENCY',  120004,  120002,  '2000-05-20');   -- DATA ERROR: QA (to Jun 4) must finish before operating (Jun 3)

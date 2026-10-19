@@ -13,7 +13,7 @@ the work actually planned and done. Associative entities join the two, and join 
 order lines. The recurring moves: need versus fulfilment (Ch 4's requirement and order),
 many-to-many fulfilment links, and two independent subtype sets, each held as a type lookup.
 
-## Submodels (proposed 2026-10-19, Figs 6.1–6.3b shared so far)
+## Submodels (proposed 2026-10-19, Figs 6.1–6.6 shared so far)
 1. **Work requirements and their roles** (Figs 6.1–6.2): what work is needed, of which type
    (a production run, maintenance, an internal project), to produce which product or
    deliverable, or to work on which machine; who created it, for whom, who is responsible for
@@ -23,6 +23,15 @@ many-to-many fulfilment links, and two independent subtype sets, each held as a 
    at what level (program down to activity) and for what purpose (production run,
    maintenance, research), where it happens, which needs it fulfils and which order lines;
    for a production run, how many to make and how many came out good or rejected?
+
+3. **Work effort breakdown** (Fig 6.4): what is this work made of, which parts serve more
+   than one job, what must finish before what and what must run together, and which effort
+   redoes which? What is the standard time for each kind of work?
+
+4. **Work effort assignments and time** (Figs 6.5–6.6): who works on an effort, in which
+   role, where and for which dates; what each party is skilled at; what state the work is in
+   and since when; how many hours each worker spent on which effort, gathered on timesheets
+   per period, and who else is involved in each timesheet?
 
 ## Figures
 
@@ -309,7 +318,227 @@ The purpose line is renamed ("categorized by"), with no change in meaning.
 **Not built**: 6.3a is built because it holds both paths. Which one the chapter's overall
 figure keeps decides whether the direct path stays (point 11).
 
-### Points to discuss after the overview (Figs 6.1–6.3b)
+### Fig 6.4 — Work effort breakdown
+**Transcription** (accepted: ☐; photo with Table 6.6)
+
+```
+WORK EFFORT ASSOCIATION
+  # effective_from_date
+  o effective_thru_date
+  subtypes: WORK EFFORT BREAKDOWN; WORK EFFORT DEPENDENCY, itself with subtypes
+            WORK EFFORT PRECEDENCY and WORK EFFORT CONCURRENCY (none has attributes)
+  -> WORK EFFORT               (many "associated with" 1 effort, as "from"; part of the key)
+  -> WORK EFFORT               (many "associated with" 1 effort, as "to"; part of the key)
+
+WORK EFFORT                       (6.3a's attributes; set 1 PROGRAM, PROJECT, PHASE, TASK,
+                                   ACTIVITY; set 2 PRODUCTION RUN with its quantities,
+                                   MAINTENANCE, WORK FLOW, RESEARCH)
+  -> WORK EFFORT               (dashed, optional: "a version of" 1 effort; the effort
+                                "redone via" many)
+  -> WORK EFFORT TYPE          (many "described by" 1; type "used to describe" many; drawn
+                                from the whole box this time)
+
+WORK EFFORT TYPE
+  # work_effort_type_id
+  * description
+  o standard_work_hours
+```
+
+**Table 6.6, work effort breakdown** (effort · subtype · description · parent(s) ·
+standard hours · scheduled start–completion · estimated hours)
+- 28045 · Job · production run #1 · – · – · Jun 1–Jun 4, 2000 · –
+- 120001 · Activity · set up production line · 28045 run #1 *and* 51245 run #2 · 20 ·
+  Jun 1–Jun 2 · 20
+- 120002 · Activity · operate machinery · 28045 · 10 · Jun 3–Jun 3 · 10
+- 120003 · Activity · clean up machinery · 28045 · 5 · Jun 4–Jun 4 · 5
+- 120004 · Activity · quality assure the goods produced · 28045 · 10 · Jun 3–Jun 4 · 10
+- 3454587 · Task · move the pen machinery into place · "1200" set up production line · 5 ·
+  Jun 1 · 4
+- 3454588 · Task · move raw materials into place for the run · "1200" · 8 · Jun 1 · 7
+- 3454589 · Task · set up the assembly line rollers · "1200" · 7 · Jun 1 · 6
+
+**To check against the book**
+- "Job" is the subtype printed for 28045, but JOB isn't one of the five drawn (point 15).
+- Standard work hours are given per effort, while the attribute sits on WORK EFFORT TYPE
+  (point 16).
+- 51245 "Production run #2" is a requirement's number in Table 6.4, not an effort's (point 17).
+- The tasks' parent is printed "1200", read as 120001, set up production line (point 18).
+- Which end is "from" in a dependency isn't drawn (point 19).
+- The "redone via" line: is it dashed on both ends (optional both ways)? Read as optional.
+
+**Discussion**
+- **Work is a tree, and more than a tree.** A job breaks into activities, an activity into
+  tasks. The naive model is a `parent_id` on the effort: one parent each. Table 6.6 already
+  breaks it: set-up 120001 serves two runs. So the breakdown is an association between two
+  efforts, many-to-many, dated so a plan can be reshaped without losing what it was.
+- **Same association, other meanings.** Beyond "is part of", two efforts can depend on each
+  other: one must finish before the other starts (precedency), or both must run at the same
+  time (concurrency). One table holds all three; the subtype says which. It's Ch 2's party
+  relationship move applied to work: a typed, dated link between two rows of one table.
+- **Versions.** A job redone (a rework, a re-run) points at the effort it redoes. It's a
+  plain self-reference: one original, many redos.
+- **When not to:** a team whose work is always a strict tree, never shared and never
+  sequenced, lives happily with `parent_id`. The association earns its place with shared
+  sub-work or with scheduling (dependencies are what a Gantt chart draws).
+
+### Fig 6.5 — Work effort party assignment
+**Transcription** (accepted: ☐; photo with Tables 6.7–6.9)
+
+```
+WORK EFFORT PARTY ASSIGNMENT
+  # from_date
+  o thru_date
+  o comment
+  -> PARTY                     (many "the assignment of" 1; party "allocated via" many; key)
+  -> WORK EFFORT               (many "for" 1; effort "assigned via" many; key)
+  -> WORK EFFORT ROLE TYPE     (many "described by" 1; type "used in" many; key)
+  -> FACILITY                  (many "assigned at" 1; facility "used in" many; not in the
+                                key, read as optional)
+
+WORK EFFORT ROLE TYPE             (no attributes drawn)
+
+PARTY SKILL
+  o years_experience
+  o rating
+  -> PARTY                     (many "details about" 1; party "described by" many; key)
+  -> SKILL TYPE                (many "defined by" 1; type "used to define" many; key)
+
+SKILL TYPE
+  # skill_type_id
+  * description
+
+WORK EFFORT STATUS
+  o datetime
+  -> WORK EFFORT STATUS TYPE   (many "defined using" 1; type "used to define" many; key)
+  -> WORK EFFORT               (many "for" 1; effort "in the state of" many; key)
+
+WORK EFFORT STATUS TYPE           (no attributes drawn)
+WORK EFFORT                       (6.3a's attributes); PARTY, FACILITY (Ch 2's)
+```
+
+**Table 6.7, party assignments** (effort · party · role · from · thru · comment)
+- 39409 develop a sales and marketing plan · Dick Jones · project manager · Jan 2–Sep 15, 2001
+- 39409 · Bob Jenkins · project administrator · *no dates*
+- 39409 · John Smith · team member · Mar 5–Aug 6, 2001 · leaving on a three-week holiday Aug 7
+- 39409 · John Smith · team member · Sep 1–Dec 2, 2001
+- 39409 · Jane Smith · team member · Aug 6, *2000*–Sep 15, 2001 · keen on the assignment
+- 29000 develop project plan (part of 39409) · Dick Jones · creator · Jan 2–Jan 4, 2001
+- 29000 · Bob Jenkins · data entry in system · Jan 4–Jan 4, 2001
+- 29003 conduct initial interviews (part of 39409) · John Smith · performer · Jan 5–Feb 5, 2001
+- 29005 conduct market research (part of 39409) · USA Consulting · outsourcing
+  responsibility · Mar 1–Jul 1, 2001 · contracted outside
+
+**Table 6.8, party skills** (party · skill · years · rating)
+- John Smith · project management · 20 · 10; marketing · 5 · 6
+- Dick Jones · project management · 12 · 8
+- USA Consulting · market research · 25 · 10; sales analysis · 15 · 7; data warehousing · 5 · 5
+
+**Table 6.9, statuses** (Table 6.6's efforts, with status and when)
+- 28045 · in progress (no time)
+- 120001 · started Jun 2, 2000 1 PM; completed Jun 2, 2000 2 PM
+- 120002 · started Jun 3 1 PM; completed Jun 3 4 PM
+- 120003 · started Jun 4 9 AM; completed Jun 4 10 AM
+- 120004 · pending
+
+**To check against the book**
+- Bob Jenkins's project administrator row has no from date, which is part of the key
+  (point 20).
+- Jane Smith's from date, Aug 6, 2000, starts before the project exists (point 21).
+- The status's datetime is drawn optional, and the key is the effort and the status type
+  alone: one row per status per effort (point 22).
+- The facility line's optionality is hard to read; read as optional.
+
+**Discussion**
+- **Who works on what, as what, and when.** The naive model puts an `assigned_to` column
+  on the job: one person, no role, no dates. Table 6.7 has five parties on one project, in
+  three roles, one of them twice (John Smith leaves for a holiday and comes back), and a
+  company among them. The assignment is a dated, role-typed link between a party and an
+  effort. From date is in the key, so the same person can come back in the same role.
+- **Party, not person.** USA Consulting takes the market research: the enterprise only
+  cares that it gets done, not who in that firm does it. Skills are the same: a firm has
+  25 years of market research.
+- **Skills are a fact about the party, not about the assignment.** PARTY SKILL says what a
+  party can do (years, a rating); it's what a manager looks at before assigning. Nothing
+  forces an assignment to match a skill.
+- **Status as history.** WORK EFFORT STATUS is a list of status events per effort (started
+  at, completed at), the same move as Ch 4's order status. The current status is the latest.
+- **Roles on the effort, not on the requirement.** Fig 6.2's roles are about the need (who
+  asked, who authorised); these are about the work (who manages, who performs).
+
+### Fig 6.6 — Work effort time tracking
+**Transcription** (accepted: ☐; photos with Table 6.10)
+
+```
+TIME ENTRY
+  # time_entry_id
+  * from_datetime
+  * thru_datetime
+  * hours
+  o comment
+  -> TIMESHEET                 (many "within" 1; timesheet "composed of" many)
+  -> WORK EFFORT               (many "the time spent on" 1; effort "tracked via" many)
+
+TIMESHEET
+  # timesheet_id
+  * from_date
+  * thru_date
+  o comment
+  -> PARTY ROLE                (many "for the hours of" 1 role; role "submitting" many),
+                                the role being a WORKER
+
+TIMESHEET ROLE                    (no attributes drawn)
+  -> PARTY                     (many "of" 1; party "involved in" many; key)
+  -> TIMESHEET ROLE TYPE       (many "described by" 1; type "the description for" many; key)
+  -> TIMESHEET                 (many "for" 1; timesheet "involving" many; key)
+
+PARTY ROLE                        (Ch 2's) with subtype WORKER, itself with subtypes
+                                   EMPLOYEE and CONTRACTOR
+  -> PARTY                     (many "for" 1; party "acting as" many)
+
+WORK EFFORT PARTY ASSIGNMENT
+  # from_date
+  * thru_date                  (mandatory here, optional in 6.5)
+  o comment
+  -> PARTY                     (many "the assignment of" 1; "allocated via")
+  -> WORK EFFORT               (many "for" 1; "assigned via")
+
+PARTY (with PERSON, ORGANIZATION), WORK EFFORT (6.3a's attributes)
+```
+
+**Table 6.10, timesheets and time entries** (timesheet · from–thru · party · effort ·
+entry from–thru · hours)
+- 1390 · Jan 1–Jan 15, 2001 · Dick Jones
+  - 29000 develop project plan (part of 39409) · Jan 2–Jan 4 · 13
+  - 29005 identify potential team members for the project · Jan 5–Jan 6 · 7
+- 1200 · Feb 1–Feb 15, 2001 · John Smith
+  - 29003 conduct initial interviews · Feb 1–Feb 5 · 30
+  - 294395 facilitate the monthly goals session · Feb 6–Feb 6 · 6
+- 1450 · Feb 16–Mar 1, 2001 · John Smith
+  - 29003 conduct initial interviews · Feb 16–Mar 1 · 45
+
+**To check against the book**
+- 29005 is "conduct market research" in Table 6.7 and "identify potential team members" in
+  Table 6.10 (point 23).
+- John Smith logs time on 29003 to Mar 1, while his assignment to it ended Feb 5; and on
+  294395, to which he has no assignment (point 24).
+- WORK EFFORT PARTY ASSIGNMENT's thru date is starred here, a circle in 6.5 (point 25).
+- The entries' times are printed as days; read as whole days.
+
+**Discussion**
+- **Time is recorded against the work, and gathered per worker.** A time entry says "these
+  hours, on this effort, between these times". A timesheet gathers a worker's entries for a
+  period, so it can be submitted and approved as one. The naive model puts `hours` on the
+  assignment, which loses when the hours happened and can't be approved period by period.
+- **A timesheet belongs to a worker role**, not to a party: the same person is an employee
+  in one period and a contractor in another, and their sheets follow the role. WORKER
+  groups EMPLOYEE and CONTRACTOR in Ch 2's role hierarchy.
+- **Other parties on a timesheet** (who approved it, who entered it) are TIMESHEET ROLEs,
+  the usual role triangle on a new hub.
+- **Nothing ties the entry to the assignment.** Time and assignment both meet the work
+  effort, separately. Whether someone logged time on work they weren't assigned to is a
+  question for a query, and Table 6.10 already answers yes (point 24).
+
+### Points to discuss after the overview (Figs 6.1–6.6)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing.
@@ -359,6 +588,39 @@ the literal drawing.
 14. **Table 6.3, the role types:** created for, created by, responsible for, authorized by
     are added beside Ch 4's OWNER, REQUESTER and APPROVER, which overlap (APPROVER with
     authorized by, OWNER with responsible for). Merge at the overview?
+15. **Table 6.6, JOB:** 28045's subtype is "Job", not one of the five drawn. Built as a
+    sixth level row, and every production run retyped JOB (this settles point 10 for runs).
+16. **Table 6.6, standard hours per effort:** the attribute is on WORK EFFORT TYPE, yet each
+    activity has its own standard. Read: WORK EFFORT TYPE is a catalogue of kinds of work
+    ("set up production line", 20 hours), not only the five levels. Built: Ch 2's
+    `work_effort_type` gains a parent, the levels become its grouping rows and the kinds of
+    work its leaves, so the type implies the level. Alternative: level and kind of work in
+    two columns (Ch 2 merged them).
+17. **Table 6.6, 51245 "Production run #2":** 51245 is a requirement in Table 6.4, filled
+    by 28045. Seeded as a new effort 51245, a second run sharing #1's set-up, which is the
+    point the row makes.
+18. **Table 6.6, "1200":** read as 120001, set up production line, the only set-up.
+19. **6.4, direction:** breakdown runs from the parent to the part; a precedency from the
+    effort that comes first to the one that waits; a concurrency either way (a query reads
+    both directions).
+20. **Table 6.7, Bob Jenkins without dates:** from date is part of the key. Seeded from Jan
+    2, 2001, Dick Jones's start (ours).
+21. **Table 6.7, Jane Smith from Aug 6, 2000:** read as Aug 6, 2001: she starts the day John
+    Smith leaves for three weeks, and both stop on Sep 15. Seeded as 2001.
+22. **6.5, status keyed by type:** one row per status per effort, the datetime optional
+    ("in progress" and "pending" have none). Built with a surrogate key; a duplicate is a
+    check. A status that comes back (paused, then in progress again) would need the
+    datetime in the key.
+23. **Tables 6.7 and 6.10, 29005:** market research (USA Consulting) in one, team members
+    (Dick Jones) in the other. 29005 kept as market research; the team-member work seeded
+    as 29006 (ours), part of 39409.
+24. **Table 6.10, time outside assignments:** John Smith's Feb 16–Mar 1 hours on 29003, and
+    his 294395 session. Seeded as printed; a review query lists time with no assignment
+    covering it, counting an assignment to a parent effort as covering its parts.
+25. **6.6, thru date starred:** 6.5 draws it optional and the text speaks of open-ended
+    assignments. Built optional.
+26. **Submodel 4's figures:** 6.5–6.6 for now. If Fig 6.7 (rates) joins it, its card heading
+    changes and Anki makes a new note.
 
 ## Design decisions (book → SQL)
 
@@ -427,6 +689,30 @@ the literal drawing.
   a PRODUCT line) committed to the forecast 51285, so its work is reached through the need:
   both paths on one order. Bad rows: effort 29900, a research job with a `production_run` row;
   51298 also linked to Ch 4's order line 1 (a product line); 28045's link to 50985 twice.
+
+### Fig 6.4
+- **`work_effort_type` gains `parent_type_id`** (point 16): the five levels and our JOB
+  (point 15) are grouping rows; the kinds of work in Table 6.6 (set up production line, move
+  raw materials into place…) are leaves under ACTIVITY or TASK, each with its standard hours.
+  An effort typed with a leaf has its level one step up; Chs 2 and 4's efforts keep their
+  level rows. Table 6.6's production runs are retyped JOB.
+- **`work_effort_association`**: one table for the three subtypes, with
+  `work_effort_association_type` as their lookup (BREAKDOWN; DEPENDENCY grouping PRECEDENCY
+  and CONCURRENCY), `from_work_effort_id`, `to_work_effort_id` and the usual `from_date` and
+  `thru_date` for the book's effective dates. Directions as point 19. An effort linked to
+  itself is a check constraint.
+- **Checks** (data-quality queries): an association typed with the DEPENDENCY grouping row;
+  a cycle in the breakdown; a precedency whose second effort is scheduled to start before
+  the first is scheduled to finish.
+- **`version_of_work_effort_id`** on `work_effort`, optional ("a version of"); an effort
+  that is its own version is a check constraint.
+- **Seed:** Table 6.6 with its ids; 51245 as production run #2 (point 17), "1200" as 120001
+  (point 18). 28045's scheduled completion becomes Jun 4, as Table 6.6 prints it. Ours: the
+  associations' from date (May 15, 2000, the day the run was planned), the dependencies
+  (set-up before operating, operating before cleaning, machinery in place before the
+  rollers; QA alongside operating), and 120005, a second clean-up that redoes 120003. Bad
+  rows: 3454589 drawn as the parent of 28045 (a cycle); 120003 → 120004 typed DEPENDENCY;
+  120004 to finish before 120002 starts, though it's scheduled a day later.
 
 ## When NOT to use this
 - **A shop that only sells** never generates work: a service it sells is a product line on

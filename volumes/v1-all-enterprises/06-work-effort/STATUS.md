@@ -13,6 +13,8 @@ Architecture figure:
 |---|---|---|---|---|---|---|
 | 1 | Work requirements and roles | 6.1–6.2 | 2026-10-19 | | | |
 | 2 | Work effort generation | 6.3a | 2026-10-19 | | | |
+| 3 | Work effort breakdown | 6.4 | | | | |
+| 4 | Work effort assignments and time | 6.5–6.6 | | | | |
 | A | Architecture | | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 6.1–6.2)`; the `A` row's matches the
