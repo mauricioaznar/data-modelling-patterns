@@ -427,3 +427,54 @@ insert into payment_application (payment_id, invoice_id, billing_account_id, amo
   (88394,    30020,  null, 120.00),
   (12298500, 30020,  null, 50.00),   -- DATA ERROR: a receipt from ACME applied to our purchase invoice (caught by a query)
   (88756,    990026, null, 700.00);  -- DATA ERROR: more than the payment's 670, and 990026 paid past its 1,200 (caught by queries)
+
+-- ============================================================
+-- Fig 7.9 — Financial accounts, withdrawals and deposits
+-- ============================================================
+-- The text's examples of account types, under the two kinds.
+insert into financial_account_type (financial_account_type_id, parent_type_id, description) values
+  ('BANK',        null,         'Bank account (grouping row)'),
+  ('CHECKING',    'BANK',       'Checking account'),
+  ('SAVINGS',     'BANK',       'Savings account'),
+  ('INVESTMENT',  null,         'Investment account (grouping row)'),
+  ('IRA',         'INVESTMENT', 'IRA account'),
+  ('MUTUAL_FUND', 'INVESTMENT', 'Mutual fund account');
+
+-- Table 7.12's account (name ours), and ours: a savings account typed under
+-- the wrong kind.
+insert into financial_account (financial_account_id, financial_account_kind, financial_account_type_id, financial_account_name) values
+  (8389309984, 'BANK',       'CHECKING',    'ABC Subsidiary operating account'),
+  (8389310001, 'INVESTMENT', 'SAVINGS',     'ABC Subsidiary reserve');   -- DATA ERROR: a savings type on an investment account (caught by a query)
+
+insert into financial_account_role_type (financial_account_role_type_id, description) values
+  ('OWNER',         'Owner'),
+  ('SIGNER',        'Authorized signer'),
+  ('ADMINISTRATOR', 'Administrator');
+
+-- Ours: ABC Subsidiary owns both; Rosa Diaz (50) signs on the operating
+-- account.
+insert into financial_account_role (financial_account_id, party_id, financial_account_role_type_id, from_date, thru_date) values
+  (8389309984, 13, 'OWNER',  '1999-01-01', null),
+  (8389310001, 13, 'OWNER',  '2000-01-01', null),
+  (8389309984, 50, 'SIGNER', '2000-01-01', null),
+  (8389309984, 50, 'SIGNER', '2000-01-01', null);   -- DATA ERROR: Rosa's signer role keyed twice (caught by a query)
+
+-- Table 7.12: one deposit of four receipts, two withdrawals of one check
+-- each (dates ours). Then ours: a bank fee, and a withdrawal with no check,
+-- executed by William Jones (47), who has no role on the account.
+insert into financial_account_transaction (financial_account_transaction_id, transaction_kind, financial_account_id, executed_by_party_id,
+                                           transaction_date, entry_date, amount) values
+  (398749, 'DEPOSIT',    8389309984, 50, '2001-07-02', '2001-07-02', null),
+  (398761, 'WITHDRAWAL', 8389309984, 50, '2001-07-06', '2001-07-09', null),
+  (398762, 'WITHDRAWAL', 8389309984, 50, '2001-07-09', '2001-07-09', null),
+  (398770, 'ADJUSTMENT', 8389309984, 50, '2001-07-31', '2001-08-01', -15.00),   -- the bank's monthly fee
+  (398771, 'WITHDRAWAL', 8389309984, 47, '2001-07-12', '2001-07-12', null),     -- DATA ERRORS: no check behind it, and executed by someone with no role on the account (caught by queries)
+  (398772, 'DEPOSIT',    8389309984, 50, '2001-07-21', '2001-07-21', null);
+
+select setval(pg_get_serial_sequence('financial_account_transaction', 'financial_account_transaction_id'),
+              (select max(financial_account_transaction_id) from financial_account_transaction));
+
+update payment set financial_account_transaction_id = 398749 where payment_id in (12298398, 12298412, 394789, 97873);   -- Table 7.12 prints 1298398 and 1298412 (point 29)
+update payment set financial_account_transaction_id = 398761 where payment_id = 88394;
+update payment set financial_account_transaction_id = 398762 where payment_id = 88756;
+update payment set financial_account_transaction_id = 398772 where payment_id = 488893;   -- DATA ERROR: a check we paid out, banked as a deposit (caught by a query)

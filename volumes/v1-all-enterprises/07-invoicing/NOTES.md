@@ -789,7 +789,10 @@ the literal drawing.
 28. **Table 7.12's other four payments** (394789, 97873 receipts; 88394, 88756 checks) aren't
     in Table 7.11. Ours: 394789 is John Smith paying part of 30012, 97873 ACME paying on
     account 1296; the checks go to Fantastic Supplies (30020, and an advance) and Hartley
-    Accounting (an advance).
+    Accounting (an advance). Built with 97873 as Jane Smith's check on account 1459 (the
+    family account), not ACME's.
+29. **Table 7.12's payment ids** are 1298398 and 1298412, Table 7.11's 12298398 and
+    12298412, and the text says they're the same receipts. Table 7.11's ids kept.
 
 ## Design decisions (book → SQL)
 
@@ -943,6 +946,26 @@ the literal drawing.
   Hartley. 30002 ends 23.61 short (point 20). Bad rows: ACME's cash applied to our purchase
   invoice 30020, 88756 applied for 700 of its 670 (and past 990026's total), our refund to
   ACME typed as a receipt.
+
+### Fig 7.9
+- **`financial_account`** keyed on the bank's number, a `bigint` (point 26), with a
+  `financial_account_kind` discriminator (BANK, INVESTMENT) and an optional type from a
+  `financial_account_type` hierarchy whose top rows are the two kinds (a check keeps a type
+  under its account's kind).
+- **`financial_account_role`** + type (OWNER, SIGNER, ADMINISTRATOR), dated.
+- **`financial_account_transaction`** with a `transaction_kind` (DEPOSIT, WITHDRAWAL,
+  ADJUSTMENT) and an `amount` only adjustments carry (point 24): a check constraint, one row
+  one rule. `executed_by_party_id` not null, as drawn.
+- **`payment` gains `financial_account_transaction_id`** (point 27): one FK for both lines.
+- **Checks:** an account typed outside its kind; a payment in the wrong kind of transaction;
+  a withdrawal that isn't exactly one check, or a deposit with no payments; a transaction
+  executed by someone with no role on the account that day; a role twice.
+- **Queries:** Table 7.12 with each transaction's amount as its payments' sum; the account's
+  running balance; payments not banked yet; who may act on the account.
+- **Seed:** Table 7.12 (point 29), dates ours; ours: the account's owner and Rosa Diaz as
+  signer, a $15 bank fee. Bad rows: a savings type on an investment account, Rosa's signer
+  role twice, a withdrawal with no check executed by William Jones, check 488893 banked as
+  a deposit.
 
 ## When NOT to use this
 - **One line per product, no fees, one tax:** a small shop's invoice is fine with a total and

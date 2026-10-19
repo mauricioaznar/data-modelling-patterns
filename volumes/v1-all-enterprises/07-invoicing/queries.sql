@@ -573,3 +573,83 @@ from payment_application a
 join payment p on p.payment_id = a.payment_id
 join invoice v on v.invoice_id = a.invoice_id
 where (p.payment_kind = 'RECEIPT') <> (v.invoice_kind = 'SALES');
+
+-- ============================================================
+-- Fig 7.9 — Financial accounts, withdrawals and deposits
+-- ============================================================
+
+-- name: 7.9 — Table 7.12: each deposit and withdrawal with the payments in it, and its amount as their sum
+select x.financial_account_id, x.financial_account_transaction_id as transaction_id, x.transaction_kind, x.transaction_date,
+       p.payment_id, p.payment_kind, p.amount as payment_amount,
+       sum(p.amount) over (partition by x.financial_account_transaction_id) as transaction_amount
+from financial_account_transaction x
+join payment p on p.financial_account_transaction_id = x.financial_account_transaction_id
+order by x.transaction_date, x.financial_account_transaction_id, p.payment_id;
+
+-- name: 7.9 — Account balance movements: deposits in, withdrawals out, adjustments as signed, and the running balance
+select x.financial_account_id, x.transaction_date, x.financial_account_transaction_id as transaction_id, x.transaction_kind,
+       case x.transaction_kind when 'ADJUSTMENT' then x.amount
+                               when 'DEPOSIT'    then coalesce(t.total, 0)
+                               else -coalesce(t.total, 0) end as movement,
+       sum(case x.transaction_kind when 'ADJUSTMENT' then x.amount
+                                   when 'DEPOSIT'    then coalesce(t.total, 0)
+                                   else -coalesce(t.total, 0) end)
+         over (partition by x.financial_account_id order by x.transaction_date, x.financial_account_transaction_id) as running_balance
+from financial_account_transaction x
+left join lateral (select sum(p.amount) as total from payment p
+                   where p.financial_account_transaction_id = x.financial_account_transaction_id) t on true
+order by x.financial_account_id, x.transaction_date, x.financial_account_transaction_id;
+
+-- name: 7.9 — Payments not banked yet: receipts not deposited, checks not cleared
+select p.payment_id, p.payment_kind, p.effective_date, p.amount, f.name as payor, r.name as receiver
+from payment p
+join party_display_name f on f.party_id = p.from_party_id
+join party_display_name r on r.party_id = p.to_party_id
+where p.financial_account_transaction_id is null
+order by p.effective_date;
+
+-- name: 7.9 — Who may act on each account, and in which role, on Jul 1, 2001
+select a.financial_account_id, a.financial_account_name, t.description as account_type, n.name as party, rt.description as role
+from financial_account a
+left join financial_account_type t       on t.financial_account_type_id = a.financial_account_type_id
+join financial_account_role r            on r.financial_account_id = a.financial_account_id
+                                        and r.from_date <= '2001-07-01' and (r.thru_date is null or r.thru_date > '2001-07-01')
+join financial_account_role_type rt      on rt.financial_account_role_type_id = r.financial_account_role_type_id
+join party_display_name n                on n.party_id = r.party_id
+order by a.financial_account_id, rt.description, n.name;
+
+-- name: 7.9 — Data-quality check: accounts typed outside their kind, or with a grouping row (should be empty)
+select a.financial_account_id, a.financial_account_kind, a.financial_account_type_id, t.parent_type_id
+from financial_account a
+join financial_account_type t on t.financial_account_type_id = a.financial_account_type_id
+where t.parent_type_id is distinct from a.financial_account_kind;
+
+-- name: 7.9 — Data-quality check: payments in the wrong kind of transaction: a receipt not in a deposit, a disbursement not in a withdrawal (should be empty)
+select p.payment_id, p.payment_kind, x.financial_account_transaction_id as transaction_id, x.transaction_kind
+from payment p
+join financial_account_transaction x on x.financial_account_transaction_id = p.financial_account_transaction_id
+where (p.payment_kind, x.transaction_kind) not in (('RECEIPT', 'DEPOSIT'), ('DISBURSEMENT', 'WITHDRAWAL'));
+
+-- name: 7.9 — Data-quality check: withdrawals that aren't exactly one check, and deposits with no receipts (should be empty)
+select x.financial_account_transaction_id as transaction_id, x.transaction_kind, count(p.payment_id) as payments
+from financial_account_transaction x
+left join payment p on p.financial_account_transaction_id = x.financial_account_transaction_id
+where x.transaction_kind in ('DEPOSIT', 'WITHDRAWAL')
+group by x.financial_account_transaction_id, x.transaction_kind
+having (x.transaction_kind = 'WITHDRAWAL' and count(p.payment_id) <> 1)
+    or (x.transaction_kind = 'DEPOSIT' and count(p.payment_id) = 0);
+
+-- name: 7.9 — Data-quality check: transactions executed by someone with no role on the account that day (should be empty)
+select x.financial_account_transaction_id as transaction_id, x.transaction_date, n.name as executed_by
+from financial_account_transaction x
+join party_display_name n on n.party_id = x.executed_by_party_id
+where not exists (select 1 from financial_account_role r
+                  where r.financial_account_id = x.financial_account_id
+                    and r.party_id = x.executed_by_party_id
+                    and r.from_date <= x.transaction_date and (r.thru_date is null or r.thru_date > x.transaction_date));
+
+-- name: 7.9 — Data-quality check: the same party in the same role on one account from the same day, twice (should be empty)
+select financial_account_id, party_id, financial_account_role_type_id, from_date, count(*) as rows
+from financial_account_role
+group by financial_account_id, party_id, financial_account_role_type_id, from_date
+having count(*) > 1;

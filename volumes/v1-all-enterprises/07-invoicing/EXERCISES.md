@@ -81,6 +81,22 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 4. **[7.6]** Time entry 3 (30 hours) is billed 20 hours now and 10 next month. What does the
    model lack today, and which one-attribute fix does the book suggest?
 
+### Submodel 5: payments
+1. **[7.8a]** 30002 was paid in two checks; check 488893 paid 990023 and part of 990026.
+   Why does neither `invoice.paid_amount` nor `payment.invoice_id` survive both cases?
+2. **[7.8a]** Jane Smith's $379 goes "on account" to 1459. What does the business know and
+   not know at that moment, and what happens to the application later?
+3. **[7.8a, 7.8b]** 7.8b applies payments to invoice lines; 7.10 keeps 7.8a. Name a
+   business that needs 7.8b, and what every other business pays for it.
+
+### Submodel 6: financial accounts
+1. **[7.9]** Four receipts became one deposit of $917.04. Why isn't the deposit just a
+   `deposited_date` on PAYMENT? Think of the bank statement.
+2. **[7.9]** A deposit has no amount of its own, a bank fee does. Where does each
+   transaction's amount come from, and why did we break the book to add one column?
+3. **[7.9]** BILLING ACCOUNT (7.3a) and FINANCIAL ACCOUNT (7.9) both have dated party roles.
+   What does each account hold, and could one entity do both jobs?
+
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
 notation (entities, key attributes, relationships and cardinality). Then diff it against
