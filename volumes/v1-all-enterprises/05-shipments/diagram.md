@@ -105,4 +105,27 @@ erDiagram
   SHIPMENT                   |o--o{ SHIPPING_DOCUMENT     : "having"
   SHIPMENT_ITEM              |o--o{ SHIPPING_DOCUMENT     : "having"
   SHIPMENT_PACKAGE           |o--o{ SHIPPING_DOCUMENT     : "having"
+
+  %% Fig 5.7 — Shipment route segments (CARRIER is a party role; VEHICLE a fixed_asset_type row)
+  SHIPMENT_ROUTE_SEGMENT {
+    int         shipment_route_segment_id PK
+    int         shipment_id FK
+    int         segment_seq_id "leg number"
+    text        shipment_method_type_id FK
+    int         carrier_party_role_id FK
+    int         fixed_asset_id FK "a vehicle, or null"
+    int         from_facility_id FK "or null"
+    int         to_facility_id FK "or null"
+    timestamptz estimated_arrival_datetime
+    timestamptz actual_arrival_datetime
+  }
+  SHIPMENT                   ||--o{ SHIPMENT_ROUTE_SEGMENT  : "shipped by way of"
+  SHIPMENT_METHOD_TYPE       ||--o{ SHIPMENT_ROUTE_SEGMENT  : "the type of transportation for"
+  PARTY_ROLE                 ||--o{ SHIPMENT_ROUTE_SEGMENT  : "the shipper of (Ch 2, CARRIER)"
+  FIXED_ASSET                |o--o{ SHIPMENT_ROUTE_SEGMENT  : "used to ship (Ch 8)"
+  FACILITY                   |o--o{ SHIPMENT_ROUTE_SEGMENT  : "the origin of (Ch 2)"
+  FACILITY                   |o--o{ SHIPMENT_ROUTE_SEGMENT  : "the destination of (Ch 2)"
+  FIXED_ASSET_TYPE           ||--o{ FIXED_ASSET             : "describes"
+  PARTY_ROLE                 ||--o{ CARRIER_SHIPMENT_METHOD : "able to ship via (Ch 2, CARRIER)"
+  SHIPMENT_METHOD_TYPE       ||--o{ CARRIER_SHIPMENT_METHOD : "the type of transportation used"
 ```

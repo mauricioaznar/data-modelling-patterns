@@ -30,6 +30,7 @@ architecture card's `(Fig N.M)`.
 | 5.4 | built | 3 | ✓ | ✓ | ✓ | ✓ | – |
 | 5.5 | built | 4 | ✓ | ✓ | ✓ | ✓ | – |
 | 5.6 | built | 5 | ✓ | ✓ | ✓ | ✓ | – |
+| 5.7 | built | 5 | ✓ | ✓ | ✓ | ✓ | – |
 
 | # | Submodel | Figures built | Card | Ponders |
 |---|---|---|---|---|
@@ -37,7 +38,7 @@ architecture card's `(Fig N.M)`.
 | 2 | Shipments and orders | ✓ | Card 18 | 4 |
 | 3 | Packages and receipts | ✓ | Card 19 | 5 |
 | 4 | Issuances and picklists | ✓ | ✗ | 5 |
-| 5 | Shipping documents and route segments | ✓ | ✗ | 2 |
+| 5 | Shipping documents and route segments | ✓ | ✗ | 5 |
 
 Last check: 4 ✗ · 1 !
 <!-- check:end -->

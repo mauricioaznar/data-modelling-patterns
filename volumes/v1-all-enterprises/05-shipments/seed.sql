@@ -154,12 +154,12 @@ insert into status_type (status_type_id, parent_type_id, description) values
 -- Table 5.3 (4800 read as 2001: NOTES, point 8), then ours. The times are ours.
 insert into shipment_status (shipment_status_id, shipment_id, status_type_id, status_datetime) values
   (1,  9000, 'SHIPMENT_SCHEDULED', '2001-03-04 09:00+00'),
-  (2,  9000, 'SHIPMENT_SHIPPED',   '2001-03-07 08:00+00'),   -- a day after the estimate
-  (3,  9000, 'SHIPMENT_RECEIVED',  '2001-03-07 16:00+00'),   -- a day before the estimate
+  (2,  9000, 'SHIPMENT_SHIPPED',   '2001-03-07 10:00+00'),   -- a day after the estimate (time: Table 5.11's first truck)
+  (3,  9000, 'SHIPMENT_RECEIVED',  '2001-03-07 20:30+00'),   -- a day before the estimate (after Table 5.11's second truck)
   (4,  4800, 'SHIPMENT_SCHEDULED', '2001-07-09 10:00+00'),
   (5,  4800, 'SHIPMENT_CANCELLED', '2001-07-10 11:00+00'),   -- on its latest cancel date
   (6,  9200, 'SHIPMENT_SCHEDULED', '2001-03-09 09:00+00'),
-  (7,  9200, 'SHIPMENT_SHIPPED',   '2001-03-12 08:00+00'),
+  (7,  9200, 'SHIPMENT_SHIPPED',   '2001-03-12 13:00+00'),   -- Table 5.10's leg starts at 1 p.m.
   (8,  9200, 'SHIPMENT_IN_ROUTE',  '2001-03-13 07:00+00'),
   (9,  9200, 'SHIPMENT_DELIVERED', '2001-03-14 10:00+00'),   -- the carrier hands it over ...
   (10, 9200, 'SHIPMENT_RECEIVED',  '2001-03-14 11:30+00'),   --   ... and ACME takes it in
@@ -168,7 +168,7 @@ insert into shipment_status (shipment_status_id, shipment_id, status_type_id, st
   (13, 9400, 'SHIPMENT_SHIPPED',   '2001-03-23 08:00+00'),   -- a day late ...
   (14, 9400, 'SHIPMENT_RECEIVED',  '2001-03-26 14:00+00'),   --   ... and still a day late
   (15, 1146, 'SHIPMENT_SCHEDULED', '2001-03-15 09:00+00'),
-  (16, 1146, 'SHIPMENT_SHIPPED',   '2001-03-19 08:00+00'),
+  (16, 1146, 'SHIPMENT_SHIPPED',   '2001-03-19 16:00+00'),   -- Table 5.10's flight leaves at 4 p.m.
   (17, 1146, 'SHIPMENT_RECEIVED',  '2001-03-18 15:00+00'),   -- DATA ERROR: received the day before it shipped (caught by a query)
   (18, 1149, 'SHIPMENT_SCHEDULED', '2001-03-20 09:00+00'),
   (19, 1149, 'ORDER_SHIPPED',      '2001-03-25 08:00+00'),   -- DATA ERROR: an order status on a shipment (caught by a query)
@@ -595,3 +595,103 @@ insert into shipping_document (document_id, shipment_id, shipment_item_id, shipm
   (6, null, null, 52000),
   (8, null, null, null),    -- DATA ERROR: covers nothing (caught by a query)
   (9, 9000, null, 62001);   -- DATA ERROR: 62001 holds 9200's erasers, not 9000's goods (caught by a query)
+
+-- ============================================================
+-- Fig 5.7 — Shipment route segments
+-- ============================================================
+-- Table 5.11's 9002, in no other table (NOTES, point 36): ours, a transfer
+-- from ABC Subsidiary to ABC Corporation on Truck #1's run with 9000.
+insert into shipment (shipment_id, shipment_type_id, estimated_ship_date, estimated_arrival_date, estimated_ready_date,
+                      estimated_ship_cost, actual_ship_cost, latest_cancel_date, handling_instructions, last_updated,
+                      shipped_from_party_id, shipped_from_contact_mechanism_id, shipped_to_party_id, shipped_to_contact_mechanism_id,
+                      inquiry_contact_mechanism_id, receiving_contact_mechanism_id) values
+  (9002, 'TRANSFER', '2001-03-07', '2001-03-07', null, null, null, null, null, null, 13, 40, 12, 33, null, null);
+
+insert into shipment_item (shipment_item_id, shipment_id, shipment_item_seq_id, product_id, quantity,
+                           shipment_contents_description, in_response_to_shipment_item_id) values
+  (25, 9002, 1, 21, 200, null, null);   -- ours: erasers for ABC Corporation
+
+select setval(pg_get_serial_sequence('shipment_item', 'shipment_item_id'), (select max(shipment_item_id) from shipment_item));
+
+-- Carriers: a party role (point 40). ABC Subsidiary carries its own goods.
+insert into role_type (role_type_id, parent_type_id, applies_to_kind, description) values
+  ('CARRIER', 'ORGANIZATION_ROLE', 'ORGANIZATION', 'Carrier');
+
+insert into party (party_id, party_kind) values
+  (51, 'ORGANIZATION'),
+  (52, 'ORGANIZATION');
+
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into organization (party_id, organization_type_id, name) values
+  (51, 'CORPORATION', 'Very Reliable Parcel Service'),
+  (52, 'CORPORATION', 'Air Goods Delivery Express');
+
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (77, 13, 'CARRIER', '1999-01-01', null),   -- ABC Subsidiary, with its own trucks
+  (78, 51, 'CARRIER', '1990-01-01', null),
+  (79, 52, 'CARRIER', '1995-01-01', null);
+
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+-- Where legs start and end: Fig 5.4's warehouses (11 ABC Corporation, 12
+-- ABC Subsidiary) and two more, ours.
+insert into facility (facility_id, facility_type_id, part_of_facility_id, description, square_footage) values
+  (13, 'BUILDING',  null, 'ACME receiving dock, 234 Stretch Street',      null),
+  (14, 'WAREHOUSE', null, 'General Goods warehouse, 300 Jennifer Street', 50000);
+
+select setval(pg_get_serial_sequence('facility', 'facility_id'), (select max(facility_id) from facility));
+
+insert into facility_contact_mechanism (facility_id, contact_mechanism_id, from_date, thru_date) values
+  (13, 32, '2000-01-01', null),
+  (14, 41, '2000-01-01', null);
+
+insert into shipment_method_type (shipment_method_type_id, description) values
+  ('TRUCK',  'Truck'),
+  ('GROUND', 'Ground'),
+  ('AIR',    'Air'),
+  ('RAIL',   'Rail');   -- ours
+
+insert into fixed_asset_type (fixed_asset_type_id, description) values
+  ('VEHICLE',   'Vehicle'),
+  ('EQUIPMENT', 'Equipment');   -- ours
+
+insert into fixed_asset (fixed_asset_id, fixed_asset_type_id, name) values
+  (1, 'VEHICLE',   'Truck #1'),
+  (2, 'VEHICLE',   'Truck #25'),
+  (3, 'EQUIPMENT', 'Dock conveyor C-2');
+
+select setval(pg_get_serial_sequence('fixed_asset', 'fixed_asset_id'), (select max(fixed_asset_id) from fixed_asset));
+
+-- Carrier roles: 77 ABC Subsidiary, 78 Very Reliable Parcel Service, 79 Air
+-- Goods Delivery Express.
+insert into carrier_shipment_method (carrier_shipment_method_id, carrier_party_role_id, shipment_method_type_id) values
+  (1, 77, 'TRUCK'),
+  (2, 78, 'GROUND'),
+  (3, 79, 'AIR'),
+  (4, 79, 'GROUND'),
+  (5, 78, 'GROUND');   -- DATA ERROR: listed twice (caught by a query)
+
+select setval(pg_get_serial_sequence('carrier_shipment_method', 'carrier_shipment_method_id'), (select max(carrier_shipment_method_id) from carrier_shipment_method));
+
+-- Table 5.10's legs with Table 5.11's trucks, then ours. The actual times of
+-- 9200 and 1146 are ours. Facilities: 11 ABC Corporation's warehouse, 12 ABC
+-- Subsidiary's, 13 ACME's dock, 14 General Goods's warehouse.
+insert into shipment_route_segment (shipment_route_segment_id, shipment_id, segment_seq_id, shipment_method_type_id, carrier_party_role_id,
+                                    fixed_asset_id, from_facility_id, to_facility_id,
+                                    estimated_start_datetime, estimated_arrival_datetime, actual_start_datetime, actual_arrival_datetime,
+                                    start_mileage, end_mileage, fuel_used) values
+  (1,  9000, 1, 'TRUCK',  77, 1,    12, 11, '2001-03-07 10:00+00', '2001-03-07 13:00+00', '2001-03-07 10:00+00', '2001-03-07 11:35+00', 52000, 52061, 2),
+  (2,  9000, 2, 'TRUCK',  77, 2,    11, 13, '2001-03-07 14:00+00', '2001-03-07 16:00+00', '2001-03-07 12:05+00', '2001-03-07 20:16+00', 73525, 74006, 25),   -- left early, arrived four hours late
+  (3,  9200, 1, 'GROUND', 78, null, 12, 13, '2001-03-12 13:00+00', '2001-03-14 13:00+00', '2001-03-12 13:10+00', '2001-03-14 10:00+00', null,  null,  null),
+  (4,  1146, 1, 'AIR',    79, null, 14, 11, '2001-03-19 16:00+00', '2001-03-20 12:00+00', '2001-03-19 16:20+00', '2001-03-20 09:30+00', null,  null,  null),
+  (5,  9002, 1, 'TRUCK',  77, 1,    12, 11, null,                  null,                  '2001-03-07 10:00+00', '2001-03-07 11:35+00', 52000, 52061, 2),    -- Table 5.11: the same run as 9000's first leg (point 37)
+  (6,  9400, 1, 'AIR',    78, null, 12, 13, '2001-03-23 08:00+00', '2001-03-24 12:00+00', null,                  null,                  null,  null,  null),   -- ours from here. DATA ERROR: Very Reliable Parcel Service only offers ground (caught by a query)
+  (7,  9500, 1, 'TRUCK',  77, 1,    12, 11, '2001-03-28 10:00+00', '2001-03-28 11:40+00', null,                  null,                  null,  null,  null),
+  (8,  9500, 2, 'TRUCK',  77, 2,    12, 13, '2001-03-28 13:00+00', '2001-03-28 21:00+00', null,                  null,                  null,  null,  null),   -- DATA ERROR: starts at ABC Subsidiary, though leg 1 ended at ABC Corporation (caught by a query)
+  (9,  1149, 1, 'AIR',    79, 3,    14, 11, '2001-03-25 16:00+00', '2001-03-26 12:00+00', null,                  null,                  null,  null,  null),   -- DATA ERROR: shipped using the dock conveyor (caught by a query)
+  (10, 3485, 1, 'TRUCK',  77, 2,    11, 12, '2001-06-23 08:00+00', '2001-06-23 10:00+00', '2001-06-23 08:00+00', '2001-06-23 09:40+00', 80000, 79940, 3),    -- DATA ERROR: 60 miles fewer at the end (caught by a query)
+  (11, 9600, 1, 'GROUND', 78, null, 13, 12, '2001-03-16 09:00+00', '2001-03-19 09:00+00', null,                  null,                  null,  null,  null),
+  (12, 9600, 1, 'GROUND', 78, null, 13, 12, '2001-03-16 09:00+00', '2001-03-19 09:00+00', null,                  null,                  null,  null,  null);   -- DATA ERROR: leg 1 twice (caught by a query)
+
+select setval(pg_get_serial_sequence('shipment_route_segment', 'shipment_route_segment_id'), (select max(shipment_route_segment_id) from shipment_route_segment));

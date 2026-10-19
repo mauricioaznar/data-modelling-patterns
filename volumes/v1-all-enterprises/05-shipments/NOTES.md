@@ -544,6 +544,96 @@ PACKAGING CONTENT: as before.
   paper at one level; the next kind (a manifest, a packing slip per box) needs another
   column, and per-line papers have nowhere to go.
 
+### Fig 5.7 — Shipment route segments
+**Transcription** (accepted: ☐; one photo, with Tables 5.10 and 5.11 on two others; open
+points under "To check against the book")
+
+```
+SHIPMENT ROUTE SEGMENT
+  # shipment_route_segment_id
+  o actual_start_datetime
+  o actual_arrival_datetime
+  o estimated_start_datetime
+  o estimated_arrival_datetime
+  o start_mileage
+  o end_mileage
+  o fuel_used
+  -> SHIPMENT                (many "of" 1 shipment, bar; shipment "shipped by way of" many)
+  -> SHIPMENT METHOD TYPE    (many "shipped via" 1 type; type "the type of transportation
+                              for" many)
+  -> VEHICLE                 (many "shipped using" 1 vehicle; vehicle "used to ship" many;
+                              dashed)
+  -> FACILITY                (many "from" 1 facility; facility "the origin of" many; dashed)
+  -> FACILITY                (many "to" 1 facility; facility "the destination of" many;
+                              dashed)
+  -> CARRIER                 (many "shipped by" 1 carrier; carrier "the shipper of" many)
+
+FIXED ASSET
+  # fixed_asset_id
+  * name
+  subtype VEHICLE (no attributes)
+
+FACILITY                     (Ch 2)
+  # facility_id
+  * facility_name
+
+CARRIER SHIPMENT METHOD      (no attributes; both lines carry a bar)
+  -> SHIPMENT METHOD TYPE    (many "of" 1 type; type "the type of transportation used" many)
+  -> CARRIER                 (many "for" 1 carrier; carrier "able to ship via" many)
+
+SHIPMENT METHOD TYPE
+  # shipment_method_type_id
+  * description
+
+ORGANIZATION ROLE            (Ch 2) with subtype CARRIER
+SHIPMENT                     (5.1's attributes)
+```
+
+**Table 5.10** (route segments, the book's sample, in our words): 9000, a customer
+shipment, goes in two legs by truck with ABC Subsidiary as its own carrier, March 7, 2001,
+10 a.m. to 1 p.m., then 2 p.m. to 4 p.m. 9200 goes in one leg by ground with Very Reliable
+Parcel Service, March 12 at 1 p.m. to March 14 at 1 p.m. Purchase shipment 1146 comes in one
+leg by air with Air Goods Delivery Express, March 19 at 4 p.m. to noon the next day. Only the
+estimates are shown.
+
+**Table 5.11** (vehicle data, in our words): 9000's first leg ran on Truck #1, March 7,
+10:00 to 11:35 a.m., 52,000 to 52,061 miles, 2 gallons; its second on Truck #25, 12:05 to
+8:16 p.m., 73,525 to 74,006 miles, 25 gallons. Shipment 9002 rode Truck #1 on the same run,
+with the same times, mileage and fuel.
+
+**The text below Table 5.10** (in our words): VEHICLE is a FIXED ASSET subtype, shown in
+full in Ch 8 (Fig 8.5); one vehicle carries many segments, so one truck can deliver many
+shipments. Below Table 5.11: estimated and actual start and arrival times per segment show
+whether a shipment runs late.
+
+**To check against the book**
+- Optionality, from the photo: the shipment, method type and carrier read as mandatory for
+  a segment; the vehicle and both facilities as optional (dashed) (point 38).
+- The segment's id carries a bar to SHIPMENT: a number within its shipment (Table 5.10's 1
+  and 2) (point 39).
+- FACILITY NAME here is Ch 2's facility description.
+- Shipment 9002 isn't in Table 5.1 (point 36).
+
+**Discussion**
+- **A shipment travels in legs.** 9000 goes by one truck to a hand-over point and by
+  another to ACME. Each leg has its own carrier, method, vehicle, places and times, so the
+  leg is a row: SHIPMENT ROUTE SEGMENT. The naive model puts one carrier and one tracking
+  number on SHIPMENT and can't tell which truck was late. (Ponder 3.)
+- **Plan beside the facts, a third time:** estimated and actual start and arrival sit side
+  by side on the segment, so lateness is a comparison within one row. The status history
+  (Fig 5.2) says what happened to the whole shipment; the segment, where and on what.
+- **The leg goes facility to facility.** Fig 5.1's shipment goes address to address; the
+  segment plugs in Ch 2's FACILITY (point 3 asked where facilities would come in). Legs
+  must chain: each starts where the one before it ended (a check).
+- **A carrier is a party role** (Ch 2's ORGANIZATION ROLE), not a lookup: carriers are
+  organizations we deal with. CARRIER SHIPMENT METHOD lists what each one offers, so a
+  segment can be checked against it. (Ponder 5.)
+- **One truck, many shipments.** Truck #1 carried 9000 and 9002 on one run, and Table 5.11
+  repeats that run's mileage and fuel on both. The figures belong to the run, not to each
+  shipment, so totals per truck count the run twice (point 37). (Ponder 4.)
+- **VEHICLE borrows from Ch 8:** a FIXED ASSET subtype, built here with just a name and a
+  type, for Ch 8 to extend.
+
 ### Points to discuss after the overview (Figs 5.1–5.5 so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -557,8 +647,8 @@ the literal drawing. The list moves under the chapter's last figure as figures a
    ours, `from_internal` and `to_internal`, saying whose organizations sit at each end. The
    alternative is a flat discriminator with the direction rules in a query.
 3. **5.1, no facility:** a shipment goes between parties and postal addresses, not between
-   facilities (Ch 2's warehouse or plant). A later figure may add them; until then, which
-   dock a shipment leaves from is only the postal address.
+   facilities (Ch 2's warehouse or plant). Fig 5.7 adds facilities on the route segment,
+   not on the shipment, and Fig 5.8 keeps it that way.
 4. **Table 5.1, 4800's drop ship:** ACME, our customer everywhere else, ships to Sellers
    Assistance. Read as a drop ship ABC arranged, with ACME as the supplier this time.
    Nothing records that hat, since the shipment points at parties, not roles.
@@ -658,6 +748,27 @@ the literal drawing. The list moves under the chapter's last figure as figures a
     rows of `document_type` under a SHIPPING_DOCUMENT grouping row; SHIPPING DOCUMENT is a
     subtype table because it carries the lines. The type and the subtype row must agree (a
     data-quality query).
+36. **Table 5.11's 9002:** in no other table. Seeded as ours: a transfer from ABC Subsidiary
+    to ABC Corporation, riding Truck #1 with 9000's first leg, so the truck's run ends at
+    ABC Corporation's warehouse, where 9000 changes trucks.
+37. **Table 5.11 repeats Truck #1's mileage and fuel on 9000 and 9002:** the run's numbers
+    sit on each segment, so a total per truck counts the run twice. Kept as drawn; a review
+    query shows the naive total beside one per run. A run (vehicle trip) shared by the
+    segments would hold them once.
+38. **5.7, optionality:** a segment must have its shipment, method type and carrier; the
+    vehicle and both facilities are optional (dashed), so a parcel carrier's leg needs no
+    truck of ours and no known depot.
+39. **5.7, the segment's id with a bar to SHIPMENT:** a number within its shipment (Table
+    5.10's 1 and 2), built as `segment_seq_id` beside a surrogate key, its uniqueness a
+    data-quality query (as Fig 5.2's line numbers).
+40. **5.7, CARRIER as a role:** a CARRIER row under Ch 2's ORGANIZATION_ROLE, and the
+    segment and CARRIER SHIPMENT METHOD point at PARTY ROLE, as Ch 4's orders do. ABC
+    Subsidiary carries its own goods in Table 5.10, so it holds the role too.
+41. **5.7, VEHICLE ahead of Ch 8:** `fixed_asset` with a `fixed_asset_type` (VEHICLE, and
+    EQUIPMENT of ours for a bad row); Ch 8's Fig 8.5 extends both.
+42. **Tables 5.10–5.11 against our status times:** the statuses' times were ours, so 9000's
+    shipped and received move to 10:00 and 20:30 to match its trucks, 9200's shipped to
+    13:00 and 1146's to 16:00. The dates stay.
 
 ## Design decisions (book → SQL)
 
@@ -847,6 +958,34 @@ the literal drawing. The list moves under the chapter's last figure as figures a
   Reliable Parcel Service's manifest for 9200, a certificate of conformity for 1146's
   diskette line, and the three rows that carry the mistakes.
 
+### Fig 5.7
+- **`shipment_route_segment`: a surrogate key and `segment_seq_id`,** the book's number
+  within the shipment (point 39). `shipment_id`, `shipment_method_type_id` and
+  `carrier_party_role_id` are `not null`; `fixed_asset_id`, `from_facility_id` and
+  `to_facility_id` are nullable (point 38). The four datetimes are `timestamptz`; mileage
+  (in miles) and fuel (in gallons, Table 5.11's unit) are `numeric`, all nullable.
+- **`shipment_method_type`** is a lookup (TRUCK, GROUND, AIR from Table 5.10; RAIL ours).
+- **CARRIER is a `role_type` row under ORGANIZATION_ROLE** (point 40). The segment and
+  `carrier_shipment_method` point at `party_role`; the role must be a carrier, and the
+  carrier must offer the segment's method (one data-quality query; seed: 9400 sent by air
+  with Very Reliable Parcel Service, which only offers ground).
+- **`carrier_shipment_method`:** a surrogate key, the carrier role, the method. The pair
+  twice is a data-quality query shared with the segment's number (seed: Very Reliable
+  Parcel Service's ground listed twice; 9600's leg 1 twice).
+- **`fixed_asset` + `fixed_asset_type`** (point 41): the segment's asset must be a vehicle
+  (data-quality query; seed: 1149's air leg "shipped using" the dock conveyor).
+- **Times and mileage in order:** arrival not before start (estimated and actual), end
+  mileage not below start (data-quality query; seed: 3485's truck reading 60 miles less at
+  the end).
+- **Legs chain:** leg n + 1 starts at the facility where leg n ended, when both are known
+  (data-quality query; seed: 9500's second leg starting back at ABC Subsidiary's
+  warehouse though its first ended at ABC Corporation's).
+- **Seed:** Table 5.10's four legs and Table 5.11's trucks; 9002 (point 36). Ours: the
+  facilities (ABC Subsidiary's and ABC Corporation's warehouses from Fig 5.4, plus ACME's
+  receiving dock and General Goods's warehouse), the actual times for 9200 and 1146, Very
+  Reliable Parcel Service and Air Goods Delivery Express (parties 51, 52), and the legs that
+  carry the mistakes (9400, 9500, 1149, 3485, 9600). Status times adjusted (point 42).
+
 ## When NOT to use this
 - **A shop that ships each order once, whole, to one address** can keep a ship date and a
   tracking number on the order. The separate shipment pays off when shipments and orders
@@ -863,5 +1002,8 @@ the literal drawing. The list moves under the chapter's last figure as figures a
 - **Shipping documents as rows** matter when several kinds of paper, at several levels,
   must be found again (customs, hazardous goods, claims). One bill of lading per shipment,
   never searched, fits in a column.
+- **Route segments** matter when a shipment changes hands or vehicles on the way, or when
+  the business runs its own fleet. A firm that hands every parcel to one carrier and only
+  wants its tracking number needs a column, not a table.
 
 ## Open questions

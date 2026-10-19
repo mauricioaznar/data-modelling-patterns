@@ -814,3 +814,108 @@ where (sd.shipment_id is not null and sd.shipment_item_id is not null and si.shi
    or (sd.shipment_item_id is not null and sd.shipment_package_id is not null
        and not exists (select 1 from packaging_content pc
                        where pc.shipment_package_id = sd.shipment_package_id and pc.shipment_item_id = sd.shipment_item_id));
+
+-- ============================================================
+-- Fig 5.7 — Shipment route segments
+-- ============================================================
+
+-- name: 5.7 — Route segments as Table 5.10 shows them: each leg's method, carrier and estimated times
+select s.shipment_id, st.description as shipment_type, s.segment_seq_id as segment, m.description as method,
+       n.name as carrier, s.estimated_start_datetime, s.estimated_arrival_datetime
+from shipment_route_segment s
+join shipment sh             on sh.shipment_id = s.shipment_id
+join shipment_type st        on st.shipment_type_id = sh.shipment_type_id
+join shipment_method_type m  on m.shipment_method_type_id = s.shipment_method_type_id
+join party_role pr           on pr.party_role_id = s.carrier_party_role_id
+join party_display_name n    on n.party_id = pr.party_id
+where s.shipment_id in (9000, 9200, 1146)
+order by array_position(array[9000, 9200, 1146], s.shipment_id), s.segment_seq_id;
+
+-- name: 5.7 — Vehicle data as Table 5.11 shows it: each leg's truck, actual times, mileage and fuel
+select s.shipment_id, m.description as method, fa.name as vehicle,
+       s.actual_start_datetime, s.actual_arrival_datetime, s.start_mileage, s.end_mileage, s.fuel_used
+from shipment_route_segment s
+join shipment_method_type m on m.shipment_method_type_id = s.shipment_method_type_id
+join fixed_asset fa         on fa.fixed_asset_id = s.fixed_asset_id
+where s.shipment_id in (9000, 9002)
+order by s.shipment_id, s.segment_seq_id;
+
+-- name: 5.7 — Each shipment's route, leg by leg: from where to where, planned against actual
+select s.shipment_id, s.segment_seq_id as segment, ff.description as from_facility, tf.description as to_facility,
+       s.estimated_arrival_datetime, s.actual_arrival_datetime,
+       case when s.actual_arrival_datetime is null or s.estimated_arrival_datetime is null then null
+            when s.actual_arrival_datetime > s.estimated_arrival_datetime then 'late'
+            else 'on time'
+       end as arrival
+from shipment_route_segment s
+left join facility ff on ff.facility_id = s.from_facility_id
+left join facility tf on tf.facility_id = s.to_facility_id
+order by s.shipment_id, s.segment_seq_id, s.shipment_route_segment_id;
+
+-- name: 5.7 — Fuel and miles per vehicle: summed per leg against summed per run (Table 5.11 repeats a shared run)
+-- A run: one vehicle, one actual start (NOTES, point 37).
+with runs as (
+  select distinct fixed_asset_id, actual_start_datetime, start_mileage, end_mileage, fuel_used
+  from shipment_route_segment
+  where fixed_asset_id is not null and actual_start_datetime is not null
+)
+select fa.name as vehicle,
+       (select sum(s.fuel_used) from shipment_route_segment s where s.fixed_asset_id = fa.fixed_asset_id)                    as fuel_per_leg,
+       (select sum(r.fuel_used) from runs r where r.fixed_asset_id = fa.fixed_asset_id)                                      as fuel_per_run,
+       (select sum(s.end_mileage - s.start_mileage) from shipment_route_segment s where s.fixed_asset_id = fa.fixed_asset_id) as miles_per_leg,
+       (select sum(r.end_mileage - r.start_mileage) from runs r where r.fixed_asset_id = fa.fixed_asset_id)                  as miles_per_run,
+       (select string_agg(distinct s.shipment_id::text, ', ') from shipment_route_segment s where s.fixed_asset_id = fa.fixed_asset_id) as shipments
+from fixed_asset fa
+where fa.fixed_asset_type_id = 'VEHICLE'
+order by fa.fixed_asset_id;
+
+-- name: 5.7 — Which carrier offers which method
+select n.name as carrier, string_agg(m.description, ', ' order by m.description) as methods
+from carrier_shipment_method c
+join party_role pr           on pr.party_role_id = c.carrier_party_role_id
+join party_display_name n    on n.party_id = pr.party_id
+join shipment_method_type m  on m.shipment_method_type_id = c.shipment_method_type_id
+group by n.name
+order by n.name;
+
+-- name: 5.7 — Data-quality check: legs shipped by a role that isn't a carrier, or by a method the carrier doesn't offer (should be empty)
+select s.shipment_id, s.segment_seq_id as segment, pr.role_type_id, n.name as carrier, s.shipment_method_type_id as method
+from shipment_route_segment s
+join party_role pr          on pr.party_role_id = s.carrier_party_role_id
+join party_display_name n   on n.party_id = pr.party_id
+where pr.role_type_id <> 'CARRIER'
+   or not exists (select 1 from carrier_shipment_method c
+                  where c.carrier_party_role_id = s.carrier_party_role_id
+                    and c.shipment_method_type_id = s.shipment_method_type_id);
+
+-- name: 5.7 — Data-quality check: legs shipped using a fixed asset that isn't a vehicle (should be empty)
+select s.shipment_id, s.segment_seq_id as segment, fa.name, fa.fixed_asset_type_id
+from shipment_route_segment s
+join fixed_asset fa on fa.fixed_asset_id = s.fixed_asset_id
+where fa.fixed_asset_type_id <> 'VEHICLE';
+
+-- name: 5.7 — Data-quality check: legs arriving before they start, or ending on a lower mileage (should be empty)
+select shipment_id, segment_seq_id as segment,
+       estimated_start_datetime, estimated_arrival_datetime, actual_start_datetime, actual_arrival_datetime,
+       start_mileage, end_mileage
+from shipment_route_segment
+where estimated_arrival_datetime < estimated_start_datetime
+   or actual_arrival_datetime < actual_start_datetime
+   or end_mileage < start_mileage;
+
+-- name: 5.7 — Data-quality check: legs starting somewhere other than where the shipment's previous leg ended (should be empty)
+select b.shipment_id, b.segment_seq_id as segment, a.to_facility_id as previous_leg_ended_at, b.from_facility_id as starts_at
+from shipment_route_segment a
+join shipment_route_segment b on b.shipment_id = a.shipment_id and b.segment_seq_id = a.segment_seq_id + 1
+where a.to_facility_id <> b.from_facility_id;
+
+-- name: 5.7 — Data-quality check: the same row twice, in shipment_route_segment or carrier_shipment_method (should be empty)
+select 'shipment_route_segment' as table_name, shipment_id || ' / leg ' || segment_seq_id as pair, count(*) as times
+from shipment_route_segment
+group by shipment_id, segment_seq_id
+having count(*) > 1
+union all
+select 'carrier_shipment_method', carrier_party_role_id || ' / ' || shipment_method_type_id, count(*)
+from carrier_shipment_method
+group by carrier_party_role_id, shipment_method_type_id
+having count(*) > 1;

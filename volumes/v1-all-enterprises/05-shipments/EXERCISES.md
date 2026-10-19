@@ -105,6 +105,13 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 2. **[5.6]** The eight kinds of shipping document are drawn as subtypes but become rows of
    DOCUMENT TYPE, while SHIPPING DOCUMENT gets a table of its own. What decides which way a
    subtype goes?
+3. **[5.7]** Why a table of route segments rather than a carrier, a method and a vehicle on
+   SHIPMENT? Use 9000's two trucks to show what the columns would lose.
+4. **[5.7]** Truck #1 carries 9000 and 9002 on one run, and Table 5.11 repeats the run's
+   mileage and fuel on both. What goes wrong when you total fuel per truck, and what would
+   you add to fix it?
+5. **[5.7]** CARRIER SHIPMENT METHOD lists what each carrier offers. What does it let you
+   check about a segment, and why does the segment still name its method itself?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
