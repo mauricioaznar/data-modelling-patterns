@@ -651,3 +651,46 @@ join work_effort_party_assignment a on a.work_effort_party_assignment_id = ar.wo
 join party_display_name n           on n.party_id = a.party_id
 where ar.from_date < a.from_date
    or (a.thru_date is not null and coalesce(ar.thru_date, 'infinity') > a.thru_date);
+
+-- ============================================================
+-- Fig 6.8 — Inventory assignments
+-- ============================================================
+-- name: 6.8 — Stock each effort used: which item, of which good, from where, how much
+select ia.work_effort_id, we.name as effort, ia.inventory_item_id as stock, p.name as good,
+       f.description as stored_at, ia.quantity
+from work_effort_inventory_assignment ia
+join work_effort we    on we.work_effort_id = ia.work_effort_id
+join inventory_item ii on ii.inventory_item_id = ia.inventory_item_id
+join product p         on p.product_id = ii.product_id
+left join facility f   on f.facility_id = ii.facility_id
+order by ia.work_effort_id, p.name;
+
+-- name: 6.8 — Goods used by a job and all its parts, rolled up (the pencil run, 41000)
+with recursive part (work_effort_id) as (
+  select 41000
+  union
+  select a.to_work_effort_id
+  from part p
+  join work_effort_association a on a.from_work_effort_id = p.work_effort_id and a.work_effort_association_type_id = 'BREAKDOWN'
+)
+select g.name as good, sum(ia.quantity) as used
+from part
+join work_effort_inventory_assignment ia on ia.work_effort_id = part.work_effort_id
+join inventory_item ii                   on ii.inventory_item_id = ia.inventory_item_id
+join product g                           on g.product_id = ii.product_id
+group by g.name
+order by g.name;
+
+-- name: 6.8 — Data-quality check: the same inventory item twice on one effort (should be empty)
+select work_effort_id, inventory_item_id, count(*) as rows, sum(quantity) as total
+from work_effort_inventory_assignment
+group by work_effort_id, inventory_item_id
+having count(*) > 1;
+
+-- name: 6.8 — Data-quality check: a serialized item used in a quantity other than one (should be empty)
+select ia.work_effort_id, ia.inventory_item_id, ii.serial_num, ia.quantity
+from work_effort_inventory_assignment ia
+join inventory_item ii on ii.inventory_item_id = ia.inventory_item_id
+where ii.inventory_item_kind = 'SERIALIZED'
+  and ia.quantity is distinct from 1
+  and ia.quantity is not null;

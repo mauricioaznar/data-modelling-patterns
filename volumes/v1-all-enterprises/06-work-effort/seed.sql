@@ -548,3 +548,52 @@ insert into time_entry (timesheet_id, work_effort_id, from_datetime, thru_dateti
   (1600, 40100, '2001-05-07', '2001-05-08', 8),
   (1600, 40100, '2001-05-14', '2001-05-15', 10),
   (1600, 40100, '2001-05-21', '2001-05-22', 8);
+
+-- ============================================================
+-- Fig 6.8 — Inventory assignments
+-- ============================================================
+-- Table 6.12's components: pencil cartridges and labels are new raw
+-- materials; erasers are Ch 5's standard eraser (21). Stock at the pen
+-- plant is ours (NOTES, point 37).
+insert into product (product_id, product_kind, name, introduction_date, uom_id) values
+  (24, 'GOOD', 'Pencil cartridge', '1995-01-01', 'EA'),
+  (25, 'GOOD', 'Pencil label',     '1995-01-01', 'EA');
+
+select setval(pg_get_serial_sequence('product', 'product_id'), (select max(product_id) from product));
+
+insert into good (product_id, good_kind) values
+  (24, 'RAW_MATERIAL'),
+  (25, 'RAW_MATERIAL');
+
+insert into inventory_item (inventory_item_id, inventory_item_kind, product_id, inventory_item_status_type_id, facility_id, quantity_on_hand) values
+  (30, 'NON_SERIALIZED', 24, 'GOOD', 15, 5000),   -- pencil cartridges at the pen plant
+  (31, 'NON_SERIALIZED', 21, 'GOOD', 15, 800),    -- erasers
+  (32, 'NON_SERIALIZED', 25, 'GOOD', 15, 900);    -- labels
+
+select setval(pg_get_serial_sequence('inventory_item', 'inventory_item_id'), (select max(inventory_item_id) from inventory_item));
+
+-- The pencil job (ours) and its two parts from Tables 6.12 and 6.15. Fig
+-- 6.11 gives the job its kind of work.
+insert into work_effort (work_effort_id, work_effort_type_id, work_effort_purpose_type_id, facility_id, name, description,
+                         scheduled_start_date, scheduled_completion_date) values
+  (41000, 'JOB',  'PRODUCTION_RUN', 15,   'Pencil production run',      'Large production run of 1,000 pencils', '2000-06-12', '2000-06-20'),
+  (41001, 'TASK', null,             null, 'Assemble pencil components', 'Assemble pencil components',            '2000-06-13', '2000-06-14'),
+  (41002, 'TASK', null,             null, 'Label pencils',              'Label pencils',                         '2000-06-12', '2000-06-15');
+
+select setval(pg_get_serial_sequence('work_effort', 'work_effort_id'), (select max(work_effort_id) from work_effort));
+
+insert into production_run (work_effort_id, quantity_to_produce) values
+  (41000, 1000);
+
+insert into work_effort_association (work_effort_association_type_id, from_work_effort_id, to_work_effort_id, from_date) values
+  ('BREAKDOWN', 41000, 41001, '2000-06-01'),
+  ('BREAKDOWN', 41000, 41002, '2000-06-01');
+
+-- Table 6.12.
+insert into work_effort_inventory_assignment (work_effort_id, inventory_item_id, quantity) values
+  (41001, 30, 100),
+  (41001, 31, 100),
+  (41001, 32, 100),
+  -- ours, each with one mistake
+  (41001, 31, 50),    -- DATA ERROR: erasers twice on one task (the key is item and effort)
+  (29900, 5,  3);     -- DATA ERROR: Ch 3's serialized copier used three times over

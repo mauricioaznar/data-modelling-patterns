@@ -1246,6 +1246,18 @@ the literal drawing.
   stop on May 14 (point 42). Bad rows: an overtime pay rate overlapping both of his, and a
   billing rate from before his assignment.
 
+### Fig 6.8
+- **`work_effort_inventory_assignment`**: work effort, inventory item, an optional quantity
+  (positive). Surrogate key; the book's key (item and effort) is a check, and so is a
+  serialized item used in any quantity but one.
+- **No trigger lowers quantity on hand**: the text leaves depletion to a business process.
+  Ch 5's balance query is left as it was; use belongs in it once the overview agrees.
+- **Seed:** Table 6.12 on "Assemble pencil components" (41001), part of a pencil job
+  (41000, ours) with "Label pencils" (41002, Table 6.15's). New raw materials: pencil
+  cartridges (24) and labels (25); erasers are Ch 5's (21). Stock items 30–32 at the pen
+  plant, quantities ours. Bad rows: erasers twice on 41001; Ch 3's serialized copier used
+  three times on the sample-pen research task.
+
 ## When NOT to use this
 - **A shop that only sells** never generates work: a service it sells is a product line on
   an order (Ch 4), and nothing needs WORK EFFORT.
