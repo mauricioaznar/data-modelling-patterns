@@ -25,11 +25,13 @@ architecture card's `(Fig N.M)`.
 | 5.1 | built | 1 | ✓ | ✓ | ✓ | ✓ | – |
 | 5.2 | built | 1 | ✓ | ✓ | ✓ | ✓ | – |
 | 5.3 | built | 2 | ✓ | ✓ | ✓ | ✓ | – |
+| 5.4 | built | 3 | ✓ | ✓ | ✓ | ✓ | – |
 
 | # | Submodel | Figures built | Card | Ponders |
 |---|---|---|---|---|
 | 1 | Shipments, items and status | ✓ | Card 17 | 5 |
 | 2 | Shipments and orders | ✓ | Card 18 | 4 |
+| 3 | Packages and receipts | ✓ | Card 19 | 5 |
 
 Last check: 0 ✗ · 1 !
 <!-- check:end -->

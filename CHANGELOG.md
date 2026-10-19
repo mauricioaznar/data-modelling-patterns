@@ -156,6 +156,19 @@ and any decisions made.
   Ch 5 column (examples on ten rows) and two patterns (item-to-item hand-over with its own
   quantity; plan beside the facts), question index rows, roadmap Ch 5 In progress. Cards 17
   and 18; Anki export 29 cards.
+- Fig 5.4 with Table 5.8 (photos), built as submodel 3, *packages and receipts*:
+  `shipment_package` (no line to shipment), `packaging_content`, `shipment_receipt` (one
+  good counted out of one package, accepted and rejected, stored into an inventory item,
+  checked against an order line), `rejection_reason`, `shipment_receipt_role` + type, and
+  the view `shipment_package_shipment`. Table 5.8's packages and receipts; ABC's two
+  warehouses (Ch 2) and six inventory items (Ch 3). Table 5.8 re-seeds 1146, 1149 and 3485,
+  and purchase order 300 is re-planned to match. Queries for the line-by-line receipts,
+  package contents, shipped against counted, ordered against shipped and accepted,
+  rejections, and stock received. Eight checks.
+- Ponders 1–5 (submodel 3); ER diagram. Design reference: entry *Packages and receipts*
+  (draft), Core patterns gains a pattern (shortcut line checked against the path) and Ch 5
+  examples on six rows, a question index row, roadmap "3 submodels so far". Card 19; Anki
+  export 30 cards.
 
 **Decisions**
 - A card joins the morning study loop at its chapter's overview, not when its figures are
@@ -216,12 +229,20 @@ and any decisions made.
   two bars); Table 5.3's 4800 read as 2001; Table 5.5's 9200 line 3 left unclaimed, as
   printed; the text's "same place, same product" built as checks; sales lines on customer
   shipments, purchase lines on purchase shipments, either on a drop ship.
+- Fig 5.4 is submodel 3 (packages and receipts), not part of submodel 1: it answers what
+  arrived and how much was accepted, a different question. Item issuance, which the text
+  under Table 5.8 opens, may join it.
+- Table 5.8 wins over our own rows: 1146's and 1149's lines are the book's now, and its
+  "4800 (transfer)" is read as 3485 (4800 is Table 5.1's cancelled drop ship). More
+  readings for the overview in Ch 5 NOTES, points 17–26: a package's shipment derived from
+  its contents, the second 12901 read as 12902, 1146's diskettes in two packages, the
+  receipt's order line checked against ORDER SHIPMENT, receipts on incoming shipments only.
 
 **Next**
 - More Ch 5 figures (`/figures`), up to the chapter's overall figure.
 - The Ch 4 overview, from point 1 (keep Fig 4.1 unbuilt?): the 40 points, the seven doc
   drafts, the architecture entry and the cards (`/overview`).
-- Re-import `docs/cards-anki.txt` in Anki (cards 11–18 and the Ch 4 architecture card are
+- Re-import `docs/cards-anki.txt` in Anki (cards 11–19 and the Ch 4 architecture card are
   new; card 10's note id changed with its figures, so delete the old card 10 note), then the
   one-time deck setup and moves in TODO.md (Cards).
 - Still open from 2026-10-17: the associations walk-through (substitute direction), the pricing
