@@ -229,7 +229,7 @@ create table order_item_billing (
 -- ============================================================
 -- Fig 7.8a — Invoice payments
 -- ============================================================
--- Fig 7.8b (alternate) is not built: 7.10 keeps 7.8a's application to the
+-- The alternate 7.8b is not built: 7.10 keeps 7.8a's application to the
 -- whole invoice (NOTES, point 19).
 --
 -- PAYMENT: money from one party to another. RECEIPT and DISBURSEMENT have no

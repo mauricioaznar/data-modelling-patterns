@@ -991,6 +991,119 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
+### Card 31 · V1 Ch 7 · Invoice status and terms (Fig 7.4)
+- **Cue:** "Where is this bill now and since when, and what are its payment terms, late fees and line-level conditions?"
+- **Hook:** an envelope stamped APPROVED, SENT and, in red, VOID, each with a date, and a
+  small-print box on the back: net 30, 2% late, one line marked "no returns" *(Claude's,
+  drafted when the figures landed)*
+- **Mantra:** Status is a dated history, never PAID; terms copy onto the bill or one line,
+  never both.
+
+<details><summary>Key</summary>
+
+- **S:** `invoice_status` (invoice, status type, date) with the types as an INVOICE_STATUS
+  group in Ch 2's `status_type` (approved, sent, void; received for supplier bills) ·
+  `invoice_term` (term type, invoice or item, value) on Ch 4's shared `term_type`.
+- **W:** a `status` column and a `payment_terms` text on INVOICE: no history (was 30005 sent
+  before it was voided?), no second term, no term on one line, nothing to compute a due date
+  from.
+- **T:** *(the naive-model trap until practice gives yours)* storing PAID as a status
+  beside the payments that already say so; pointing at the agreement's term instead of
+  copying it; a term on both the invoice and a line.
+- **D:** invoice ← invoice_status → status_type (Ch 2); invoice ← invoice_term (arc: invoice
+  | invoice_item) → term_type (Ch 4). Current status = the latest. Checks: a status outside
+  the group; before the invoice date; anything after a void; a status twice on one day; a
+  term type twice on one invoice or line.
+</details>
+
+---
+
+### Card 32 · V1 Ch 7 · Billing for what was delivered (Figs 7.5–7.7)
+- **Cue:** "Which shipment lines, hours, jobs or order lines does this invoice line charge for, and what's delivered or worked but not billed?"
+- **Hook:** an invoice line with four strings pinned to it, running back to a delivery note,
+  a timesheet, a project plan and a purchase order *(Claude's, drafted when the figures
+  landed)*
+- **Mantra:** An invoice line points back at what caused it: a shipment, hours, a job or an
+  order line. One route per line.
+
+<details><summary>Key</summary>
+
+- **S:** `shipment_item_billing` (shipment item, invoice item) · `time_entry_billing` (time
+  entry, invoice item) · `work_effort_billing` (work effort, invoice item, percentage) ·
+  `order_item_billing` (order item, invoice item, quantity, amount). All many to many.
+- **W:** a `shipment_item_id` (or `order_item_id`) on the invoice line, or an `invoiced`
+  flag on the time entry: one line can't gather three shipments, an order line can't be
+  billed in parts, and a void bill leaves nothing to say what's unbilled again.
+- **T:** *(the naive-model trap until practice gives yours)* billing one line through both
+  its order and its shipment (counted twice); counting a void invoice as billing; billing a
+  time entry on two lines with no hours to split it.
+- **D:** invoice_item ← shipment_item_billing → **shipment_item** (Ch 5); invoice_item ←
+  time_entry_billing → **time_entry** (Ch 6); invoice_item ← work_effort_billing →
+  **work_effort** (Ch 6); invoice_item ← order_item_billing → **order_item** (Ch 4). Checks:
+  a pair twice; another product shipped than billed; shipped to someone else than billed; a
+  link on a line of the wrong type; an entry on two lines; an effort over 100%; an order
+  line billed past its quantity or on the other kind of invoice; a line on both routes.
+</details>
+
+---
+
+### Card 33 · V1 Ch 7 · Payments (Fig 7.8a)
+- **Cue:** "Who paid whom, how and how much, which invoices or which account it settles, and what's still owed?"
+- **Hook:** one check pinned across two bills, with the stub split $6,000 and $1,000, and a
+  second bill held by two smaller checks *(Claude's, drafted when the figures landed)*
+- **Mantra:** A payment goes party to party; applications split it over invoices, or on
+  account. Balance is computed, never stored.
+
+<details><summary>Key</summary>
+
+- **S:** `payment` (kind RECEIPT or DISBURSEMENT, method type, from party, to party,
+  effective date, ref num, amount, comment) · `payment_application` (payment, invoice or
+  billing account: the arc, amount applied) · `payment_method_type` · view `invoice_total`.
+- **W:** `paid_date` and `amount_paid` on INVOICE, or `invoice_id` on PAYMENT: no partial
+  payments, no one check for several bills, no money received before anyone knows which bill
+  it's for.
+- **T:** *(the naive-model trap until practice gives yours)* storing an outstanding balance
+  that drifts from the lines; a receipt applied to a purchase invoice; applying more of a
+  payment than it's worth.
+- **D:** payment → payment_method_type, → **party** (from, to; Ch 2); payment ←
+  payment_application → invoice | billing_account (the arc). Outstanding = invoice_total −
+  applications. Checks: a payment the wrong way round (receipt not to, disbursement not from,
+  an internal organization); applied past its amount; an invoice paid past its total; a
+  receipt on a purchase bill or back. 7.8b (per-line applications) dropped.
+</details>
+
+---
+
+### Card 34 · V1 Ch 7 · Financial accounts (Fig 7.9)
+- **Cue:** "Which payments went into which deposit or withdrawal, on which bank account, who may act on it, and what's its balance?"
+- **Hook:** a bank deposit slip with four checks stapled to it and a total of $917.04 at the
+  bottom, next to a statement with one line for the whole slip *(Claude's, drafted when the
+  figures landed)*
+- **Mantra:** Payments aren't cash until banked: receipts gather into a deposit, a check
+  clears as a withdrawal; parties hold the account in roles.
+
+<details><summary>Key</summary>
+
+- **S:** `financial_account` (the bank's number as id, kind BANK or INVESTMENT, optional
+  type: checking, savings, IRA, mutual fund; name) · `financial_account_role` (party, type:
+  owner, signer, administrator; from, thru) · `financial_account_transaction` (kind DEPOSIT,
+  WITHDRAWAL or ADJUSTMENT, account, executed by, transaction and entry date; an amount for
+  adjustments only) · `payment` gains its transaction.
+- **W:** a `bank_account_id` or a `deposited_date` on PAYMENT: no deposit slip to match the
+  statement's one line, no bank fees, no record of who banked it.
+- **T:** *(the naive-model trap until practice gives yours)* giving the deposit an amount
+  that can disagree with its receipts; a check put in a deposit; a withdrawal executed by
+  someone with no role on the account.
+- **D:** **payment** (Ch 7) → financial_account_transaction → financial_account (→
+  financial_account_type), → **party** (executed by); financial_account ←
+  financial_account_role → **party**, → financial_account_role_type. Checks: a type outside
+  the account's kind; a payment in the wrong kind of transaction; a withdrawal that isn't
+  one check; a deposit with no payments; executed by someone without a role that day; a role
+  twice.
+</details>
+
+---
+
 ## Deck: architecture
 
 One card per chapter, from its architecture figure (the last, overall one): how the chapter's
@@ -1161,6 +1274,39 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
   work_effort_type ← skill, **good** and fixed asset type standards; work_effort ←
   inventory and deliverable produced. Bold = from Ch 2, 3, 4 and 5. Kept: every submodel;
   6.3b dropped.
+</details>
+
+---
+
+### Architecture · V1 Ch 7 · Invoicing (Fig 7.10)
+- **Cue:** "Everything about a bill, from what it charges for and who it goes to, to how it's paid and banked, in one picture."
+- **Hook:** an invoice in the middle of a corkboard: strings out to the delivery notes,
+  timesheets and orders behind its lines, an address label and an account card above, a
+  status stamp and small print in the corner, and checks clipped below, heading for a bank
+  slip *(Claude's, drafted when the figure landed)*
+- **Mantra:** Typed lines point back at what caused them; parties and accounts are billed;
+  status and terms ride along; payments apply, then bank.
+
+<details><summary>Key</summary>
+
+- **S:** `invoice` and `invoice_item` (typed, with adjusted-by and sold-with) as the hubs.
+- **W:** lines bill products and features (Ch 3) and link back to order items (Ch 4),
+  shipment items (Ch 5), work efforts and time entries (Ch 6); the invoice is billed from a
+  party to a party or a BILLING ACCOUNT, addressed and sent through contact mechanisms (Ch
+  2), with INVOICE ROLEs, a STATUS history and TERMs; PAYMENTs apply to invoices or on
+  account, and are banked as FINANCIAL ACCOUNT TRANSACTIONs on FINANCIAL ACCOUNTs.
+- **T:** *(the naive-model trap until practice gives yours)* one `invoice` with customer,
+  address, tax, freight, status, terms and paid-amount columns and lines with one product
+  each: it breaks on a second fee, an e-mailed bill, a household account, a partial payment
+  or a deposit slip.
+- **D:** invoice ← invoice_item → invoice_item_type, **product**, **product_feature**;
+  invoice_item ← order, shipment, work effort and time entry billing → **order_item**,
+  **shipment_item**, **work_effort**, **time_entry**; invoice → **party** (from, to) |
+  billing_account (← billing_account_role → **party**), → **contact_mechanism**; invoice ←
+  invoice_role, invoice_status (→ **status_type**), invoice_term (→ **term_type**); invoice |
+  billing_account ← payment_application → payment → **party**, payment_method_type,
+  financial_account_transaction → financial_account ← financial_account_role. Bold = from
+  Ch 2 to 6. Kept: 7.1a, 7.3a, 7.8a; 7.1b, 7.3b, 7.8b dropped.
 </details>
 
 ---

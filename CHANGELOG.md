@@ -77,8 +77,39 @@ and any decisions made.
   and 1–4; ER diagram; cards 29–30, Anki export 43 cards. Design reference: two draft
   entries, a Ch 7 column in Core patterns with examples on fourteen rows, two question index
   rows, roadmap Ch 7 In progress.
+- Figs 7.4–7.10 with Tables 7.7–7.12 (photos, some sent twice), transcribed with points
+  13–29; Fig 7.10 settles points 3, 11 and 19 (7.1a, 7.3a and 7.8a kept).
+- Fig 7.4 built: `invoice_status` (an INVOICE_STATUS group in Ch 2's status types, no PAID),
+  `invoice_term` on Ch 4's shared term types, its arc a check constraint. Tables 7.7–7.8;
+  five checks.
+- Fig 7.5 built: `shipment_item_billing`; shipments 1235 and 1330 (ours) to Table 7.9's
+  intention, a credit billing a shipment line again; unbilled shipments ignore void bills.
+  Three checks.
+- Fig 7.6 built: `time_entry_billing`, `work_effort_billing` (a percentage); 30017 bills John
+  Smith's interview hours and half the project plan. Three checks and a review.
+- Fig 7.7 built: `order_item_billing` (quantity, amount); Table 7.10 as our purchases from
+  Hartley Accounting (ours), invoices 990023 and 990026. Three checks, one for a line
+  billed through both its order and its shipment.
+- Fig 7.8a built: `payment` (receipt or disbursement, a method, from and to parties),
+  `payment_application` to an invoice or on account (an arc constraint), an
+  `invoice_total` view; Table 7.11 and Table 7.12's other payments; outstanding and
+  overdue balances. Four checks and a review.
+- Fig 7.9 built: `financial_account` (the bank's number as a bigint key, kind + type
+  hierarchy), dated `financial_account_role`, `financial_account_transaction` (an amount
+  for adjustments only), payments banked; Table 7.12's $917.04 deposit. Five checks.
+- Fig 7.10, the architecture: How it flows; MAP's Ch 7 section rewritten and marked done.
+- Submodels 3–6 and the architecture; ponders 1–3, 1–4, 1–3, 1–3; cards 31–34 and the Ch 7
+  architecture card, Anki export 48 cards. Design reference: four draft entries and the Ch 7
+  architecture entry, Ch 7 examples on eleven Core patterns rows, four question index rows,
+  roadmap "6 submodels + architecture".
 
 **Decisions**
+- Ch 7: Table 7.9's 30002 isn't Table 7.2's, so its links are built to its intention
+  with our shipments (point 14); Table 7.10's purchase orders read as ours (point 16).
+- Ch 7: no PAID status; balances, deposit amounts and "unbilled" are all computed, never
+  stored. Only a bank adjustment carries an amount (point 24).
+- Ch 7: a payment application is an invoice or a billing account, exactly one (point 18);
+  the financial account keeps the bank's number as its key, a bigint (point 26).
 - Ch 7: build 7.1a and 7.2–7.3a, not the alternates 7.1b and 7.3b; their rules become
   checks, and the chapter's overall figure decides (points 3 and 11).
 - Ch 7: every invoice item is typed, product lines too (point 1); amount is per unit, so
@@ -111,9 +142,9 @@ and any decisions made.
 - Work effort purpose optional; production runs typed PROJECT for want of a level in the book.
 
 **Next**
-- The rest of Ch 7's figures (the user's call to keep building ahead).
-- The Ch 4, 5, 6 and 7 overviews (Ch 6: 42 points, Ch 7: 12 so far); then practice,
-  submodel by submodel.
+- The Ch 4, 5, 6 and 7 overviews (Ch 6: 42 points, Ch 7: 29); then practice, submodel by
+  submodel. Re-import the Anki export (48 cards; cards 31–34 and the Ch 7 architecture
+  card land in Drafts).
 
 ## 2026-10-18
 

@@ -32,7 +32,7 @@ volumes. Vol 2's industry models can therefore extend Vol 1's `party` directly.
 | 1 | 04 | [Ordering Products](volumes/v1-all-enterprises/04-ordering-products/NOTES.md) | Figs 4.1–4.17 in (4.1 not built, 4.17 the architecture); submodels 1–7 and the architecture drafted and carded; overview started (point 1 of 40) |
 | 1 | 05 | [Shipments](volumes/v1-all-enterprises/05-shipments/NOTES.md) | Figs 5.1–5.8 in (5.8 the architecture, no SQL); submodels 1–5 and the architecture drafted and carded; overview next (44 points) |
 | 1 | 06 | [Work Effort](volumes/v1-all-enterprises/06-work-effort/NOTES.md) | Figs 6.1–6.13 in (6.3b the alternate, not built; 6.13 the architecture); submodels 1–7 and the architecture drafted and carded; overview next |
-| 1 | 07 | [Invoicing](volumes/v1-all-enterprises/07-invoicing/NOTES.md) | Figs 7.1a–7.3b in (7.1b and 7.3b the alternates, not built); submodels 1–2 drafted and carded; more figures to come |
+| 1 | 07 | [Invoicing](volumes/v1-all-enterprises/07-invoicing/NOTES.md) | Figs 7.1a–7.10 in (7.1b, 7.3b and 7.8b the alternates, not built; 7.10 the architecture); submodels 1–6 and the architecture drafted and carded; overview next (29 points) |
 
 Each chapter folder contains:
 

@@ -13,11 +13,11 @@ Architecture figure: 7.10
 |---|---|---|---|---|---|---|
 | 1 | Invoices and invoice items | 7.1a | 2026-10-19 | | | |
 | 2 | Invoice parties and billing accounts | 7.2–7.3a | 2026-10-19 | | | |
-| 3 | Invoice status and terms | 7.4 | | | | |
-| 4 | Billing for what was delivered | 7.5–7.7 | | | | |
-| 5 | Payments | 7.8a | | | | |
-| 6 | Financial accounts | 7.9 | | | | |
-| A | Architecture | 7.10 | | | – | – |
+| 3 | Invoice status and terms | 7.4 | 2026-10-19 | | | |
+| 4 | Billing for what was delivered | 7.5–7.7 | 2026-10-19 | | | |
+| 5 | Payments | 7.8a | 2026-10-19 | | | |
+| 6 | Financial accounts | 7.9 | 2026-10-19 | | | |
+| A | Architecture | 7.10 | 2026-10-19 | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs N.1–N.3)`; the `A` row's matches the
 architecture card's `(Fig N.M)`.
@@ -31,11 +31,24 @@ architecture card's `(Fig N.M)`.
 | 7.2 | built | 2 | ✓ | ✓ | ✓ | ✓ | – |
 | 7.3a | built | 2 | ✓ | ✓ | ✓ | ✓ | – |
 | 7.3b | not built | 2 | ✓ | – | – | – | – |
+| 7.4 | built | 3 | ✓ | ✓ | ✓ | ✓ | – |
+| 7.5 | built | 4 | ✓ | ✓ | ✓ | ✓ | – |
+| 7.6 | built | 4 | ✓ | ✓ | ✓ | ✓ | – |
+| 7.7 | built | 4 | ✓ | ✓ | ✓ | ✓ | – |
+| 7.8a | built | 5 | ✓ | ✓ | ✓ | ✓ | – |
+| 7.8b | not built | – | ✓ | – | – | – | – |
+| 7.9 | built | 6 | ✓ | ✓ | ✓ | ✓ | – |
+| 7.10 | architecture | – | ✓ | – | – | – | ✓ |
 
 | # | Submodel | Figures built | Card | Ponders |
 |---|---|---|---|---|
 | 1 | Invoices and invoice items | ✓ | Card 29 | 3 |
 | 2 | Invoice parties and billing accounts | ✓ | Card 30 | 4 |
+| 3 | Invoice status and terms | ✓ | Card 31 | 3 |
+| 4 | Billing for what was delivered | ✓ | Card 32 | 4 |
+| 5 | Payments | ✓ | Card 33 | 3 |
+| 6 | Financial accounts | ✓ | Card 34 | 3 |
+| A | Architecture | – | Architecture | – |
 
-Last check: 0 ✗ · 1 !
+Last check: 0 ✗ · 0 !
 <!-- check:end -->
