@@ -141,3 +141,70 @@ insert into accounting_transaction (accounting_transaction_id, accounting_transa
   (61005, 'EXTERNAL',               16, 13,   null,  null,     null, '2001-07-01', '2001-07-01', 'Cash from ACME, not yet classified'); -- DATA ERROR: typed with a grouping row
 
 select setval(pg_get_serial_sequence('accounting_transaction', 'accounting_transaction_id'), (select max(accounting_transaction_id) from accounting_transaction));
+
+-- ============================================================
+-- Fig 8.3a — Accounting transaction details
+-- ============================================================
+-- Three more transactions whose details go wrong (ours).
+insert into accounting_transaction (accounting_transaction_id, accounting_transaction_type_id, from_party_id, to_party_id,
+                                    invoice_id, payment_id, inventory_item_variance_id, transaction_date, entry_date, description) values
+  (32391, 'OTHER_INTERNAL',       12, null, null, null, null, '2000-03-01', '2000-03-02', 'Stand at the spring trade fair'),
+  (61006, 'INVOICE',              13, 16,   null, null, null, '2001-07-05', '2001-07-05', 'Copier toner for ACME'),
+  (61007, 'RECEIPT_FOR_INVOICES', 16, 13,   null, null, null, '2001-07-10', '2001-07-11', 'ACME pays for some toner');
+
+-- Detail ids are the transaction id and seq (389481 = 38948 seq 1), so the
+-- associations read like Table 8.5. Organization GL accounts (Fig 8.1):
+-- ABC Corporation 1 cash, 2 receivables, 6 marketing (closed 1997),
+-- 10 equipment, 11 accumulated depreciation, 12 sales revenue, 13 capital
+-- gain, 14 depreciation expense, 15 discount expense; ABC Subsidiary 21 cash,
+-- 22 receivables, 28 sales revenue.
+insert into transaction_detail (transaction_detail_id, accounting_transaction_id, trans_detail_seq_id, organization_gl_account_id,
+                                amount, debit_credit_flag, associated_with_transaction_detail_id) values
+  -- Table 8.4
+  (323891, 32389, 1, 14,  200,    'DEBIT',  null),
+  (323892, 32389, 2, 11,  200,    'CREDIT', null),
+  (389481, 38948, 1, 2,   900,    'DEBIT',  null),
+  (389482, 38948, 2, 12,  900,    'CREDIT', null),
+  (397761, 39776, 1, 1,   882,    'DEBIT',  null),
+  (397762, 39776, 2, 15,  18,     'DEBIT',  null),
+  (397763, 39776, 3, 2,   900,    'CREDIT', 389481),   -- Table 8.5: settles the invoice's debit
+  (478741, 47874, 1, 1,   1000,   'DEBIT',  null),
+  (478742, 47874, 2, 11,  200,    'DEBIT',  null),
+  (478743, 47874, 3, 10,  800,    'CREDIT', null),
+  (478744, 47874, 4, 13,  400,    'CREDIT', null),
+  -- Table 8.5
+  (509841, 50984, 1, 2,   1000,   'DEBIT',  null),
+  (509842, 50984, 2, 12,  1000,   'CREDIT', null),
+  (509991, 50999, 1, 2,   2000,   'DEBIT',  null),
+  (509992, 50999, 2, 12,  2000,   'CREDIT', null),
+  (609851, 60985, 1, 1,   3000,   'DEBIT',  null),
+  (609852, 60985, 2, 2,   1000,   'CREDIT', 509841),   -- one payment, two invoices
+  (609853, 60985, 3, 2,   2000,   'CREDIT', 509991),
+  -- The rest of Table 8.3 (ours)
+  (457831, 45783, 1, 12,  200,    'DEBIT',  null),     -- the credit memo names no invoice (point 10)
+  (457832, 45783, 2, 2,   200,    'CREDIT', null),
+  (458941, 45894, 1, 1,   300,    'DEBIT',  null),
+  (458942, 45894, 2, 2,   300,    'CREDIT', null),     -- on account: no invoice to settle
+  (463251, 46325, 1, 2,   300,    'DEBIT',  458942),   -- the refund undoes the payment on account
+  (463252, 46325, 2, 1,   300,    'CREDIT', null),
+  -- ABC Subsidiary (ours)
+  (610011, 61001, 1, 22,  218.65, 'DEBIT',  null),
+  (610012, 61001, 2, 28,  218.65, 'CREDIT', null),
+  (610021, 61002, 1, 21,  182.20, 'DEBIT',  null),
+  (610022, 61002, 2, 22,  182.20, 'CREDIT', 610011),
+  -- Fig 8.2's bad transactions, balanced so only their own check catches them
+  (323901, 32390, 1, 14,  50,     'DEBIT',  null),
+  (323902, 32390, 2, 11,  50,     'CREDIT', null),
+  (610041, 61004, 1, 22,  12.84,  'DEBIT',  null),
+  (610042, 61004, 2, 28,  12.84,  'CREDIT', null),
+  (610051, 61005, 1, 21,  10,     'DEBIT',  null),
+  (610052, 61005, 2, 22,  10,     'CREDIT', null),
+  -- Bad details
+  (323911, 32391, 1, 6,   150,    'DEBIT',  null),     -- DATA ERROR: marketing expense closed at ABC Corporation in 1997
+  (323912, 32391, 2, 1,   150,    'CREDIT', null),
+  (610061, 61006, 1, 22,  100,    'DEBIT',  null),     -- DATA ERROR: debits 100, credits 90
+  (610062, 61006, 2, 28,  90,     'CREDIT', null),
+  (610071, 61007, 1, 1,   40,     'DEBIT',  null),     -- DATA ERROR: ABC Corporation's cash on ABC Subsidiary's receipt
+  (610072, 61007, 2, 22,  40,     'CREDIT', null);
+
+select setval(pg_get_serial_sequence('transaction_detail', 'transaction_detail_id'), (select max(transaction_detail_id) from transaction_detail));

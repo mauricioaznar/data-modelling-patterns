@@ -51,6 +51,10 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    INTERNAL and EXTERNAL instead of making "to" optional on every transaction?
 2. *(8.2)* Why point the transaction at its invoice or payment, when the invoice already
    holds the amounts? What question can't you answer without that line?
+3. *(8.3a)* 39776 records $900 against receivables, but only $882 reached the bank. Model
+   it with one amount on the transaction instead of details: what is lost?
+4. *(8.3a)* How does "associated with" let you list open invoices without an "amount
+   paid" column? What breaks if a customer pays on account, as ACME did in 45894?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

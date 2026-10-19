@@ -368,6 +368,25 @@ the literal drawing.
   Bad rows: a depreciation with a receiver, an invoice transaction posting a payment, a
   transaction typed EXTERNAL.
 
+### Fig 8.3a
+- **`transaction_detail`** with a surrogate key (the book's transaction + seq stays as
+  columns), `organization_gl_account_id` not null (point 7), `amount` > 0 and a
+  `debit_credit_flag` (point 8), `associated_with_transaction_detail_id` as a plain FK.
+- **Checks:** a transaction that doesn't balance or has fewer than two postings; a posting
+  to an account not open on the transaction date; a posting to the books of an
+  organization that isn't a party to the transaction.
+- **Queries:** Tables 8.4–8.5; each transaction's worth as its debits (Table 8.3's
+  amounts, points 3–4); open receivables debit by debit, with the credits that settle
+  nothing (45783's memo, point 10); a trial balance per organization for 2000.
+- **Seed:** Tables 8.4–8.5 as printed, the rest of Table 8.3 and ABC Subsidiary's two
+  (ours), balanced details for Fig 8.2's bad rows so only their own check fires. Detail
+  ids are transaction id × 10 + seq. Bad rows: a trade fair stand on the closed marketing
+  account, an invoice whose credits fall $10 short, ABC Corporation's cash on ABC
+  Subsidiary's receipt.
+- **No opening balances:** ABC Corporation's 2000 starts from nothing, so equipment ends
+  the year at −800 (the engraver's cost was booked before our data). The trial balance
+  still sums to zero.
+
 ## When NOT to use this
 - **One company, one ledger:** a single small business can key the chart and the books
   together; ORGANIZATION GL ACCOUNT earns its keep with several internal organizations.

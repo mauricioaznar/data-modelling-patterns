@@ -152,3 +152,84 @@ left join payment p                      on p.payment_id = x.payment_id
 where (x.invoice_id is not null and c.subtype_id is distinct from 'SALES')
    or (x.payment_id is not null and c.subtype_id is distinct from p.payment_kind)
    or (x.inventory_item_variance_id is not null and c.subtype_id is distinct from 'ITEM_VARIANCE');
+
+-- ============================================================
+-- Fig 8.3a — Accounting transaction details
+-- ============================================================
+
+-- name: 8.3a — Tables 8.4–8.5: each transaction's postings, the organization's account each goes to, and the posting it settles
+select x.accounting_transaction_id as transaction, x.description, d.trans_detail_seq_id as seq, d.amount, d.debit_credit_flag,
+       a.name || ' (' || n.name || ')' as organization_gl_account,
+       ad.accounting_transaction_id || ', ' || ad.trans_detail_seq_id as associated_with
+from transaction_detail d
+join accounting_transaction x       on x.accounting_transaction_id = d.accounting_transaction_id
+join organization_gl_account o      on o.organization_gl_account_id = d.organization_gl_account_id
+join general_ledger_account a       on a.general_ledger_account_id = o.general_ledger_account_id
+join organization n                 on n.party_id = o.internal_organization_party_id
+left join transaction_detail ad     on ad.transaction_detail_id = d.associated_with_transaction_detail_id
+where x.accounting_transaction_id in (32389, 38948, 39776, 47874, 50984, 50999, 60985)
+order by x.accounting_transaction_id, d.trans_detail_seq_id;
+
+-- name: 8.3a — What each transaction is worth: its debits, which Table 8.3 prints as the amount (39776 shows 700 there: NOTES, point 4)
+select x.accounting_transaction_id as transaction, x.transaction_date, x.description,
+       sum(d.amount) filter (where d.debit_credit_flag = 'DEBIT')  as debits,
+       sum(d.amount) filter (where d.debit_credit_flag = 'CREDIT') as credits
+from accounting_transaction x
+join transaction_detail d on d.accounting_transaction_id = x.accounting_transaction_id
+group by x.accounting_transaction_id, x.transaction_date, x.description
+order by x.transaction_date, x.accounting_transaction_id;
+
+-- name: 8.3a — Open receivables, debit by debit: what each receivable posting still has open after the credits associated with it, and the credits that settle nothing
+select x.accounting_transaction_id as transaction, x.transaction_date, x.description, d.debit_credit_flag, d.amount,
+       coalesce((select sum(s.amount) from transaction_detail s where s.associated_with_transaction_detail_id = d.transaction_detail_id), 0) as settled,
+       d.amount - coalesce((select sum(s.amount) from transaction_detail s where s.associated_with_transaction_detail_id = d.transaction_detail_id), 0) as still_open
+from transaction_detail d
+join accounting_transaction x  on x.accounting_transaction_id = d.accounting_transaction_id
+join organization_gl_account o on o.organization_gl_account_id = d.organization_gl_account_id
+where o.general_ledger_account_id = 120
+  and ((d.debit_credit_flag = 'DEBIT' and not exists (select 1 from transaction_detail t where t.transaction_detail_id = d.associated_with_transaction_detail_id))
+       or (d.debit_credit_flag = 'CREDIT' and d.associated_with_transaction_detail_id is null))
+order by o.internal_organization_party_id, x.transaction_date, x.accounting_transaction_id;
+
+-- name: 8.3a — Trial balance of each organization at the end of 2000: every account's debits, credits and balance (debits − credits); the balances sum to zero when the books balance
+select n.name as organization, a.general_ledger_account_id as account, a.name,
+       sum(d.amount) filter (where d.debit_credit_flag = 'DEBIT')  as debits,
+       sum(d.amount) filter (where d.debit_credit_flag = 'CREDIT') as credits,
+       sum(case d.debit_credit_flag when 'DEBIT' then d.amount else -d.amount end) as balance
+from transaction_detail d
+join accounting_transaction x  on x.accounting_transaction_id = d.accounting_transaction_id
+join organization_gl_account o on o.organization_gl_account_id = d.organization_gl_account_id
+join general_ledger_account a  on a.general_ledger_account_id = o.general_ledger_account_id
+join organization n            on n.party_id = o.internal_organization_party_id
+where x.transaction_date < date '2001-01-01'
+group by rollup ((n.name, a.general_ledger_account_id, a.name))
+order by n.name nulls last, a.general_ledger_account_id;
+
+-- name: 8.3a — Data-quality check: transactions that don't balance (debits ≠ credits) or have fewer than two postings (should be empty)
+select x.accounting_transaction_id, count(d.transaction_detail_id) as postings,
+       coalesce(sum(d.amount) filter (where d.debit_credit_flag = 'DEBIT'), 0)  as debits,
+       coalesce(sum(d.amount) filter (where d.debit_credit_flag = 'CREDIT'), 0) as credits
+from accounting_transaction x
+left join transaction_detail d on d.accounting_transaction_id = x.accounting_transaction_id
+group by x.accounting_transaction_id
+having count(d.transaction_detail_id) < 2
+    or coalesce(sum(d.amount) filter (where d.debit_credit_flag = 'DEBIT'), 0)
+       <> coalesce(sum(d.amount) filter (where d.debit_credit_flag = 'CREDIT'), 0);
+
+-- name: 8.3a — Data-quality check: postings to an organization's account that wasn't open on the transaction date (should be empty)
+select d.transaction_detail_id, x.transaction_date, a.name as account, o.from_date, o.thru_date
+from transaction_detail d
+join accounting_transaction x  on x.accounting_transaction_id = d.accounting_transaction_id
+join organization_gl_account o on o.organization_gl_account_id = d.organization_gl_account_id
+join general_ledger_account a  on a.general_ledger_account_id = o.general_ledger_account_id
+where not (o.from_date <= x.transaction_date and (o.thru_date is null or o.thru_date > x.transaction_date));
+
+-- name: 8.3a — Data-quality check: postings to the books of an organization that isn't a party to the transaction (should be empty)
+select d.transaction_detail_id, x.accounting_transaction_id, n.name as books_of, f.name as from_party, t.name as to_party
+from transaction_detail d
+join accounting_transaction x    on x.accounting_transaction_id = d.accounting_transaction_id
+join organization_gl_account o   on o.organization_gl_account_id = d.organization_gl_account_id
+join organization n              on n.party_id = o.internal_organization_party_id
+join party_display_name f        on f.party_id = x.from_party_id
+left join party_display_name t   on t.party_id = x.to_party_id
+where o.internal_organization_party_id not in (x.from_party_id, coalesce(x.to_party_id, x.from_party_id));
