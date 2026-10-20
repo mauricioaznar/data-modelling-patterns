@@ -550,6 +550,51 @@ change · flag · reason in our words)
 - **The naive model** overwrites the item's amount. The approved figure survives, but not
   what was asked for or why it changed.
 
+### Fig 8.8 — Budget review
+**Transcription** (accepted: ☐; photo with Table 8.11)
+
+```
+BUDGET REVIEW
+  # budget_review_id
+  * review_date
+  -> BUDGET REVIEW RESULT TYPE (many "described by" 1, tilde; type "the description for" many)
+  -> PARTY                     (many "of" 1, tilde; party "involved in" many)
+  -> BUDGET                    (many "for" 1, tilde; budget "involving" many)
+
+BUDGET REVIEW RESULT TYPE
+  # budget_review_result_type_id
+  * description
+  o comment
+
+BUDGET REVISION, BUDGET REVISION IMPACT, BUDGET ITEM, BUDGET: as in 8.7b, redrawn
+PARTY (# party id)
+```
+
+**Table 8.11, budget reviews** (budget 29839; reviewer · date · result · comment in our
+words)
+- Susan Jones · Nov 10, 2000 · accepted · looks reasonable
+- John Smith · Nov 15, 2000 · rejected · the amount is too high
+- Susan Jones · Nov 22, 2000 · accepted · fine
+- John Smith · Nov 30, 2000 · accepted · fine
+
+**To check against the book**
+- The table's second column is headed "budget revision party id". Read as the reviewing
+  party: the figure draws no line from the review to a revision.
+- The comment is drawn on the result type, but Table 8.11 gives each review its own
+  comment. Built on the review (point 25).
+- Only rows 1 and 3 print the budget id. Read as one budget, 29839, throughout.
+
+**Discussion**
+- **A review is one party's verdict on a budget on a day.** The status (8.6) says what
+  stage the budget is at; the reviews say who decided it and why. The two tables tell
+  one story: John Smith's rejection on Nov 15 is the send-back, revisions 1.1 and 1.2
+  follow, Susan Jones accepts the resubmitted budget on Nov 22 and John Smith's
+  acceptance on Nov 30 is the approval.
+- **On the budget, not on a revision** (the text): the reviewer judges the budget as it
+  stands, revisions included.
+- **The naive model** puts `approved_by` and `approved_date` on BUDGET: one reviewer, one
+  verdict, and the rejection that caused the revisions is lost.
+
 ### Points to discuss after the overview (Figs 8.1–8.7b, so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -632,6 +677,15 @@ Added with Figs 8.4–8.7b:
 24. **An item's parts add up to it** (ours): a parent item holds the total and its parts
     break it down, so a budget's total sums only its top items, and a check catches parts
     that don't add up.
+
+Added with Figs 8.8–8.12:
+
+25. **The review's comment on the review**, not on BUDGET REVIEW RESULT TYPE where it is
+    drawn: Table 8.11 gives each review its own ("too high", "fine"). The result type
+    keeps only its description.
+26. **Reviewers, ours:** Susan Jones and John Smith are new persons at ABC Corporation
+    (parties 68 and 69), not Ch 6's John Smith of ABC Manufacturing. Table 8.11's
+    "budget revision party id" column is read as the reviewer.
 
 ## Design decisions (book → SQL)
 
@@ -770,6 +824,16 @@ Added with Figs 8.4–8.7b:
 - **Seed:** Table 8.10 with item 4 (Internet advertising, $5,000) added by 1.1; revision
   dates ours (point 23). Bad rows: a revision of the office budget that trims a marketing
   item and cuts office supplies by $6,000 of $5,000.
+
+### Fig 8.8
+- **`budget_review_result_type`** a plain lookup (ACCEPTED, REJECTED), without the drawn
+  comment; **`budget_review`** carries the budget, the reviewing party, the result, the
+  date and the comment (point 25).
+- **Check:** a review dated before the budget was first submitted. **Queries:** Table
+  8.11; 29839's statuses and reviews on one timeline.
+- **Seed:** Table 8.11 with Susan Jones and John Smith (parties 68–69, point 26). Bad row:
+  Susan Jones accepting the office budget 38576 on Apr 25, 2002, a week before it was
+  submitted.
 
 ## When NOT to use this
 - **One company, one ledger:** a single small business can key the chart and the books

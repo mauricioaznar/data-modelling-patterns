@@ -428,3 +428,36 @@ insert into budget_revision_impact (budget_revision_impact_id, budget_revision_i
   (5, 3, 298391, -1000,  null,  'Trade show stands paid from admin'),   -- DATA ERROR: an item of the marketing budget, revised in the office budget
   (6, 3, 385761, -6000,  null,  'Supplies cut to the bone');           -- DATA ERROR: office supplies 5,000 cut by 6,000
 select setval(pg_get_serial_sequence('budget_revision_impact', 'budget_revision_impact_id'), (select max(budget_revision_impact_id) from budget_revision_impact));
+
+-- ============================================================
+-- Fig 8.8 — Budget review
+-- ============================================================
+-- Susan Jones and John Smith review budgets at ABC Corporation (ours, NOTES
+-- point 26): not Ch 6's John Smith of ABC Manufacturing.
+insert into party (party_id, party_kind) values
+  (68, 'PERSON'),
+  (69, 'PERSON');
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into person (party_id, gender_type_id) values
+  (68, 'FEMALE'),
+  (69, 'MALE');
+
+insert into person_name (party_id, person_name_type_id, from_date, thru_date, name) values
+  (68, 'FIRST', '1990-01-01', null, 'Susan'),
+  (68, 'LAST',  '1990-01-01', null, 'Jones'),
+  (69, 'FIRST', '1990-01-01', null, 'John'),
+  (69, 'LAST',  '1990-01-01', null, 'Smith');
+
+insert into budget_review_result_type (budget_review_result_type_id, description) values
+  ('ACCEPTED', 'Accepted'),
+  ('REJECTED', 'Rejected');
+
+-- Table 8.11 (comments in our words), then a bad row.
+insert into budget_review (budget_review_id, budget_id, party_id, budget_review_result_type_id, review_date, comment) values
+  (1, 29839, 68, 'ACCEPTED', '2000-11-10', 'Looks reasonable'),
+  (2, 29839, 69, 'REJECTED', '2000-11-15', 'The amount is too high'),
+  (3, 29839, 68, 'ACCEPTED', '2000-11-22', 'Fine'),
+  (4, 29839, 69, 'ACCEPTED', '2000-11-30', 'Fine'),
+  (5, 38576, 68, 'ACCEPTED', '2002-04-25', 'Same as last year');   -- DATA ERROR: reviewed a week before it was submitted (May 2)
+select setval(pg_get_serial_sequence('budget_review', 'budget_review_id'), (select max(budget_review_id) from budget_review));

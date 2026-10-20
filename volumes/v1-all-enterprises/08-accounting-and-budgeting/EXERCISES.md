@@ -12,7 +12,7 @@ every row scores 3+ and its scenario holds up.
 **Submodels:**
 1. Chart of accounts (Figs 8.1, 8.4)
 2. Accounting transactions (Figs 8.2–8.3b, 8.5)
-3. Budgets (Figs 8.6–8.7b)
+3. Budgets (Figs 8.6–8.8)
 
 ## Progress
 
@@ -68,8 +68,8 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 ### Submodel 3: budgets
 1. *(8.6)* Whose budget it is lives in BUDGET ROLE, not in a column on BUDGET. What does
    that buy, and why does the text want budgets at the lowest organization level?
-2. *(8.6)* A BUDGET ITEM has a purpose and a justification; an ORDER ITEM has neither.
-   What is a budget for, that it needs them? Write one pair for "a new laptop".
+2. *(8.8)* Budget status and budget review both record the approval. Why keep both? Name a
+   question only the reviews answer, and one only the statuses answer.
 3. *(8.6)* Budget periods are STANDARD TIME PERIODs, not 8.1's ACCOUNTING PERIODs. When
    would you want the budget tied to an organization's fiscal period instead?
 4. *(8.7)* 8.7a copies the whole budget per revision; 8.7b records impacts. Which

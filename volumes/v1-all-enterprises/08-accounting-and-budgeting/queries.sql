@@ -584,3 +584,40 @@ join budget_revision_impact x on x.budget_item_id = i.budget_item_id
 group by i.budget_item_id, i.budget_id, i.budget_item_seq_id, i.amount
 having i.amount + coalesce(sum(x.revised_amount) filter (where x.add_delete_flag is null), 0) < 0
     or bool_or(x.add_delete_flag = 'ADD' and x.revised_amount is distinct from i.amount);
+
+-- ============================================================
+-- Fig 8.8 — Budget review
+-- ============================================================
+
+-- name: 8.8 — Table 8.11: who reviewed each budget, when, with what result and why
+select r.budget_id, b.comment as budget, d.name as reviewer, r.review_date,
+       t.description as result, r.comment
+from budget_review r
+join budget b                    on b.budget_id = r.budget_id
+join party_display_name d        on d.party_id = r.party_id
+join budget_review_result_type t on t.budget_review_result_type_id = r.budget_review_result_type_id
+order by r.budget_id, r.review_date;
+
+-- name: 8.8 — The marketing budget's story: statuses (8.6), revisions (8.7b) and reviews (8.8) on one timeline
+select s.status_date as day, 'status' as kind, t.description as what, s.comment
+from budget_status s join status_type t on t.status_type_id = s.status_type_id
+where s.budget_id = 29839
+union all
+select r.date_revised, 'revision', '1.' || r.revision_seq_id, null
+from budget_revision r
+where r.budget_id = 29839
+union all
+select v.review_date, 'review', d.name || ': ' || t.description, v.comment
+from budget_review v
+join party_display_name d        on d.party_id = v.party_id
+join budget_review_result_type t on t.budget_review_result_type_id = v.budget_review_result_type_id
+where v.budget_id = 29839
+order by day, kind;
+
+-- name: 8.8 — Data-quality check: reviews dated before the budget was first submitted (should be empty)
+select r.budget_review_id, r.budget_id, r.review_date,
+       (select min(s.status_date) from budget_status s
+        where s.budget_id = r.budget_id and s.status_type_id = 'BUDGET_SUBMITTED') as first_submitted
+from budget_review r
+where r.review_date < coalesce((select min(s.status_date) from budget_status s
+                                where s.budget_id = r.budget_id and s.status_type_id = 'BUDGET_SUBMITTED'), 'infinity'::date);
