@@ -409,6 +409,24 @@ the literal drawing. The list moves under the chapter's last figure when it land
   employees (points 4–5). Bad row: Mike Johnson "hired" again in 1996 as CEO while his
   1980 employment is still open.
 
+### Fig 9.3
+- **`position_type`** (Ch 6) gains `title`, not null after Ch 6's rows take their
+  description (point 10), and `benefit_percent` (0–100). Text ids kept (point 9).
+- **`position`** with a surrogate key, the type not null, the budget item nullable
+  (point 8), the four flags as booleans not null, estimated and actual dates with
+  thru after from. **`responsibility_type`** a lookup; **`valid_responsibility`**
+  (type × responsibility) and **`position_responsibility`** (slot × responsibility),
+  surrogate keys, the book's triple unique, dated.
+- **Checks:** a slot's responsibility not valid for its type on the day it starts (the
+  book's rule); a slot opened before the budget that funds it was approved.
+  **Queries:** Tables 9.1–9.2; is each funded slot authorized (its budget's latest
+  status); slot 101's job description on a day.
+- **Seed:** Table 9.2's two types; Table 9.1's two slots (types ours, point 7); the 2001
+  *Information systems staffing* budget 41001 (ours) with three item types mapped to
+  Salaries expense, approved Nov 15, 2000; six responsibility types and their valid and
+  assigned rows (ours). Bad rows: slot 102 opened Nov 1, 2000, before its budget's
+  approval; slot 101 given the clerk's bookkeeping.
+
 ## When NOT to use this
 - **A small company with one office:** a `job_title` and `manager_id` on the person, and
   a hire date, is honest when nobody budgets slots or keeps a job-description history.

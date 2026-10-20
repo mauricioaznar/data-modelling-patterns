@@ -37,6 +37,13 @@ Questions and ideas raised while the chapter was being built, tagged with their 
 At most 5 per submodel. Answer in a sentence or three under each item. Group them under
 `### Submodel N: name` headings, numbered as in STATUS.md, so `npm run check` can count them.
 ### Submodel 1: positions
+1. *(9.3)* The salaried, exempt, full-time and temporary flags sit on POSITION, not on the
+   person or the fulfillment. Why? Give a case where that's wrong (someone working half
+   time in a full-time slot) and say where you'd record it.
+2. *(9.3)* "Authorized" is never stored: it comes from the funding budget's status. What
+   goes wrong if POSITION gets an `authorized_flag`?
+3. *(9.3)* Why both VALID RESPONSIBILITY and POSITION RESPONSIBILITY? What would you lose
+   with only the first, and what with only the second?
 
 ### Submodel 2: employment, fulfillment and reporting
 
