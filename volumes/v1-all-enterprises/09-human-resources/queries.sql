@@ -441,3 +441,43 @@ where pm.payment_kind <> 'DISBURSEMENT'
    or pm.to_party_id <> e.party_id
    or e.role_type_id <> 'EMPLOYEE'
    or o.role_type_id <> 'INTERNAL_ORGANIZATION';
+
+-- ============================================================
+-- Fig 9.10 — Employment application
+-- ============================================================
+
+-- name: 9.10 — Who applied for which slot (or any job), how they heard, who referred them, and where each application stands
+select a.employment_application_id as app, a.application_date, coalesce(t.title, '(any job)') as for_slot, a.position_id,
+       ap.name as applicant, src.description as source, rf.name as referred_by, s.description as status
+from employment_application a
+join party_display_name ap on ap.party_id = a.applicant_party_id
+join employment_application_source_type src on src.employment_application_source_type_id = a.employment_application_source_type_id
+join status_type s         on s.status_type_id = a.status_type_id
+left join party_display_name rf on rf.party_id = a.referrer_party_id
+left join position p       on p.position_id = a.position_id
+left join position_type t  on t.position_type_id = p.position_type_id
+order by a.position_id nulls last, a.application_date;
+
+-- name: 9.10 — From application to slot: each hired applicant, and whether they now fill the slot they applied for
+select a.employment_application_id as app, ap.name as applicant, a.position_id, t.title, a.application_date,
+       pf.from_date as filled_from, pf.thru_date as filled_thru
+from employment_application a
+join party_display_name ap on ap.party_id = a.applicant_party_id
+join position p            on p.position_id = a.position_id
+join position_type t       on t.position_type_id = p.position_type_id
+left join position_fulfillment pf on pf.position_id = a.position_id and pf.party_id = a.applicant_party_id
+where a.status_type_id = 'APPLICATION_HIRED'
+order by a.employment_application_id;
+
+-- name: 9.10 — Data-quality check: an application for a slot that had already closed, or in a state that isn't an application status (should be empty)
+select a.employment_application_id as app, a.application_date, a.position_id, p.actual_thru_date as slot_closed,
+       a.status_type_id, 'slot already closed' as problem
+from employment_application a
+join position p on p.position_id = a.position_id
+where p.actual_thru_date <= a.application_date
+union all
+select a.employment_application_id, a.application_date, a.position_id, null, a.status_type_id, 'not an application status'
+from employment_application a
+join status_type s on s.status_type_id = a.status_type_id
+where s.parent_type_id is distinct from 'EMPLOYMENT_APPLICATION_STATUS'
+order by 1;

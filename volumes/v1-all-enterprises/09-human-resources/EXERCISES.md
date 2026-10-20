@@ -93,6 +93,12 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    the net instead. What would Ch 7's bank deposits and Ch 8's postings need either way?
 4. *(9.9)* On Nov 2, 1999 John Smith changes banks: row 1 closes and row 3 opens. Why
    not update row 1's account number?
+### Submodel 5: applications and qualifications
+1. *(9.10)* An application's slot is optional. Give two business questions that need it
+   filled and one that works without it. What would you do with an application for a
+   slot that was later cancelled?
+2. *(9.10)* The application has one current status, no history. Which recruiting question
+   does that kill (hint: time to hire), and what would you add?
 
 
 ## 1. Redraw from memory

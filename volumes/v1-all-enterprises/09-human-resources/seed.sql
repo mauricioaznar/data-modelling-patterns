@@ -414,3 +414,69 @@ insert into deduction (payment_id, deduction_seq_id, deduction_type_id, amount) 
   (90001, 2, 'FICA',         54.50),
   (90001, 3, 'STATE_TAX',    80.00),
   (90001, 4, 'INSURANCE',   125.00);
+
+-- ============================================================
+-- Fig 9.10 — Employment application
+-- ============================================================
+-- No sample data in the book: sources, statuses and applicants ours.
+insert into employment_application_source_type (employment_application_source_type_id, description) values
+  ('NEWSPAPER',         'Newspaper advertisement'),
+  ('PERSONAL_REFERRAL', 'Personal referral'),
+  ('INTERNET',          'Internet posting'),
+  ('WALK_IN',           'Walk-in');
+
+insert into status_type (status_type_id, parent_type_id, description) values
+  ('EMPLOYMENT_APPLICATION_STATUS', null,                            'Employment application status'),
+  ('APPLICATION_RECEIVED',          'EMPLOYMENT_APPLICATION_STATUS', 'Received'),
+  ('APPLICATION_REJECTED',          'EMPLOYMENT_APPLICATION_STATUS', 'Rejected'),
+  ('APPLICATION_ON_FILE',           'EMPLOYMENT_APPLICATION_STATUS', 'Kept on file'),
+  ('APPLICATION_HIRED',             'EMPLOYMENT_APPLICATION_STATUS', 'Hired');
+
+-- Three applicants: Ana Ruiz (73), John Doe (74), Lee Wong (75).
+insert into party (party_id, party_kind) values
+  (73, 'PERSON'),
+  (74, 'PERSON'),
+  (75, 'PERSON');
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into person (party_id, gender_type_id, birth_date) values
+  (73, 'FEMALE', '1975-04-12'),
+  (74, 'MALE',   '1970-09-30'),
+  (75, 'MALE',   '1978-02-03');
+
+insert into person_name (party_id, person_name_type_id, from_date, thru_date, name) values
+  (73, 'FIRST', '1975-04-12', null, 'Ana'),
+  (73, 'LAST',  '1975-04-12', null, 'Ruiz'),
+  (74, 'FIRST', '1970-09-30', null, 'John'),
+  (74, 'LAST',  '1970-09-30', null, 'Doe'),
+  (75, 'FIRST', '1978-02-03', null, 'Lee'),
+  (75, 'LAST',  '1978-02-03', null, 'Wong');
+
+-- Two applications for analyst slot 101 (Ana Ruiz, referred by Sue Jones,
+-- is hired; John Doe is not), one for no slot in particular, Kim Park for
+-- the summer clerk slot 204, referred by Mike Johnson. Then bad rows: John
+-- Doe applies for slot 204 after it closed; Lee Wong's second application
+-- carries a position status.
+insert into employment_application (employment_application_id, application_date, position_id, status_type_id,
+                                    employment_application_source_type_id, applicant_party_id, referrer_party_id) values
+  (1, '2000-11-20', 101,  'APPLICATION_HIRED',    'PERSONAL_REFERRAL', 73, 68),
+  (2, '2000-11-25', 101,  'APPLICATION_REJECTED', 'NEWSPAPER',         74, null),
+  (3, '2001-02-10', null, 'APPLICATION_ON_FILE',  'INTERNET',          75, null),
+  (4, '2001-05-01', 204,  'APPLICATION_HIRED',    'PERSONAL_REFERRAL', 72, 70),
+  (5, '2001-10-01', 204,  'APPLICATION_RECEIVED', 'NEWSPAPER',         74, null),   -- DATA ERROR: slot 204 closed on Sep 1
+  (6, '2001-03-01', null, 'POSITION_ACTIVE',      'WALK_IN',           75, null);   -- DATA ERROR: a position status on an application
+select setval(pg_get_serial_sequence('employment_application', 'employment_application_id'), (select max(employment_application_id) from employment_application));
+
+-- Ana Ruiz hired: employed by ABC Corporation and in slot 101 from the day it
+-- opened (Jan 15, 2001).
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (93, 73, 'EMPLOYEE', '2001-01-15', null);
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+insert into party_relationship (party_relationship_id, party_relationship_type_id, from_party_role_id, to_party_role_id, from_date, thru_date, comment, status_type_id) values
+  (25, 'EMPLOYMENT', 73, 93, '2001-01-15', null, null, 'REL_ACTIVE');
+select setval(pg_get_serial_sequence('party_relationship', 'party_relationship_id'), (select max(party_relationship_id) from party_relationship));
+
+insert into position_fulfillment (position_fulfillment_id, position_id, party_id, from_date, thru_date, comment) values
+  (11, 101, 73, '2001-01-15', null, null);
+select setval(pg_get_serial_sequence('position_fulfillment', 'position_fulfillment_id'), (select max(position_fulfillment_id) from position_fulfillment));

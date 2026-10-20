@@ -569,6 +569,47 @@ John Smith's preferences at ABC Corporation.
 - **The naive model** puts a `bank_account` column on EMP and stores the net only:
   no split deposits, no history, no record of what was withheld.
 
+### Fig 9.10 — Employment application
+**Transcription** (accepted: ☐; photo, printed sideways)
+
+```
+EMPLOYMENT APPLICATION
+  # application_id
+  * application_date
+  -> POSITION                              (many "for" 0..1, dashed; position "fulfilled via" many)
+  -> EMPLOYMENT APPLICATION STATUS TYPE    (many "in the state of" 1; type "the status for" many)
+  -> EMPLOYMENT APPLICATION SOURCE TYPE    (many "received as a result of" 1; type "the status for" many)
+  -> PERSON                                (many "from" 1; person "applying using" many)
+  -> PERSON                                (many "referred by" 0..1; person "the referrer of" many)
+
+EMPLOYMENT APPLICATION STATUS TYPE (no attributes drawn)
+EMPLOYMENT APPLICATION SOURCE TYPE (# employment app source type id, * description)
+PERSON (* current last name, * current first name, o current middle name, o current
+  personal title, o current suffix, o current nickname, o gender, o birth date, o height,
+  o weight, o mother's maiden name, o marital status, o social security no, o current
+  passport no, o current passport expire date, o total years work experience, o comment)
+```
+
+No sample data.
+
+**To check against the book**
+- The source type's line is labelled "the status for" on its far end, like the status
+  type's: read as "the source of", a copy slip (point 39).
+- The "referred by" line looks as solid as "from": read as optional, since most
+  applications have no referrer (point 40).
+- PERSON's attributes are Ch 2's, listed again: nothing new to build.
+
+**Discussion**
+- **An application is its own fact,** not a half-made employment: it comes from a person
+  who may never be hired, and it outlives the decision (rejected, kept on file).
+- **For a slot, or for any job:** the text makes the slot optional, since people apply
+  without knowing an opening exists. When one is named, the application, the slot and
+  the later fulfillment chain together: applied Nov 20, filled from Jan 15.
+- **Source and referrer** answer where candidates come from (which ads work, which
+  employees bring people in), a recruiting question the naive model can't ask.
+- **The naive model** has no applicant at all: only people already hired exist, as EMP
+  rows, and the history of who applied and why they were turned down is lost.
+
 ### Points to discuss after the overview (Figs 9.1–9.6, so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -660,6 +701,13 @@ the literal drawing. The list moves under the chapter's last figure when it land
 38. **No arc between deposits and deductions:** a row may hold a share, a flat amount, an
     account, a deduction type. Only the shares adding up to more than 100% on a day are
     checked.
+39. **9.10's source type line says "the status for"** on the type's end, like the status
+    line: read as a copy slip ("the source of").
+40. **Referrer optional,** though the line looks solid: most applications have none. A
+    person can't refer themselves (a check constraint).
+41. **Application status a current value,** like the position's (point 15): Ch 2's status
+    types under an EMPLOYMENT_APPLICATION_STATUS group, mandatory. Statuses, sources and
+    applicants ours (no sample data).
 
 ## Design decisions (book → SQL)
 
@@ -782,6 +830,19 @@ the literal drawing. The list moves under the chapter's last figure when it land
 - **Seed:** four deduction types; Table 9.11 (Nov 1 stored Nov 2); payment 90001 (check
   1001, point 36) and Table 9.12's deductions. Bad rows: a third account at 30% from 2001;
   paycheck 1002 paid to Sue Jones but issued for John Smith.
+
+### Fig 9.10
+- **`employment_application_source_type`** a lookup. **`employment_application`** with the
+  book's id as a surrogate key, the date, an optional slot, a status (Ch 2's
+  `status_type`, point 41), a source, the applicant and an optional referrer (both plain
+  FKs to `person`, never the same, point 40).
+- **Check:** an application for a slot that had already closed, or in a state that
+  isn't an application status. **Queries:** applications by slot with source, referrer
+  and status; each hired applicant and the slot they now fill.
+- **Seed:** four sources and four statuses; Ana Ruiz (73), John Doe (74), Lee Wong (75);
+  four applications, Kim Park's referred by Mike Johnson; Ana Ruiz hired into slot 101
+  (employee role 93, employment 25, fulfillment 11). Bad rows: John Doe applies for slot
+  204 after it closed; a walk-in application carrying a position status.
 
 ## When NOT to use this
 - **A small company with one office:** a `job_title` and `manager_id` on the person, and
