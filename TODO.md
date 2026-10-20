@@ -125,15 +125,14 @@ Chapter titles are from memory; verify them against the book's table of contents
 - [ ] Ch 12: Additional Star Schema Designs
 - [ ] Ch 13: Implementing the Universal Data Models
 
-## Mini apps (one per 3 finished chapters)
+## Core app (the user's call, 2026-10-20)
 
-Each uses a different JS stack and a different ops/testing practice. The suggestions below
-aren't final; agree on each one before starting.
+One app over all of Vol 1's core OLTP models, Ch 2–9, in place of one app per three
+chapters. Vol 2's industry types are extra documentation on top.
 
-- **Gate (the user's decision, 2026-10-14):** before a mini app starts, every tracker row of its three chapters reaches 4 (applies cold, later session, no hints).
-- [ ] App 1: Vol 1 Ch 02–04 (Party, Product, Order): order entry. Suggested: Express + Knex, deploy to a DigitalOcean droplet
-- [ ] App 2: Vol 1 Ch 05–07 (Shipment, Work Effort, Invoice): fulfilment and billing. Suggested: Fastify + Drizzle, k6 stress testing
-- [ ] App 3: Vol 1 Ch 08–10 (Accounting, HR, DW): reporting. *(Ch 10 is set aside for Vol 2, so this app's chapters need regrouping.)* Suggested: Next.js + Prisma, Playwright E2E
+- **Gate (the user's decision, 2026-10-14):** before the app starts, every tracker row of Ch 2–9 reaches 4 (applies cold, later session, no hints).
+- [ ] Agree on the problem, the stack and the ops/testing practice. Ideas from the old per-3-chapter plan: Express + Knex with a deploy, Fastify + Drizzle with k6 stress testing, Next.js + Prisma with Playwright E2E.
+- [ ] Open: do the industry types get an app of their own, or versions of the core app?
 
 ## Vol 2: A Library of Universal Data Models by Industry Types
 

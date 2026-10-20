@@ -119,12 +119,13 @@ the user, tease with nicknames, so the sessions stay fun.
   Then add the submodel's questions to the question index.
 - Cover every chapter, including Shipments, Invoicing and Accounting.
 
-### Every 3 chapters (mini app)
-- A tiny app over the last 3 chapters' models, framed as a **problem to solve**. The user
-  decides which models and patterns apply and why, and Claude writes the plumbing.
-- Use a different JS stack and ops/testing practice each time (deploy, stress test, E2E…). The
-  plan is in `TODO.md` under *Mini apps*; agree on the stack and practice with the user before
-  starting.
+### The core app (the user's call, 2026-10-20)
+- One app over all of Vol 1's core OLTP models (Ch 2–9), framed as a **problem to solve**.
+  The user decides which models and patterns apply and why, and Claude writes the plumbing.
+- Vol 2's industry types are extra documentation on top of the core. Whether they get an
+  app of their own, or versions of the core app, is still open.
+- The plan is in `TODO.md` under *Core app*; agree on the stack and ops/testing practice
+  with the user before starting.
 
 ## Tracking progress
 - **Start of session:** read `TODO.md`, the latest `CHANGELOG.md` entry and the current

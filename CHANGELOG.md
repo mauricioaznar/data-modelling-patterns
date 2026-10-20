@@ -91,6 +91,9 @@ and any decisions made.
   stays in its usual deck, and Vol 1's deck names stay as they are. Vol 2's industry cards
   will get a new deck of their own.
 - Vol 1's warehouse chapters (Ch 10 on) are set aside: after Ch 9 comes Vol 2.
+- One core app over Ch 2–9's OLTP models replaces the three mini apps. Vol 2's industry
+  types are extra documentation on top; whether they get their own app or versions of the
+  core app is open.
 
 **Next**
 - Ch 8 overview: points 1–39, the doc drafts and cards 35–38 plus the architecture card.

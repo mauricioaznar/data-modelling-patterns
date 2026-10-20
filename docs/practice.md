@@ -4,13 +4,13 @@ How the user practises once the reading for a submodel is done. Read this when p
 or resumes, not every session.
 
 ## Aim
-- **Conceptual understanding at a high level.** Implementation depth comes later (mini apps).
+- **Conceptual understanding at a high level.** Implementation depth comes later (the core app).
 - **What "understood" means**, for every concept: the user can (a) say what the table or
   pattern is **for**, meaning the problem it solves and what the naive design gets wrong;
   (b) say how it **relates** to its neighbours, conceptually rather than column by column; and
   (c) **spot a wrong implementation** of it and say what data it would lose or corrupt.
   Attribute lists, syntax and exact cardinalities are out of scope. Going deeper risks
-  overlearning; a concept can be revisited later (recall questions, mini apps, later chapters).
+  overlearning; a concept can be revisited later (recall questions, the core app, later chapters).
 - **Patterns over tables.** Every submodel is practised through the patterns it uses (see Core
   patterns in the design reference doc). At least one question per submodel asks which pattern
   is at work, or which entity owns a fact.
