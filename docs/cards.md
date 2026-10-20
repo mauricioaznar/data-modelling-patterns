@@ -1180,13 +1180,14 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
-### Card 37 · V1 Ch 8 · Budgets (Figs 8.6–8.7b)
-- **Cue:** "Who asks for how much money, for which period, for what and why; where is each budget in its approval; and how was it revised, item by item?"
+### Card 37 · V1 Ch 8 · Budgets (Figs 8.6–8.9)
+- **Cue:** "Who asks for how much money, for which period, for what and why; where is each budget in its approval, and who said yes or no; how was it revised, item by item; and what would it be in a good or a bad year?"
 - **Hook:** a department's budget sheet with a "why" column, a rubber stamp trail down the
-  margin (created, submitted, SENT BACK, submitted, approved), and red pencil deltas beside
-  three lines *(Claude's, drafted when the figures landed)*
-- **Mantra:** A budget is for a party and a period; items say what and why; statuses
-  track approval; revisions record deltas, never overwrite.
+  margin (created, submitted, SENT BACK, submitted, approved) with a reviewer's initials on
+  each stamp, red pencil deltas beside three lines, and two sticky notes at the bottom:
+  "poor year −20%", "great year +25%" *(Claude's, drafted when the figures landed)*
+- **Mantra:** Budget: a party, a period; items say what and why; status and reviews
+  approve; revisions are deltas; scenarios are what-ifs.
 
 <details><summary>Key</summary>
 
@@ -1196,20 +1197,58 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   justification) · `budget_item_type` · `budget_status` (Ch 2 status types under
   BUDGET_STATUS, date, comment) · `budget_role` + `budget_role_type` (the party it's for,
   the initiator) · `budget_revision` (budget + seq, date) · `budget_revision_impact`
-  (revision, item, signed change, add/delete flag, reason).
+  (revision, item, signed change, add/delete flag, reason) · `budget_review` (budget,
+  reviewer, result type, date, comment) + `budget_review_result_type` · `budget_scenario` ·
+  `budget_scenario_rule` (scenario × item type, an amount or a %) ·
+  `budget_scenario_application` (scenario, an item or a whole budget, an amount or a %).
 - **W:** a spreadsheet per department with a total: no place in the organization tree to
-  roll up, no approval history, no item kinds to compare across departments, and each
-  revision overwrites what was asked for and why it changed.
+  roll up, no approval history or reviewer, no item kinds to compare across departments,
+  each revision overwrites what was asked for, and every "what if" is another copy of the
+  sheet.
 - **T:** *(the naive-model trap until practice gives yours)* overwriting an item's amount
-  on revision; summing a parent item and its parts; counting an added item twice; a
-  department column on the budget instead of a role.
+  on revision; summing a parent item and its parts; counting an added item twice;
+  `approved_by` on the budget; a copy of the budget per scenario; applying a scenario to a
+  budget and to its items at once.
 - **D:** **standard_time_period** → **period_type** (8.1) ← budget → budget_type; budget ←
   budget_item (↺ part of) → budget_item_type; budget ← budget_status → **status_type**
   (Ch 2); budget ← budget_role → **party** (Ch 2, rolling up through ORGANIZATION_ROLLUP),
-  budget_role_type; budget ← budget_revision ← budget_revision_impact → budget_item.
-  Checks: a status of another group; a budget with no items or for no one; parts that don't
-  add up to their parent; a revision touching another budget's item; an item revised below
-  zero.
+  budget_role_type; budget ← budget_revision ← budget_revision_impact → budget_item;
+  budget ← budget_review → **party**, budget_review_result_type; budget_scenario ←
+  budget_scenario_rule → budget_item_type; budget_scenario ← budget_scenario_application →
+  budget_item | budget. Checks: a status of another group; a budget with no items or for
+  no one; parts that don't add up to their parent; a revision touching another budget's
+  item; an item revised below zero; a review before submission; a scenario counted twice.
+</details>
+
+---
+
+### Card 38 · V1 Ch 8 · Budget usage and the ledger (Figs 8.10–8.11)
+- **Cue:** "Which requirements, orders and payments draw on each budget item, how much is left, and which GL accounts does each kind of budget item land in?"
+- **Hook:** a budget line with three clips hanging off it (a requisition, a purchase order,
+  a check torn in two halves for two lines) and a translation card pinned beside it:
+  "marketing = 50% trade shows (525) + 50% advertising (520)" *(Claude's, drafted when the
+  figures landed)*
+- **Mantra:** Needs earmark, orders commit, checks spend, each against a budget item;
+  item types map to ledger accounts by share.
+
+<details><summary>Key</summary>
+
+- **S:** `order_item.budget_item_id` (Ch 4's line, allocated to one item) ·
+  `requirement_budget_allocation` (requirement × item, amount) ·
+  `payment_budget_allocation` (payment × item, amount) · `gl_budget_xref` (item type ×
+  GL account, from, thru, allocation %).
+- **W:** a "spent so far" column on the budget item, bumped by hand, and a GL account
+  column on each budget line: the total drifts on the first voided or split check, can't
+  say which payments made it, and every department repeats the same mapping with no way
+  to split it.
+- **T:** *(the naive-model trap until practice gives yours)* storing what's spent instead
+  of summing allocations; one budget item per payment, so a split check can't be told;
+  mapping items instead of item types; shares that don't add up to 100.
+- **D:** **requirement** (Ch 4) ← requirement_budget_allocation → budget_item;
+  **order_item** (Ch 4) → budget_item; **payment** (Ch 7) ← payment_budget_allocation →
+  budget_item → budget_item_type ← gl_budget_xref → **general_ledger_account** (8.1).
+  Checks: a payment allocated beyond its amount; an order or payment outside its budget's
+  period; an item type's shares not adding up to 100.
 </details>
 
 ---
@@ -1417,6 +1456,42 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
   billing_account ← payment_application → payment → **party**, payment_method_type,
   financial_account_transaction → financial_account ← financial_account_role. Bold = from
   Ch 2 to 6. Kept: 7.1a, 7.3a, 7.8a; 7.1b, 7.3b, 7.8b dropped.
+</details>
+
+---
+
+### Architecture · V1 Ch 8 · Accounting and budgeting (Fig 8.12)
+- **Cue:** "Every business event in the books, and every plan for money, in one picture: how do they meet?"
+- **Hook:** a ledger book open on the left, debits and credits in two columns that add up,
+  a budget binder open on the right with stamped and red-pencilled lines, and a row of
+  checks and purchase orders between them, each clipped to a budget line and stamped with
+  an account number *(Claude's, drafted when the figure landed)*
+- **Mantra:** Events post balanced to organization accounts; budgets plan by item;
+  spending draws on items; item types map to accounts.
+
+<details><summary>Key</summary>
+
+- **S:** ACCOUNTING TRANSACTION (with TRANSACTION DETAIL) and BUDGET (with BUDGET ITEM) as
+  the hubs; GENERAL LEDGER ACCOUNT between them.
+- **W:** an internal organization switches chart accounts on through ORGANIZATION GL
+  ACCOUNT (broken down by supplier, customer, product category) and cuts its time into
+  ACCOUNTING PERIODs; every event (an invoice or payment from Ch 7, a variance, a
+  DEPRECIATION of a FIXED ASSET) is an ACCOUNTING TRANSACTION, internal or external, posted
+  as balanced details; a BUDGET for a party and a STANDARD TIME PERIOD carries STATUS,
+  REVIEW, revisions and SCENARIO APPLICATIONs; requirements, order items and payments draw
+  on BUDGET ITEMs; GL BUDGET XREF maps item types to GL accounts.
+- **T:** *(the naive-model trap until practice gives yours)* a `ledger` table with date,
+  account name and amount, and a budget spreadsheet with a "spent" column: no balancing,
+  no shared chart, no tie from a check to the line it pays for or to the account it hits.
+- **D:** **party** (internal organization) ← organization_gl_account (↺ subsidiary) →
+  general_ledger_account → gl_account_type, → **party role** (supplier, bill-to customer),
+  **product_category**; accounting_period (↺) → **party**, period_type;
+  accounting_transaction (internal: depreciation → **fixed_asset**; external → **party** ×2)
+  ← transaction_detail (↺ associated) → organization_gl_account; budget (↺ 8.7a's loop) →
+  standard_time_period ← budget_item → budget_item_type ← gl_budget_xref →
+  general_ledger_account; budget ← status, review, role (→ **party**), scenario
+  application; budget_item ← **requirement** and **payment** allocations. Bold = from Ch 2
+  to 7. Kept: 8.3a (no stored balance); 8.12 draws 8.7a where 8.7b is built (to settle).
 </details>
 
 ---

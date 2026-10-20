@@ -13,9 +13,9 @@ Architecture figure: 8.12
 |---|---|---|---|---|---|---|
 | 1 | Chart of accounts | 8.1, 8.4 | 2026-10-19 | | | |
 | 2 | Accounting transactions | 8.2–8.3b, 8.5 | 2026-10-19 | | | |
-| 3 | Budgets | 8.6–8.9 | 2026-10-19 | | | |
-| 4 | Budget usage and the ledger | 8.10–8.11 | | | | |
-| A | Architecture | 8.12 | | | – | – |
+| 3 | Budgets | 8.6–8.9 | 2026-10-20 | | | |
+| 4 | Budget usage and the ledger | 8.10–8.11 | 2026-10-20 | | | |
+| A | Architecture | 8.12 | 2026-10-20 | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs N.1–N.3)`; the `A` row's matches the
 architecture card's `(Fig N.M)`.
