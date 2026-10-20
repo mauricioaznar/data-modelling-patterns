@@ -595,6 +595,60 @@ words)
 - **The naive model** puts `approved_by` and `approved_date` on BUDGET: one reviewer, one
   verdict, and the rejection that caused the revisions is lost.
 
+### Fig 8.9 — Budget scenario
+**Transcription** (accepted: ☐; photo with Table 8.12)
+
+```
+BUDGET SCENARIO APPLICATION
+  # budget_scenario_applic_id
+  o amount_change
+  o percentage_change
+  -> BUDGET ITEM | BUDGET      (arc; many "affecting" 1; item and budget "affected by" many)
+  -> BUDGET SCENARIO           (many "from" 1, tilde; scenario "affecting" many)
+
+BUDGET SCENARIO RULE           (identified by its type and scenario: tildes)
+  o amount_change
+  o percentage_change
+  -> BUDGET ITEM TYPE          (many "for" 1, tilde; type "affected by" many)
+  -> BUDGET SCENARIO           (many "for" 1, tilde; scenario "affected by" many)
+
+BUDGET SCENARIO
+  # budget_scenario_id
+  * description
+
+BUDGET ITEM (8.6's, "part of" BUDGET, "described by" BUDGET ITEM TYPE); BUDGET ITEM TYPE
+(# id, * description); BUDGET (# id, o comment)
+```
+
+**Table 8.12, budget scenarios** (budget 29839, marketing; item · amount · scenario ·
+rule's % · applied %)
+- 1 trade shows · $20,000 · excellent marketing conditions · +20% · +20%
+- 1 trade shows · $20,000 · poor marketing conditions · −15% · −20%
+- 2 advertising · $30,000 · excellent marketing conditions · +25% · +25%
+- 2 advertising · $30,000 · poor marketing conditions · −15% · −15%
+- 3 direct mail · $15,000 · over 2% return responses · +30% · +30%
+- 3 direct mail · $15,000 · less than 1% return responses · −40% · −40%
+
+**To check against the book**
+- The arc on the application's two "affecting" lines: read as exactly one, an item or a
+  whole budget (point 28).
+- Amount and percentage change are both optional. Read as exactly one of the two, on the
+  rule and on the application (point 27).
+- Table 8.12's amounts are Table 8.8's, before revisions 1.1–1.2 cut advertising and
+  direct mail. Read as applied to the item as first entered (point 29).
+
+**Discussion**
+- **A scenario is a "what if" with a name** ("poor market", "major deal signed"). The
+  budget keeps one set of amounts; each scenario says how they would move.
+- **Rule and application, the suggestion and the decision.** The rule says how a scenario
+  usually moves a *kind* of item (poor market: trade shows −15%); the application says
+  what this budget actually plans for this item (−20%). Table 8.12's trade shows are the
+  one row where the two differ, and that difference is why both exist.
+- **Not a revision:** a revision changes the plan; a scenario leaves it standing and
+  prepares alternatives. Nothing is overwritten either way.
+- **The naive model** copies the budget per scenario ("Marketing 2001, pessimistic"):
+  three budgets to keep in step, and no way to say that −15% is the house rule.
+
 ### Points to discuss after the overview (Figs 8.1–8.7b, so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -686,6 +740,13 @@ Added with Figs 8.8–8.12:
 26. **Reviewers, ours:** Susan Jones and John Smith are new persons at ABC Corporation
     (parties 68 and 69), not Ch 6's John Smith of ABC Manufacturing. Table 8.11's
     "budget revision party id" column is read as the reviewer.
+27. **A change is an amount or a percentage, not both** (ours): both are drawn optional on
+    the rule and on the application; a check constraint asks for exactly one.
+28. **The application's arc:** exactly one of an item or a whole budget. A budget-wide
+    application and an item one for the same scenario would count twice: a check.
+29. **Scenarios apply to the item as first entered,** as Table 8.12 does ($30,000 of
+    advertising, not the $20,000 left after revision 1.1). Which base the business wants
+    (first entered, or after revisions) is a question for the overview.
 
 ## Design decisions (book → SQL)
 
@@ -834,6 +895,19 @@ Added with Figs 8.8–8.12:
 - **Seed:** Table 8.11 with Susan Jones and John Smith (parties 68–69, point 26). Bad row:
   Susan Jones accepting the office budget 38576 on Apr 25, 2002, a week before it was
   submitted.
+
+### Fig 8.9
+- **`budget_scenario`** with a surrogate key and a description.
+  **`budget_scenario_rule`** per scenario and item type (unique, the book's key);
+  **`budget_scenario_application`** with nullable `budget_item_id` and `budget_id` under
+  an exactly-one check (the arc, point 28), unique per scenario and item or budget.
+  Amount or percentage, exactly one (point 27).
+- **Check:** a scenario applied to a budget and to one of its items. **Queries:** Table
+  8.12; where the plan departs from the rule; the marketing budget's total under each
+  scenario.
+- **Seed:** Table 8.12's four scenarios, six rules and six applications, on the items as
+  first entered (point 29). Bad row: poor marketing conditions also applied to the whole
+  of 29839 (−10%), on top of its items.
 
 ## When NOT to use this
 - **One company, one ledger:** a single small business can key the chart and the books

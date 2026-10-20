@@ -1,6 +1,6 @@
 # Vol 1, Chapter 8 — ER diagram
 
-Figs 8.1–8.8 (8.7a not built). Tables from earlier chapters are shown by name only.
+Figs 8.1–8.9 (8.7a not built). Tables from earlier chapters are shown by name only.
 
 ```mermaid
 erDiagram
@@ -46,4 +46,9 @@ erDiagram
   budget ||--o{ budget_review : "involving"
   party ||--o{ budget_review : "involved in"
   budget_review_result_type ||--o{ budget_review : "describes"
+  budget_scenario ||--o{ budget_scenario_rule : "affected by"
+  budget_item_type ||--o{ budget_scenario_rule : "affected by"
+  budget_scenario ||--o{ budget_scenario_application : "affecting"
+  budget_item |o--o{ budget_scenario_application : "affected by"
+  budget |o--o{ budget_scenario_application : "affected by"
 ```

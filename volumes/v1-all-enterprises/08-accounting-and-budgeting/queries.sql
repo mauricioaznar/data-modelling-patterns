@@ -621,3 +621,58 @@ select r.budget_review_id, r.budget_id, r.review_date,
 from budget_review r
 where r.review_date < coalesce((select min(s.status_date) from budget_status s
                                 where s.budget_id = r.budget_id and s.status_type_id = 'BUDGET_SUBMITTED'), 'infinity'::date);
+
+-- ============================================================
+-- Fig 8.9 — Budget scenario
+-- ============================================================
+
+-- name: 8.9 — Table 8.12: each item under each scenario, the rule's suggestion beside the plan, and the amount it gives
+select i.budget_id, i.budget_item_seq_id as seq, y.description as item, i.amount,
+       s.description as scenario,
+       coalesce(r.percentage_change || '%', r.amount_change::text) as rule_change,
+       coalesce(a.percentage_change || '%', a.amount_change::text) as applied_change,
+       round(i.amount + coalesce(a.amount_change, i.amount * a.percentage_change / 100), 2) as amount_under_scenario
+from budget_scenario_application a
+join budget_scenario s     on s.budget_scenario_id = a.budget_scenario_id
+join budget_item i         on i.budget_item_id = a.budget_item_id
+join budget_item_type y    on y.budget_item_type_id = i.budget_item_type_id
+left join budget_scenario_rule r on r.budget_scenario_id = a.budget_scenario_id
+                                and r.budget_item_type_id = i.budget_item_type_id
+order by i.budget_id, i.budget_item_seq_id, s.budget_scenario_id;
+
+-- name: 8.9 — Where the plan departs from the house rule (a review, not an error)
+select i.budget_id, i.budget_item_seq_id as seq, y.description as item, s.description as scenario,
+       r.percentage_change as rule_pct, a.percentage_change as applied_pct,
+       r.amount_change as rule_amount, a.amount_change as applied_amount
+from budget_scenario_application a
+join budget_scenario s      on s.budget_scenario_id = a.budget_scenario_id
+join budget_item i          on i.budget_item_id = a.budget_item_id
+join budget_item_type y     on y.budget_item_type_id = i.budget_item_type_id
+join budget_scenario_rule r on r.budget_scenario_id = a.budget_scenario_id
+                           and r.budget_item_type_id = i.budget_item_type_id
+where r.percentage_change is distinct from a.percentage_change
+   or r.amount_change is distinct from a.amount_change;
+
+-- name: 8.9 — The marketing budget's total under each scenario: items it touches move, the others stay (as first entered)
+select s.description as scenario,
+       sum(i.amount) as as_entered,
+       round(sum(i.amount + coalesce(a.amount_change, i.amount * a.percentage_change / 100, 0)), 2) as under_scenario
+from budget_scenario s
+cross join budget_item i
+left join budget_scenario_application a on a.budget_scenario_id = s.budget_scenario_id
+                                       and a.budget_item_id = i.budget_item_id
+where i.budget_id = 29839 and i.part_of_budget_item_id is null
+  and not exists (select 1 from budget_revision_impact x where x.budget_item_id = i.budget_item_id and x.add_delete_flag = 'ADD')   -- Fig 8.7b
+group by s.budget_scenario_id, s.description
+order by s.budget_scenario_id;
+
+-- name: 8.9 — Data-quality check: a scenario applied to a whole budget and to one of its items, counting twice (should be empty)
+select b.budget_id, s.description as scenario,
+       b.percentage_change as budget_pct, count(*) as item_applications
+from budget_scenario_application b
+join budget_scenario s             on s.budget_scenario_id = b.budget_scenario_id
+join budget_item i                 on i.budget_id = b.budget_id
+join budget_scenario_application a on a.budget_scenario_id = b.budget_scenario_id
+                                  and a.budget_item_id = i.budget_item_id
+where b.budget_id is not null
+group by b.budget_id, s.description, b.percentage_change;

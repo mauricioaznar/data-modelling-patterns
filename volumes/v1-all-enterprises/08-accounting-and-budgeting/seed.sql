@@ -461,3 +461,35 @@ insert into budget_review (budget_review_id, budget_id, party_id, budget_review_
   (4, 29839, 69, 'ACCEPTED', '2000-11-30', 'Fine'),
   (5, 38576, 68, 'ACCEPTED', '2002-04-25', 'Same as last year');   -- DATA ERROR: reviewed a week before it was submitted (May 2)
 select setval(pg_get_serial_sequence('budget_review', 'budget_review_id'), (select max(budget_review_id) from budget_review));
+
+-- ============================================================
+-- Fig 8.9 — Budget scenario
+-- ============================================================
+insert into budget_scenario (budget_scenario_id, description) values
+  (1, 'Excellent marketing conditions'),
+  (2, 'Poor marketing conditions'),
+  (3, 'Over 2% return responses'),
+  (4, 'Less than 1% return responses');
+select setval(pg_get_serial_sequence('budget_scenario', 'budget_scenario_id'), (select max(budget_scenario_id) from budget_scenario));
+
+-- Table 8.12's rule column.
+insert into budget_scenario_rule (budget_scenario_rule_id, budget_scenario_id, budget_item_type_id, amount_change, percentage_change) values
+  (1, 1, 'TRADE_SHOWS', null,  20),
+  (2, 2, 'TRADE_SHOWS', null, -15),
+  (3, 1, 'ADVERTISING', null,  25),
+  (4, 2, 'ADVERTISING', null, -15),
+  (5, 3, 'DIRECT_MAIL', null,  30),
+  (6, 4, 'DIRECT_MAIL', null, -40);
+select setval(pg_get_serial_sequence('budget_scenario_rule', 'budget_scenario_rule_id'), (select max(budget_scenario_rule_id) from budget_scenario_rule));
+
+-- Table 8.12's applied column, on 29839's items as first entered (NOTES,
+-- point 29): trade shows plan -20% in a poor market, against the rule's -15%.
+insert into budget_scenario_application (budget_scenario_application_id, budget_scenario_id, budget_item_id, budget_id, amount_change, percentage_change) values
+  (1, 1, 298391, null,  null,  20),
+  (2, 2, 298391, null,  null, -20),
+  (3, 1, 298392, null,  null,  25),
+  (4, 2, 298392, null,  null, -15),
+  (5, 3, 298393, null,  null,  30),
+  (6, 4, 298393, null,  null, -40),
+  (7, 2, null,   29839, null, -10);   -- DATA ERROR: the whole budget too, on top of its items
+select setval(pg_get_serial_sequence('budget_scenario_application', 'budget_scenario_application_id'), (select max(budget_scenario_application_id) from budget_scenario_application));

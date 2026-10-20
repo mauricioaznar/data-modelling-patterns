@@ -12,7 +12,7 @@ every row scores 3+ and its scenario holds up.
 **Submodels:**
 1. Chart of accounts (Figs 8.1, 8.4)
 2. Accounting transactions (Figs 8.2–8.3b, 8.5)
-3. Budgets (Figs 8.6–8.8)
+3. Budgets (Figs 8.6–8.9)
 
 ## Progress
 
@@ -74,8 +74,8 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    would you want the budget tied to an organization's fiscal period instead?
 4. *(8.7)* 8.7a copies the whole budget per revision; 8.7b records impacts. Which
    questions does each answer cheaply? Pick one for a 10-line team budget, and say why.
-5. *(8.7b)* Revision 1.1 *adds* item 4. Where does the $5,000 live, and why must the
-   "budget after each revision" query not count it twice?
+5. *(8.9)* In a poor market the rule says trade shows −15%, the plan says −20%. Why keep
+   both rows? And how is a scenario different from a revision?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription
