@@ -12,6 +12,10 @@ every row scores 3+ and its scenario holds up.
 **Submodels:**
 1. Positions (Figs 9.3–9.4)
 2. Employment, fulfillment and reporting (Figs 9.2, 9.5–9.6)
+3. Pay and benefits (Figs 9.7–9.8)
+4. Payroll (Fig 9.9)
+5. Applications and qualifications (Figs 9.10–9.11)
+6. Performance and termination (Figs 9.12a, 9.13)
 
 ## Progress
 
@@ -65,6 +69,15 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 5. *(9.6)* Reporting runs slot to slot. When does that give the wrong answer to "who is
    Kim's boss?" (hint: vacancies, job shares, acting managers), and how would you
    answer it from these tables?
+
+### Submodel 3: pay and benefits
+1. *(9.7)* A position type rate holds an amount or a salary step, never both. Which
+   enterprise uses each? What goes wrong when one row has both?
+2. *(9.7)* A grade's step amount is updated in place. What question can no longer be
+   answered after a raise, and what is the smallest change that would answer it?
+3. *(9.7)* Pay history hangs on the employment, not on the position or the person. John
+   Smith moves from programmer to analyst inside ABC Corporation, then joins a second
+   employer part time. What happens to his pay history in each case?
 
 
 ## 1. Redraw from memory

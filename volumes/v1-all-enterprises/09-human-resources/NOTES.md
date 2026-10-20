@@ -15,7 +15,7 @@ organization creates, funds through a budget item and describes by a **position 
 in a slot for a while, and **position reporting structure** makes slots report to slots,
 not people to people. The person moves; the slot and the org chart stay.
 
-## Submodels (proposed 2026-10-20, from Figs 9.1–9.6)
+## Submodels (proposed 2026-10-20, from Figs 9.1–9.6; 3–6 from Figs 9.7–9.14)
 1. **Positions** (Figs 9.3–9.4): which slots does the enterprise have, of which type,
    salaried or hourly, exempt or not, full-time or part-time, permanent or temporary,
    from when to when (planned and actual); which budget item funds each, and is it
@@ -28,7 +28,28 @@ not people to people. The person moves; the slot and the org chart stay.
    slot reports to which, which line is the main one, and how the chart looked on a
    given day?
 
-Fig 9.1 is the naive model the chapter replaces: transcribed, not built.
+3. **Pay and benefits** (Figs 9.7–9.8, added 2026-10-20): what does each type of job
+   pay, as a band of rates per period or as steps of a pay grade; what has each
+   employee actually been paid, from when to when; which benefits does each employment
+   carry, at what cost per period, how much does the employer pay, and how much time
+   off is left?
+
+4. **Payroll** (Fig 9.9): how does each employee want to be paid by each employer
+   (which accounts, what share), which standing deductions apply; what did each
+   paycheck come to, what was deducted, and what was the net?
+
+5. **Applications and qualifications** (Figs 9.10–9.11): who applied for which slot (or
+   for any job), through which source, referred by whom, in what state; which skills,
+   qualifications (degrees, certifications), training and resumes does each party have?
+
+6. **Performance and termination** (Figs 9.12a, 9.13): which reviews has each employee
+   had, from which manager, scored how on which items, and what did they lead to (a
+   raise, a bonus, a new slot); which notes were logged about them; how and why did an
+   employment end, and which unemployment claims followed?
+
+Fig 9.1 is the naive model the chapter replaces: transcribed, not built. Fig 9.12b is
+the alternate of 9.12a (reviews and notes as communication event purposes): 9.14 keeps
+9.12a, so 9.12b is transcribed, not built. Fig 9.14 is the overall model.
 
 ## Figures
 
@@ -336,6 +357,94 @@ POSITION (9.3's attributes)
 - **The naive model** is 9.1's "reports to" between people: a vacancy cuts the chart in
   two, one boss only, no history.
 
+### Fig 9.7 — Salary determination and history
+**Transcription** (accepted: ☐; photo with Tables 9.6–9.9)
+
+```
+POSITION TYPE RATE
+  # from_date
+  o thru_date       (printed "thru rate")
+  o rate
+  -> POSITION TYPE  (many "for" 1, tilde; type "with a rate of" many)
+  -> RATE TYPE      (many "for" 1; rate type "the payment range for" many)
+  -> PERIOD TYPE    (many "for" 1, tilde; period type "the payment period for" many)
+  -> SALARY STEP    (many "associated with" 0..1, dashed; step "used to describe" many)
+
+SALARY STEP
+  # salary_step_seq_id
+  * amount
+  * date_modified
+  -> PAY GRADE      (many "part of" 1, tilde; grade "composed of" many)
+
+PAY GRADE (# pay_grade_id, * name, o comment)
+
+PAY HISTORY
+  # from_date
+  o thru_date
+  * amount
+  o comment
+  -> EMPLOYMENT     (many "the record for" 1, tilde; employment "associated with" many)
+  -> PERIOD TYPE    (many "for" 1; period type "the payment period for" many)
+  -> SALARY STEP    (many "associated with" 0..1, dashed; step "used to describe" many)
+
+POSITION TYPE (# id, * description, * title, o benefit percent)
+RATE TYPE (# id, * description); PERIOD TYPE (# id, * description)
+```
+
+**Table 9.6, rates of pay** (type · rate type · amount · period · from · thru)
+- Programmer · average · $45,000 · per year · Jan 1, 1990 · Dec 31, 1999
+- Programmer · highest · $70,000 · per year · Jan 1, 1990 · Dec 31, 1999
+- Programmer · lowest · $25,000 · per year · Jan 1, 1990 · Dec 31, 1999
+- Programmer · standard · $30.00 · per hour · Jan 1, 1990 · Dec 31, 1999
+- Programmer · average · $55,000 · per year · Jan 1, 2000 · –
+- Programmer · highest · $90,000 · per year · Jan 1, 2000 · –
+- Programmer · lowest · $30,000 · per year · Jan 1, 2000 · –
+- Programmer · standard · $55.00 · per hour · Jan 1, 2000 · –
+
+**Table 9.7, a pay grade system** (grade id · name · step · amount)
+- 1 · GG-1 · steps 1–5 · $10,000, $10,200, $10,400, $10,500, $10,800
+- 2 · GG-2 · steps 1–4 · $10,450, $10,780, $11,200, $11,650
+
+**Table 9.8, rates of pay by grade** (type · rate type · rate · grade · step · period ·
+from · thru)
+- Programmer · average · – · GG-6 · 6 · per year · Jan 1, 1990 · –
+- Programmer · highest · – · GG-8 · 10 · per year · Jan 1, 1990 · –
+- Programmer · lowest · – · GG-5 · 1 · per year · Jan 1, 1990 · –
+
+**Table 9.9, pay history** (employer · employee · from · thru · amount · period)
+- ABC Corporation · John Smith · Jan 1, 1995 · Dec 31, 1997 · $45,000 · per year
+- ABC Corporation · John Smith · Jan 1, 1998 · Dec 31, 2000 · $55,000 · per year
+- ABC Corporation · John Smith · Jan 1, 2001 · – · $62,500 · per year
+
+**To check against the book**
+- The rate's second date is printed "thru rate": read as thru date (point 25).
+- The rate type line carries no tilde, but Table 9.6 has four rate types on one type,
+  period and from date: rate type read as part of the key (point 26).
+- Table 9.8 repeats Table 9.6's type, rate types, period and from date with grades
+  instead of amounts: read as a second enterprise's sample (point 27).
+- Table 9.8's grades GG-5, GG-6 and GG-8 are not in Table 9.7, which lists GG-1 and GG-2
+  only (point 28).
+- Pay history's period type line shows no tilde: key read as employment + from date.
+
+**Discussion**
+- **A band, not a price:** a position type is paid within a range per period (lowest,
+  average, highest, standard), each a row typed by RATE TYPE and dated, so a new
+  measure is a new row and a revision closes the old one. Ch 6 used the same entity
+  for billing and pay rates; 9.7 adds the period, so one type can carry a yearly band
+  and an hourly standard.
+- **Amount or step:** an enterprise without a schedule writes the rate; one with a pay
+  grade system (government style) points at a grade's step, and the amount comes from
+  the step. Never both, or the two can disagree (the text's rule).
+- **The step is updated in place:** when a grade's pay rises, the step's amount changes
+  (date modified) and no rate row moves. The price is that a step's earlier amount is
+  gone (point 30).
+- **Pay history is what was paid,** per employment, not per position or person: two
+  employers, two histories. The position type's band says what the job should pay;
+  the pay history says what this person got. For contractors, the text moves it up to
+  the party relationship.
+- **The naive model** keeps a `salary` column on EMP, overwritten at each raise, and no
+  band at all.
+
 ### Points to discuss after the overview (Figs 9.1–9.6, so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -397,6 +506,19 @@ the literal drawing. The list moves under the chapter's last figure when it land
     each of these ultimately reports"). A check, ours.
 24. **Table 9.5's slots:** one slot per row (ids ours), all in ABC Corporation. Sue Jones's
     business analyst slot is not Table 9.1's 101 (that one opens in 2001).
+25. **9.7's "thru rate"** read as thru date, a misprint.
+26. **Rate type in POSITION TYPE RATE's key,** although its line has no tilde: Table 9.6
+    needs it. Built unique on type + rate type + period + from date.
+27. **Table 9.8 is another enterprise's sample,** with the same keys as Table 9.6. Seeded
+    on Programmer/Analyst so both fit in one database.
+28. **GG-5, GG-6 and GG-8** are not in Table 9.7: ten steps each, amounts ours.
+29. **Two hourly rates for a programmer in 2000:** Ch 6's regular pay ($35) and 9.6's
+    standard pay ($55). Different rate types, both kept.
+30. **Salary steps have no history:** the amount is updated in place (date modified), as
+    the text says. A dated step amount would keep past schedules; not built.
+31. **John Smith's employer:** Ch 6 put him at ABC Manufacturing with only a party role;
+    Table 9.9 says ABC Corporation. The employment is new, from ABC Corporation's internal
+    organization role, since Jan 1, 1995 (Ch 6's role date).
 
 ## Design decisions (book → SQL)
 
@@ -472,6 +594,25 @@ the literal drawing. The list moves under the chapter's last figure when it land
 - **Seed:** four types; Table 9.4's slots (point 22) and lines (points 20–21), plus the
   managers' lines to the CIO (ours). Bad row: the business analyst given a second
   primary line, to maintenance.
+
+### Fig 9.7
+- **`period_type`** (Ch 8) gains HOUR. **`pay_grade`** (the book's ids); **`salary_step`**
+  with a surrogate key, grade + seq unique, amount and date modified, no history (point
+  30).
+- **`position_type_rate`** (Ch 6) gains `period_type_id` (Ch 6's rows take HOUR, then not
+  null) and an optional `salary_step_id`; the rate becomes optional, and a check
+  constraint takes exactly one of the two. Type + rate type + period + from date unique
+  (point 26).
+- **`pay_history`** on Ch 2's `party_relationship` (the employment row), period, an
+  optional step, dated, amount; employment + from date unique.
+- **Checks:** two rates of one type, rate type and period overlapping; two pay records
+  of one employment overlapping, or pay on a relationship that isn't an employment.
+  **Queries:** Tables 9.6 and 9.8 with the amount read off the step; Table 9.7; Table
+  9.9 with each raise.
+- **Seed:** four rate types; Table 9.6; Table 9.7 and GG-5, GG-6, GG-8 (point 28);
+  Table 9.8 on Programmer/Analyst (point 27); John Smith's employment (point 31) and
+  Table 9.9. Bad rows: a second lowest yearly programmer rate from Jul 1, 2000; a second
+  current salary for John Smith from Jul 1, 2001.
 
 ## When NOT to use this
 - **A small company with one office:** a `job_title` and `manager_id` on the person, and

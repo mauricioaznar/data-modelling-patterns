@@ -270,3 +270,76 @@ insert into position_reporting_structure (position_reporting_structure_id, repor
   (11, 406, 314, '2001-01-01', null,         null, true),
   (12, 312, 406, '2001-01-01', null,         'DATA ERROR: a second primary line', true);
 select setval(pg_get_serial_sequence('position_reporting_structure', 'position_reporting_structure_id'), (select max(position_reporting_structure_id) from position_reporting_structure));
+
+-- ============================================================
+-- Fig 9.7 — Salary determination and history
+-- ============================================================
+insert into rate_type (rate_type_id, description) values
+  ('AVERAGE_PAY',  'Average pay rate'),
+  ('HIGHEST_PAY',  'Highest pay rate'),
+  ('LOWEST_PAY',   'Lowest pay rate'),
+  ('STANDARD_PAY', 'Standard pay rate');
+
+-- Table 9.6: Programmer's band, revised once in ten years (Dec 31, 1999
+-- stored Jan 1, 2000). Then a bad row: a second lowest yearly rate from
+-- Jul 1, 2000, while the 2000 one is still open.
+insert into position_type_rate (position_type_id, rate_type_id, period_type_id, from_date, thru_date, rate) values
+  ('PROGRAMMER', 'AVERAGE_PAY',  'YEAR', '1990-01-01', '2000-01-01', 45000),
+  ('PROGRAMMER', 'HIGHEST_PAY',  'YEAR', '1990-01-01', '2000-01-01', 70000),
+  ('PROGRAMMER', 'LOWEST_PAY',   'YEAR', '1990-01-01', '2000-01-01', 25000),
+  ('PROGRAMMER', 'STANDARD_PAY', 'HOUR', '1990-01-01', '2000-01-01', 30.00),
+  ('PROGRAMMER', 'AVERAGE_PAY',  'YEAR', '2000-01-01', null,         55000),
+  ('PROGRAMMER', 'HIGHEST_PAY',  'YEAR', '2000-01-01', null,         90000),
+  ('PROGRAMMER', 'LOWEST_PAY',   'YEAR', '2000-01-01', null,         30000),
+  ('PROGRAMMER', 'STANDARD_PAY', 'HOUR', '2000-01-01', null,         55.00),
+  ('PROGRAMMER', 'LOWEST_PAY',   'YEAR', '2000-07-01', null,         28000);   -- DATA ERROR: overlaps the 2000 lowest rate
+
+-- Table 9.7's two grades, then the three Table 9.8 names but 9.7 doesn't
+-- list (GG-5, GG-6, GG-8, ten steps each, amounts ours, point 28).
+insert into pay_grade (pay_grade_id, name, comment) values
+  (1, 'GG-1', null),
+  (2, 'GG-2', null),
+  (5, 'GG-5', 'Ours: Table 9.8 uses it, Table 9.7 doesn''t list it'),
+  (6, 'GG-6', 'Ours: Table 9.8 uses it, Table 9.7 doesn''t list it'),
+  (8, 'GG-8', 'Ours: Table 9.8 uses it, Table 9.7 doesn''t list it');
+
+insert into salary_step (pay_grade_id, salary_step_seq_id, amount, date_modified) values
+  (1, 1, 10000, '1990-01-01'),
+  (1, 2, 10200, '1990-01-01'),
+  (1, 3, 10400, '1990-01-01'),
+  (1, 4, 10500, '1990-01-01'),
+  (1, 5, 10800, '1990-01-01'),
+  (2, 1, 10450, '1990-01-01'),
+  (2, 2, 10780, '1990-01-01'),
+  (2, 3, 11200, '1990-01-01'),
+  (2, 4, 11650, '1990-01-01');
+
+insert into salary_step (pay_grade_id, salary_step_seq_id, amount, date_modified)
+select g.base_grade, s.n, g.base + (s.n - 1) * g.stride, '2000-01-01'
+from (values (5, 30000, 1500), (6, 44500, 1700), (8, 70000, 2000)) as g (base_grade, base, stride)
+cross join generate_series(1, 10) as s (n);
+
+-- Table 9.8, a second enterprise's way: rates read off grade steps, no
+-- amount. Same type, rate types, period and date as Table 9.6, so it goes on
+-- Programmer/Analyst here (point 27).
+insert into position_type_rate (position_type_id, rate_type_id, period_type_id, from_date, thru_date, rate, salary_step_id) values
+  ('PROGRAMMER_ANALYST', 'AVERAGE_PAY', 'YEAR', '1990-01-01', null, null, (select salary_step_id from salary_step where pay_grade_id = 6 and salary_step_seq_id = 6)),
+  ('PROGRAMMER_ANALYST', 'HIGHEST_PAY', 'YEAR', '1990-01-01', null, null, (select salary_step_id from salary_step where pay_grade_id = 8 and salary_step_seq_id = 10)),
+  ('PROGRAMMER_ANALYST', 'LOWEST_PAY',  'YEAR', '1990-01-01', null, null, (select salary_step_id from salary_step where pay_grade_id = 5 and salary_step_seq_id = 1));
+
+
+-- John Smith (Ch 6's party 54, employee role 82) works for ABC Corporation
+-- (Table 9.9); Ch 6 placed him at ABC Manufacturing with no relationship
+-- row, so the employment is new (point 31).
+insert into party_relationship (party_relationship_id, party_relationship_type_id, from_party_role_id, to_party_role_id, from_date, thru_date, comment, status_type_id) values
+  (24, 'EMPLOYMENT', 73, 82, '1995-01-01', null, null, 'REL_ACTIVE');
+select setval(pg_get_serial_sequence('party_relationship', 'party_relationship_id'), (select max(party_relationship_id) from party_relationship));
+
+-- Table 9.9 (Dec 31 thru dates stored Jan 1), then a bad row: a second
+-- current salary from Jul 1, 2001.
+insert into pay_history (pay_history_id, party_relationship_id, period_type_id, from_date, thru_date, amount, comment) values
+  (1, 24, 'YEAR', '1995-01-01', '1998-01-01', 45000, null),
+  (2, 24, 'YEAR', '1998-01-01', '2001-01-01', 55000, null),
+  (3, 24, 'YEAR', '2001-01-01', null,         62500, null),
+  (4, 24, 'YEAR', '2001-07-01', null,         64000, 'DATA ERROR: the 2001 salary is still open');
+select setval(pg_get_serial_sequence('pay_history', 'pay_history_id'), (select max(pay_history_id) from pay_history));

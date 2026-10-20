@@ -257,3 +257,62 @@ join position_reporting_structure b
   and a.from_date < coalesce(b.thru_date, 'infinity')
 join position p      on p.position_id = a.reporting_position_id
 join position_type t on t.position_type_id = p.position_type_id;
+
+-- ============================================================
+-- Fig 9.7 — Salary determination and history
+-- ============================================================
+
+-- name: 9.7 — Tables 9.6 and 9.8: each type's pay band by rate type and period, an amount or a grade step, over time
+select t.title, rt.description as rate_type, ptr.period_type_id as per,
+       coalesce(ptr.rate, ss.amount) as amount,
+       case when ptr.salary_step_id is null then 'rate' else pg.name || ' step ' || ss.salary_step_seq_id end as priced_by,
+       ptr.from_date, ptr.thru_date
+from position_type_rate ptr
+join position_type t on t.position_type_id = ptr.position_type_id
+join rate_type rt    on rt.rate_type_id = ptr.rate_type_id
+left join salary_step ss on ss.salary_step_id = ptr.salary_step_id
+left join pay_grade pg   on pg.pay_grade_id = ss.pay_grade_id
+where ptr.rate_type_id in ('AVERAGE_PAY', 'HIGHEST_PAY', 'LOWEST_PAY', 'STANDARD_PAY')
+order by t.title, ptr.from_date, rt.description;
+
+-- name: 9.7 — Table 9.7: the pay grades and their steps
+select pg.pay_grade_id, pg.name, ss.salary_step_seq_id, ss.amount, ss.date_modified
+from pay_grade pg
+join salary_step ss on ss.pay_grade_id = pg.pay_grade_id
+where pg.pay_grade_id in (1, 2)
+order by pg.pay_grade_id, ss.salary_step_seq_id;
+
+-- name: 9.7 — Table 9.9: John Smith's pay history at ABC Corporation, with each raise
+select er.name as employer, ee.name as employee, ph.from_date, ph.thru_date, ph.amount, ph.period_type_id as per,
+       round(100.0 * (ph.amount / lag(ph.amount) over (partition by ph.party_relationship_id order by ph.from_date) - 1), 1) as raise_pct
+from pay_history ph
+join employment_relationship e on e.party_relationship_id = ph.party_relationship_id
+join party_display_name er     on er.party_id = e.employer_party_id
+join party_display_name ee     on ee.party_id = e.employee_party_id
+where ph.comment is null
+order by ee.name, ph.from_date;
+
+-- name: 9.7 — Data-quality check: two rates of one type, rate type and period over overlapping dates (should be empty)
+select a.position_type_id, a.rate_type_id, a.period_type_id, a.from_date, a.thru_date, b.from_date as other_from, b.rate as other_rate
+from position_type_rate a
+join position_type_rate b
+  on  b.position_type_id = a.position_type_id
+  and b.rate_type_id = a.rate_type_id
+  and b.period_type_id = a.period_type_id
+  and b.position_type_rate_id > a.position_type_rate_id
+  and b.from_date < coalesce(a.thru_date, 'infinity')
+  and a.from_date < coalesce(b.thru_date, 'infinity');
+
+-- name: 9.7 — Data-quality check: two pay records of one employment over overlapping dates, or pay on a relationship that isn't an employment (should be empty)
+select a.pay_history_id, b.pay_history_id as overlaps_with, a.party_relationship_id, a.from_date, a.thru_date, b.from_date as other_from
+from pay_history a
+join pay_history b
+  on  b.party_relationship_id = a.party_relationship_id
+  and b.pay_history_id > a.pay_history_id
+  and b.from_date < coalesce(a.thru_date, 'infinity')
+  and a.from_date < coalesce(b.thru_date, 'infinity')
+union all
+select ph.pay_history_id, null, ph.party_relationship_id, ph.from_date, ph.thru_date, null
+from pay_history ph
+join party_relationship r on r.party_relationship_id = ph.party_relationship_id
+where r.party_relationship_type_id <> 'EMPLOYMENT';
