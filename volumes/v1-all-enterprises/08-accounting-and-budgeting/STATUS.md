@@ -33,12 +33,19 @@ architecture card's `(Fig N.M)`.
 | 8.6 | built | 3 | ✓ | ✓ | ✓ | ✓ | – |
 | 8.7a | not built | 3 | ✓ | – | – | – | – |
 | 8.7b | built | 3 | ✓ | ✓ | ✓ | ✓ | – |
+| 8.8 | built | 3 | ✓ | ✓ | ✓ | ✓ | – |
+| 8.9 | built | 3 | ✓ | ✓ | ✓ | ✓ | – |
+| 8.10 | built | 4 | ✓ | ✓ | ✓ | ✓ | – |
+| 8.11 | built | 4 | ✓ | ✓ | ✓ | ✓ | – |
+| 8.12 | architecture | – | ✓ | – | – | – | ✓ |
 
 | # | Submodel | Figures built | Card | Ponders |
 |---|---|---|---|---|
 | 1 | Chart of accounts | ✓ | Card 35 | 5 |
 | 2 | Accounting transactions | ✓ | Card 36 | 5 |
 | 3 | Budgets | ✓ | Card 37 | 5 |
+| 4 | Budget usage and the ledger | ✓ | Card 38 | 4 |
+| A | Architecture | – | Architecture | – |
 
-Last check: 0 ✗ · 1 !
+Last check: 0 ✗ · 0 !
 <!-- check:end -->

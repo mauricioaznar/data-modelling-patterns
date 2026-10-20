@@ -3,6 +3,39 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-20
+
+**Built**
+- Ch 8's last figures, 8.8–8.12 with Tables 8.11–8.14 (photos), transcribed with points
+  25–39.
+- Fig 8.8 built: `budget_review` (budget, reviewer, result, date, comment) and
+  `budget_review_result_type`. Table 8.11 with Susan Jones and John Smith; 29839's
+  statuses, revisions and reviews on one timeline. One check.
+- Fig 8.9 built: `budget_scenario`, `budget_scenario_rule` (scenario × item type),
+  `budget_scenario_application` (an item or a whole budget; an amount or a percentage).
+  Table 8.12; where the plan departs from the rule; the marketing budget under each
+  scenario. One check.
+- Fig 8.10 built: `order_item.budget_item_id`, `requirement_budget_allocation`,
+  `payment_budget_allocation`. Table 8.13's check 2903; the office budget's usage
+  (earmarked, committed, paid, left). Two checks.
+- Fig 8.11 built: `gl_budget_xref`. Table 8.14 with Salaries expense; the marketing budget
+  against the 2001 books by account. One check.
+- Fig 8.12, the architecture: How it flows, MAP's Ch 8 section rewritten and ticked, hub
+  lines fixed.
+- Submodel 4 (budget usage and the ledger) opened; card 37 gains 8.8–8.9, card 38 and the
+  Ch 8 architecture card drafted, Anki export 53 cards. Design reference: Budgets revised,
+  *Budget usage and the ledger* and *Ch 8 architecture* drafted, Ch 8 examples on eight
+  Core patterns rows, a question index row, roadmap.
+
+**Decisions**
+- Reviews and scenarios join submodel 3; allocations and the GL xref make submodel 4.
+- Built 8.10's order line as a plain column, as drawn, though 8.12 drops it.
+- 8.12 draws 8.7a's loop; 8.7b stays built until the overview (point 37). 8.12 settles
+  8.3a over 8.3b and standard periods apart from accounting periods.
+
+**Next**
+- Ch 8 overview: points 1–39, the doc drafts and cards 35–38 plus the architecture card.
+
 ## 2026-10-19
 
 **Built**
