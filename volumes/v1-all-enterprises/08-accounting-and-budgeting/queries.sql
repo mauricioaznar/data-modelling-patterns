@@ -676,3 +676,63 @@ join budget_scenario_application a on a.budget_scenario_id = b.budget_scenario_i
                                   and a.budget_item_id = i.budget_item_id
 where b.budget_id is not null
 group by b.budget_id, s.description, b.percentage_change;
+
+-- ============================================================
+-- Fig 8.10 — Budget allocations
+-- ============================================================
+
+-- name: 8.10 — Table 8.13: each payment split across the budget items it paid for
+select i.budget_id, y.description as budget_item, p.payment_id, p.comment as payment,
+       p.amount as payment_amount, a.amount as allocated
+from payment_budget_allocation a
+join payment p          on p.payment_id = a.payment_id
+join budget_item i      on i.budget_item_id = a.budget_item_id
+join budget_item_type y on y.budget_item_type_id = i.budget_item_type_id
+order by p.payment_id, i.budget_item_seq_id;
+
+-- name: 8.10 — Budget usage for the office budget: each top item with what requirements earmark, orders commit and payments spend (parts rolled up)
+with recursive top as (
+  select budget_item_id, budget_item_id as top_id from budget_item where part_of_budget_item_id is null
+  union all
+  select c.budget_item_id, t.top_id from budget_item c join top t on t.budget_item_id = c.part_of_budget_item_id
+),
+uses as (
+  select budget_item_id, amount as earmarked, 0 as committed, 0 as paid from requirement_budget_allocation
+  union all
+  select budget_item_id, 0, quantity * unit_price, 0 from order_item where budget_item_id is not null
+  union all
+  select budget_item_id, 0, 0, amount from payment_budget_allocation
+)
+select i.budget_id, i.budget_item_seq_id as seq, y.description as item, i.amount as budgeted,
+       coalesce(sum(u.earmarked), 0) as earmarked, coalesce(sum(u.committed), 0) as committed,
+       coalesce(sum(u.paid), 0) as paid, i.amount - coalesce(sum(u.paid), 0) as left_to_spend
+from budget_item i
+join budget_item_type y on y.budget_item_type_id = i.budget_item_type_id
+join top t              on t.top_id = i.budget_item_id
+left join uses u        on u.budget_item_id = t.budget_item_id
+where i.budget_id = 38576 and i.part_of_budget_item_id is null
+group by i.budget_id, i.budget_item_seq_id, y.description, i.amount
+order by i.budget_item_seq_id;
+
+-- name: 8.10 — Data-quality check: payments allocated to budget items beyond their own amount (should be empty)
+select p.payment_id, p.amount as payment_amount, sum(a.amount) as allocated
+from payment_budget_allocation a
+join payment p on p.payment_id = a.payment_id
+group by p.payment_id, p.amount
+having sum(a.amount) > p.amount;
+
+-- name: 8.10 — Data-quality check: orders and payments dated outside the period of the budget they draw on (should be empty)
+with uses as (
+  select 'order item ' || oi.order_item_id as usage, o.order_date as day, oi.budget_item_id
+  from order_item oi join "order" o on o.order_id = oi.order_id
+  where oi.budget_item_id is not null
+  union all
+  select 'payment ' || a.payment_id, p.effective_date, a.budget_item_id
+  from payment_budget_allocation a join payment p on p.payment_id = a.payment_id
+)
+select u.usage, u.day, i.budget_id, s.from_date as period_from, s.thru_date as period_thru
+from uses u
+join budget_item i          on i.budget_item_id = u.budget_item_id
+join budget b               on b.budget_id = i.budget_id
+join standard_time_period s on s.standard_time_period_id = b.standard_time_period_id
+where u.day < s.from_date or u.day >= s.thru_date;

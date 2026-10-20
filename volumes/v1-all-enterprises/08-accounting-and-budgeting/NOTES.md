@@ -16,7 +16,7 @@ inventory variance), broken into **debit and credit details** that each post to 
 organization's account. **Budgets** are the other half: the money each department plans
 to spend, item by item, with its approval history and its revisions.
 
-## Submodels (proposed 2026-10-19; Figs 8.4–8.7 added the same day)
+## Submodels (proposed 2026-10-19; Figs 8.4–8.7 added the same day, 8.8–8.11 on 2026-10-20)
 1. **Chart of accounts** (Figs 8.1, 8.4): which ledger accounts exist and what kind each is
    (asset, liability, equity, revenue, expense); which of them each internal organization
    uses, and since when; which subsidiary accounts break a control account down, and which
@@ -30,9 +30,15 @@ to spend, item by item, with its approval history and its revisions.
    each account's balance is for a period? Which asset a depreciation is of, and which
    method worked it out that year?
 
-3. **Budgets** (Figs 8.6–8.7b): who asks for how much money, for which period, for what
+3. **Budgets** (Figs 8.6–8.9): who asks for how much money, for which period, for what
    items and why; what stage each budget has reached; how it was revised, item by item,
-   and why?
+   and why; who reviewed it and what they said; what each item would be in a poor or an
+   excellent year?
+
+4. **Budget usage and the ledger** (Figs 8.10–8.11): which requirements, orders and
+   payments draw on each budget item, and how much is left; which general ledger
+   accounts each kind of budget item maps to, so the budget can be held against the
+   books?
 
 ## Figures
 
@@ -649,6 +655,57 @@ rule's % · applied %)
 - **The naive model** copies the budget per scenario ("Marketing 2001, pessimistic"):
   three budgets to keep in step, and no way to say that −15% is the house rule.
 
+### Fig 8.10 — Budget allocations
+**Transcription** (accepted: ☐; photo with Table 8.13)
+
+```
+PAYMENT BUDGET ALLOCATION      (identified by its item and payment: tildes)
+  o amount
+  -> BUDGET ITEM               (many "a usage of" 1, tilde; item "used to pay" many)
+  -> PAYMENT                   (many "an allocation of" 1, tilde; payment "booked against" many)
+
+ORDER ITEM (Ch 4's: # order item seq id, o quantity, unit price, estimated delivery
+date, shipping instructions, item description, comment)
+  -> BUDGET ITEM               (many "allocated to" 1, optional; item "used to buy" many)
+
+REQUIREMENT BUDGET ALLOCATION  (identified by its item and requirement: tildes)
+  * amount
+  -> BUDGET ITEM               (many "allocated to" 1, tilde; item "used to provide funding via" many)
+  -> REQUIREMENT               (many "the allocation of" 1, tilde; requirement "allocated via" many)
+
+PAYMENT (Ch 7's: # id, * effective date, * payment ref num, * amount, o comment)
+REQUIREMENT (Ch 4's: # id, * description, o creation date, required by date, estimated
+budget, quantity, reason)
+BUDGET ITEM (8.6's)
+```
+
+**Table 8.13, a disbursement allocated** (budget 38576, office expenses)
+- Check 2903, $2,000 for a chair and office supplies: $500 to office supplies, $1,500 to
+  furniture.
+
+**To check against the book**
+- PAYMENT BUDGET ALLOCATION's amount is drawn optional, yet it is the whole point of the
+  entity (the text: how much of each payment goes to each item). Built not null (point
+  30).
+- ORDER ITEM has a plain line to BUDGET ITEM, no allocation entity and no amount; the
+  overall figure (8.12) shows no order item at all, and names a REQUIREMENT *ITEM* BUDGET
+  ALLOCATION (point 31).
+- Table 8.13 gives no date or payee for 2903: ours (point 32).
+
+**Discussion**
+- **Three moments of the same money:** a requirement *earmarks* it (we'll need furniture),
+  an order line *commits* it (we ordered desks), a payment *spends* it (the check went
+  out). Each points at the budget item it draws on, so "what's left in furniture?" can be
+  asked at any of the three.
+- **Allocation entities where the split is many-to-many:** one check can pay for two
+  items (Table 8.13), one item is paid by many checks. An order line belongs to one
+  budget item, so a plain foreign key will do.
+- **Budgets meet the rest of the model here.** Chs 4 and 7 come in by their entities,
+  not by copies: the budget never stores "spent so far", it sums its allocations.
+- **The naive model** keeps a "spent" column on the budget item, bumped by hand. It
+  drifts the first time a check is voided or split, and can't say which payments made up
+  the figure.
+
 ### Points to discuss after the overview (Figs 8.1–8.7b, so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -747,6 +804,18 @@ Added with Figs 8.8–8.12:
 29. **Scenarios apply to the item as first entered,** as Table 8.12 does ($30,000 of
     advertising, not the $20,000 left after revision 1.1). Which base the business wants
     (first entered, or after revisions) is a question for the overview.
+30. **A payment allocation's amount is not null**, though drawn optional: without it a
+    split check (Table 8.13) can't be told apart.
+31. **Order items allocated by a plain column** (`order_item.budget_item_id`), as 8.10
+    draws it. 8.12 drops the line and renames the requirement entity REQUIREMENT ITEM
+    BUDGET ALLOCATION, though Ch 4's REQUIREMENT has no items. Kept as 8.10 draws it.
+32. **Ours, for the allocations:** 2903's date (Jun 12, 2002), payee (Fantastic Supplies)
+    and reference; 38576 approved on May 30, 2002; the Benjamin Street furniture as
+    requirement 50100 and the six desks as purchase order 2400 (ABC Corporation gains
+    placing and ship-to buyer roles, 88–89).
+33. **Usage rolls up through item parts:** the desks order draws on the desks item, a part
+    of furniture, so furniture's usage counts it. Payments may go to a parent item (2903's
+    chair goes to furniture, as Table 8.13 says), not only to the lowest one.
 
 ## Design decisions (book → SQL)
 
@@ -908,6 +977,16 @@ Added with Figs 8.8–8.12:
 - **Seed:** Table 8.12's four scenarios, six rules and six applications, on the items as
   first entered (point 29). Bad row: poor marketing conditions also applied to the whole
   of 29839 (−10%), on top of its items.
+
+### Fig 8.10
+- **`order_item.budget_item_id`**, a nullable column on Ch 4's table (point 31).
+  **`requirement_budget_allocation`** and **`payment_budget_allocation`** with surrogate
+  keys, one row per pair (the book's key, unique), amounts not null (point 30).
+- **Checks:** a payment allocated beyond its amount; an order or payment dated outside the
+  period of the budget it draws on. **Queries:** Table 8.13; the office budget's usage,
+  item by item (earmarked, committed, paid, left), parts rolled up (point 33).
+- **Seed:** Table 8.13's check 2903, and ours (point 32). Bad rows: a $250 toner check
+  allocated $300; Ch 4's 2025 paper order on June 2002's office supplies.
 
 ## When NOT to use this
 - **One company, one ledger:** a single small business can key the chart and the books

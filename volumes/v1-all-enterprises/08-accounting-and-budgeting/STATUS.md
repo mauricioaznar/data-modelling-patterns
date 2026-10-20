@@ -14,6 +14,7 @@ Architecture figure:
 | 1 | Chart of accounts | 8.1, 8.4 | 2026-10-19 | | | |
 | 2 | Accounting transactions | 8.2–8.3b, 8.5 | 2026-10-19 | | | |
 | 3 | Budgets | 8.6–8.9 | 2026-10-19 | | | |
+| 4 | Budget usage and the ledger | 8.10 | | | | |
 | A | Architecture | | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs N.1–N.3)`; the `A` row's matches the

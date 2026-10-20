@@ -13,6 +13,7 @@ every row scores 3+ and its scenario holds up.
 1. Chart of accounts (Figs 8.1, 8.4)
 2. Accounting transactions (Figs 8.2–8.3b, 8.5)
 3. Budgets (Figs 8.6–8.9)
+4. Budget usage and the ledger (Figs 8.10–8.11)
 
 ## Progress
 
@@ -76,6 +77,15 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    questions does each answer cheaply? Pick one for a 10-line team budget, and say why.
 5. *(8.9)* In a poor market the rule says trade shows −15%, the plan says −20%. Why keep
    both rows? And how is a scenario different from a revision?
+
+### Submodel 4: budget usage and the ledger
+1. *(8.10)* Payments and requirements get allocation entities; order items get a plain
+   column. What does that say about how each one meets a budget item? When would the
+   order item need an allocation entity too?
+2. *(8.10)* Requirement, order, payment: earmarked, committed, spent. Why keep all three
+   against the budget instead of only payments? Which question does each answer?
+3. *(8.10)* A budget item has no "spent so far" column. What breaks if you add one, and
+   when might you add it anyway?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

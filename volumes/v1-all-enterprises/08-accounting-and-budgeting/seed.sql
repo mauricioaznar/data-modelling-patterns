@@ -493,3 +493,54 @@ insert into budget_scenario_application (budget_scenario_application_id, budget_
   (6, 4, 298393, null,  null, -40),
   (7, 2, null,   29839, null, -10);   -- DATA ERROR: the whole budget too, on top of its items
 select setval(pg_get_serial_sequence('budget_scenario_application', 'budget_scenario_application_id'), (select max(budget_scenario_application_id) from budget_scenario_application));
+
+-- ============================================================
+-- Fig 8.10 — Budget allocations
+-- ============================================================
+-- 38576 approved before its month starts (ours), so June's spending has a
+-- budget to draw on.
+insert into budget_status (budget_status_id, budget_id, status_type_id, status_date, comment) values
+  (10, 38576, 'BUDGET_APPROVED', '2002-05-30', null);
+select setval(pg_get_serial_sequence('budget_status', 'budget_status_id'), (select max(budget_status_id) from budget_status));
+
+-- Ours: the Benjamin Street furniture as a requirement, earmarking the
+-- furniture item.
+insert into requirement (requirement_id, requirement_origin, requirement_kind, description, requirement_creation_date,
+                         required_by_date, estimated_budget, quantity, reason, part_of_requirement_id, facility_id) values
+  (50100, 'INTERNAL', 'PRODUCT', 'Furniture for the Benjamin Street facility', '2002-05-28', '2002-06-30', 10000, null, 'The facility opens in July', null, null);
+
+insert into requirement_budget_allocation (requirement_budget_allocation_id, requirement_id, budget_item_id, amount) values
+  (1, 50100, 385762, 10000);
+select setval(pg_get_serial_sequence('requirement_budget_allocation', 'requirement_budget_allocation_id'), (select max(requirement_budget_allocation_id) from requirement_budget_allocation));
+
+-- Ours: ABC Corporation orders six desks from Fantastic Supplies (its
+-- supplier role 37 from Ch 4), committing the desks item.
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (88, 12, 'PLACING_BUYER', '1998-03-04', null),
+  (89, 12, 'SHIP_TO_BUYER', '1998-03-04', null);
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+insert into "order" (order_id, order_kind, order_date, entry_date) values
+  (2400, 'PURCHASE', '2002-06-05', '2002-06-05');
+insert into purchase_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id,
+                            placed_using_contact_mechanism_id, taken_via_contact_mechanism_id, bill_to_contact_mechanism_id) values
+  (2400, 88, 37, 70, 33, 31, 33);
+insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, quantity, unit_price, item_description, budget_item_id) values
+  (24001, 2400, 1, null, 6, 1300.00, 'Office desks', 385763);
+insert into purchase_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
+  (24001, 89, 33);
+select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max(order_item_id) from order_item));
+
+-- Ch 4's 2025 paper order, allocated to June 2002's office supplies.
+update order_item set budget_item_id = 385761 where order_item_id = 16;   -- DATA ERROR: ordered in 2025, outside the budget's period
+
+-- Table 8.13's check 2903 (date, payee and reference ours), then a bad one.
+insert into payment (payment_id, payment_kind, payment_method_type_id, from_party_id, to_party_id, effective_date, payment_ref_num, amount, comment) values
+  (2903, 'DISBURSEMENT', 'CHECK', 12, 18, '2002-06-12', 'ABC check 8120', 2000.00, 'Payment by check for a chair and office supplies'),
+  (2904, 'DISBURSEMENT', 'CHECK', 12, 18, '2002-06-20', 'ABC check 8131', 250.00,  'Toner');
+
+insert into payment_budget_allocation (payment_budget_allocation_id, payment_id, budget_item_id, amount) values
+  (1, 2903, 385761, 500),
+  (2, 2903, 385762, 1500),
+  (3, 2904, 385761, 300);   -- DATA ERROR: 300 allocated from a 250 check
+select setval(pg_get_serial_sequence('payment_budget_allocation', 'payment_budget_allocation_id'), (select max(payment_budget_allocation_id) from payment_budget_allocation));
