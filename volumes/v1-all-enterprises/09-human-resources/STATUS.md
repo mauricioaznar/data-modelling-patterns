@@ -13,11 +13,11 @@ Architecture figure: 9.14
 |---|---|---|---|---|---|---|
 | 1 | Positions | 9.3–9.4 | 2026-10-20 | | | |
 | 2 | Employment, fulfillment and reporting | 9.2, 9.5–9.6 | 2026-10-20 | | | |
-| 3 | Pay and benefits | 9.7–9.8 | | | | |
-| 4 | Payroll | 9.9 | | | | |
-| 5 | Applications and qualifications | 9.10–9.11 | | | | |
-| 6 | Performance and termination | 9.12a, 9.13 | | | | |
-| A | Architecture | 9.14 | | | – | – |
+| 3 | Pay and benefits | 9.7–9.8 | 2026-10-20 | | | |
+| 4 | Payroll | 9.9 | 2026-10-20 | | | |
+| 5 | Applications and qualifications | 9.10–9.11 | 2026-10-20 | | | |
+| 6 | Performance and termination | 9.12a, 9.13 | 2026-10-20 | | | |
+| A | Architecture | 9.14 | 2026-10-20 | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs N.1–N.3)`; the `A` row's matches the
 architecture card's `(Fig N.M)`.
@@ -32,11 +32,25 @@ architecture card's `(Fig N.M)`.
 | 9.4 | built | 1 | ✓ | ✓ | ✓ | ✓ | – |
 | 9.5 | built | 2 | ✓ | ✓ | ✓ | ✓ | – |
 | 9.6 | built | 2 | ✓ | ✓ | ✓ | ✓ | – |
+| 9.7 | built | 3 | ✓ | ✓ | ✓ | ✓ | – |
+| 9.8 | built | 3 | ✓ | ✓ | ✓ | ✓ | – |
+| 9.9 | built | 4 | ✓ | ✓ | ✓ | ✓ | – |
+| 9.10 | built | 5 | ✓ | ✓ | ✓ | ✓ | – |
+| 9.11 | built | 5 | ✓ | ✓ | ✓ | ✓ | – |
+| 9.12a | built | 6 | ✓ | ✓ | ✓ | ✓ | – |
+| 9.12b | not built | – | ✓ | – | – | – | – |
+| 9.13 | built | 6 | ✓ | ✓ | ✓ | ✓ | – |
+| 9.14 | architecture | – | ✓ | – | – | – | ✓ |
 
 | # | Submodel | Figures built | Card | Ponders |
 |---|---|---|---|---|
 | 1 | Positions | ✓ | Card 39 | 5 |
 | 2 | Employment, fulfillment and reporting | ✓ | Card 40 | 5 |
+| 3 | Pay and benefits | ✓ | Card 41 | 5 |
+| 4 | Payroll | ✓ | Card 42 | 4 |
+| 5 | Applications and qualifications | ✓ | Card 43 | 4 |
+| 6 | Performance and termination | ✓ | Card 44 | 4 |
+| A | Architecture | – | Architecture | – |
 
-Last check: 0 ✗ · 1 !
+Last check: 0 ✗ · 0 !
 <!-- check:end -->

@@ -47,7 +47,37 @@ and any decisions made.
   *Budget usage and the ledger* and *Ch 8 architecture* drafted, Ch 8 examples on eight
   Core patterns rows, a question index row, roadmap.
 
+- Ch 9's second batch, Figs 9.7–9.14 with Tables 9.6–9.12 (photos), transcribed with
+  points 25–52; the points list now sits under 9.14.
+- Fig 9.7 built: `pay_grade`, `salary_step`; Ch 6's `position_type_rate` gains the
+  period and an optional step (amount or step, never both); `pay_history` on the
+  employment. Tables 9.6–9.9, 9.8 on Programmer/Analyst; John Smith's ABC Corporation
+  employment. Two checks.
+- Fig 9.8 built: `benefit_type`, `party_benefit`. Table 9.10. One check.
+- Fig 9.9 built: `deduction_type`, `payroll_preference`, `paycheck` (a Ch 7 payment
+  subtype), `deduction`. Tables 9.11–9.12, check 1001's net and where it went. Two checks.
+- Fig 9.10 built: `employment_application` and its source type; applicants Ana Ruiz, John
+  Doe, Lee Wong; Ana Ruiz hired into slot 101. One check.
+- Fig 9.11 built: `qualification_type` (degree and certification groups),
+  `party_qualification`, `training_class_type`, `person_training`, `resume`; Ch 6's
+  `party_skill` gains a started-using date. One check.
+- Fig 9.12a built: review item and note types, Ch 3's `rating_type` reused, MANAGER role,
+  `performance_review` (+ items, three outcomes), `performance_note`. One check. 9.12b
+  transcribed, not built.
+- Fig 9.13 built: termination types and reasons, `employment_termination`,
+  `unemployment_claim`; Tom Baker and Rita Gomez. One check.
+- Fig 9.14 transcribed with its How it flows; MAP.md's Ch 9 rewritten and marked ✓.
+- Cards 41–44 and the Ch 9 architecture card, Anki export 60 cards. Design reference:
+  four entries and the Ch 9 architecture entry drafted, Ch 9 examples on eleven more
+  Core patterns rows, four question index rows, roadmap row extended.
+
 **Decisions**
+- Ch 9's second batch makes submodels 3–6: pay and benefits (9.7–9.8), payroll (9.9),
+  applications and qualifications (9.10–9.11), performance and termination (9.12a, 9.13).
+  9.12b not built (9.14 keeps 9.12a); 9.14 the architecture figure.
+- Rate type joins POSITION TYPE RATE's key; Table 9.8 seeded on another type. A paycheck's
+  payment holds the gross. EMPLOYMENT's ending is a subtype table on the relationship's
+  key, named `employment_termination` since Ch 2's comparison table owns `employment`.
 - Ch 9 split into two submodels so far: positions (9.3–9.4), and employment, fulfillment
   and reporting (9.2, 9.5–9.6). 9.1 is the naive model, not built.
 - POSITION's hiring company and status built mandatory, as drawn; the status is a current
@@ -59,8 +89,7 @@ and any decisions made.
 
 **Next**
 - Ch 8 overview: points 1–39, the doc drafts and cards 35–38 plus the architecture card.
-- Ch 9's remaining figures (pay, benefits, payroll, performance, qualifications,
-  applications, the overall model).
+- Ch 9 overview: points 1–52, the doc drafts and cards 39–44 plus the architecture card.
 
 ## 2026-10-19
 

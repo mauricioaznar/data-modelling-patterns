@@ -1322,6 +1322,135 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
+### Card 41 · V1 Ch 9 · Pay and benefits (Figs 9.7–9.8)
+- **Cue:** "What should each kind of job pay, by band or by grade step, what has each employee actually been paid, and which benefits does each employment carry, at what cost and share?"
+- **Hook:** a ruler pinned to a job's door, marked lowest, average, highest, with a
+  ladder of numbered steps beside it (the grade), and John Smith's own pay slips stacked
+  on his badge, one per raise, next to a health card stamped "50%" crossed out to "60%"
+  and a jar of 15 vacation beans *(Claude's, drafted when the figures landed)*
+- **Mantra:** The job has a band, an amount or a grade step; the employment holds what was
+  paid and the benefits.
+
+<details><summary>Key</summary>
+
+- **S:** `position_type_rate` (Ch 6's, + period, salary step?, rate optional: amount or
+  step, never both) · `pay_grade` · `salary_step` (grade + seq, amount, date modified) ·
+  `pay_history` (employment, period, step?, from, thru, amount) · `benefit_type`
+  (standard employer %) · `party_benefit` (employment, type, period, from, thru, cost,
+  actual employer %, available time) · Ch 8's `period_type` (+ HOUR, DAY).
+- **W:** a `salary` column and a `vacation_days` column on the employee: each raise
+  overwrites the last, nothing says what the job should pay, a new benefit is a new
+  column, and the employer's share can't change without losing the old one.
+- **T:** *(the naive-model trap until practice gives yours)* pay on the position or the
+  person instead of the employment; an amount and a step on the same rate; keying rates
+  without the rate type; a step amount assumed to keep its history.
+- **D:** **position_type** (Ch 6) ← position_type_rate → **rate_type** (Ch 6),
+  **period_type** (Ch 8), salary_step → pay_grade; **party_relationship** (Ch 2,
+  EMPLOYMENT) ← pay_history → period_type, salary_step; **party_relationship** ←
+  party_benefit → benefit_type, period_type. Checks: overlapping rates of one type, rate
+  type and period; overlapping pay in one employment; a benefit twice at once or outside
+  its employment.
+</details>
+
+---
+
+### Card 42 · V1 Ch 9 · Payroll (Fig 9.9)
+- **Cue:** "How does each employee want to be paid by each employer, what is withheld, and what did each paycheck come to, gross, deductions and net?"
+- **Hook:** a paycheck torn into strips: four strips (federal, FICA, state, insurance)
+  dropped in labelled bins, the rest cut in half and posted into two bank slots whose
+  numbers come from a standing order card pinned to John Smith's badge and ABC's logo
+  *(Claude's, drafted when the figure landed)*
+- **Mantra:** Preferences plan the split and the withholding; a paycheck is a payment;
+  deductions come off it.
+
+<details><summary>Key</summary>
+
+- **S:** `payroll_preference` (employee role, internal organization role, seq, from, thru,
+  percentage, flat amount, routing, account, bank, period?, payment method?, deduction
+  type?) · `deduction_type` · `paycheck` (subtype of Ch 7's `payment`, a DISBURSEMENT:
+  issued for an employee role, from an internal organization role) · `deduction`
+  (paycheck + seq, type, amount). The payment's amount is the gross; the net is derived.
+- **W:** a `bank_account` column on the employee and a `net_pay` figure: one account, no
+  split, no history of changes, and nothing records what was withheld or why.
+- **T:** *(the naive-model trap until practice gives yours)* storing only the net; a
+  paycheck table of its own outside PAYMENT, so it is never banked or posted; editing the
+  account number in place; shares adding up to more than 100.
+- **D:** **party_role** (Ch 2: employee, internal organization) ← payroll_preference →
+  **period_type** (Ch 8), **payment_method_type** (Ch 7), deduction_type; **payment**
+  (Ch 7) ← paycheck → **party_role** ×2; paycheck ← deduction → deduction_type. Checks:
+  deposit shares above 100% on a day; a paycheck whose roles don't match its payment.
+</details>
+
+---
+
+### Card 43 · V1 Ch 9 · Applications and qualifications (Figs 9.10–9.11)
+- **Cue:** "Who applied for which slot, through which source, referred by whom, in what state, and what can each candidate show: skills, degrees, certifications, training, resumes?"
+- **Hook:** a pile of envelopes in a tray labelled with slot 101's box from the org
+  chart, one envelope with a sticky note "sent by Sue", each opened onto a resume, a
+  diploma that never expires and a certificate with a red expiry stamp, and a framed ISO
+  certificate on ABC's own wall *(Claude's, drafted when the figures landed)*
+- **Mantra:** People apply, for a slot or any job; parties show skills and
+  qualifications; persons train.
+
+<details><summary>Key</summary>
+
+- **S:** `employment_application` (date, slot?, status, source type, applicant person,
+  referrer person?) · `employment_application_source_type` · `qualification_type` (DEGREE
+  and CERTIFICATION as groups) · `party_qualification` (party, type, from, thru) ·
+  `party_skill` (Ch 6's, + started using date; rating = skill level) ·
+  `training_class_type` · `person_training` (person, class, from, thru) · `resume`
+  (party, date, text).
+- **W:** only hired people exist (EMP rows), with `degree` and `skills` text: applicants
+  who were turned down vanish, no source or referrer to measure, one degree, no lapse
+  dates, nothing an organization can hold.
+- **T:** *(the naive-model trap until practice gives yours)* making the slot mandatory
+  on an application; qualifications on PERSON only; one status column with no group
+  check; a degree with an end date.
+- **D:** **person** (Ch 2) ← employment_application → **position**, **status_type**
+  (Ch 2), source type, **person** (referrer); **party** (Ch 2) ← party_qualification →
+  qualification_type (↺ groups); **party** ← **party_skill** (Ch 6) → **skill_type**;
+  **person** ← person_training → training_class_type; **party** ← resume. Checks: an
+  application for a closed slot or with a wrong status; an expiring degree or a group
+  held.
+</details>
+
+---
+
+### Card 44 · V1 Ch 9 · Performance and termination (Figs 9.12a, 9.13)
+- **Cue:** "How is each employee reviewed and by whom, scored how, what did each review lead to, which notes were logged, and how and why did each employment end?"
+- **Hook:** a report card with three graded lines, three arrows out of it (to a bigger
+  pay slip, a bonus check, a door with a new title), sticky notes on the employee's file
+  between report cards, and at the end an exit door with two tags, "layoff" and
+  "downsizing", and a claim form trailing behind *(Claude's, drafted when the figures
+  landed)*
+- **Mantra:** Managers review employees by items, leading to pay, bonus or slot;
+  employment ends with a type, a reason and claims.
+
+<details><summary>Key</summary>
+
+- **S:** `performance_review` (employee role, manager role, from, thru, comments, pay
+  history?, bonus paycheck?, position?) · `performance_review_item` (review + seq, item
+  type, rating type, comment) · `performance_note` (employee, manager, note type, from,
+  thru, communication date, comment) · `employment_termination` (on the employment's key:
+  termination type?, reason?) · `unemployment_claim` (employment, date, description,
+  status). Ch 3's `rating_type`; MANAGER a Ch 2 role type.
+- **W:** a `last_review_score` and a `terminated` flag on the employee: no items, no
+  reviewer, no history, no tie to the raise it justified; leaving deletes or flags the
+  row, so the reason and the claims go with it.
+- **T:** *(the naive-model trap until practice gives yours)* reviews on the person
+  instead of the employee role; one termination column mixing how and why; a review
+  setting another employee's pay; a termination on an open employment.
+- **D:** **party_role** (Ch 2: employee, manager) ← performance_review → **pay_history**,
+  **paycheck**, **position**; review ← item → perf_review_item_type, **rating_type**
+  (Ch 3); **party_role** ×2 ← performance_note → note type; **party_relationship** (Ch 2,
+  EMPLOYMENT) ← employment_termination → termination type, reason; ← unemployment_claim →
+  **status_type**. Alternate 9.12b (reviews as communication event purposes) not built.
+  Checks: wrong role types, another employee's pay or bonus; terminations of open
+  employments, claims before the end.
+</details>
+
+---
+
 ## Deck: architecture
 
 One card per chapter, from its architecture figure (the last, overall one): how the chapter's
@@ -1561,6 +1690,46 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
   general_ledger_account; budget ← status, review, role (→ **party**), scenario
   application; budget_item ← **requirement** and **payment** allocations. Bold = from Ch 2
   to 7. Kept: 8.3a (no stored balance); 8.12 draws 8.7a where 8.7b is built (to settle).
+</details>
+
+---
+
+### Architecture · V1 Ch 9 · Human resources (Fig 9.14)
+- **Cue:** "From application to exit: how do the job, the person and the deal between them hang together?"
+- **Hook:** an org chart of boxes on the left (each with a price ruler and a budget tag),
+  a person on the right holding an envelope, a diploma and a badge, and between them a
+  signed contract (the employment) with pay slips, a health card, report cards and, at
+  the bottom, an exit door, while a rope (the fulfillment) ties the person into one box
+  *(Claude's, drafted when the figure landed)*
+- **Mantra:** Slots are typed and funded; persons apply and fill them; the employment
+  carries pay, benefits and its end.
+
+<details><summary>Key</summary>
+
+- **S:** EMPLOYMENT (Ch 2's party relationship, internal organization → employee) and
+  POSITION (a slot, typed by POSITION TYPE) as the hubs; the PERSON and the EMPLOYEE role
+  around them.
+- **W:** POSITION TYPE carries responsibilities, classes, union and pay band (rate or
+  grade step); POSITION is funded by a Ch 8 budget item. A PERSON applies (backed by
+  skills, qualifications, training, resumes); hiring opens an EMPLOYMENT and a POSITION
+  FULFILLMENT; slots report to slots. PAY HISTORY and PARTY BENEFIT hang on the
+  employment; PAYROLL PREFERENCEs and PAYCHECKs (Ch 7 payments, with deductions) on the
+  employee role; REVIEWs and NOTES from a MANAGER feed pay, bonus or a new slot; the
+  employment ends with a type, a reason and any claim.
+- **T:** *(the naive-model trap until practice gives yours)* 9.1's EMP and DEPT: title,
+  salary, manager and hire date as columns on the person, overwritten at every change, no
+  slot without a holder, no applicant before hire, nothing left after exit.
+- **D:** **party_role** (Ch 2: internal organization, employee, manager) ←
+  **party_relationship** (EMPLOYMENT) ← pay_history, party_benefit,
+  employment_termination, unemployment_claim; employee role ← payroll_preference,
+  paycheck (→ **payment**, Ch 7) ← deduction, performance_review, performance_note;
+  **position_type** (Ch 6) ← valid_responsibility, position_type_class,
+  position_type_rate (→ salary_step → pay_grade); position → position_type,
+  **budget_item** (Ch 8), **organization** (Ch 2) ← position_responsibility,
+  position_reporting_structure ×2, position_fulfillment (→ **person**),
+  employment_application (→ **person**); **party** ← party_skill (Ch 6),
+  party_qualification, resume; **person** ← person_training. Bold = from Ch 2 to 8. Kept:
+  9.12a over 9.12b.
 </details>
 
 ---
