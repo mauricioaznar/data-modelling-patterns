@@ -586,3 +586,43 @@ from performance_review r
 join paycheck pc on pc.payment_id = r.payment_id
 where pc.employee_party_role_id <> r.employee_party_role_id
 order by 1, 2;
+
+-- ============================================================
+-- Fig 9.13 — Employee termination
+-- ============================================================
+
+-- name: 9.13 — Ended employments: who, from when to when, how and why it ended, and the claims that followed
+select ee.name as employee, er.name as employer, e.from_date, e.thru_date as ended,
+       tt.description as how, tr.description as why,
+       (select string_agg(c.unemployment_claim_date || ' ' || s.description, ', ' order by c.unemployment_claim_date)
+          from unemployment_claim c join status_type s on s.status_type_id = c.status_type_id
+         where c.party_relationship_id = e.party_relationship_id
+           and c.description not like 'DATA ERROR%') as claims
+from employment_relationship e
+join employment_termination t   on t.party_relationship_id = e.party_relationship_id
+join party_display_name ee      on ee.party_id = e.employee_party_id
+join party_display_name er      on er.party_id = e.employer_party_id
+left join termination_type tt   on tt.termination_type_id = t.termination_type_id
+left join termination_reason tr on tr.termination_reason_id = t.termination_reason_id
+where e.thru_date is not null
+order by e.thru_date;
+
+-- name: 9.13 — Data-quality check: a termination or claim on a relationship that isn't an employment or hasn't ended, a claim dated before the employment ended, or a claim status from the wrong group (should be empty)
+select 'termination' as kind, t.party_relationship_id as id, r.party_relationship_type_id, r.thru_date, null::date as claim_date,
+       case when r.party_relationship_type_id <> 'EMPLOYMENT' then 'not an employment' else 'employment still open' end as problem
+from employment_termination t
+join party_relationship r on r.party_relationship_id = t.party_relationship_id
+where r.party_relationship_type_id <> 'EMPLOYMENT' or r.thru_date is null
+union all
+select 'claim', c.unemployment_claim_id, r.party_relationship_type_id, r.thru_date, c.unemployment_claim_date,
+       case when r.party_relationship_type_id <> 'EMPLOYMENT' then 'not an employment'
+            when r.thru_date is null then 'employment still open'
+            when c.unemployment_claim_date < r.thru_date then 'filed before the employment ended'
+            else 'not a claim status' end
+from unemployment_claim c
+join party_relationship r on r.party_relationship_id = c.party_relationship_id
+join status_type s        on s.status_type_id = c.status_type_id
+where r.party_relationship_type_id <> 'EMPLOYMENT' or r.thru_date is null
+   or c.unemployment_claim_date < r.thru_date
+   or s.parent_type_id is distinct from 'UNEMPLOYMENT_CLAIM_STATUS'
+order by 1, 2;

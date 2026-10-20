@@ -596,3 +596,68 @@ insert into performance_note (performance_note_id, employee_party_role_id, manag
   (1, 82, 94, 'LATENESS',     '2000-03-06', null, '2000-03-06', 'Late three days running'),
   (2, 82, 94, 'COMMENDATION', '2000-11-20', null, '2000-11-21', 'Cutover finished a week early');
 select setval(pg_get_serial_sequence('performance_note', 'performance_note_id'), (select max(performance_note_id) from performance_note));
+
+-- ============================================================
+-- Fig 9.13 — Employee termination
+-- ============================================================
+-- No sample data in the book: types, reasons, statuses and people ours.
+insert into termination_type (termination_type_id, description) values
+  ('RESIGNATION', 'Resignation'),
+  ('DISMISSAL',   'Dismissal'),
+  ('LAYOFF',      'Layoff'),
+  ('RETIREMENT',  'Retirement');
+
+insert into termination_reason (termination_reason_id, description) values
+  ('BETTER_OFFER',     'Took a better offer'),
+  ('RELOCATION',       'Moved away'),
+  ('DOWNSIZING',       'Downsizing'),
+  ('POOR_PERFORMANCE', 'Poor performance');
+
+insert into status_type (status_type_id, parent_type_id, description) values
+  ('UNEMPLOYMENT_CLAIM_STATUS', null,                        'Unemployment claim status'),
+  ('CLAIM_FILED',               'UNEMPLOYMENT_CLAIM_STATUS', 'Filed'),
+  ('CLAIM_CONTESTED',           'UNEMPLOYMENT_CLAIM_STATUS', 'Contested'),
+  ('CLAIM_APPROVED',            'UNEMPLOYMENT_CLAIM_STATUS', 'Approved'),
+  ('CLAIM_DENIED',              'UNEMPLOYMENT_CLAIM_STATUS', 'Denied');
+
+-- Two former employees of ABC Corporation: Tom Baker (76), laid off on Jul 31,
+-- 2000; Rita Gomez (77), who resigned on Dec 31, 1999 (thru dates stored the
+-- day after).
+insert into party (party_id, party_kind) values
+  (76, 'PERSON'),
+  (77, 'PERSON');
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into person (party_id, gender_type_id) values
+  (76, 'MALE'),
+  (77, 'FEMALE');
+
+insert into person_name (party_id, person_name_type_id, from_date, thru_date, name) values
+  (76, 'FIRST', '1965-01-01', null, 'Tom'),
+  (76, 'LAST',  '1965-01-01', null, 'Baker'),
+  (77, 'FIRST', '1970-01-01', null, 'Rita'),
+  (77, 'LAST',  '1970-01-01', null, 'Gomez');
+
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (95, 76, 'EMPLOYEE', '1997-03-01', '2000-08-01'),
+  (96, 77, 'EMPLOYEE', '1996-05-01', '2000-01-01');
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+insert into party_relationship (party_relationship_id, party_relationship_type_id, from_party_role_id, to_party_role_id, from_date, thru_date, comment, status_type_id) values
+  (26, 'EMPLOYMENT', 73, 95, '1997-03-01', '2000-08-01', null, 'REL_INACTIVE'),
+  (27, 'EMPLOYMENT', 73, 96, '1996-05-01', '2000-01-01', null, 'REL_INACTIVE');
+select setval(pg_get_serial_sequence('party_relationship', 'party_relationship_id'), (select max(party_relationship_id) from party_relationship));
+
+-- How each ended, then a bad row: Sue Jones's employment "laid off" while it
+-- is still open.
+insert into employment_termination (party_relationship_id, termination_type_id, termination_reason_id) values
+  (26, 'LAYOFF',      'DOWNSIZING'),
+  (27, 'RESIGNATION', 'BETTER_OFFER'),
+  (22, 'LAYOFF',      'DOWNSIZING');   -- DATA ERROR: Sue Jones's employment is still open
+
+-- Tom Baker's claim, contested then approved (one current state), then a bad
+-- row: a claim on his employment dated before it ended.
+insert into unemployment_claim (unemployment_claim_id, party_relationship_id, unemployment_claim_date, description, status_type_id) values
+  (1, 26, '2000-08-10', 'Laid off in the 2000 downsizing',          'CLAIM_APPROVED'),
+  (2, 26, '2000-07-01', 'DATA ERROR: filed before the layoff took effect', 'CLAIM_FILED');
+select setval(pg_get_serial_sequence('unemployment_claim', 'unemployment_claim_id'), (select max(unemployment_claim_id) from unemployment_claim));

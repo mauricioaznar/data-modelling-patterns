@@ -758,6 +758,50 @@ reaching the manager and the employee through roles on the event, not by a direc
 **Not built:** 9.14 hangs PERFORMANCE REVIEW and PERFORMANCE NOTE straight off EMPLOYEE,
 as in 9.12a.
 
+### Fig 9.13 — Employee termination
+**Transcription** (accepted: ☐; two photos, the second clearer)
+
+```
+UNEMPLOYMENT CLAIM
+  # unemployment_claim_id
+  * unemployment_claim_date
+  * description
+  -> EMPLOYMENT                        (many "resulting from" 1; employment "subject to" many)
+  -> UNEMPLOYMENT CLAIM STATUS TYPE    (many "defined by" 1; type "the status for" many)
+
+PARTY RELATIONSHIP (# from date, o thru date, o comment) > EMPLOYMENT
+EMPLOYMENT
+  -> PARTY RELATIONSHIP STATUS TYPE  (many "defined by" 1; type "the status for" many)
+  -> TERMINATION TYPE                (many "terminated via" 0..1, dashed; type "the termination category of" many)
+  -> TERMINATION REASON              (many "terminated due to" 0..1, dashed; reason "the case of termination for" many)
+  -> EMPLOYEE (PERSON ROLE)                     (many "established to" 1, tilde; "employed within")
+  -> INTERNAL ORGANIZATION (ORGANIZATION ROLE)  (many "established from" 1, tilde; "employer of")
+
+TERMINATION TYPE (# termination type id, * description)
+TERMINATION REASON (# term reason id, * description)
+UNEMPLOYMENT CLAIM STATUS TYPE (no attributes drawn)
+PARTY ROLE (# party id, # party role id)
+```
+
+No sample data.
+
+**To check against the book**
+- PARTY ROLE is keyed here on party id + party role id, where Ch 2 keys it on the role
+  id: kept as Ch 2 built it.
+- EMPLOYMENT's status line is drawn solid at EMPLOYMENT's end; Ch 2 (2.7) made a
+  relationship's status optional. Kept optional (point 49).
+
+**Discussion**
+- **How it ended and why are two things:** a type (resignation, layoff, dismissal,
+  retirement) and a reason (a better offer, downsizing, poor performance). Counting
+  either answers turnover questions; one free-text column can't be counted.
+- **On the employment, not the person:** someone laid off by one company and later
+  rehired has two employments, each with its own ending.
+- **Claims follow the employment,** dated and in a state (filed, contested, approved,
+  denied), so HR can see what each separation still costs.
+- **The naive model** deletes the EMP row, or sets a `terminated` flag: the history, the
+  reason and any claim go with it.
+
 ### Points to discuss after the overview (Figs 9.1–9.6, so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -869,6 +913,15 @@ the literal drawing. The list moves under the chapter's last figure when it land
 46. **MANAGER a person role** under PERSON_ROLE, as drawn; Dick Jones (Ch 6) manages John
     Smith. Reviews, notes and their contents are ours (no sample data).
 47. **9.12b not built:** 9.14 keeps 9.12a's direct lines from EMPLOYEE.
+48. **EMPLOYMENT's attributes as `employment_termination`,** a subtype table on the
+    relationship's key with one row per ended employment: Ch 2's 2.5 comparison table
+    already holds the name `employment`. Columns on `party_relationship` would put two
+    employment-only columns on every relationship.
+49. **EMPLOYMENT's status** drawn solid in 9.13; Ch 2 built it optional. Kept; every Ch 9
+    employment has one.
+50. **Unemployment claim status a current value,** Ch 2's status types under an
+    UNEMPLOYMENT_CLAIM_STATUS group, as points 15 and 41. Types, reasons, statuses, Tom
+    Baker and Rita Gomez ours.
 
 ## Design decisions (book → SQL)
 
@@ -1034,6 +1087,20 @@ the literal drawing. The list moves under the chapter's last figure when it land
   note types; bonus paycheck 1003; John Smith's 1997 and 2000 reviews (setting Table
   9.9's raises, the 2000 one with the bonus) and two notes. Bad rows: a review from Sue
   Jones's employee role; a review of Ana Ruiz that sets John Smith's pay.
+
+### Fig 9.13
+- **`termination_type`** and **`termination_reason`** lookups;
+  **`employment_termination`** sharing `party_relationship`'s key (point 48), both
+  optional but not both null (a check constraint).
+- **`unemployment_claim`** with the book's id as a surrogate key, the employment (plain
+  FK to `party_relationship`), date, description, a status (point 50).
+- **Check:** a termination or claim on a relationship that isn't an employment or hasn't
+  ended, a claim dated before the employment ended, a claim status from the wrong group.
+  **Query:** ended employments, how and why, with their claims.
+- **Seed:** four types, four reasons, four claim statuses; Tom Baker (76, laid off Jul
+  31, 2000, an approved claim) and Rita Gomez (77, resigned Dec 31, 1999). Bad rows: Sue
+  Jones's open employment marked laid off; a claim on Tom Baker's employment before it
+  ended.
 
 ## When NOT to use this
 - **A small company with one office:** a `job_title` and `manager_id` on the person, and

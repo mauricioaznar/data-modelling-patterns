@@ -111,6 +111,10 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 2. *(9.12a, 9.12b)* 9.12b makes a review a purpose of a Ch 2 communication event. What do
    you gain (think: one log of every exchange with an employee), and what gets harder to
    ask? Why might 9.14 keep 9.12a?
+3. *(9.13)* Termination type and termination reason: why two lookups and not one? Give
+   a pair that shows the difference, and a report that needs both.
+4. *(9.13)* Tom Baker is laid off in 2000 and rehired in 2002. Which rows exist for him,
+   and where does each of these go: the 2000 layoff, his 2000 claim, his 2002 salary?
 
 
 ## 1. Redraw from memory
