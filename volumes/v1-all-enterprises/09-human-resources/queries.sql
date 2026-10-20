@@ -363,3 +363,81 @@ where r.party_relationship_type_id <> 'EMPLOYMENT'
    or pb.from_date < r.from_date
    or coalesce(pb.thru_date, 'infinity') > coalesce(r.thru_date, 'infinity')
 order by 1, 2;
+
+-- ============================================================
+-- Fig 9.9 — Payroll information
+-- ============================================================
+
+-- name: 9.9 — Table 9.11: each employee's payroll preferences with an employer: deposits and standing deductions
+select ee.name as employee, er.name as employer, pp.payroll_preference_seq_id as seq,
+       pp.payment_method_type_id as method, pp.from_date, pp.thru_date, pp.percentage, pp.flat_amount,
+       pp.routing_number, pp.account_number, pp.deduction_type_id as deduction, pp.period_type_id as per
+from payroll_preference pp
+join party_role e  on e.party_role_id = pp.employee_party_role_id
+join party_role o  on o.party_role_id = pp.internal_organization_party_role_id
+join party_display_name ee on ee.party_id = e.party_id
+join party_display_name er on er.party_id = o.party_id
+where pp.payroll_preference_id <= 4
+order by employee, seq;
+
+-- name: 9.9 — Table 9.12: each paycheck, its deductions, and the net
+select pm.payment_ref_num as check_no, ee.name as employee, pm.effective_date, pm.amount as gross,
+       string_agg(dt.description || ' ' || d.amount, ', ' order by d.deduction_seq_id) as deductions,
+       coalesce(sum(d.amount), 0) as total_deducted,
+       pm.amount - coalesce(sum(d.amount), 0) as net
+from paycheck pc
+join payment pm on pm.payment_id = pc.payment_id
+join party_role e on e.party_role_id = pc.employee_party_role_id
+join party_display_name ee on ee.party_id = e.party_id
+left join deduction d       on d.payment_id = pc.payment_id
+left join deduction_type dt on dt.deduction_type_id = d.deduction_type_id
+where pm.comment not like 'DATA ERROR%'
+group by pm.payment_id, pm.payment_ref_num, ee.name, pm.effective_date, pm.amount
+order by check_no;
+
+-- name: 9.9 — Where check 1001's net went: the deposit preferences in force on its date (bad row 5 left out)
+with net as (
+  select pc.payment_id, pc.employee_party_role_id, pc.internal_organization_party_role_id, pm.effective_date,
+         pm.amount - coalesce((select sum(d.amount) from deduction d where d.payment_id = pc.payment_id), 0) as net
+  from paycheck pc join payment pm on pm.payment_id = pc.payment_id
+  where pm.payment_ref_num = '1001'
+)
+select n.net, pp.payroll_preference_seq_id as seq, pp.routing_number, pp.account_number, pp.percentage,
+       round(n.net * pp.percentage / 100, 2) as deposited
+from net n
+join payroll_preference pp
+  on  pp.employee_party_role_id = n.employee_party_role_id
+  and pp.internal_organization_party_role_id = n.internal_organization_party_role_id
+  and pp.percentage is not null
+  and pp.from_date <= n.effective_date and (pp.thru_date is null or pp.thru_date > n.effective_date)
+where pp.payroll_preference_id <> 5
+order by seq;
+
+-- name: 9.9 — Data-quality check: deposit shares for one employee and employer adding up to more than 100% on a day (should be empty)
+with day as (
+  select distinct employee_party_role_id, internal_organization_party_role_id, from_date as on_day
+  from payroll_preference
+)
+select a.employee_party_role_id, a.internal_organization_party_role_id, a.on_day,
+       sum(b.percentage) as total_pct, string_agg(b.payroll_preference_seq_id::text, ', ' order by b.payroll_preference_seq_id) as preferences
+from day a
+join payroll_preference b
+  on  b.employee_party_role_id = a.employee_party_role_id
+  and b.internal_organization_party_role_id = a.internal_organization_party_role_id
+  and b.percentage is not null
+  and b.from_date <= a.on_day and (b.thru_date is null or b.thru_date > a.on_day)
+group by a.employee_party_role_id, a.internal_organization_party_role_id, a.on_day
+having sum(b.percentage) > 100;
+
+-- name: 9.9 — Data-quality check: a paycheck whose roles don't match its payment (a disbursement from the internal organization to the employee), or whose roles are the wrong types (should be empty)
+select pc.payment_id, pm.payment_ref_num, pm.payment_kind, pm.from_party_id, o.party_id as issuer_party_id,
+       pm.to_party_id, e.party_id as employee_party_id, e.role_type_id as employee_role, o.role_type_id as issuer_role
+from paycheck pc
+join payment pm   on pm.payment_id = pc.payment_id
+join party_role e on e.party_role_id = pc.employee_party_role_id
+join party_role o on o.party_role_id = pc.internal_organization_party_role_id
+where pm.payment_kind <> 'DISBURSEMENT'
+   or pm.from_party_id <> o.party_id
+   or pm.to_party_id <> e.party_id
+   or e.role_type_id <> 'EMPLOYEE'
+   or o.role_type_id <> 'INTERNAL_ORGANIZATION';

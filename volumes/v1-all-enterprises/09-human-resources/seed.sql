@@ -372,3 +372,45 @@ insert into party_benefit (party_benefit_id, party_relationship_id, benefit_type
   (6, 24, 'HEALTH',     'YEAR', '2000-07-01', null,         1300, 50,  null),   -- DATA ERROR: overlaps both health rows
   (7, 22, 'HEALTH',     'YEAR', '1994-01-01', null,         1200, 50,  null);   -- DATA ERROR: before Sue Jones's employment (Mar 1, 1995)
 select setval(pg_get_serial_sequence('party_benefit', 'party_benefit_id'), (select max(party_benefit_id) from party_benefit));
+
+-- ============================================================
+-- Fig 9.9 — Payroll information
+-- ============================================================
+insert into deduction_type (deduction_type_id, description) values
+  ('FEDERAL_TAX', 'Federal tax'),
+  ('FICA',        'FICA'),
+  ('STATE_TAX',   'State tax'),
+  ('INSURANCE',   'Insurance');
+
+-- Table 9.11, John Smith (role 82) at ABC Corporation (role 73): half his
+-- pay into each of two accounts, the first swapped for a new one on Nov 2,
+-- 1999 (Nov 1 stored Nov 2), and $125 a month for insurance. Routing and
+-- account split from the table's "routing no and account number". Then a
+-- bad row: a third account taking 30% from 2001, so the shares come to 130.
+insert into payroll_preference (payroll_preference_id, employee_party_role_id, internal_organization_party_role_id, payroll_preference_seq_id,
+                                from_date, thru_date, percentage, flat_amount, routing_number, account_number, bank_name,
+                                period_type_id, payment_method_type_id, deduction_type_id) values
+  (1, 82, 73, 1, '1995-01-01', '1999-11-02', 50,   null, '99986-99', '30984098', null, null,    'ELECTRONIC', null),
+  (2, 82, 73, 2, '1995-01-01', null,         50,   null, '99986-98', '93485999', null, null,    'ELECTRONIC', null),
+  (3, 82, 73, 3, '1999-11-02', null,         50,   null, '11111-22', '67567676', null, null,    'ELECTRONIC', null),
+  (4, 82, 73, 4, '1999-11-02', null,         null, 125,  null,       null,       null, 'MONTH', null,         'INSURANCE'),
+  (5, 82, 73, 5, '2001-01-01', null,         30,   null, '22222-33', '11112222', null, null,    'ELECTRONIC', null);   -- DATA ERROR: the shares now come to 130%
+select setval(pg_get_serial_sequence('payroll_preference', 'payroll_preference_id'), (select max(payroll_preference_id) from payroll_preference));
+
+-- Table 9.12: check 1001, $2,000 gross on Jan 1, 2001 (payment id ours; an
+-- electronic payment carrying the check number as its reference, point 36).
+-- Then a bad row: paycheck 1002 paid to Sue Jones but issued for John
+-- Smith's role.
+insert into payment (payment_id, payment_kind, payment_method_type_id, from_party_id, to_party_id, effective_date, payment_ref_num, amount, comment) values
+  (90001, 'DISBURSEMENT', 'ELECTRONIC', 12, 54, '2001-01-01', '1001', 2000, 'Paycheck'),
+  (90002, 'DISBURSEMENT', 'ELECTRONIC', 12, 68, '2001-01-01', '1002', 3000, 'DATA ERROR: paid to Sue Jones, issued for John Smith');
+
+insert into paycheck (payment_id, employee_party_role_id, internal_organization_party_role_id) values
+  (90001, 82, 73),
+  (90002, 82, 73);
+
+insert into deduction (payment_id, deduction_seq_id, deduction_type_id, amount) values
+  (90001, 1, 'FEDERAL_TAX', 200.00),
+  (90001, 2, 'FICA',         54.50),
+  (90001, 3, 'STATE_TAX',    80.00),
+  (90001, 4, 'INSURANCE',   125.00);

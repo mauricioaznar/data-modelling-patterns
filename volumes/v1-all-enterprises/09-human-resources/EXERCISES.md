@@ -84,6 +84,15 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 5. *(9.8)* John Smith has 15 vacation days as PARTY BENEFIT's available time. He takes
    three days off in March. What do you write, and where is the record of the three
    days? Is available time an entitlement or a balance?
+### Submodel 4: payroll
+1. *(9.9)* PAYROLL PREFERENCE is keyed on the employee's role and the hiring firm's, not on
+   the employment. What does that allow, and what can it get wrong?
+2. *(9.9)* The $125 insurance appears twice: as preference 4 and as deduction 4 on check
+   1001. Which is the plan and which the fact? What would you lose with only one?
+3. *(9.9)* The payment holds the gross $2,000 and the net is derived. Argue for storing
+   the net instead. What would Ch 7's bank deposits and Ch 8's postings need either way?
+4. *(9.9)* On Nov 2, 1999 John Smith changes banks: row 1 closes and row 3 opens. Why
+   not update row 1's account number?
 
 
 ## 1. Redraw from memory

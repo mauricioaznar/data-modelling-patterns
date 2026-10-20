@@ -498,6 +498,77 @@ PERIOD TYPE (# id, * description)
 - **The naive model** puts `health_plan` and `vacation_days` columns on EMP: one value,
   no history, a new column for every new benefit.
 
+### Fig 9.9 — Payroll information
+**Transcription** (accepted: ☐; photo with Tables 9.11–9.12)
+
+```
+PAYROLL PREFERENCE
+  # payroll_preference_seq_id
+  * from_date
+  o thru_date
+  o percentage
+  o flat_amount
+  o routing_number
+  o account_number
+  o bank_name
+  -> EMPLOYEE               (many "for" 1, tilde; employee "declaring" many)
+  -> INTERNAL ORGANIZATION  (many "of" 1, tilde; organization "associated with" many)
+  -> PERIOD TYPE            (many "defined by" 0..1; period type "used to define" many)
+  -> PAYMENT METHOD TYPE    (many "defined by" 0..1; type "used to define" many)
+  -> DEDUCTION TYPE         (many "defined by" 0..1; type "used to define" many)
+
+DEDUCTION
+  # deduction_id
+  * amount
+  -> PAYCHECK        (many "a reduction of" 1, tilde; paycheck "reduced by" many)
+  -> DEDUCTION TYPE  (many "defined by" 1; type "used to define" many)
+
+PAYMENT (# payment id, * effective date, * payment ref num, * amount, o comment)
+  > DISBURSEMENT > PAYCHECK; RECEIPT
+  -> PAYMENT METHOD TYPE  (many "paid via" 1; type "the method for paying" many)
+PAYCHECK
+  -> EMPLOYEE               (many "issued for" 1; employee "the receiver of" many)
+  -> INTERNAL ORGANIZATION  (many "issued from" 1; organization "the issuer of" many)
+
+DEDUCTION TYPE, PERIOD TYPE, PAYMENT METHOD TYPE (# id, * description)
+```
+
+**Table 9.11, payroll preferences** (seq · method · from · thru · percentage · flat amount
+· routing and account · deduction type · period)
+- 1 · electronic · Jan 1, 1995 · Nov 1, 1999 · 50 · – · 99986-99, 30984098 · – · –
+- 2 · electronic · Jan 1, 1995 · – · 50 · – · 99986-98, 93485999 · – · –
+- 3 · electronic · Nov 2, 1999 · – · 50 · – · 11111-22, 67567676 · – · –
+- 4 · – · Nov 2, 1999 · – · – · $125 · – · insurance · per month
+
+**Table 9.12, payroll data** (check · effective date · amount · deduction id · type ·
+amount)
+- 1001 · Jan 1, 2001 · $2,000 · 1 federal tax $200.00, 2 FICA $54.50, 3 state tax
+  $80.00, 4 insurance $125.00
+
+The text: the deductions come to $459.50, so the check's net is $1,540.50, distributed by
+John Smith's preferences at ABC Corporation.
+
+**To check against the book**
+- DEDUCTION's line runs down through PAYMENT's box; the text puts deductions on the
+  paycheck. Read as PAYCHECK (point 34).
+- PAYMENT's amount holds the $2,000 gross, not the net (point 35).
+- A "check no" on pay distributed electronically (point 36).
+- $2,000 is not a pay period's share of John Smith's $62,500 (Table 9.9): sample data, kept.
+
+**Discussion**
+- **Preferences are standing instructions,** dated: where the pay goes (a share or a flat
+  amount into an account, by a payment method) and what is withheld (a deduction type, an
+  amount per period). Changing banks closes a row and opens one; the old account stays
+  on record.
+- **Keyed on the employee and the hiring firm,** the text says: someone working for two
+  internal organizations can have their pay sent differently by each (point 37).
+- **A paycheck is a payment** (Ch 7), a disbursement, so it is banked, applied and
+  posted like any other. Its own lines say who it was issued for and from.
+- **Deductions are facts on one paycheck;** the preference was the plan. The $125
+  insurance shows up in both, once as the rule and once as what was taken.
+- **The naive model** puts a `bank_account` column on EMP and stores the net only:
+  no split deposits, no history, no record of what was withheld.
+
 ### Points to discuss after the overview (Figs 9.1–9.6, so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -576,6 +647,19 @@ the literal drawing. The list moves under the chapter's last figure when it land
     key: seeded from Jan 1, 2001, read as the current balance.
 33. **PERIOD TYPE on a time-off benefit** is the unit of the available time (days), not
     a cost period. Kept mandatory as drawn; `period_type` gains DAY.
+34. **DEDUCTION on the paycheck:** its line crosses PAYMENT's box; the text and 9.14's
+    PAYCHECK put deductions on the paycheck. Built so.
+35. **Gross on the payment:** check 1001's $2,000 is the gross, and the net ($1,540.50) is
+    derived (gross less deductions). A payment amount usually means the money that moved;
+    the book's reading kept.
+36. **Check 1001 paid electronically:** the payment's method is ELECTRONIC and its
+    reference holds the check number, as Ch 7 allows ("a check number or electronic
+    transfer").
+37. **Payroll preference on two roles,** not on the employment (the text). A preference
+    with no employment between the two roles is possible; not checked.
+38. **No arc between deposits and deductions:** a row may hold a share, a flat amount, an
+    account, a deduction type. Only the shares adding up to more than 100% on a day are
+    checked.
 
 ## Design decisions (book → SQL)
 
@@ -683,6 +767,21 @@ the literal drawing. The list moves under the chapter's last figure when it land
 - **Seed:** four benefit types (standard shares ours); Table 9.10 (point 32 for the
   vacation and sick dates). Bad rows: a second health plan from Jul 1, 2000; Sue Jones's
   health from 1994, before her employment.
+
+### Fig 9.9
+- **`deduction_type`** a lookup. **`payroll_preference`** with a surrogate key, two plain
+  FKs to Ch 2's `party_role` (employee, internal organization) + the book's seq unique,
+  dated, share, flat amount, routing, account, bank, and three optional types (period,
+  Ch 7's payment method, deduction).
+- **`paycheck`** a subtype table sharing Ch 7's `payment` key (a DISBURSEMENT), with its
+  two role FKs; **`deduction`** on the paycheck (point 34), the book's id as a seq,
+  typed, an amount. The payment's amount is the gross (point 35).
+- **Checks:** deposit shares above 100% on a day; a paycheck whose roles don't match its
+  payment's parties, isn't a disbursement, or uses the wrong role types. **Queries:**
+  Table 9.11; Table 9.12 with the net; where check 1001's net went.
+- **Seed:** four deduction types; Table 9.11 (Nov 1 stored Nov 2); payment 90001 (check
+  1001, point 36) and Table 9.12's deductions. Bad rows: a third account at 30% from 2001;
+  paycheck 1002 paid to Sue Jones but issued for John Smith.
 
 ## When NOT to use this
 - **A small company with one office:** a `job_title` and `manager_id` on the person, and
