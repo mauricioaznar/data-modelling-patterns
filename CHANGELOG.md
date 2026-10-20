@@ -6,6 +6,26 @@ and any decisions made.
 ## 2026-10-20
 
 **Built**
+- Ch 9 (Human Resources) started from the template, with Figs 9.1–9.6 and Tables 9.1–9.5
+  (photos), transcribed with 24 points to discuss.
+- Fig 9.1 transcribed, not built: the standard emp dept model, the naive model.
+- Fig 9.2 built with no table: the `employment_relationship` view over Ch 2's party
+  relationship. Mike Johnson (party 70) and Sue Jones (Ch 8's Susan Jones) employed by
+  ABC Corporation. One check.
+- Fig 9.3 built: `position_type` gains title and benefit percent; `position`,
+  `responsibility_type`, `valid_responsibility`, `position_responsibility`. Tables
+  9.1–9.2; the 2001 staffing budget 41001 funds the slots; authorization read from the
+  budget's status. Two checks.
+- Fig 9.4 built: `position_classification_type`, `position_type_class`, the UNION role on
+  `position_type`. Table 9.3; Office Workers Union Local 12. Two checks.
+- Fig 9.5 built: `position` gains its hiring company and status; `position_fulfillment`.
+  Table 9.5 with Mike Johnson's and Sue Jones's slots; slots on a day, held or vacant.
+  Two checks and a review.
+- Fig 9.6 built: `position_reporting_structure`. Table 9.4 and the 2001 reorganization;
+  the chart before and after; a chain of command up the primary lines. One check.
+- Cards 39–40, Anki export 55 cards. Design reference: *Positions* and *Employment,
+  fulfillment and reporting* drafted, a Ch 9 column in Core patterns with twelve
+  examples, two question index rows, roadmap Ch 9 In progress.
 - Ch 8's last figures, 8.8–8.12 with Tables 8.11–8.14 (photos), transcribed with points
   25–39.
 - Fig 8.8 built: `budget_review` (budget, reviewer, result, date, comment) and
@@ -28,6 +48,10 @@ and any decisions made.
   Core patterns rows, a question index row, roadmap.
 
 **Decisions**
+- Ch 9 split into two submodels so far: positions (9.3–9.4), and employment, fulfillment
+  and reporting (9.2, 9.5–9.6). 9.1 is the naive model, not built.
+- POSITION's hiring company and status built mandatory, as drawn; the status is a current
+  value, not a history. Fulfillment points at a person, and job shares are allowed.
 - Reviews and scenarios join submodel 3; allocations and the GL xref make submodel 4.
 - Built 8.10's order line as a plain column, as drawn, though 8.12 drops it.
 - 8.12 draws 8.7a's loop; 8.7b stays built until the overview (point 37). 8.12 settles
@@ -35,6 +59,8 @@ and any decisions made.
 
 **Next**
 - Ch 8 overview: points 1–39, the doc drafts and cards 35–38 plus the architecture card.
+- Ch 9's remaining figures (pay, benefits, payroll, performance, qualifications,
+  applications, the overall model).
 
 ## 2026-10-19
 

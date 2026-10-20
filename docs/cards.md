@@ -1257,6 +1257,71 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ---
 
+### Card 39 · V1 Ch 9 · Positions (Figs 9.3–9.4)
+- **Cue:** "Which slots does the enterprise have, of which type and terms, funded and authorized by which budget item, doing what, classified how, and represented by which union?"
+- **Hook:** an org chart of empty boxes, each with a price tag clipped to a budget line
+  ("analysts, 2001: $120,000 — APPROVED" stamped on it), a job-description card pinned
+  under each box with ticked duties from a master list, and colored stickers on the card
+  (Computer, MIS) with dates on them *(Claude's, drafted when the figures landed)*
+- **Mantra:** A position is a slot, not a person: typed, funded by a budget item, given
+  valid duties, classed by dates.
+
+<details><summary>Key</summary>
+
+- **S:** `position` (type, budget item?, estimated from/thru, salary, exempt, full-time,
+  temporary flags, actual from/thru) · `position_type` (Ch 6's, + title, benefit %, union
+  role?) · `responsibility_type` · `valid_responsibility` (type × responsibility, dated) ·
+  `position_responsibility` (slot × responsibility, dated) · `position_classification_type`
+  · `position_type_class` (type × class, dated, standard hours/week) · UNION a Ch 2 role
+  type under ORGANIZATION_ROLE.
+- **W:** a `job_title` and `duties` text on the employee row: the job vanishes when its
+  holder leaves, a vacancy or a planned slot can't exist, nothing ties headcount to the
+  budget, and one `job_category` column can't hold two groupings or a change of one.
+- **T:** *(the naive-model trap until practice gives yours)* putting the flags on the
+  person; storing an `authorized_flag` instead of reading the budget's status; giving a
+  slot a duty its type doesn't allow; one category column on the type.
+- **D:** **budget_item** (Ch 8) ← position → position_type ← valid_responsibility →
+  responsibility_type ← position_responsibility → position; position_type ←
+  position_type_class → position_classification_type; position_type → **party_role**
+  (Ch 2, UNION). Checks: a duty not valid for the slot's type on its start day; a slot
+  opened before its budget's approval; overlapping classes; a "union" that isn't one.
+</details>
+
+---
+
+### Card 40 · V1 Ch 9 · Employment, fulfillment and reporting (Figs 9.2, 9.5–9.6)
+- **Cue:** "Who is employed by whom, who has filled each slot and when, which slots are vacant, and which slot reports to which on a given day?"
+- **Hook:** Mike Johnson climbing a ladder of five boxes (mail clerk to CEO), each box
+  staying on the wall after he steps off, with dotted lines from box to box above him and
+  one line drawn thicker (the primary), while an employment badge on his lapel never
+  changes *(Claude's, drafted when the figures landed)*
+- **Mantra:** Employment is a relationship; people fill slots for a while; slots report
+  to slots, one line primary.
+
+<details><summary>Key</summary>
+
+- **S:** EMPLOYMENT = Ch 2's `party_relationship` typed EMPLOYMENT (internal organization
+  role → employee role, dated, status), read through the `employment_relationship` view ·
+  `position` gains hiring `organization` and a current status (Ch 2 `status_type`, group
+  POSITION_STATUS) · `position_fulfillment` (slot × person, from, thru, comment) ·
+  `position_reporting_structure` (reporting slot, manager slot, from, thru, comment,
+  primary flag).
+- **W:** 9.1's EMP and DEPT: a title and a hire date on the person, `reports_to` between
+  people: each promotion overwrites the last, a rehire loses the first stint, a vacancy
+  cuts the chart, one boss only, and a reorganization rewrites every employee.
+- **T:** *(the naive-model trap until practice gives yours)* putting the title on the
+  employment; banning two people in one slot (job shares); reporting person to person;
+  two primary lines at once.
+- **D:** **party_role** (Ch 2: internal organization, employee) ← **party_relationship**
+  (EMPLOYMENT); **organization** (Ch 2) ← position → **status_type**; position ←
+  position_fulfillment → **person** (Ch 2); position ← position_reporting_structure →
+  position (reporting, managed by). Checks: overlapping employments by one employer; a
+  fulfillment outside its slot's dates; a hiring company never internal; two primary
+  lines at once. Review: fulfillments with no employment.
+</details>
+
+---
+
 ## Deck: architecture
 
 One card per chapter, from its architecture figure (the last, overall one): how the chapter's
