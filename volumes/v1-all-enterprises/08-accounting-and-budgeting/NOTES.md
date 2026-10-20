@@ -706,6 +706,55 @@ BUDGET ITEM (8.6's)
   drifts the first time a check is voided or split, and can't say which payments made up
   the figure.
 
+### Fig 8.11 — Budget relationship to general ledger
+**Transcription** (accepted: ☐; photo with Table 8.14)
+
+```
+GL BUDGET XREF                 (identified by its type, account and from date: tildes)
+  # from_date
+  o thru_date
+  * allocation_percentage
+  -> BUDGET ITEM TYPE          (many "mapped to" 1, tilde; type "assigned to a GL account via" many)
+  -> GENERAL LEDGER ACCOUNT    (many "mapped to" 1, tilde; account "associated to a budget
+                                line item type via" many)
+
+BUDGET ITEM (8.6's)
+  -> BUDGET ITEM TYPE          (many "described by" 1; type "used to describe" many)
+BUDGET ITEM TYPE (# id, * description)
+GENERAL LEDGER ACCOUNT (8.1's: # id, * name, * description)
+```
+
+**Table 8.14, GL budget xref** (GL account · budget item type · % · from; no thru dates)
+- Office supplies expense · office supplies · 100 · Jan 1, 2001
+- Salaries expense · sales director · 100 · Jan 1, 2001
+- Salaries expense · sales representative · 100 · Jan 1, 2001
+- Trade show expense · marketing · 50 · Jan 1, 2001
+- Advertising expense · marketing · 50 · Jan 1, 2001
+
+**To check against the book**
+- What the percentage is a share of: read as the share of the item type's money that
+  lands in that account, so a type's rows add up to 100 (marketing: 50 + 50) (point 34).
+- Table 8.14's "Marketing" item type is broader than Table 8.8's trade shows and
+  advertising items. Seeded as printed, beside mappings of ours for 29839's own types
+  (point 35).
+- The figure draws BUDGET ITEM but no line from it to the xref: the item reaches the
+  ledger only through its type.
+
+**Discussion**
+- **Budgets speak the department's language, the ledger the accountant's.** Marketing asks
+  for "trade shows"; the books know "525 Trade show expense". The xref translates, once,
+  per kind of item, so every budget item of that kind can be held against the books.
+- **Many-to-many both ways:** two item types (sales director, sales representative) land in
+  one account (salaries), and one type (marketing) splits over two accounts. The
+  percentage says how the split goes.
+- **Dated:** when the chart changes (8.1's 1997 split of marketing expense), the mapping
+  ends and a new one starts; old budgets still map the way they did.
+- **On the type, not the item:** mapping each budget item to an account would repeat the
+  same answer for every department's "office supplies" every year.
+- **The naive model** puts a GL account column on the budget item, or names budget lines
+  after GL accounts. The first repeats itself and can't split; the second forces
+  departments to budget in accounting codes.
+
 ### Points to discuss after the overview (Figs 8.1–8.7b, so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -816,6 +865,16 @@ Added with Figs 8.8–8.12:
 33. **Usage rolls up through item parts:** the desks order draws on the desks item, a part
     of furniture, so furniture's usage counts it. Payments may go to a parent item (2903's
     chair goes to furniture, as Table 8.13 says), not only to the lowest one.
+34. **A type's GL shares add up to 100** on any day (our reading of the percentage): a
+    check. The book doesn't say what a share below 100 would mean.
+35. **Ours, for the xref:** Salaries expense (560, new), the item types marketing, sales
+    director and sales representative (Table 8.14), and 29839's own types mapped from Jan
+    1, 2001 (trade shows → 525, advertising, Internet advertising and direct mail → 520).
+    Furniture and the capital budget's machines stay unmapped (a review lists them):
+    would they map to an asset account like 150 Equipment?
+36. **Budget against the books by GL account:** the marketing budget after its revisions,
+    spread over accounts by the xref, beside ABC Corporation's 2001 postings. No 2001
+    marketing postings are seeded, so "posted" is zero: the query shows the shape.
 
 ## Design decisions (book → SQL)
 
@@ -987,6 +1046,15 @@ Added with Figs 8.8–8.12:
   item by item (earmarked, committed, paid, left), parts rolled up (point 33).
 - **Seed:** Table 8.13's check 2903, and ours (point 32). Bad rows: a $250 toner check
   allocated $300; Ch 4's 2025 paper order on June 2002's office supplies.
+
+### Fig 8.11
+- **`gl_budget_xref`** with a surrogate key and (type, account, from date) unique, the
+  percentage between 0 and 100. Dated like every effectivity here (thru exclusive).
+- **Check:** an item type whose shares don't add up to 100 on a day a mapping starts
+  (point 34). **Queries:** Table 8.14; the marketing budget against ABC Corporation's
+  2001 books, account by account (point 36). **Review:** item types mapped to no account.
+- **Seed:** Table 8.14 with Salaries expense (560) and three item types, plus 29839's
+  types (point 35). Bad row: direct mail mapped 60% to advertising and nowhere else.
 
 ## When NOT to use this
 - **One company, one ledger:** a single small business can key the chart and the books

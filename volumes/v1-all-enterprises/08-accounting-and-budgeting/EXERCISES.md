@@ -86,6 +86,8 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    against the budget instead of only payments? Which question does each answer?
 3. *(8.10)* A budget item has no "spent so far" column. What breaks if you add one, and
    when might you add it anyway?
+4. *(8.11)* The xref maps budget item *types* to GL accounts, not budget items. Why the
+   type? And what does the percentage let you say that a plain mapping can't?
 
 ## 1. Redraw from memory
 Without the book, NOTES or schema, write out the chapter's main model in the transcription

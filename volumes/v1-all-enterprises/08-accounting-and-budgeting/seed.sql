@@ -544,3 +544,27 @@ insert into payment_budget_allocation (payment_budget_allocation_id, payment_id,
   (2, 2903, 385762, 1500),
   (3, 2904, 385761, 300);   -- DATA ERROR: 300 allocated from a 250 check
 select setval(pg_get_serial_sequence('payment_budget_allocation', 'payment_budget_allocation_id'), (select max(payment_budget_allocation_id) from payment_budget_allocation));
+
+-- ============================================================
+-- Fig 8.11 — Budget relationship to general ledger
+-- ============================================================
+insert into general_ledger_account (general_ledger_account_id, general_ledger_account_type_id, name, description) values
+  (560, 'EXPENSE', 'Salaries expense', 'Wages and salaries of employees');
+
+insert into budget_item_type (budget_item_type_id, description) values
+  ('MARKETING',            'Marketing'),
+  ('SALES_DIRECTOR',       'Sales director'),
+  ('SALES_REPRESENTATIVE', 'Sales representative');
+
+-- Table 8.14, then 29839's own item types (ours, NOTES point 35).
+insert into gl_budget_xref (gl_budget_xref_id, budget_item_type_id, general_ledger_account_id, from_date, thru_date, allocation_percentage) values
+  (1,  'OFFICE_SUPPLIES',      530, '2001-01-01', null, 100),
+  (2,  'SALES_DIRECTOR',       560, '2001-01-01', null, 100),
+  (3,  'SALES_REPRESENTATIVE', 560, '2001-01-01', null, 100),
+  (4,  'MARKETING',            525, '2001-01-01', null, 50),
+  (5,  'MARKETING',            520, '2001-01-01', null, 50),
+  (6,  'TRADE_SHOWS',          525, '2001-01-01', null, 100),
+  (7,  'ADVERTISING',          520, '2001-01-01', null, 100),
+  (8,  'INTERNET_ADVERTISING', 520, '2001-01-01', null, 100),
+  (9,  'DIRECT_MAIL',          520, '2001-01-01', null, 60);   -- DATA ERROR: direct mail's shares add up to 60, not 100
+select setval(pg_get_serial_sequence('gl_budget_xref', 'gl_budget_xref_id'), (select max(gl_budget_xref_id) from gl_budget_xref));

@@ -736,3 +736,68 @@ join budget_item i          on i.budget_item_id = u.budget_item_id
 join budget b               on b.budget_id = i.budget_id
 join standard_time_period s on s.standard_time_period_id = b.standard_time_period_id
 where u.day < s.from_date or u.day >= s.thru_date;
+
+-- ============================================================
+-- Fig 8.11 — Budget relationship to general ledger
+-- ============================================================
+
+-- name: 8.11 — Table 8.14: which GL accounts each kind of budget item maps to, with what share, since when
+select g.name as gl_account, y.description as budget_item_type, x.allocation_percentage,
+       x.from_date, x.thru_date
+from gl_budget_xref x
+join general_ledger_account g on g.general_ledger_account_id = x.general_ledger_account_id
+join budget_item_type y       on y.budget_item_type_id = x.budget_item_type_id
+order by x.gl_budget_xref_id;
+
+-- name: 8.11 — The 2001 marketing budget against the books: each GL account's budgeted share (after revisions) beside ABC Corporation's 2001 postings to it
+with item_now as (   -- each top item after its revisions (Fig 8.7b)
+  select i.budget_item_id, i.budget_id, i.budget_item_type_id,
+         case when bool_or(x.add_delete_flag = 'DELETE') then 0
+              else i.amount + coalesce(sum(x.revised_amount) filter (where x.add_delete_flag is null), 0) end as amount
+  from budget_item i
+  left join budget_revision_impact x on x.budget_item_id = i.budget_item_id
+  where i.part_of_budget_item_id is null
+  group by i.budget_item_id, i.budget_id, i.budget_item_type_id, i.amount
+),
+budgeted as (
+  select x.general_ledger_account_id, sum(n.amount * x.allocation_percentage / 100) as budgeted
+  from item_now n
+  join budget b               on b.budget_id = n.budget_id
+  join standard_time_period s on s.standard_time_period_id = b.standard_time_period_id
+  join gl_budget_xref x       on x.budget_item_type_id = n.budget_item_type_id
+                             and x.from_date <= s.from_date and (x.thru_date is null or x.thru_date > s.from_date)
+  where n.budget_id = 29839
+  group by x.general_ledger_account_id
+),
+actual as (
+  select o.general_ledger_account_id,
+         sum(case d.debit_credit_flag when 'D' then d.amount else -d.amount end) as posted
+  from transaction_detail d
+  join accounting_transaction t  on t.accounting_transaction_id = d.accounting_transaction_id
+  join organization_gl_account o on o.organization_gl_account_id = d.organization_gl_account_id
+  where o.internal_organization_party_id = 12
+    and t.transaction_date >= '2001-01-01' and t.transaction_date < '2002-01-01'
+  group by o.general_ledger_account_id
+)
+select g.general_ledger_account_id as account, g.name, round(b.budgeted, 2) as budgeted,
+       coalesce(a.posted, 0) as posted_2001, round(b.budgeted - coalesce(a.posted, 0), 2) as left
+from budgeted b
+join general_ledger_account g on g.general_ledger_account_id = b.general_ledger_account_id
+left join actual a            on a.general_ledger_account_id = b.general_ledger_account_id
+order by g.general_ledger_account_id;
+
+-- name: 8.11 — Budget item types mapped to no GL account (a review: their money can't be held against the books)
+select y.budget_item_type_id, y.description,
+       exists (select 1 from budget_item i where i.budget_item_type_id = y.budget_item_type_id) as used_in_a_budget
+from budget_item_type y
+where not exists (select 1 from gl_budget_xref x where x.budget_item_type_id = y.budget_item_type_id)
+order by y.budget_item_type_id;
+
+-- name: 8.11 — Data-quality check: budget item types whose GL shares don't add up to 100 on a day some mapping starts (should be empty)
+select y.budget_item_type_id, d.day, sum(x.allocation_percentage) as total_pct
+from (select distinct budget_item_type_id, from_date as day from gl_budget_xref) d
+join budget_item_type y on y.budget_item_type_id = d.budget_item_type_id
+join gl_budget_xref x   on x.budget_item_type_id = d.budget_item_type_id
+                       and x.from_date <= d.day and (x.thru_date is null or x.thru_date > d.day)
+group by y.budget_item_type_id, d.day
+having sum(x.allocation_percentage) <> 100;

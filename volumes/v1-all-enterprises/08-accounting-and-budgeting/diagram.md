@@ -1,6 +1,6 @@
 # Vol 1, Chapter 8 — ER diagram
 
-Figs 8.1–8.10 (8.7a not built). Tables from earlier chapters are shown by name only.
+Figs 8.1–8.11 (8.7a not built). Tables from earlier chapters are shown by name only.
 
 ```mermaid
 erDiagram
@@ -56,4 +56,6 @@ erDiagram
   budget_item ||--o{ requirement_budget_allocation : "funds"
   payment ||--o{ payment_budget_allocation : "booked against"
   budget_item ||--o{ payment_budget_allocation : "used to pay"
+  budget_item_type ||--o{ gl_budget_xref : "assigned to a GL account via"
+  general_ledger_account ||--o{ gl_budget_xref : "associated via"
 ```
