@@ -59,6 +59,12 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    9.1 lost?
 3. *(9.5)* Two half-time people share one full-time slot. How do you count FTEs and head
    count from these tables, and why does the book count on positions, not people?
+4. *(9.6)* On Jan 1, 2001 the director's slot closes and two managers take its three
+   reports. List the rows that change in 9.6's model and in 9.1's. Which one still
+   answers "who did the business analyst report to in June 2000"?
+5. *(9.6)* Reporting runs slot to slot. When does that give the wrong answer to "who is
+   Kim's boss?" (hint: vacancies, job shares, acting managers), and how would you
+   answer it from these tables?
 
 
 ## 1. Redraw from memory

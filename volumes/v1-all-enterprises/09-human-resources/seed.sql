@@ -230,3 +230,43 @@ insert into position_fulfillment (position_fulfillment_id, position_id, party_id
   (9,  314, 68, '2000-11-02', null,         null),
   (10, 204, 72, '2001-06-01', '2001-09-16', 'DATA ERROR: the slot closed on Sep 1');
 select setval(pg_get_serial_sequence('position_fulfillment', 'position_fulfillment_id'), (select max(position_fulfillment_id) from position_fulfillment));
+
+-- ============================================================
+-- Fig 9.6 — Position reporting relationships
+-- ============================================================
+insert into position_type (position_type_id, description, title) values
+  ('DIRECTOR_BIS',           'Directs business information systems',          'Director of Business Information Systems'),
+  ('PROGRAMMER_ANALYST',     'Analyzes needs and programs the solutions',     'Programmer/Analyst'),
+  ('IS_DEVELOPMENT_MANAGER', 'Manages the development of new systems',        'IS Development Manager'),
+  ('MAINTENANCE_MANAGER',    'Manages the upkeep of the systems in service',  'Maintenance Manager');
+
+-- Table 9.4's slots (ids and dates ours, point 22). Its business analyst is
+-- slot 312, the one Sue Jones held until 1999. The director's slot closes at
+-- the end of 2000; the two manager slots open on Jan 1, 2001.
+insert into position (position_id, position_type_id, budget_item_id, organization_party_id, status_type_id,
+                      estimated_from_date, estimated_thru_date,
+                      salary_flag, exempt_flag, fulltime_flag, temporary_flag, actual_from_date, actual_thru_date) values
+  (401, 'DIRECTOR_BIS',           null,   12, 'POSITION_INACTIVE', '1999-01-01', '2001-01-01', true, true,  true, false, '1999-01-01', '2001-01-01'),
+  (403, 'SYSTEMS_ADMINISTRATOR',  null,   12, 'POSITION_ACTIVE',   '1999-01-01', null,         true, false, true, false, '1999-01-01', null),
+  (404, 'PROGRAMMER_ANALYST',     410012, 12, 'POSITION_ACTIVE',   '1999-01-01', null,         true, false, true, false, '1999-01-01', null),
+  (405, 'IS_DEVELOPMENT_MANAGER', null,   12, 'POSITION_ACTIVE',   '2001-01-01', null,         true, true,  true, false, '2001-01-01', null),
+  (406, 'MAINTENANCE_MANAGER',    null,   12, 'POSITION_ACTIVE',   '2001-01-01', null,         true, true,  true, false, '2001-01-01', null);
+select setval(pg_get_serial_sequence('position', 'position_id'), (select max(position_id) from position));
+
+-- Table 9.4 (by the text, point 20; every 2000 line ends Dec 31, stored
+-- Jan 1, point 21), the managers' own lines to the CIO (ours), then a bad
+-- row: the business analyst given a second primary line, to maintenance.
+insert into position_reporting_structure (position_reporting_structure_id, reporting_position_id, manager_position_id, from_date, thru_date, comment, primary_flag) values
+  (1,  312, 401, '2000-01-01', '2001-01-01', null, true),
+  (2,  403, 401, '2000-01-01', '2001-01-01', null, true),
+  (3,  404, 401, '2000-01-01', '2001-01-01', null, true),
+  (4,  312, 405, '2001-01-01', null,         null, true),
+  (5,  403, 405, '2001-01-01', null,         null, false),
+  (6,  404, 405, '2001-01-01', null,         null, true),
+  (7,  403, 406, '2001-01-01', null,         null, true),
+  (8,  404, 406, '2001-01-01', null,         null, false),
+  (9,  401, 314, '2000-11-02', '2001-01-01', 'The director reports to the new CIO', true),
+  (10, 405, 314, '2001-01-01', null,         null, true),
+  (11, 406, 314, '2001-01-01', null,         null, true),
+  (12, 312, 406, '2001-01-01', null,         'DATA ERROR: a second primary line', true);
+select setval(pg_get_serial_sequence('position_reporting_structure', 'position_reporting_structure_id'), (select max(position_reporting_structure_id) from position_reporting_structure));

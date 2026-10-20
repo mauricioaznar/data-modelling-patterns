@@ -390,7 +390,9 @@ the literal drawing. The list moves under the chapter's last figure when it land
 21. **The business analyst's Dec 30, 2000:** read as Dec 31, like the other two rows
     (stored Jan 1, 2001).
 22. **Table 9.4's slots:** the Director of Business Information Systems slot closes at
-    the end of 2000, and the two manager slots open on Jan 1, 2001. Ours, from the text.
+    the end of 2000, and the two manager slots open on Jan 1, 2001. Its business
+    analyst is slot 312, the one Sue Jones held until 1999, and the director and the two
+    managers report to Sue Jones's CIO slot. Ours, from the text.
 23. **One primary line per slot at a time:** implied by the text ("to which position
     each of these ultimately reports"). A check, ours.
 24. **Table 9.5's slots:** one slot per row (ids ours), all in ABC Corporation. Sue Jones's
@@ -459,6 +461,17 @@ the literal drawing. The list moves under the chapter's last figure when it land
   Kim Park (party 72), the summer clerk with no employment. Bad rows: a mail clerk slot
   "within" Ace Cleaning Service, a supplier; Kim Park in slot 204 two weeks after it
   closed.
+
+### Fig 9.6
+- **`position_reporting_structure`** with a surrogate key, two plain FKs to `position`
+  (`reporting_position_id`, `manager_position_id`, never the same slot), the book's
+  triple unique, dated, `primary_flag` not null.
+- **Check:** a slot with two primary lines on the same day (point 23). **Queries:**
+  Table 9.4; each manager's reports before and after the reorganization; the systems
+  administrator's chain of command up the primary lines, with who holds each slot.
+- **Seed:** four types; Table 9.4's slots (point 22) and lines (points 20–21), plus the
+  managers' lines to the CIO (ours). Bad row: the business analyst given a second
+  primary line, to maintenance.
 
 ## When NOT to use this
 - **A small company with one office:** a `job_title` and `manager_id` on the person, and

@@ -195,3 +195,65 @@ where not exists (
   where e.employee_party_id = f.party_id
     and e.employer_party_id = p.organization_party_id
     and e.from_date <= f.from_date and (e.thru_date is null or e.thru_date > f.from_date));
+
+-- ============================================================
+-- Fig 9.6 — Position reporting relationships
+-- ============================================================
+
+-- name: 9.6 — Table 9.4: which slot reports to which, from when to when, and which line is primary
+select mt.title as manager, s.manager_position_id, rt.title as reporting, s.reporting_position_id,
+       s.from_date, s.thru_date, s.primary_flag
+from position_reporting_structure s
+join position m       on m.position_id = s.manager_position_id
+join position_type mt on mt.position_type_id = m.position_type_id
+join position r       on r.position_id = s.reporting_position_id
+join position_type rt on rt.position_type_id = r.position_type_id
+order by s.from_date, manager, reporting;
+
+-- name: 9.6 — The chart before and after the reorganization: each manager's reports on Jun 1, 2000 and Jun 1, 2001 (* = primary line)
+select d.as_of, mt.title as manager,
+       string_agg(rt.title || case when s.primary_flag then ' *' else '' end, ', ' order by rt.title) as reports
+from (values (date '2000-06-01'), (date '2001-06-01')) d(as_of)
+join position_reporting_structure s
+  on s.from_date <= d.as_of and (s.thru_date is null or s.thru_date > d.as_of)
+join position m       on m.position_id = s.manager_position_id
+join position_type mt on mt.position_type_id = m.position_type_id
+join position r       on r.position_id = s.reporting_position_id
+join position_type rt on rt.position_type_id = r.position_type_id
+group by d.as_of, mt.title
+order by d.as_of, manager;
+
+-- name: 9.6 — Chain of command for the systems administrator (403) on Jun 1, 2001, up the primary lines, with who holds each slot
+with recursive chain (position_id, depth) as (
+  select 403, 0
+  union all
+  select s.manager_position_id, c.depth + 1
+  from chain c
+  join position_reporting_structure s
+    on  s.reporting_position_id = c.position_id
+    and s.primary_flag
+    and s.from_date <= date '2001-06-01' and (s.thru_date is null or s.thru_date > date '2001-06-01')
+  where c.depth < 10
+)
+select c.depth, c.position_id, t.title, coalesce(d.name, '(vacant)') as held_by
+from chain c
+join position p      on p.position_id = c.position_id
+join position_type t on t.position_type_id = p.position_type_id
+left join position_fulfillment f
+  on  f.position_id = c.position_id
+  and f.from_date <= date '2001-06-01' and (f.thru_date is null or f.thru_date > date '2001-06-01')
+left join party_display_name d on d.party_id = f.party_id
+order by c.depth;
+
+-- name: 9.6 — Data-quality check: a slot with two primary reporting lines on the same day (should be empty)
+select a.reporting_position_id, t.title,
+       a.manager_position_id, b.manager_position_id as also_primary_to, greatest(a.from_date, b.from_date) as from_day
+from position_reporting_structure a
+join position_reporting_structure b
+  on  b.reporting_position_id = a.reporting_position_id
+  and b.position_reporting_structure_id > a.position_reporting_structure_id
+  and a.primary_flag and b.primary_flag
+  and b.from_date < coalesce(a.thru_date, 'infinity')
+  and a.from_date < coalesce(b.thru_date, 'infinity')
+join position p      on p.position_id = a.reporting_position_id
+join position_type t on t.position_type_id = p.position_type_id;
