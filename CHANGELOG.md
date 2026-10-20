@@ -70,6 +70,9 @@ and any decisions made.
 - Cards 41–44 and the Ch 9 architecture card, Anki export 60 cards. Design reference:
   four entries and the Ch 9 architecture entry drafted, Ch 9 examples on eleven more
   Core patterns rows, four question index rows, roadmap row extended.
+- Ch 3 practice, submodel 5: item 7 (the paper substitute), Q2 (the X200 → X300 successor,
+  dated unprompted for the first time) and two digressions (sheets sold in one unit; what a
+  successor should carry over). Card 6 gains the EACH vs SHEET lines.
 
 **Decisions**
 - Ch 9's second batch makes submodels 3–6: pay and benefits (9.7–9.8), payroll (9.9),
@@ -94,6 +97,8 @@ and any decisions made.
 - One core app over Ch 2–9's OLTP models replaces the three mini apps. Vol 2's industry
   types are extra documentation on top; whether they get their own app or versions of the
   core app is open.
+- Practice: the user answers in short bits; no grading or next question until they say done
+  (CLAUDE.md).
 
 **Next**
 - Ch 8 overview: points 1–39, the doc drafts and cards 35–38 plus the architecture card.

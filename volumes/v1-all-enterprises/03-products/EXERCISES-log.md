@@ -367,3 +367,13 @@ opens the next session.
 - Card 6 gains both statements (S: counted vs inside; W: the PACK_250 trap). CLAUDE.md: the
   user answers in short bits; no next question until they say done.
 Scores: type-only attributes 2 -> 3; direction stays 2 (the why); the link stays 2 (dates).
+- Q2 X200 -> X300: SUCCESSOR from X200 to X300, from 2026-11-15, thru null ✓, the date unprompted
+  (first time in four); on 1 Nov the row is stored but not in effect ✓. "Old machine" for the
+  cartridge (slip). Asked for a UI banner with boobs; declined.
+- The user's question: what should a successor carry over? Claude (own view, the book is
+  silent): nothing flows by itself, on purpose. Copy-then-review on setup, the old product's
+  discontinuation dates for retiring it, and rewrite or resolve at read time for references.
+  The user called read-time resolution a costly luxury; Claude held that the query is cheap
+  (two recursive CTEs here already), the cost is the business rules, worth it at scale.
+  English: predecessor / successor; "first generation" over "original" (OEM in cartridges).
+Scores: the link stays 2 (one dated row; retest cold once more before 3).
