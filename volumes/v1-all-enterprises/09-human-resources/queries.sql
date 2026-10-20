@@ -481,3 +481,46 @@ from employment_application a
 join status_type s on s.status_type_id = a.status_type_id
 where s.parent_type_id is distinct from 'EMPLOYMENT_APPLICATION_STATUS'
 order by 1;
+
+-- ============================================================
+-- Fig 9.11 — Employee skills and qualifications
+-- ============================================================
+
+-- name: 9.11 — Each party's qualifications by kind (degree or certification), current or lapsed on Jun 1, 2001
+select pd.name as party, g.description as kind, q.description as qualification, pq.from_date, pq.thru_date,
+       (pq.thru_date is null or pq.thru_date > date '2001-06-01') as current_on_jun_1_2001
+from party_qualification pq
+join party_display_name pd  on pd.party_id = pq.party_id
+join qualification_type q   on q.qualification_type_id = pq.qualification_type_id
+left join qualification_type g on g.qualification_type_id = q.parent_type_id
+where pq.party_qualification_id <= 6
+order by pd.name, kind, pq.from_date;
+
+-- name: 9.11 — The candidates for analyst slot 101: each applicant's qualifications, skills, training and resume on the day they applied
+select a.employment_application_id as app, ap.name as applicant, s.description as status,
+       (select string_agg(q.description, ', ' order by q.description)
+          from party_qualification pq join qualification_type q on q.qualification_type_id = pq.qualification_type_id
+         where pq.party_id = a.applicant_party_id and pq.from_date <= a.application_date
+           and (pq.thru_date is null or pq.thru_date > a.application_date)) as qualifications,
+       (select string_agg(st.description || ' (' || ps.years_experience || ' yrs, level ' || ps.rating || ')', ', ' order by st.description)
+          from party_skill ps join skill_type st on st.skill_type_id = ps.skill_type_id
+         where ps.party_id = a.applicant_party_id) as skills,
+       (select string_agg(tc.description, ', ')
+          from person_training pt join training_class_type tc on tc.training_class_type_id = pt.training_class_type_id
+         where pt.party_id = a.applicant_party_id and pt.from_date <= a.application_date) as training,
+       (select max(r.resume_date) from resume r where r.party_id = a.applicant_party_id) as resume_date
+from employment_application a
+join party_display_name ap on ap.party_id = a.applicant_party_id
+join status_type s         on s.status_type_id = a.status_type_id
+where a.position_id = 101
+order by a.application_date;
+
+-- name: 9.11 — Data-quality check: a degree with a thru date, or a qualification held as a group (DEGREE, CERTIFICATION) instead of a type under it (should be empty)
+select pq.party_qualification_id, pd.name as party, pq.qualification_type_id, pq.from_date, pq.thru_date,
+       case when q.parent_type_id is null then 'a group, not a qualification' else 'a degree that expires' end as problem
+from party_qualification pq
+join qualification_type q  on q.qualification_type_id = pq.qualification_type_id
+join party_display_name pd on pd.party_id = pq.party_id
+where q.parent_type_id is null
+   or (q.parent_type_id = 'DEGREE' and pq.thru_date is not null)
+order by 1;

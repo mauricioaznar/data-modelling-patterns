@@ -610,6 +610,61 @@ No sample data.
 - **The naive model** has no applicant at all: only people already hired exist, as EMP
   rows, and the history of who applied and why they were turned down is lost.
 
+### Fig 9.11 — Employee skills and qualifications
+**Transcription** (accepted: ☐; photo, printed upside down)
+
+```
+PARTY QUALIFICATION
+  * from_date
+  o thru_date
+  > CERTIFICATION, DEGREE
+  -> PARTY               (many "held by" 1, tilde; party "the holder of" many)
+  -> QUALIFICATION TYPE  (many "described by" 1, tilde; type "the description for" many)
+
+PARTY SKILL
+  o started_using_date
+  o years_experience
+  o skill_level
+  -> PARTY       (many "held by" 1, tilde; party "the holder of" many)
+  -> SKILL TYPE  (many "described by" 1, tilde; type "the description for" many)
+
+PERSON TRAINING
+  * from_date
+  o thru_date
+  -> PERSON               (many "received by" 1, tilde; person "the receiver of" many)
+  -> TRAINING CLASS TYPE  (many "described by" 1, tilde; type "the description for" many)
+
+RESUME
+  # resume_id
+  * resume_date
+  * resume_text
+  -> PARTY  (many "for" 1, tilde; party "described by" many)
+
+QUALIFICATION TYPE (# qual type id, * description)
+SKILL TYPE (# skill type id, * description)
+TRAINING CLASS TYPE (# training class type id, * description)
+PARTY (# party id) > ORGANIZATION, PERSON
+```
+
+No sample data.
+
+**To check against the book**
+- PARTY QUALIFICATION's from date is starred, not part of the key: the key is party +
+  type, which can't hold a renewed certification (point 42).
+- PARTY SKILL here has a skill level and a started-using date; Ch 6's (6.5) had years of
+  experience and a rating. Read the rating as the skill level (point 43).
+
+**Discussion**
+- **What a party can show,** kept apart from what it was hired to do (the position) and
+  what it applied for (9.10). Recruiting compares the two: the candidates for slot 101
+  side by side.
+- **PARTY, not PERSON,** for qualifications, skills and resumes: a firm can be ISO
+  certified, a consultancy has skills (Ch 6's Table 6.8). Training goes to a PERSON only.
+- **Dated qualifications:** certifications lapse (John Doe's PMP in 2001), degrees don't.
+  The subtypes have no attributes, so they are two groups of qualification types.
+- **The naive model** writes `degree` and `skills` text on EMP: one degree, no lapse
+  dates, nothing to search, and applicants who were never hired have nowhere to go.
+
 ### Points to discuss after the overview (Figs 9.1–9.6, so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -708,6 +763,14 @@ the literal drawing. The list moves under the chapter's last figure when it land
 41. **Application status a current value,** like the position's (point 15): Ch 2's status
     types under an EMPLOYMENT_APPLICATION_STATUS group, mandatory. Statuses, sources and
     applicants ours (no sample data).
+42. **PARTY QUALIFICATION's key:** party + type as drawn would forbid holding a
+    certification again after it lapsed. The from date joins the unique, as with every
+    other dated link here.
+43. **9.11's skill level is Ch 6's rating;** 9.11 adds the started-using date. Ch 6's
+    column kept its name.
+44. **CERTIFICATION and DEGREE as type groups:** attribute-less subtypes, so rows in a
+    `qualification_type` hierarchy. A degree with a thru date is flagged (ours: degrees
+    don't lapse).
 
 ## Design decisions (book → SQL)
 
@@ -843,6 +906,20 @@ the literal drawing. The list moves under the chapter's last figure when it land
   four applications, Kim Park's referred by Mike Johnson; Ana Ruiz hired into slot 101
   (employee role 93, employment 25, fulfillment 11). Bad rows: John Doe applies for slot
   204 after it closed; a walk-in application carrying a position status.
+
+### Fig 9.11
+- **`qualification_type`** with a parent column (DEGREE and CERTIFICATION as groups, point
+  44); **`party_qualification`** (party × type, dated) with a surrogate key, party + type
+  + from date unique (point 42).
+- **`party_skill`** (Ch 6) gains `started_using_date` (point 43). **`training_class_type`**
+  a lookup; **`person_training`** (person × class, dated); **`resume`** (party, date,
+  text), surrogate keys.
+- **Check:** a degree with a thru date, or a qualification held as a group. Ch 6's check
+  for a skill held twice still stands. **Queries:** each party's qualifications by kind,
+  current or lapsed; the candidates for slot 101 side by side.
+- **Seed:** three degrees and three certifications; qualifications for the applicants,
+  Sue Jones and ABC Corporation (ISO 9001); skills, three training classes, three
+  resumes. Bad rows: Lee Wong's degree "expiring"; Sue Jones holding the DEGREE group.
 
 ## When NOT to use this
 - **A small company with one office:** a `job_title` and `manager_id` on the person, and

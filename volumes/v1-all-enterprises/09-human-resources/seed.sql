@@ -480,3 +480,60 @@ select setval(pg_get_serial_sequence('party_relationship', 'party_relationship_i
 insert into position_fulfillment (position_fulfillment_id, position_id, party_id, from_date, thru_date, comment) values
   (11, 101, 73, '2001-01-15', null, null);
 select setval(pg_get_serial_sequence('position_fulfillment', 'position_fulfillment_id'), (select max(position_fulfillment_id) from position_fulfillment));
+
+-- ============================================================
+-- Fig 9.11 — Employee skills and qualifications
+-- ============================================================
+-- No sample data in the book: all ours.
+insert into qualification_type (qualification_type_id, parent_type_id, description) values
+  ('DEGREE',              null,            'Degree'),
+  ('CERTIFICATION',       null,            'Certification'),
+  ('BA_ECONOMICS',        'DEGREE',        'BA in economics'),
+  ('BS_COMPUTER_SCIENCE', 'DEGREE',        'BS in computer science'),
+  ('MBA',                 'DEGREE',        'Master of business administration'),
+  ('PMP',                 'CERTIFICATION', 'Project management professional'),
+  ('CPA',                 'CERTIFICATION', 'Certified public accountant'),
+  ('ISO_9001',            'CERTIFICATION', 'ISO 9001 quality management');
+
+-- Applicants and staff, and ABC Corporation's ISO certification (a firm holds
+-- qualifications too). John Doe's PMP lapsed in 2001. Then bad rows: Lee
+-- Wong's degree "expiring" in 2003; Sue Jones holding the DEGREE group
+-- itself.
+insert into party_qualification (party_qualification_id, party_id, qualification_type_id, from_date, thru_date) values
+  (1, 73, 'BA_ECONOMICS',        '1997-06-01', null),
+  (2, 73, 'MBA',                 '2000-06-01', null),
+  (3, 74, 'BS_COMPUTER_SCIENCE', '1992-06-01', null),
+  (4, 74, 'PMP',                 '1998-03-01', '2001-03-01'),
+  (5, 68, 'MBA',                 '1994-06-01', null),
+  (6, 12, 'ISO_9001',            '1999-01-01', '2002-01-01'),
+  (7, 75, 'BS_COMPUTER_SCIENCE', '2000-06-01', '2003-06-01'),   -- DATA ERROR: a degree doesn't expire
+  (8, 68, 'DEGREE',              '1990-06-01', null);           -- DATA ERROR: the group, not a degree
+select setval(pg_get_serial_sequence('party_qualification', 'party_qualification_id'), (select max(party_qualification_id) from party_qualification));
+
+insert into skill_type (skill_type_id, description) values
+  ('BUSINESS_ANALYSIS', 'Business analysis'),
+  ('SQL_PROGRAMMING',   'SQL programming');
+
+insert into party_skill (party_id, skill_type_id, years_experience, rating, started_using_date) values
+  (73, 'BUSINESS_ANALYSIS', 4, 4, '1997-07-01'),
+  (74, 'SQL_PROGRAMMING',   8, 3, '1993-01-01'),
+  (74, 'BUSINESS_ANALYSIS', 2, 2, '1999-01-01'),
+  (75, 'SQL_PROGRAMMING',   1, 2, '2000-01-01');
+
+insert into training_class_type (training_class_type_id, description) values
+  ('DATA_MODELING',    'Data modeling'),
+  ('LEADERSHIP',       'Leadership for new managers'),
+  ('ORDER_SYSTEM_USE', 'Using the new order system');
+
+-- Thru dates exclusive: the day after the last class day.
+insert into person_training (person_training_id, party_id, training_class_type_id, from_date, thru_date) values
+  (1, 68, 'DATA_MODELING',    '1999-04-05', '1999-04-10'),
+  (2, 70, 'LEADERSHIP',       '1996-05-01', '1996-05-04'),
+  (3, 73, 'ORDER_SYSTEM_USE', '2001-02-12', '2001-02-15');
+select setval(pg_get_serial_sequence('person_training', 'person_training_id'), (select max(person_training_id) from person_training));
+
+insert into resume (resume_id, party_id, resume_date, resume_text) values
+  (1, 73, '2000-11-20', 'Business analyst, four years in retail systems; BA economics, MBA.'),
+  (2, 74, '2000-11-25', 'SQL developer, eight years; BS computer science; PMP.'),
+  (3, 75, '2001-02-10', 'Junior programmer, one year of SQL.');
+select setval(pg_get_serial_sequence('resume', 'resume_id'), (select max(resume_id) from resume));

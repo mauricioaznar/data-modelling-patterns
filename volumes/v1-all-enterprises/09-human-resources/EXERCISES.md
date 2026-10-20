@@ -99,6 +99,11 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    slot that was later cancelled?
 2. *(9.10)* The application has one current status, no history. Which recruiting question
    does that kill (hint: time to hire), and what would you add?
+3. *(9.11)* Qualifications, skills and resumes hang on PARTY, training on PERSON. Give an
+   organization's example for each of the first three, and say why training is different.
+4. *(9.11)* Slot 101 needs an MBA and three years of business analysis. Nothing in Ch 9
+   says what a position type requires. Where would you add it, by analogy with Ch 6's
+   skill standards and 9.3's valid responsibilities, and what query would it unlock?
 
 
 ## 1. Redraw from memory
