@@ -7,6 +7,9 @@
 // A submodel or architecture card's status (draft, reviewed, done) comes from its row in
 // the chapter's STATUS.md and sets its tag and its deck: drafts are for looking up, and a
 // card joins the study loop in Settled at its chapter's overview (the user's call, 2026-10-18).
+// An optional "- **Kind:** OLAP" bullet marks a warehouse card (star schemas, Vol 1 Ch 10 on,
+// each Vol 2 chapter's end): it gets the dm::olap tag and an [OLAP] mark on its front, and
+// stays in its usual deck (the user's call, 2026-10-20). No bullet means OLTP.
 import { readFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -82,6 +85,7 @@ export function buildAnki(src, statusRows = readStatusRows()) {
     const arch = block.startsWith('### Architecture ');
     const title = block.match(/^### (.+)/)[1].trim();
     const cue = field(block, 'Cue');
+    const olap = /^olap$/i.test(field(block, 'Kind'));
     const hook = field(block, 'Hook') || '(not written yet)';
     const mantra = field(block, 'Mantra') || '(not written yet)';
     const key = block.match(/<summary>Key<\/summary>\n([\s\S]*?)<\/details>/)[1];
@@ -100,9 +104,9 @@ export function buildAnki(src, statusRows = readStatusRows()) {
     const status = cardStatus(statusRow?.row);
     const deck = `Data Models::${arch ? 'Architecture' : 'Submodels'}::${status === 'draft' ? 'Drafts' : 'Settled'}`;
     rows.push([
-      `${html(title)}<br><br>${html(cue)}`,
+      `${olap ? '<b>[OLAP]</b> ' : ''}${html(title)}<br><br>${html(cue)}`,
       `<b>Hook:</b> ${html(hook)}<br><b>Mantra:</b> ${html(mantra)}<hr>${keyHtml}`,
-      `v${volume}::ch${chapter}${arch ? ' architecture' : ''} dm::status::${status}`,
+      `v${volume}::ch${chapter}${arch ? ' architecture' : ''}${olap ? ' dm::olap' : ''} dm::status::${status}`,
       deck,
       arch ? `dm-v${volume}-ch${chapter}-arch` : `dm-v${volume}-ch${chapter}-${figs}`,
     ]);

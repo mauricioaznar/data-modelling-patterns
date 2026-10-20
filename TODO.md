@@ -119,6 +119,7 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [x] Figs 9.1–9.6 with Tables 9.1–9.5 (2026-10-20): 9.1 transcribed, not built (the naive emp dept model); 9.3–9.4 built as submodel 1, positions (card 39), 9.2 and 9.5–9.6 as submodel 2, employment, fulfillment and reporting (card 40); doc drafts for both, Ch 9 column in Core patterns with examples on twelve rows, two question index rows, roadmap In progress; ponders 1–5 and 1–5
   - [x] Figs 9.7–9.14 with Tables 9.6–9.12 (2026-10-20): 9.7–9.8 built as submodel 3, pay and benefits (card 41); 9.9 as submodel 4, payroll (card 42); 9.10–9.11 as submodel 5, applications and qualifications (card 43); 9.12a and 9.13 as submodel 6, performance and termination (card 44); 9.12b transcribed, not built; 9.14 the architecture figure (architecture card, MAP ✓); doc drafts for all four and the architecture entry; ponders 5, 4, 4 and 4
   - [ ] Ch 9 overview: the points to discuss in NOTES (1–52: 9.1 not built, 9.2 as a view, its dashed lines, Mike Johnson's employer before 1990, Sue Jones as Ch 8's Susan Jones, positions named by their type, Table 9.1's types, approval optional, text type ids, the title for Ch 6's types, standard hours on the class, Business Analyst's thru date, System(s) Administrator, UNION as a role, position status as a current value, the hiring company an ORGANIZATION, Mike Johnson's one clerk day, fulfillment by a person, job shares, Table 9.4's reversed headers, Dec 30, Table 9.4's slots, one primary line, Table 9.5's slots; thru rate, rate type in the key, Table 9.8 elsewhere, GG-5/6/8, two hourly rates, steps without history, John Smith's employer, undated vacation, days as a period, deductions on the paycheck, gross on the payment, check 1001 electronic, preferences on roles, no deposit/deduction arc, the source line's label, referrer optional, application status, the qualification key, skill level as rating, degree and certification groups, the note type box, MANAGER, 9.12b not built, `employment_termination`, employment status solid, claim status, what 9.14 leaves out, the three anchors)
+- [ ] **Warehouse chapters set aside (the user's call, 2026-10-20):** after Ch 9 we jump to Vol 2 and come back later. Their cards carry `- **Kind:** OLAP`. Before starting, settle what replaces the submodel as the unit (a star schema?) and the practice shape. Check this list against the book's contents: the 2nd edition may run Ch 10–14 as warehouse and Ch 15 as implementing.
 - [ ] Ch 10: Creating the Data Warehouse Data Model from the Enterprise Data Model
 - [ ] Ch 11: A Sample Data Warehouse Data Model
 - [ ] Ch 12: Additional Star Schema Designs
@@ -132,10 +133,13 @@ aren't final; agree on each one before starting.
 - **Gate (the user's decision, 2026-10-14):** before a mini app starts, every tracker row of its three chapters reaches 4 (applies cold, later session, no hints).
 - [ ] App 1: Vol 1 Ch 02–04 (Party, Product, Order): order entry. Suggested: Express + Knex, deploy to a DigitalOcean droplet
 - [ ] App 2: Vol 1 Ch 05–07 (Shipment, Work Effort, Invoice): fulfilment and billing. Suggested: Fastify + Drizzle, k6 stress testing
-- [ ] App 3: Vol 1 Ch 08–10 (Accounting, HR, DW): reporting. Suggested: Next.js + Prisma, Playwright E2E
+- [ ] App 3: Vol 1 Ch 08–10 (Accounting, HR, DW): reporting. *(Ch 10 is set aside for Vol 2, so this app's chapters need regrouping.)* Suggested: Next.js + Prisma, Playwright E2E
 
 ## Vol 2: A Library of Universal Data Models by Industry Types
 
+- [ ] Next after Ch 9's overview and practice (the user's call, 2026-10-20)
+- [ ] A new Anki deck for the industry cards; agree on its name and shape before the first Vol 2 card. Vol 1's deck names stay as they are.
+- [ ] Each industry chapter's star schemas get cards with `- **Kind:** OLAP`
 - [ ] Add chapter list once started
 
 ## Vol 3: Universal Patterns for Data Modeling

@@ -86,10 +86,16 @@ and any decisions made.
 - Built 8.10's order line as a plain column, as drawn, though 8.12 drops it.
 - 8.12 draws 8.7a's loop; 8.7b stays built until the overview (point 37). 8.12 settles
   8.3a over 8.3b and standard periods apart from accounting periods.
+- OLTP and OLAP split (the user's call): a warehouse card gets a `- **Kind:** OLAP`
+  bullet, which the export turns into a `dm::olap` tag and an [OLAP] mark on the front. It
+  stays in its usual deck, and Vol 1's deck names stay as they are. Vol 2's industry cards
+  will get a new deck of their own.
+- Vol 1's warehouse chapters (Ch 10 on) are set aside: after Ch 9 comes Vol 2.
 
 **Next**
 - Ch 8 overview: points 1–39, the doc drafts and cards 35–38 plus the architecture card.
 - Ch 9 overview: points 1–52, the doc drafts and cards 39–44 plus the architecture card.
+- Then Vol 2: agree on the industry deck before its first card.
 
 ## 2026-10-19
 

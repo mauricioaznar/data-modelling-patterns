@@ -47,7 +47,8 @@ the user, tease with nicknames, so the sessions stay fun.
   doc (the five sections the figures can answer, see below) and add its patterns and questions.
 - **Card:** as a submodel's figures land, Claude writes its card in `docs/cards.md`
   (hook, mantra and hidden key) and reruns `npm run cards:anki`. Until practice gives a real
-  mistake, the card's Trap is the naive-model mistake.
+  mistake, the card's Trap is the naive-model mistake. A warehouse (star schema) card gets a
+  `- **Kind:** OLAP` bullet under its Cue (the user's call, 2026-10-20).
 - **Architecture figures** (the user's call, 2026-10-16): a chapter's last, overall figure is
   its own category, not a submodel. No SQL. Transcribe it, then write a short **How it flows**
   under it in NOTES.md and the chapter's architecture entry in the design reference doc. Keep

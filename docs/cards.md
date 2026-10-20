@@ -28,6 +28,11 @@ split into *Drafts* and *Settled*; patterns stay in *Data Models::Patterns*:
   (with the chapter's tag), select all, Change Deck to *Data Models::Submodels::Settled*;
   then the same with *Architecture*.
 
+**OLAP cards** (the user's call, 2026-10-20). A warehouse card (a star schema: Vol 1's
+warehouse chapters, or the end of a Vol 2 chapter) carries a `- **Kind:** OLAP` bullet under
+its Cue. The export tags it `dm::olap` and puts **[OLAP]** on its front; it stays in its
+usual deck. No bullet means OLTP. Search `tag:dm::olap` to drill only the star schemas.
+
 ## The idea: compress, then decompress
 
 Each submodel gets a **card** with three layers, from smallest to biggest:
