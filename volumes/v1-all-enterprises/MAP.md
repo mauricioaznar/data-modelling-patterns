@@ -19,24 +19,26 @@ As of 2026-10-19: Ch 2 to Ch 7 whole.
                  \                               /
 need ─────► ask ─────► offer ─────► commitment ─────► fulfilment ─────► bill ─────► settle ─────► book
 REQUIREMENT REQUEST    QUOTE        ORDER, under an   SHIPMENT (goods)  INVOICE     PAYMENT      ACCOUNTING
- 4 ✓        4 ✓        4 ✓          AGREEMENT 4 ✓     5 ✓               7 ✓         7 ✓          TRANSACTION 8 ~
+ 4 ✓        4 ✓        4 ✓          AGREEMENT 4 ✓     5 ✓               7 ✓         7 ✓          TRANSACTION 8 ✓
                                                       WORK EFFORT
                                                       (services, production) 6 ✓
-people: EMPLOYMENT and POSITION 9 ~, paid by PAYCHECK (a payment) 9 ~, funded by BUDGET ITEM 8 ~
+people: EMPLOYMENT and POSITION 9 ~, paid by PAYCHECK (a payment) 9 ~, funded by BUDGET ITEM 8 ✓
 ```
 
 Three shapes repeat down the chain:
 
 - **Header + items:** ORDER, REQUEST, QUOTE, AGREEMENT and SHIPMENT with their items ✓;
-  INVOICE ✓ (Ch 7); ACCOUNTING TRANSACTION (its details) and BUDGET with their items ~.
+  INVOICE ✓ (Ch 7); ACCOUNTING TRANSACTION (its details) and BUDGET with their items ✓ (Ch 8).
 - **Each header gets** typed rows, a scoped role table, a status history and terms on TERM
   TYPE ✓ (Ch 4). Shipments take the typed rows and the status history, point at parties
   directly and put their scoped roles on receipts and issuances, with no terms ✓ (Ch 5);
-  invoices take all four, with billed to and from as lines, not roles ✓ (Ch 7); budgets ~.
+  invoices take all four, with billed to and from as lines, not roles ✓ (Ch 7); budgets take
+  typed rows, roles and a status history, plus reviews, revisions and scenarios ✓ (Ch 8).
 - **Hand-overs are item-to-item links with their own quantity:** ORDER REQUIREMENT COMMITMENT
   and ORDER SHIPMENT ✓, and Ch 5's SHIPMENT RECEIPT and ITEM ISSUANCE between a shipment
   and Ch 3's stock ✓; ORDER ITEM BILLING and PAYMENT APPLICATION ✓ (Ch 7), while
-  SHIPMENT ITEM and TIME ENTRY BILLING bill their line whole, no quantity ✓. That is how
+  SHIPMENT ITEM and TIME ENTRY BILLING bill their line whole, no quantity ✓; REQUIREMENT and
+  PAYMENT BUDGET ALLOCATION carry an amount against a budget item ✓ (Ch 8). That is how
   one order line can ship in parts and be billed in parts. Ch 6's WORK ORDER ITEM FULFILLMENT
   and WORK REQUIREMENT FULFILLMENT are the exception: many to many, no quantity ✓.
 
@@ -126,18 +128,25 @@ PRODUCT, PRODUCT FEATURE, INVENTORY ITEM. From Ch 4: ORDER ITEM, TERM TYPE, and 
 gain a requested bill-to account. From Ch 5: SHIPMENT ITEM. From Ch 6: WORK EFFORT, TIME
 ENTRY. Ahead: Ch 8 turns invoices and payments into accounting transactions.
 
-### Ch 8 Accounting and budgeting ~
-- Chart of accounts: GENERAL LEDGER ACCOUNT (asset, liability, equity, revenue, expense), used
-  by an internal organization through a dated ORGANIZATION GL ACCOUNT, with balances per
-  ACCOUNTING PERIOD (nested: year, quarter, month).
-- ACCOUNTING TRANSACTION, internal (depreciation, capitalization, inventory variance) or
-  external (obligations from invoices, payments), posted as TRANSACTION DETAILs: debits and
-  credits to organization GL accounts.
-- Budgets: BUDGET (operating, capital) + BUDGET ITEM over standard time periods, with
-  revisions, reviews, roles, statuses and scenarios. Usage comes from allocations of order
-  items, requirements and payments to budget items; budget item types map to GL accounts.
-- From: PARTY (the internal organization, 2); PRODUCT, INVENTORY ITEM (3); ORDER ITEM,
-  REQUIREMENT (4); FIXED ASSET (5, extended in 6); INVOICE, PAYMENT (7).
+### Ch 8 Accounting and budgeting ✓ (Figs 8.1–8.12)
+Two hubs. Accounting: an internal organization switches chart accounts (GENERAL LEDGER
+ACCOUNT, typed asset to expense) on through a dated ORGANIZATION GL ACCOUNT, broken down by
+subsidiary accounts about a supplier, customer, product or category, and cuts its time into
+nested ACCOUNTING PERIODs. Every business event is an ACCOUNTING TRANSACTION, internal
+(depreciation of a FIXED ASSET, variances) or external (invoices, payments, from a party to a
+party), typed and tied to its source, posted as balanced TRANSACTION DETAILs (debit or
+credit, a credit settling a debit) to organization accounts (8.3a kept; 8.3b's stored
+balances an add-on). Budgeting: a BUDGET (operating, capital) for a party (BUDGET ROLE) over
+a STANDARD TIME PERIOD, of nested BUDGET ITEMs with purpose and justification; STATUS and
+REVIEW record its approval, REVISIONs and their IMPACTs its changes (8.7b built; 8.12 draws
+8.7a's loop, to settle), SCENARIO RULEs and APPLICATIONs its what-ifs. Requirements earmark,
+order items commit and payments spend against budget items; GL BUDGET XREF maps budget
+item types to GL accounts, with a share.
+From Ch 2: PARTY, PARTY ROLE (internal organization, supplier, bill-to customer), STATUS
+TYPE, the organization rollup. From Ch 3: PRODUCT, PRODUCT CATEGORY. From Ch 4: ORDER ITEM,
+REQUIREMENT. From Ch 5: INVENTORY ITEM VARIANCE, FIXED ASSET (extended in Ch 6). From Ch 7:
+INVOICE, PAYMENT. Ahead: Ch 9's positions are authorized by budget items, paychecks are
+payments.
 
 ### Ch 9 Human resources ~
 - EMPLOYMENT is Ch 2's party relationship (employee → internal organization), carrying pay
@@ -155,23 +164,23 @@ ENTRY. Ahead: Ch 8 turns invoices and payments into accounting transactions.
 
 | Entity (chapter) | Used by |
 |---|---|
-| PARTY, PARTY ROLE (2) | 3 suppliers ✓ · 4 orders, requests, quotes, agreements ✓ · 5 shipments (sender, receiver), receipt and issuance roles, carriers ✓ · 6 assignments, rates, skills, timesheets on WORKER roles, assets checked out ✓ · 7 billed to and from, invoice, billing account and financial account roles, payors and receivers ✓ · 8 the internal organization's books ~ · 9 employment ~ |
+| PARTY, PARTY ROLE (2) | 3 suppliers ✓ · 4 orders, requests, quotes, agreements ✓ · 5 shipments (sender, receiver), receipt and issuance roles, carriers ✓ · 6 assignments, rates, skills, timesheets on WORKER roles, assets checked out ✓ · 7 billed to and from, invoice, billing account and financial account roles, payors and receivers ✓ · 8 the internal organization's books, subsidiary accounts by supplier and customer, budget roles and reviewers ✓ · 9 employment ~ |
 | PARTY RELATIONSHIP (2) | 2 communication events ✓ · 4 agreements ✓ · 9 employment ~ |
 | CONTACT MECHANISM (2) | 4 order and request mechanisms ✓ · 5 ship from and to, inquiries and receiving ✓ · 7 invoices addressed to and sent from, billing accounts billed at ✓ |
 | FACILITY (2) | 3 inventory ✓ · 4 requirements ✓ · 5 route segments (from, to; not the shipment itself), stock that issues must sit at the ship-from address ✓ · 6 work and assignments at a place ✓ |
 | GEOGRAPHIC BOUNDARY (2) | 3 prices ✓ · 4 sales tax, agreement applicability, regional agreement prices ✓ |
-| PRODUCT, FEATURE (3) | 4 order, quote and agreement items, requirements ✓ · 5 shipment items (GOOD), shipped features, receipts ✓ · 6 work requirements and kinds of work that produce a product, goods standards ✓ · 7 invoice items ✓ · 8 GL accounts ~ |
-| INVENTORY ITEM (3) | 5 issuance and receipt, qoh = their balance ✓ · 6 used up by work, produced by work (no quantity on the link) ✓ · 7 a serialized item billed ✓ · 8 variances ~ |
+| PRODUCT, FEATURE (3) | 4 order, quote and agreement items, requirements ✓ · 5 shipment items (GOOD), shipped features, receipts ✓ · 6 work requirements and kinds of work that produce a product, goods standards ✓ · 7 invoice items ✓ · 8 subsidiary GL accounts by product and category ✓ |
+| INVENTORY ITEM (3) | 5 issuance and receipt, qoh = their balance ✓ · 6 used up by work, produced by work (no quantity on the link) ✓ · 7 a serialized item billed ✓ · 8 variances posted as accounting transactions ✓ |
 | PRICE COMPONENT (3) | 4 agreement pricing ✓ |
-| ORDER ITEM (4) | 5 ORDER SHIPMENT, receipts checked against it ✓ · 6 WORK lines fulfilled by work efforts ✓ · 7 ORDER ITEM BILLING, with a quantity ✓ · 8 budget allocation ~ |
-| REQUIREMENT (4) | 6 work requirements, fulfilled by work efforts ✓ · 8 budget allocation ~ |
+| ORDER ITEM (4) | 5 ORDER SHIPMENT, receipts checked against it ✓ · 6 WORK lines fulfilled by work efforts ✓ · 7 ORDER ITEM BILLING, with a quantity ✓ · 8 allocated to a budget item ✓ |
+| REQUIREMENT (4) | 6 work requirements, fulfilled by work efforts ✓ · 8 budget allocation ✓ |
 | TERM TYPE (4) | 4 order, quote and agreement terms ✓ · 7 invoice terms ✓ |
 | DOCUMENT (5) | 5 shipping documents ✓ |
-| FIXED ASSET (8, built ahead in 5) | 5 vehicles on route segments ✓ · 6 type hierarchy, capacity unit, booked on work, checked out to parties, repaired by work ✓ · 8 the chapter that defines it ~ |
+| FIXED ASSET (8, built ahead in 5) | 5 vehicles on route segments ✓ · 6 type hierarchy, capacity unit, booked on work, checked out to parties, repaired by work ✓ · 8 depreciation transactions and methods ✓ |
 | WORK EFFORT (2, 4, 6) | 2 case follow-ups ✓ · 4 quote items ✓ · 6 the whole chapter ✓ · 7 WORK EFFORT BILLING, TIME ENTRY BILLING ✓ |
 | SHIPMENT ITEM (5) | 7 SHIPMENT ITEM BILLING ✓ |
-| INVOICE, BILLING ACCOUNT (7) | 7 payments applied to them ✓ · 8 accounting transactions ~ |
-| PAYMENT (7) | 7 banked as financial account transactions ✓ · 8 accounting transactions ~ · 9 paychecks ~ |
+| INVOICE, BILLING ACCOUNT (7) | 7 payments applied to them ✓ · 8 accounting transactions ✓ |
+| PAYMENT (7) | 7 banked as financial account transactions ✓ · 8 accounting transactions, budget allocations ✓ · 9 paychecks ~ |
 | BUDGET ITEM (8) | 9 positions ~ |
 
 ## Keeping it true

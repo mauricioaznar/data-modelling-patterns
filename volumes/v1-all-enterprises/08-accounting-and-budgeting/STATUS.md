@@ -6,7 +6,7 @@ repo and rewrites the generated tables at the bottom. The design reference doc l
 claude.ai, so its columns (Doc draft, Doc done) are on trust.
 
 Not built (alternates): 8.7a
-Architecture figure:
+Architecture figure: 8.12
 
 ## Submodels
 | # | Submodel | Figs | Doc draft | Overview | Practice | Doc done |
@@ -15,7 +15,7 @@ Architecture figure:
 | 2 | Accounting transactions | 8.2–8.3b, 8.5 | 2026-10-19 | | | |
 | 3 | Budgets | 8.6–8.9 | 2026-10-19 | | | |
 | 4 | Budget usage and the ledger | 8.10–8.11 | | | | |
-| A | Architecture | | | | – | – |
+| A | Architecture | 8.12 | | | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs N.1–N.3)`; the `A` row's matches the
 architecture card's `(Fig N.M)`.

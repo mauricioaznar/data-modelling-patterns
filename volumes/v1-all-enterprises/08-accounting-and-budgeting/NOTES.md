@@ -755,7 +755,68 @@ GENERAL LEDGER ACCOUNT (8.1's: # id, * name, * description)
   after GL accounts. The first repeats itself and can't split; the second forces
   departments to budget in accounting codes.
 
-### Points to discuss after the overview (Figs 8.1–8.7b, so far)
+### Fig 8.12 — Overall accounting and budgeting model (architecture)
+**Transcription** (accepted: ☐; entities with their identifiers only, lines as drawn)
+
+```
+Budgeting (top half)
+BUDGET (# id; a dashed recursive line) -- the budgeting hub
+  -> STANDARD TIME PERIOD (# id)
+  <- BUDGET ITEM (# seq id) -> BUDGET ITEM TYPE (dashed; the type is drawn twice)
+  <- BUDGET STATUS -> BUDGET STATUS TYPE
+  <- BUDGET REVIEW (# id)
+  <- BUDGET ROLE -> PARTY (# id), BUDGET ROLE TYPE
+  <- BUDGET SCENARIO APPLICATION (also -> BUDGET ITEM)
+BUDGET ITEM <- REQUIREMENT ITEM BUDGET ALLOCATION -> REQUIREMENT
+BUDGET ITEM <- PAYMENT BUDGET ALLOCATION -> PAYMENT
+BUDGET ITEM TYPE <- GL BUDGET XREF -> GENERAL LEDGER ACCOUNT
+
+Accounting (bottom half)
+GENERAL LEDGER ACCOUNT (# GL account id) -> GL ACCOUNT TYPE (# acct type id)
+  <- ORGANIZATION GL ACCOUNT (dashed recursive) -> INTERNAL ORGANIZATION, SUPPLIER,
+     BILL TO CUSTOMER, PRODUCT CATEGORY (# id)
+TRANSACTION DETAIL (# trans detail seq id; dashed recursive)
+  -> ORGANIZATION GL ACCOUNT, ACCOUNTING TRANSACTION
+ACCOUNTING TRANSACTION (# transaction id)
+  subtypes INTERNAL ACCTG TRANS (subtype DEPRECIATION -> FIXED ASSET (# id))
+           -> PARTY ROLE / INTERNAL ORGANIZATION
+         EXTERNAL ACCTG TRANS -> PARTY (two lines: from, to)
+ACCOUNTING PERIOD (# acctg period id; recursive) -> INTERNAL ORGANIZATION, PERIOD TYPE (# id)
+```
+
+**What it adds or settles**
+- **Budgets:** BUDGET's recursive dashed line is 8.7a's "revision of"; neither BUDGET
+  REVISION nor its IMPACT is drawn (point 37). STANDARD TIME PERIOD stands apart from
+  ACCOUNTING PERIOD, with no line between them (point 19, settled as built).
+- **Accounting:** no ORGANIZATION GL ACCOUNT BALANCE, so 8.3a is the one kept (point 9).
+  The internal transaction goes to the internal organization's role, the external one to
+  two parties, as 8.2 drew them.
+- **Renamed:** REQUIREMENT *ITEM* BUDGET ALLOCATION, for 8.10's requirement allocation
+  (point 31).
+- **Not drawn** (read as left out for space, point 39): budget type, review result type,
+  revisions, scenarios and rules, the order item's line to the budget item, the
+  transaction type and its invoice, payment and variance sources, depreciation methods,
+  and 8.4's product line.
+
+**How it flows**
+- **Two hubs:** BUDGET (with BUDGET ITEM) on top, ACCOUNTING TRANSACTION (with TRANSACTION
+  DETAIL) below. GENERAL LEDGER ACCOUNT sits between them.
+- **A budget's life:** a party asks (BUDGET ROLE) for a STANDARD TIME PERIOD, item by item;
+  STATUS and REVIEW record its approval, revisions its changes, SCENARIO APPLICATIONs its
+  what-ifs.
+- **Budget to spending:** REQUIREMENTs (Ch 4) earmark, ORDER ITEMs (Ch 4) commit and
+  PAYMENTs (Ch 7) spend against BUDGET ITEMs.
+- **Budget to books:** GL BUDGET XREF maps each BUDGET ITEM TYPE to the GENERAL LEDGER
+  ACCOUNTs its money lands in.
+- **The books:** an INTERNAL ORGANIZATION (Ch 2) switches chart accounts on through
+  ORGANIZATION GL ACCOUNT (broken down by supplier, customer or product category, Chs 2–3)
+  and cuts its time into ACCOUNTING PERIODs. Every business event (an invoice or payment
+  from Ch 7, a variance from Ch 5, a depreciation of a FIXED ASSET) is an ACCOUNTING
+  TRANSACTION, posted as balanced debits and credits to those accounts.
+- **Alternates:** 8.3a over 8.3b; the drawing keeps 8.7a's loop where we built 8.7b (point
+  37).
+
+### Points to discuss after the overview (Figs 8.1–8.12)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
 the literal drawing.
@@ -875,6 +936,15 @@ Added with Figs 8.8–8.12:
 36. **Budget against the books by GL account:** the marketing budget after its revisions,
     spread over accounts by the xref, beside ABC Corporation's 2001 postings. No 2001
     marketing postings are seeded, so "posted" is zero: the query shows the shape.
+37. **8.12 draws 8.7a, we built 8.7b.** BUDGET's recursive loop is the "revision of"
+    line, and no revision entity is drawn. But the text keeps 8.7a for simple budgets, and
+    8.12 also leaves out scenarios and rules, which it surely keeps. Our reading: the
+    overall figure shows the short form. Keep 8.7b, switch to 8.7a, or both?
+38. **8.3a over 8.3b:** 8.12 has no stored balance, which settles point 9 towards 8.3a.
+    Our `organization_gl_account_balance` stays an add-on for closed periods, or goes?
+39. **8.12's omissions read as abbreviation:** budget type, review result type, revisions,
+    scenarios and rules, the order item's line, the transaction type and its sources,
+    depreciation methods, 8.4's product line. Nothing built is dropped.
 
 ## Design decisions (book → SQL)
 
@@ -1064,6 +1134,5 @@ Added with Figs 8.8–8.12:
   which transaction) in their own models.
 
 ## Open questions
-- What the rest of budgeting adds (reviews, scenarios, how budgets are used and funded,
-  their tie to the ledger), and what the overall figure keeps from 8.3a and 8.3b (point 9)
-  and from 8.7 (point 20).
+- Which revision model the chapter keeps (point 37) and whether stored balances stay
+  (point 38): for the overview.
