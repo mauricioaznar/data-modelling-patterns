@@ -89,6 +89,10 @@ the user, tease with nicknames, so the sessions stay fun.
 - **Time budget: about 3 hours of practice per submodel.** Go over only when a gap still needs
   reinforcing, and say so first. Don't write more exercises than fit the budget.
 - **Ask one question at a time** and wait for the answer.
+- **The user answers in short bits** (the user's call, 2026-10-20): don't treat a reply as the
+  whole answer, and don't grade it, until the user says they're done. Respond to each bit only
+  as far as it needs. Never ask, preview or remind them of the next question until the user
+  says they're done with the current one and its discussion.
 - **Next session start:** open with 3 quick recall questions on the most recently finished
   submodel, favouring its open gaps.
 - **Cards (solo, every morning):** `docs/cards.md` holds one mantra card per submodel, drafted by

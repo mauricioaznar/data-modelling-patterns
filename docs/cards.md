@@ -255,12 +255,15 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   measure) · `product_feature_applicability` (this feature on this product is required,
   standard, optional or selectable) · `product_feature_interaction` (feature A needs feature B,
   or A and B can't go together, optionally only within one product) · `unit_of_measure` with
-  conversions.
+  conversions. The product's unit says how it's counted (EACH); a dimension says what's inside
+  (250 SHEET).
 - **W:** a column per option on the product, or a separate product row for every combination
   (red-small, red-large, blue-small…): an explosion of near-duplicates and no rules between
   them. The other way round: whatever is sold alone, stocked or worked on in its own right (a
   kit's contents, a substitute, a walk-in engraving) is a product. A feature only describes
-  what was bought, on a line ordered for the product's line.
+  what was bought, on a line ordered for the product's line. A unit per pack size (PACK_250)
+  is product data disguised as a unit and explodes: count the product in EACH, put the
+  contents in a SHEET dimension.
 - **T:** applicability is feature ↔ **product**; interaction is feature ↔ **feature** (you mixed
   them up once). Null product on an interaction = it holds everywhere.
 - **D:** product ← applicability → feature; feature ← interaction → feature (twice) and →

@@ -354,3 +354,16 @@ quantity on the link and the substitute's direction, retested cold.
 - 7 (two 250-sheet packs for a 500-sheet ream) asked, unanswered: the user went to sleep.
 Scores: type-only attributes 1 → 2; direction stays 2; the link stays 2 (dates). Next: item 7
 opens the next session.
+
+### 2026-10-20: Submodel 5, item 7 (the paper substitute) and a units digression
+- Item 7: two products, SUBSTITUTE from the 500 ream to the 250 pack, quantity 2 ✓ unprompted;
+  the date missed a third time. The why for the direction was circular ("that is what it
+  means"); Claude gave it (from = the product asked for, to = what may be given instead).
+- The user's question: sheets sold in one unit. A unit per pack size (PACK_250): its cost (a unit
+  explosion) ✓ unprompted. Built after hints: product in EACH, a DIMENSION feature per pack
+  size in SHEET (first EACH ✗), REQUIRED applicability (STANDARD offered ~), no conversion
+  row; sheets = sum of quantity x number specified ✓ (multiplied, unlike the toner on 10-19).
+  "Product carries quantity 1" ✗ (the product names its unit only).
+- Card 6 gains both statements (S: counted vs inside; W: the PACK_250 trap). CLAUDE.md: the
+  user answers in short bits; no next question until they say done.
+Scores: type-only attributes 2 -> 3; direction stays 2 (the why); the link stays 2 (dates).
