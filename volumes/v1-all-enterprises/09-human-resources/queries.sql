@@ -316,3 +316,50 @@ select ph.pay_history_id, null, ph.party_relationship_id, ph.from_date, ph.thru_
 from pay_history ph
 join party_relationship r on r.party_relationship_id = ph.party_relationship_id
 where r.party_relationship_type_id <> 'EMPLOYMENT';
+
+-- ============================================================
+-- Fig 9.8 — Benefits tracking
+-- ============================================================
+
+-- name: 9.8 — Table 9.10: each employee's benefits, cost per period, the employer's share and the time off available
+select er.name as employer, ee.name as employee, bt.name as benefit, pb.from_date, pb.thru_date,
+       pb.cost, pb.period_type_id as per, pb.actual_employer_paid_percent as employer_pct, pb.available_time
+from party_benefit pb
+join benefit_type bt           on bt.benefit_type_id = pb.benefit_type_id
+join employment_relationship e on e.party_relationship_id = pb.party_relationship_id
+join party_display_name er     on er.party_id = e.employer_party_id
+join party_display_name ee     on ee.party_id = e.employee_party_id
+where pb.party_benefit_id <= 5
+order by ee.name, bt.name, pb.from_date;
+
+-- name: 9.8 — What John Smith's benefits cost on Jun 1, 2001, split between employer and employee, against each type's standard share
+select bt.name as benefit, pb.cost, pb.period_type_id as per,
+       pb.actual_employer_paid_percent as actual_pct, bt.employer_paid_percentage as standard_pct,
+       round(pb.cost * pb.actual_employer_paid_percent / 100, 2)       as employer_pays,
+       round(pb.cost * (100 - pb.actual_employer_paid_percent) / 100, 2) as employee_pays
+from party_benefit pb
+join benefit_type bt on bt.benefit_type_id = pb.benefit_type_id
+where pb.party_relationship_id = 24
+  and pb.cost is not null
+  and pb.from_date <= date '2001-06-01' and (pb.thru_date is null or pb.thru_date > date '2001-06-01')
+  and pb.party_benefit_id <= 5
+order by bt.name;
+
+-- name: 9.8 — Data-quality check: one benefit type twice in an employment over overlapping dates, or a benefit outside its employment's dates or on a relationship that isn't an employment (should be empty)
+select a.party_benefit_id, b.party_benefit_id as overlaps_with, a.benefit_type_id, a.from_date, a.thru_date, 'overlap' as problem
+from party_benefit a
+join party_benefit b
+  on  b.party_relationship_id = a.party_relationship_id
+  and b.benefit_type_id = a.benefit_type_id
+  and b.party_benefit_id > a.party_benefit_id
+  and b.from_date < coalesce(a.thru_date, 'infinity')
+  and a.from_date < coalesce(b.thru_date, 'infinity')
+union all
+select pb.party_benefit_id, null, pb.benefit_type_id, pb.from_date, pb.thru_date,
+       case when r.party_relationship_type_id <> 'EMPLOYMENT' then 'not an employment' else 'outside the employment' end
+from party_benefit pb
+join party_relationship r on r.party_relationship_id = pb.party_relationship_id
+where r.party_relationship_type_id <> 'EMPLOYMENT'
+   or pb.from_date < r.from_date
+   or coalesce(pb.thru_date, 'infinity') > coalesce(r.thru_date, 'infinity')
+order by 1, 2;

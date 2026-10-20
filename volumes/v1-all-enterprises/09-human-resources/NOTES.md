@@ -445,6 +445,59 @@ from · thru)
 - **The naive model** keeps a `salary` column on EMP, overwritten at each raise, and no
   band at all.
 
+### Fig 9.8 — Benefits tracking
+**Transcription** (accepted: ☐; photo with Table 9.10)
+
+```
+PARTY BENEFIT
+  # from_date
+  o thru_date
+  o cost
+  o actual_employer_paid_percent
+  o available_time
+  -> EMPLOYMENT    (many "the benefits for" 1, tilde; employment "associated with" many)
+  -> BENEFIT TYPE  (many "defined by" 1, tilde; type "used to define" many)
+  -> PERIOD TYPE   (many "further defined by" 1; period type "the cost period for" many)
+
+BENEFIT TYPE
+  # benefit_type_id
+  * name
+  * description
+  o employer_paid_percentage
+
+PERIOD TYPE (# id, * description)
+```
+
+**Table 9.10, party benefits** (employer · employee · benefit · from · thru · cost · period
+· employer paid % · available time)
+- ABC Corporation · John Smith · Health · Jan 1, 1998 · Dec 31, 2000 · $1,200 · per year
+  · 50 · –
+- ABC Corporation · John Smith · Health · Jan 1, 2001 · – · $1,500 · per year · 60 · –
+- ABC Corporation · John Smith · Vacation · – · – · – · days · 100 · 15
+- ABC Corporation · John Smith · Sick leave · – · – · – · days · 100 · 10
+- ABC Corporation · John Smith · 401k · Jan 1, 2001 · – · $50.00 · per year · 100 · –
+
+**To check against the book**
+- Vacation and sick leave have no from date in the table, though it is part of the key
+  (point 32).
+- The period type line reads solid at PARTY BENEFIT's end: mandatory. For vacation and
+  sick leave the period is "days", the unit of the available time, not a cost period
+  (point 33).
+
+**Discussion**
+- **A benefit belongs to an employment,** like pay: the same person employed by two
+  companies carries two sets (the text's insurance case, benefits per organization).
+- **Standard and actual:** BENEFIT TYPE says what the employer usually pays; PARTY BENEFIT
+  says what it pays for this person now. John Smith's health share rose from 50 to 60
+  percent without changing the type. (POSITION TYPE's benefit percent, 9.3, is a third
+  place: what share of the package the job gets.)
+- **Cost per period, dated:** the health plan's cost rose from $1,200 to $1,500 a year,
+  a new row with its own employer share, and the old one is kept.
+- **Available time** turns the same row into a time-off balance (15 vacation days,
+  10 sick days), counted in the period type's unit.
+- **The naive model** puts `health_plan` and `vacation_days` columns on EMP: one value,
+  no history, a new column for every new benefit.
+
 ### Points to discuss after the overview (Figs 9.1–9.6, so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -519,6 +572,10 @@ the literal drawing. The list moves under the chapter's last figure when it land
 31. **John Smith's employer:** Ch 6 put him at ABC Manufacturing with only a party role;
     Table 9.9 says ABC Corporation. The employment is new, from ABC Corporation's internal
     organization role, since Jan 1, 1995 (Ch 6's role date).
+32. **Table 9.10's vacation and sick leave rows have no dates,** though from date is in the
+    key: seeded from Jan 1, 2001, read as the current balance.
+33. **PERIOD TYPE on a time-off benefit** is the unit of the available time (days), not
+    a cost period. Kept mandatory as drawn; `period_type` gains DAY.
 
 ## Design decisions (book → SQL)
 
@@ -613,6 +670,19 @@ the literal drawing. The list moves under the chapter's last figure when it land
   Table 9.8 on Programmer/Analyst (point 27); John Smith's employment (point 31) and
   Table 9.9. Bad rows: a second lowest yearly programmer rate from Jul 1, 2000; a second
   current salary for John Smith from Jul 1, 2001.
+
+### Fig 9.8
+- **`benefit_type`** (text ids, name, description, standard employer share 0–100);
+  **`party_benefit`** on Ch 2's `party_relationship` (the employment), the type, a
+  period (not null as drawn, point 33), dated, cost, actual employer share 0–100,
+  available time; employment + type + from date unique. `period_type` gains DAY.
+- **Check:** one benefit type twice in an employment over overlapping dates, or a benefit
+  outside its employment's dates or on a relationship that isn't an employment.
+  **Queries:** Table 9.10; what John Smith's benefits cost on a day, split between
+  employer and employee, against the type's standard share.
+- **Seed:** four benefit types (standard shares ours); Table 9.10 (point 32 for the
+  vacation and sick dates). Bad rows: a second health plan from Jul 1, 2000; Sue Jones's
+  health from 1994, before her employment.
 
 ## When NOT to use this
 - **A small company with one office:** a `job_title` and `manager_id` on the person, and

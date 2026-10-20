@@ -343,3 +343,32 @@ insert into pay_history (pay_history_id, party_relationship_id, period_type_id, 
   (3, 24, 'YEAR', '2001-01-01', null,         62500, null),
   (4, 24, 'YEAR', '2001-07-01', null,         64000, 'DATA ERROR: the 2001 salary is still open');
 select setval(pg_get_serial_sequence('pay_history', 'pay_history_id'), (select max(pay_history_id) from pay_history));
+
+-- ============================================================
+-- Fig 9.8 — Benefits tracking
+-- ============================================================
+-- Vacation and sick leave count days (point 33).
+insert into period_type (period_type_id, description) values
+  ('DAY', 'Day');
+
+-- The standard shares are ours: Table 9.10 gives only the actual ones.
+insert into benefit_type (benefit_type_id, name, description, employer_paid_percentage) values
+  ('HEALTH',     'Health',     'Health insurance',          50),
+  ('VACATION',   'Vacation',   'Paid vacation days',        100),
+  ('SICK_LEAVE', 'Sick leave', 'Paid sick days',            100),
+  ('PLAN_401K',  '401k',       'Retirement plan (401k)',    100);
+
+-- Table 9.10, John Smith at ABC Corporation (employment 24). Health's
+-- Dec 31, 2000 stored Jan 1, 2001. Vacation and sick leave have no dates in
+-- the table: from Jan 1, 2001, the current balance (point 32). Then bad
+-- rows: a second health plan from Jul 1, 2000 while the first runs; Sue
+-- Jones's health from 1994, before ABC Corporation employed her.
+insert into party_benefit (party_benefit_id, party_relationship_id, benefit_type_id, period_type_id, from_date, thru_date, cost, actual_employer_paid_percent, available_time) values
+  (1, 24, 'HEALTH',     'YEAR', '1998-01-01', '2001-01-01', 1200, 50,  null),
+  (2, 24, 'HEALTH',     'YEAR', '2001-01-01', null,         1500, 60,  null),
+  (3, 24, 'VACATION',   'DAY',  '2001-01-01', null,         null, 100, 15),
+  (4, 24, 'SICK_LEAVE', 'DAY',  '2001-01-01', null,         null, 100, 10),
+  (5, 24, 'PLAN_401K',  'YEAR', '2001-01-01', null,         50,   100, null),
+  (6, 24, 'HEALTH',     'YEAR', '2000-07-01', null,         1300, 50,  null),   -- DATA ERROR: overlaps both health rows
+  (7, 22, 'HEALTH',     'YEAR', '1994-01-01', null,         1200, 50,  null);   -- DATA ERROR: before Sue Jones's employment (Mar 1, 1995)
+select setval(pg_get_serial_sequence('party_benefit', 'party_benefit_id'), (select max(party_benefit_id) from party_benefit));

@@ -78,6 +78,12 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 3. *(9.7)* Pay history hangs on the employment, not on the position or the person. John
    Smith moves from programmer to analyst inside ABC Corporation, then joins a second
    employer part time. What happens to his pay history in each case?
+4. *(9.8)* Three places say how much the employer pays: BENEFIT TYPE's employer paid
+   percentage, PARTY BENEFIT's actual employer paid percent, POSITION TYPE's benefit
+   percent (9.3). What question does each answer? Could you drop one?
+5. *(9.8)* John Smith has 15 vacation days as PARTY BENEFIT's available time. He takes
+   three days off in March. What do you write, and where is the record of the three
+   days? Is available time an entitlement or a balance?
 
 
 ## 1. Redraw from memory
