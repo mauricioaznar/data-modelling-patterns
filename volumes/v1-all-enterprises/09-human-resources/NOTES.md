@@ -802,10 +802,71 @@ No sample data.
 - **The naive model** deletes the EMP row, or sets a `terminated` flag: the history, the
   reason and any claim go with it.
 
-### Points to discuss after the overview (Figs 9.1–9.6, so far)
+### Fig 9.14 — Overall human resources model
+**Transcription** (accepted: ☐; photo; the chapter's architecture figure, no SQL)
+
+```
+PARTY RELATIONSHIP (# from date) > EMPLOYMENT
+  -> PARTY RELATIONSHIP TYPE, PARTY RELATIONSHIP STATUS TYPE
+EMPLOYMENT
+  -> INTERNAL ORGANIZATION (tilde), EMPLOYEE (tilde)
+  -> TERMINATION TYPE, TERMINATION REASON (dashed)
+  <- PAY HISTORY, PARTY BENEFIT (tilde)
+PARTY ROLE (# party role id) > INTERNAL ORGANIZATION, EMPLOYEE
+  -> PARTY (tilde)
+EMPLOYEE <- PAYROLL PREFERENCE (tilde), PAYCHECK, PERFORMANCE REVIEW, PERFORMANCE NOTE
+PARTY (# party id) > PERSON, ORGANIZATION
+  PERSON <- EMPLOYMENT APPLICATION, PERSON TRAINING, POSITION FULFILLMENT (tilde)
+  PARTY  <- PARTY SKILL, PARTY QUALIFICATION (tilde)
+  ORGANIZATION <- POSITION (the hiring company)
+POSITION FULFILLMENT -> POSITION (tilde), PERSON (tilde)
+POSITION (# position id)
+  -> POSITION TYPE, BUDGET ITEM (# budget item seq id), ORGANIZATION
+  <- POSITION RESPONSIBILITY (tilde), POSITION REPORTING STRUCTURE (two lines, tildes)
+POSITION RESPONSIBILITY (# from date) -> POSITION, RESPONSIBILITY TYPE (tildes)
+VALID RESPONSIBILITY (# from date) -> RESPONSIBILITY TYPE, POSITION TYPE (tildes)
+POSITION TYPE CLASS (# from date) -> POSITION TYPE, POSITION CLASSIFICATION TYPE (tildes)
+POSITION TYPE (# position type id) <- POSITION TYPE RATE (tilde)
+POSITION TYPE RATE -> SALARY STEP (# salary step seq id) -> PAY GRADE (# pay grade id)
+```
+
+**What it adds or settles**
+- Nothing new: every box comes from 9.2–9.13. It settles 9.12a over 9.12b (reviews and
+  notes hang off EMPLOYEE).
+- It leaves out the claims, resumes, deductions, the payment supertype, the period and
+  type lookups, managers, and payroll preference's line to the hiring firm (point 51).
+- It shows the three anchors the chapter uses (point 52): the PERSON (applies, trains,
+  fills slots), the EMPLOYEE role (paid, reviewed, sets preferences) and the EMPLOYMENT
+  relationship (pay history, benefits, termination).
+
+**How it flows**
+- **Two hubs:** EMPLOYMENT (Ch 2's party relationship, internal organization role to
+  employee role) for the deal with the person, and POSITION for the job, typed by
+  POSITION TYPE.
+- **Positions:** POSITION TYPE carries the job's valid responsibilities, its dated classes
+  (with standard hours), its union and its pay band (POSITION TYPE RATE: an amount, or a
+  SALARY STEP of a PAY GRADE). POSITION is a slot in a hiring ORGANIZATION, funded by a
+  Ch 8 BUDGET ITEM, given responsibilities, in a current status.
+- **Into the slot:** a PERSON sends an EMPLOYMENT APPLICATION (for a slot or any job),
+  backed by PARTY SKILLs, PARTY QUALIFICATIONs, PERSON TRAINING and RESUMEs. Hiring opens
+  an EMPLOYMENT and a POSITION FULFILLMENT; slots report to slots (POSITION REPORTING
+  STRUCTURE, one primary line).
+- **Paying:** PAY HISTORY and PARTY BENEFIT hang on the EMPLOYMENT; PAYROLL PREFERENCEs (on
+  the employee and the hiring firm) say how pay is split and what is withheld; each
+  PAYCHECK is a Ch 7 PAYMENT with its DEDUCTIONs.
+- **Judging and ending:** PERFORMANCE REVIEWs (scored items) and NOTES go to the EMPLOYEE
+  from a MANAGER, and a review can set the next PAY HISTORY, pay a bonus PAYCHECK or lead
+  to a POSITION. The EMPLOYMENT ends with a thru date, a TERMINATION TYPE and REASON, and
+  any UNEMPLOYMENT CLAIM.
+- **Plugged in from earlier:** PARTY, PERSON, ORGANIZATION, PARTY ROLE, PARTY
+  RELATIONSHIP, STATUS TYPE (Ch 2); RATING TYPE (Ch 3); POSITION TYPE, RATE TYPE, PARTY
+  SKILL (Ch 6); PAYMENT, PAYMENT METHOD TYPE (Ch 7); BUDGET ITEM, PERIOD TYPE (Ch 8).
+- **Alternates:** 9.1 (EMP and DEPT) is the naive model replaced; 9.12a kept over 9.12b.
+
+### Points to discuss after the overview (Figs 9.1–9.14)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
-the literal drawing. The list moves under the chapter's last figure when it lands.
+the literal drawing.
 
 1. **9.1 not built:** the naive model the chapter argues against, transcribed only.
 2. **9.2 adds no table:** Ch 2's party relationship already has the EMPLOYMENT type
@@ -922,6 +983,13 @@ the literal drawing. The list moves under the chapter's last figure when it land
 50. **Unemployment claim status a current value,** Ch 2's status types under an
     UNEMPLOYMENT_CLAIM_STATUS group, as points 15 and 41. Types, reasons, statuses, Tom
     Baker and Rita Gomez ours.
+51. **What 9.14 leaves out:** unemployment claims, resumes, deductions, PAYMENT above
+    PAYCHECK, the type lookups, MANAGER, payroll preference's line to the hiring firm.
+    Read as space, not as dropping them: all built.
+52. **Three anchors, as 9.14 draws them:** PERSON (applications, training, fulfillment),
+    EMPLOYEE role (preferences, paychecks, reviews, notes), EMPLOYMENT relationship (pay,
+    benefits, termination). The build follows it; whether pay and benefits should sit on
+    the role or the relationship is worth a talk.
 
 ## Design decisions (book → SQL)
 
