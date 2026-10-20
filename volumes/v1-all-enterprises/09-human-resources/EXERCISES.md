@@ -51,6 +51,14 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    would you change if the answer had to be "no"?
 
 ### Submodel 2: employment, fulfillment and reporting
+1. *(9.2, 9.5)* Employment links two party *roles* (employee, internal organization);
+   fulfillment links a slot to a *person*. Why the difference? What does each allow that
+   the other way round would not?
+2. *(9.5)* Mike Johnson becomes CEO in 1996. In 9.1's model that's one UPDATE. Here,
+   which rows are written or closed, and what can you still answer about 1990 that
+   9.1 lost?
+3. *(9.5)* Two half-time people share one full-time slot. How do you count FTEs and head
+   count from these tables, and why does the book count on positions, not people?
 
 
 ## 1. Redraw from memory

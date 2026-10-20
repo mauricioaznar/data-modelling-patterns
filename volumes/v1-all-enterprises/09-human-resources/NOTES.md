@@ -442,6 +442,24 @@ the literal drawing. The list moves under the chapter's last figure when it land
   clerks. Bad rows: Programmer classed Computer again from 1998; systems administrators
   "unionized by" ABC Corporation's internal organization role.
 
+### Fig 9.5
+- **`position`** gains `organization_party_id` (a plain FK to `organization`, point 16)
+  and `status_type_id` (Ch 2's `status_type`, under a POSITION_STATUS group), both not
+  null as drawn; one current status, no history (point 15). The status types are seeded
+  in 9.3's section, which inserts the first slots.
+- **`position_fulfillment`** (slot × person, dated) with a surrogate key, the book's
+  triple unique, the person a plain FK to `person` (point 18). No overlap check: job
+  shares are allowed (point 19).
+- **Checks:** a slot filled before it opened or after it closed; a hiring company that
+  has never been an internal organization. **Review:** fulfillments by someone not
+  employed by the hiring company on the day they start. **Queries:** Table 9.5; ABC
+  Corporation's slots on a day, with their holders or vacant.
+- **Seed:** seven types for Table 9.5's slots (mail clerks unionized); nine slots, one
+  per row (ids and dates ours, point 24); Table 9.5 (point 17 for the clerk's day);
+  Kim Park (party 72), the summer clerk with no employment. Bad rows: a mail clerk slot
+  "within" Ace Cleaning Service, a supplier; Kim Park in slot 204 two weeks after it
+  closed.
+
 ## When NOT to use this
 - **A small company with one office:** a `job_title` and `manager_id` on the person, and
   a hire date, is honest when nobody budgets slots or keeps a job-description history.

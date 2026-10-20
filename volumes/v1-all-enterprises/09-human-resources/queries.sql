@@ -138,3 +138,60 @@ from position_type t
 join party_role r         on r.party_role_id = t.union_party_role_id
 join party_display_name d on d.party_id = r.party_id
 where r.role_type_id <> 'UNION';
+
+-- ============================================================
+-- Fig 9.5 — Position fulfillment
+-- ============================================================
+
+-- name: 9.5 — Table 9.5: who filled which slot, from when to when
+select d.name as person, f.position_id, t.title, f.from_date, f.thru_date
+from position_fulfillment f
+join position p           on p.position_id = f.position_id
+join position_type t      on t.position_type_id = p.position_type_id
+join party_display_name d on d.party_id = f.party_id
+order by person, f.from_date;
+
+-- name: 9.5 — ABC Corporation's slots on Jul 1, 2001: state, and who holds each (vacant when nobody)
+select p.position_id, t.title, s.description as status,
+       coalesce(string_agg(d.name, ', '), '(vacant)') as held_by
+from position p
+join position_type t on t.position_type_id = p.position_type_id
+join status_type s   on s.status_type_id = p.status_type_id
+left join position_fulfillment f
+  on  f.position_id = p.position_id
+  and f.from_date <= date '2001-07-01' and (f.thru_date is null or f.thru_date > date '2001-07-01')
+left join party_display_name d on d.party_id = f.party_id
+where p.organization_party_id = 12
+group by p.position_id, t.title, s.description
+order by p.position_id;
+
+-- name: 9.5 — Data-quality check: a slot filled before it opened or after it closed (should be empty)
+select f.position_fulfillment_id, f.position_id, t.title, d.name as person,
+       f.from_date, f.thru_date, p.actual_from_date, p.actual_thru_date
+from position_fulfillment f
+join position p           on p.position_id = f.position_id
+join position_type t      on t.position_type_id = p.position_type_id
+join party_display_name d on d.party_id = f.party_id
+where p.actual_from_date is null
+   or f.from_date < p.actual_from_date
+   or coalesce(f.thru_date, 'infinity') > coalesce(p.actual_thru_date, 'infinity');
+
+-- name: 9.5 — Data-quality check: slots whose hiring company has never been an internal organization (should be empty)
+select p.position_id, t.title, d.name as hiring_company
+from position p
+join position_type t      on t.position_type_id = p.position_type_id
+join party_display_name d on d.party_id = p.organization_party_id
+where not exists (select 1 from party_role r
+                  where r.party_id = p.organization_party_id and r.role_type_id = 'INTERNAL_ORGANIZATION');
+
+-- name: 9.5 — Review: fulfillments by someone not employed by the slot's hiring company on the day they start (contractors, agency staff, or a missing employment)
+select f.position_fulfillment_id, d.name as person, t.title, f.from_date
+from position_fulfillment f
+join position p           on p.position_id = f.position_id
+join position_type t      on t.position_type_id = p.position_type_id
+join party_display_name d on d.party_id = f.party_id
+where not exists (
+  select 1 from employment_relationship e
+  where e.employee_party_id = f.party_id
+    and e.employer_party_id = p.organization_party_id
+    and e.from_date <= f.from_date and (e.thru_date is null or e.thru_date > f.from_date));

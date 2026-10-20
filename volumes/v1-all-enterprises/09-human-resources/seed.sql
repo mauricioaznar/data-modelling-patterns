@@ -73,14 +73,24 @@ insert into gl_budget_xref (gl_budget_xref_id, budget_item_type_id, general_ledg
   (22, 'TEMPORARY_HELP',    560, '2001-01-01', null, 100);
 select setval(pg_get_serial_sequence('gl_budget_xref', 'gl_budget_xref_id'), (select max(gl_budget_xref_id) from gl_budget_xref));
 
--- Table 9.1 (types ours, point 7; 204's thru Aug 31 stored Sep 1), then a
--- bad row: a second analyst slot opened on Nov 1, 2000, two weeks before the
--- budget that funds it was approved.
-insert into position (position_id, position_type_id, budget_item_id, estimated_from_date, estimated_thru_date,
+-- Position statuses (9.5's line, needed here since 9.5 makes it mandatory;
+-- ours, point 15), under their own group as Ch 8's budget statuses.
+insert into status_type (status_type_id, parent_type_id, description) values
+  ('POSITION_STATUS',   null,              'Position status'),
+  ('POSITION_PLANNED',  'POSITION_STATUS', 'Planned for'),
+  ('POSITION_ACTIVE',   'POSITION_STATUS', 'Active'),
+  ('POSITION_INACTIVE', 'POSITION_STATUS', 'Inactive');
+
+-- Table 9.1 (types ours, point 7; 204's thru Aug 31 stored Sep 1), all in
+-- ABC Corporation (9.5's hiring company), then a bad row: a second analyst
+-- slot opened on Nov 1, 2000, two weeks before the budget that funds it was
+-- approved.
+insert into position (position_id, position_type_id, budget_item_id, organization_party_id, status_type_id,
+                      estimated_from_date, estimated_thru_date,
                       salary_flag, exempt_flag, fulltime_flag, temporary_flag, actual_from_date, actual_thru_date) values
-  (101, 'BUSINESS_ANALYST', 410011, '2001-01-01', null,         true, false, true, false, '2001-01-15', null),
-  (204, 'ACCOUNTING_CLERK', 410013, '2001-06-01', '2001-09-01', true, true,  true, true,  '2001-06-01', '2001-09-01'),
-  (102, 'BUSINESS_ANALYST', 410011, '2001-03-01', null,         true, false, true, false, '2000-11-01', null);   -- DATA ERROR: opened before its budget was approved
+  (101, 'BUSINESS_ANALYST', 410011, 12, 'POSITION_ACTIVE',   '2001-01-01', null,         true, false, true, false, '2001-01-15', null),
+  (204, 'ACCOUNTING_CLERK', 410013, 12, 'POSITION_INACTIVE', '2001-06-01', '2001-09-01', true, true,  true, true,  '2001-06-01', '2001-09-01'),
+  (102, 'BUSINESS_ANALYST', 410011, 12, 'POSITION_ACTIVE',   '2001-03-01', null,         true, false, true, false, '2000-11-01', null);   -- DATA ERROR: opened before its budget was approved
 select setval(pg_get_serial_sequence('position', 'position_id'), (select max(position_id) from position));
 
 -- Responsibilities (ours: the book gives no table).
@@ -158,3 +168,65 @@ select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max
 
 update position_type set union_party_role_id = 92 where position_type_id = 'ACCOUNTING_CLERK';
 update position_type set union_party_role_id = 73 where position_type_id = 'SYSTEMS_ADMINISTRATOR';   -- DATA ERROR: role 73 is ABC Corporation's internal organization role, not a union
+
+-- ============================================================
+-- Fig 9.5 — Position fulfillment
+-- ============================================================
+-- The types of Table 9.5's slots (descriptions ours). Mail clerks are
+-- represented by 9.4's union.
+insert into position_type (position_type_id, description, title, union_party_role_id) values
+  ('MAIL_CLERK',       'Sorts and delivers the mail',                  'Mail Clerk',       92),
+  ('MAIL_SUPERVISOR',  'Runs the mail room',                           'Mail Supervisor',  null),
+  ('OFFICE_MANAGER',   'Runs an office and its staff',                 'Office Manager',   null),
+  ('REGIONAL_MANAGER', 'Runs the offices of a region',                 'Regional Manager', null),
+  ('CEO',              'Runs the enterprise',                          'CEO',              null),
+  ('MIS_MANAGER',      'Runs the management information systems group', 'MIS Manager',     null),
+  ('CIO',              'Runs information systems for the enterprise',   'CIO',             null);
+
+-- Table 9.5's slots, one per row, all in ABC Corporation (ids and dates
+-- ours, point 24). The MIS manager slot closed when the CIO slot opened.
+-- Then a bad row: a mail clerk slot "within" Ace Cleaning Service, a
+-- supplier, not an internal organization.
+insert into position (position_id, position_type_id, budget_item_id, organization_party_id, status_type_id,
+                      estimated_from_date, estimated_thru_date,
+                      salary_flag, exempt_flag, fulltime_flag, temporary_flag, actual_from_date, actual_thru_date) values
+  (301, 'MAIL_CLERK',       null, 12, 'POSITION_ACTIVE',   '1978-01-01', null, false, false, true, false, '1978-01-01', null),
+  (302, 'MAIL_SUPERVISOR',  null, 12, 'POSITION_ACTIVE',   '1978-01-01', null, true,  false, true, false, '1978-01-01', null),
+  (303, 'OFFICE_MANAGER',   null, 12, 'POSITION_ACTIVE',   '1980-01-01', null, true,  true,  true, false, '1980-01-01', null),
+  (304, 'REGIONAL_MANAGER', null, 12, 'POSITION_ACTIVE',   '1985-01-01', null, true,  true,  true, false, '1985-01-01', null),
+  (305, 'CEO',              null, 12, 'POSITION_ACTIVE',   '1975-01-01', null, true,  true,  true, false, '1975-01-01', null),
+  (311, 'PROGRAMMER',       null, 12, 'POSITION_ACTIVE',   '1994-01-01', null, true,  false, true, false, '1994-01-01', null),
+  (312, 'BUSINESS_ANALYST', null, 12, 'POSITION_ACTIVE',   '1996-01-01', null, true,  false, true, false, '1996-01-01', null),
+  (313, 'MIS_MANAGER',      null, 12, 'POSITION_INACTIVE', '1998-01-01', '2000-11-02', true, true, true, false, '1998-01-01', '2000-11-02'),
+  (314, 'CIO',              null, 12, 'POSITION_ACTIVE',   '2000-11-02', null, true,  true,  true, false, '2000-11-02', null),
+  (501, 'MAIL_CLERK',       null, 43, 'POSITION_PLANNED',  '2001-01-01', null, false, false, true, false, null,         null);   -- DATA ERROR: the hiring company is a supplier
+select setval(pg_get_serial_sequence('position', 'position_id'), (select max(position_id) from position));
+
+-- Kim Park, the summer clerk (ours): no employment with ABC Corporation, so
+-- she shows in the review query (point 18).
+insert into party (party_id, party_kind) values
+  (72, 'PERSON');
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into person (party_id, gender_type_id) values
+  (72, 'FEMALE');
+
+insert into person_name (party_id, person_name_type_id, from_date, thru_date, name) values
+  (72, 'FIRST', '1980-01-01', null, 'Kim'),
+  (72, 'LAST',  '1980-01-01', null, 'Park');
+
+-- Table 9.5 (thru dates +1 day; Mike Johnson's clerk days end on the Jun 1
+-- handover, point 17), then a bad row: Kim Park still in slot 204 two weeks
+-- after it closed.
+insert into position_fulfillment (position_fulfillment_id, position_id, party_id, from_date, thru_date, comment) values
+  (1,  301, 70, '1980-05-31', '1980-06-01', null),
+  (2,  302, 70, '1980-06-01', '1984-01-01', null),
+  (3,  303, 70, '1984-01-01', '1990-06-01', null),
+  (4,  304, 70, '1990-06-01', '1996-06-01', null),
+  (5,  305, 70, '1996-06-01', null,         null),
+  (6,  311, 68, '1995-03-01', '1997-02-28', null),
+  (7,  312, 68, '1997-02-28', '1999-03-15', null),
+  (8,  313, 68, '1999-03-15', '2000-11-02', null),
+  (9,  314, 68, '2000-11-02', null,         null),
+  (10, 204, 72, '2001-06-01', '2001-09-16', 'DATA ERROR: the slot closed on Sep 1');
+select setval(pg_get_serial_sequence('position_fulfillment', 'position_fulfillment_id'), (select max(position_fulfillment_id) from position_fulfillment));
