@@ -1374,8 +1374,18 @@ an order reaches its agreement: through the products (and features) both of them
   snapshot, 4.2), and the agreement says what it should have been. Comparing the two is the
   point: a price check and a threshold count, each a query. (Ponder 5 of submodel 7.)
 - **When to store it after all:** when the business really does order against one named
-  contract (blanket orders, call-offs), or when deriving it is too slow; then the stored
-  link needs a check that it still agrees with the derivation.
+  contract (blanket orders, call-offs), when deriving it is too slow, or when it must
+  remember which agreement priced the line at the time, whatever later edits say. It's
+  cheap: one nullable `agreement_item_id` on the order line, filled by the step that sets the
+  price. Then the stored link needs a check that it still agrees with the derivation.
+- **Ending an agreement, forward or back:** the match tests the order's own date, so an end
+  date set after the orders leaves them governed. An end set back in time (a cancellation
+  learnt late) takes the lines placed in between out from under it: their prices stay, the
+  agreement behind them goes. That is often the right answer: the discount wasn't owed, and
+  the line now shows as charged below list with nothing behind it, for someone to bill or
+  write off. A stored link would hide that unless the check above runs. Our dates say when a
+  fact held, not when we learnt it, so what we believed before the edit is gone (bitemporal,
+  Ch 2 NOTES, Fig 2.2b). (Chat, 2026-10-20; point 41.)
 
 ### Fig 4.17 — Overall order model
 **Transcription** (accepted: ☐; one photo; identifiers only, no attributes; open points
@@ -1612,6 +1622,11 @@ the literal drawing.
     features, work efforts, addenda, applicabilities and every lookup. Read as abbreviation,
     as for Fig 3.11. ORDER ITEM ROLE is the one that may be meant: 4.17 draws roles on the
     order only.
+41. **4.16, a retroactive end (chat, 2026-10-20):** ending an agreement back in time takes
+    the lines placed after the new end out from under it, while their prices stay. Read as
+    intended: the order keeps what was agreed (price, adjustments, terms) and which agreement
+    governed it is derived, so the mismatch shows up. Keep the view only, or also store the
+    item that set the price on the line (one nullable column), with the view as its check?
 
 ## Design decisions (book → SQL)
 

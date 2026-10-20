@@ -73,6 +73,19 @@ and any decisions made.
 - Ch 3 practice, submodel 5: item 7 (the paper substitute), Q2 (the X200 → X300 successor,
   dated unprompted for the first time) and two digressions (sheets sold in one unit; what a
   successor should carry over). Card 6 gains the EACH vs SHEET lines.
+- Ch 4 preview in chat (the user hasn't read the chapter): the story of need → ask → offer →
+  order, agreements, and how Chs 2–7 hand over. Two questions answered: why the order line
+  copies the price (history, and a deal the list never had) and how an agreement governs a
+  line with no link (date, party, item applicability, derived).
+- Ch 4 NOTES, Fig 4.16: ending an agreement forward vs back (a retroactive end takes later
+  lines out from under it while their prices stay, often the right answer: the discount
+  wasn't owed); the stored link is one nullable column, kept honest by the view as a check.
+  Point 41 for the overview.
+- Ch 2 NOTES, Fig 2.2b: the bitemporal limit of from/thru (valid time only, corrections
+  overwrite; recorded time is the other timeline, an audit table the lighter fix).
+- Design reference: the Core patterns row "Link entity with from/thru dates" gains
+  bitemporal in its title and valid time / recorded time in its meaning. Card P4 renamed to
+  match; Anki export 60 cards.
 
 **Decisions**
 - Ch 9's second batch makes submodels 3–6: pay and benefits (9.7–9.8), payroll (9.9),
@@ -99,11 +112,16 @@ and any decisions made.
   core app is open.
 - Practice: the user answers in short bits; no grading or next question until they say done
   (CLAUDE.md).
+- Bitemporal goes on the existing effectivity row and card, not a new pattern: Silverston
+  doesn't model it, so it has no chapter examples of its own.
 
 **Next**
 - Ch 8 overview: points 1–39, the doc drafts and cards 35–38 plus the architecture card.
 - Ch 9 overview: points 1–52, the doc drafts and cards 39–44 plus the architecture card.
 - Then Vol 2: agree on the industry deck before its first card.
+- The user to say which overview they meant to cover now (Ch 4's needs the chapter read
+  first).
+- Re-import the Anki export (P4's back changed; same note id).
 
 ## 2026-10-19
 

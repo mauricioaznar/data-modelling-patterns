@@ -857,6 +857,13 @@ What it adds or settles:
 - **Not enforced: overlapping periods.** Nothing stops two open `LAST` names or two current
   marital statuses for the same person. Postgres could enforce it with an exclusion constraint
   (`btree_gist`); for now it's up to the application.
+- **Not covered: when we learnt it.** `from_date` and `thru_date` say when a fact held in the
+  business (valid time), not when the database recorded it. A correction (a cancellation
+  learnt late, a mistyped birth date) overwrites what we believed before, so a past report
+  can't be rerun as it came out. Keeping both timelines is **bitemporal** modelling: each row
+  also gets recorded from/thru dates, and a correction closes the old row's recorded period
+  and adds a new row instead of editing. Silverston doesn't model it (Vol 1 at least); an
+  audit table of changes is the lighter fix. Example: Ch 4 NOTES, Fig 4.16 (2026-10-20).
 - **"No rows" ≠ "single."** Chloe has no marital status rows, which means *unknown*. The flat
   model conflated unknown with null, which is the same thing but less visible.
 

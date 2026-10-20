@@ -1752,7 +1752,7 @@ to use it**.
 - **P1 · Roles, not subtypes.** Cue: "The same thing plays several parts over time."
 - **P2 · Attribute-less subtypes become type rows.** Cue: "A subtype with nothing of its own."
 - **P3 · The link owns the fact.** Cue: "A fact that's true of the pair, not of either side."
-- **P4 · Effectivity dates.** Cue: "It was true then, it isn't now."
+- **P4 · Effectivity dates, bitemporal when corrections matter: valid time (when it held in the business) and recorded time (when the database believed it).** Cue: "It was true then, it isn't now."
 - **P5 · Self-referencing link (from / to, rollup).** Cue: "A thing related to another of its own kind."
 - **P6 · Rules as rows.** Cue: "Which combinations are allowed, without a code change."
 - **P7 · Exclusive arc.** Cue: "Here or there, never both, never neither."
