@@ -537,3 +537,62 @@ insert into resume (resume_id, party_id, resume_date, resume_text) values
   (2, 74, '2000-11-25', 'SQL developer, eight years; BS computer science; PMP.'),
   (3, 75, '2001-02-10', 'Junior programmer, one year of SQL.');
 select setval(pg_get_serial_sequence('resume', 'resume_id'), (select max(resume_id) from resume));
+
+-- ============================================================
+-- Fig 9.12a — Employee performance
+-- ============================================================
+-- MANAGER is a person role (9.12a draws it beside EMPLOYEE). Dick Jones (Ch
+-- 6's party 56, who approves John Smith's timesheets there) manages John
+-- Smith (ours, point 46).
+insert into role_type (role_type_id, parent_type_id, applies_to_kind, description) values
+  ('MANAGER', 'PERSON_ROLE', 'PERSON', 'Manager');
+
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (94, 56, 'MANAGER', '1995-01-01', null);
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+insert into perf_review_item_type (perf_review_item_type_id, description) values
+  ('QUALITY_OF_WORK', 'Quality of work'),
+  ('TEAMWORK',        'Teamwork'),
+  ('INITIATIVE',      'Initiative');
+
+-- Ch 3's rating types already hold OUTSTANDING (point 45).
+insert into rating_type (rating_type_id, description) values
+  ('EXCEEDS',           'Exceeds expectations'),
+  ('MEETS',             'Meets expectations'),
+  ('NEEDS_IMPROVEMENT', 'Needs improvement');
+
+insert into performance_note_type (performance_note_type_id, description) values
+  ('COMMENDATION', 'Commendation'),
+  ('LATENESS',     'Late arrival'),
+  ('WARNING',      'Verbal warning');
+
+-- A bonus paycheck for John Smith, from his 2000 review (ours).
+insert into payment (payment_id, payment_kind, payment_method_type_id, from_party_id, to_party_id, effective_date, payment_ref_num, amount, comment) values
+  (90003, 'DISBURSEMENT', 'ELECTRONIC', 12, 54, '2001-01-15', '1003', 1000, 'Bonus');
+
+insert into paycheck (payment_id, employee_party_role_id, internal_organization_party_role_id) values
+  (90003, 82, 73);
+
+-- John Smith's 1997 and 2000 reviews from Dick Jones (ours), each setting the
+-- next year's pay (Table 9.9's raises); 2000's also earns a bonus. Then bad
+-- rows: a review "from" Sue Jones's employee role, not a manager; a review
+-- of Ana Ruiz that sets John Smith's pay.
+insert into performance_review (performance_review_id, employee_party_role_id, manager_party_role_id, from_date, thru_date, comments, pay_history_id, payment_id, position_id) values
+  (1, 82, 94, '1997-01-01', '1998-01-01', 'Solid year',                    2,    null,  null),
+  (2, 82, 94, '2000-01-01', '2001-01-01', 'Led the order system cutover',  3,    90003, null),
+  (3, 82, 91, '2000-01-01', '2001-01-01', 'DATA ERROR: from an employee role, not a manager', null, null, null),
+  (4, 93, 94, '2001-01-15', '2001-07-15', 'DATA ERROR: sets another employee''s pay', 3, null, null);
+select setval(pg_get_serial_sequence('performance_review', 'performance_review_id'), (select max(performance_review_id) from performance_review));
+
+insert into performance_review_item (performance_review_id, perf_review_seq_id, perf_review_item_type_id, rating_type_id, comment) values
+  (1, 1, 'QUALITY_OF_WORK', 'MEETS',       null),
+  (1, 2, 'TEAMWORK',        'MEETS',       null),
+  (2, 1, 'QUALITY_OF_WORK', 'EXCEEDS',     null),
+  (2, 2, 'TEAMWORK',        'MEETS',       'Could share more with the team'),
+  (2, 3, 'INITIATIVE',      'OUTSTANDING', 'Took on the cutover weekend');
+
+insert into performance_note (performance_note_id, employee_party_role_id, manager_party_role_id, performance_note_type_id, from_date, thru_date, communication_date, comment) values
+  (1, 82, 94, 'LATENESS',     '2000-03-06', null, '2000-03-06', 'Late three days running'),
+  (2, 82, 94, 'COMMENDATION', '2000-11-20', null, '2000-11-21', 'Cutover finished a week early');
+select setval(pg_get_serial_sequence('performance_note', 'performance_note_id'), (select max(performance_note_id) from performance_note));

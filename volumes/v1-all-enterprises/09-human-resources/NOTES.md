@@ -665,6 +665,99 @@ No sample data.
 - **The naive model** writes `degree` and `skills` text on EMP: one degree, no lapse
   dates, nothing to search, and applicants who were never hired have nowhere to go.
 
+### Fig 9.12a — Employee performance
+**Transcription** (accepted: ☐; photo)
+
+```
+PERFORMANCE REVIEW
+  # perf_review_id
+  * from_date
+  o thru_date
+  o comments
+  -> EMPLOYEE     (many "for" 1, tilde; employee "the receiver of" many)
+  -> MANAGER      (many "from" 1; manager "responsible for" many)
+  -> PAY HISTORY  (many "affecting" 0..1, dashed; pay history "affected by" many)
+  -> PAYCHECK     (many "resulting in a bonus of" 0..1, dashed; paycheck "arising from" many)
+  -> POSITION     (many "resulting in" 0..1, dashed; position "influenced by" many)
+
+PERFORMANCE REVIEW ITEM
+  # perf_review_seq_id
+  o comment
+  -> PERFORMANCE REVIEW     (many "part of" 1, tilde; review "composed of" many)
+  -> PERF REVIEW ITEM TYPE  (many "described by" 1; type "the description for" many)
+  -> RATING TYPE            (many "scored using" 1; type "used to score" many)
+
+PERFORMANCE NOTE
+  # from_date
+  o thru_date
+  o communication_date
+  o comment
+  -> EMPLOYEE               (many "regarding the performance of" 1, tilde; employee "the receiver of" many)
+  -> MANAGER                (many "given by" 1, tilde; manager "given by" many)
+  -> PERFORMANCE NOTE TYPE  (many "described by" 1, tilde; type "the description for" many)
+
+PERF REVIEW ITEM TYPE (# id, * description); RATING TYPE (# id, * description)
+PERFORMANCE NOTE TYPE (# perf note type id, * description)   (box printed "PERFORMANCE NOTE")
+PARTY ROLE (# party role id) > PERSON ROLE > EMPLOYEE, MANAGER
+```
+
+No sample data.
+
+**To check against the book**
+- The note type's box is printed PERFORMANCE NOTE, with a perf note type id: read as
+  PERFORMANCE NOTE TYPE (point 45).
+- RATING TYPE is Ch 3's entity (supplier ratings); 9.12a reuses it (point 45).
+- The review's line to MANAGER has no tilde, the one to EMPLOYEE has: key read as the
+  review id (+ employee), a surrogate here.
+
+**Discussion**
+- **Reviews and notes are about a role,** the employee, and come from another, the
+  manager: both are Ch 2 party roles, so the same person can review and be reviewed.
+- **A review is a header with items,** each scored on a rating type: new criteria are
+  rows, not columns.
+- **What it led to** is three optional lines: the pay record it set (a raise), a bonus
+  paycheck, a new slot (a promotion). The chain from evaluation to money is in the data,
+  not in a memo.
+- **Notes fill the gaps** between reviews (a commendation, lateness), dated, with the day
+  they were raised with the employee.
+- **The naive model** keeps a `last_review_score` on EMP: one number, no items, no
+  manager, no history, and no link to the raise it justified.
+
+### Fig 9.12b — Employee performance, alternate model (not built)
+**Transcription** (accepted: ☐; photo)
+
+```
+COMMUNICATION EVENT PURPOSE
+  o description
+  > PERFORMANCE NOTE, PERFORMANCE REVIEW, SUPPORT CALL, INQUIRY, CUSTOMER SERVICE CALL,
+    SALES FOLLOW UP, MEETING, CONFERENCE, ACTIVITY REQUEST, SEMINAR
+  -> COMMUNICATION EVENT               (many "the category for"... "categorized by" 1)
+  -> COMMUNICATION EVENT PURPOSE TYPE  (many "described by" 1, tilde; type "the description for" many)
+PERFORMANCE REVIEW (a purpose)
+  -> PAY HISTORY  (many "affecting" 0..1; "affected by")
+  -> PAYCHECK     (many "resulting in a bonus of" 0..1; "arising from")
+  -> POSITION     (many "resulting in" 0..1; "influenced by")
+PERFORMANCE REVIEW ITEM (# perf review seq id, o comment)
+  -> COMMUNICATION EVENT PURPOSE  (many "part of" 1, tilde; "composed of" many)
+  -> PERF REVIEW ITEM TYPE, RATING TYPE (as 9.12a)
+
+COMMUNICATION EVENT (# id, * datetime started, o datetime ended, o note)
+  > PHONE, FAX, FACE TO FACE, LETTER, EMAIL, WEB SITE COMMUNICATION
+  -> COMMUNICATION EVENT STATUS TYPE  ("monitored by")
+  -> PARTY RELATIONSHIP               ("in the context of")
+  -> CONTACT MECHANISM TYPE           ("occurs via")
+COMMUNICATION EVENT ROLE
+  -> COMMUNICATION EVENT (tilde), PARTY (tilde), COMMUNICATION EVENT ROLE TYPE
+```
+
+**What it would change:** a review or a note becomes a purpose of a Ch 2 communication
+event (the meeting where it happened), in the context of the employment relationship,
+with the reviewer and the reviewee as event roles. The review keeps its items and its
+three outcome lines. One log for every exchange with an employee, at the cost of
+reaching the manager and the employee through roles on the event, not by a direct line.
+**Not built:** 9.14 hangs PERFORMANCE REVIEW and PERFORMANCE NOTE straight off EMPLOYEE,
+as in 9.12a.
+
 ### Points to discuss after the overview (Figs 9.1–9.6, so far)
 The readings below stand, and the SQL follows them. We look at each once the chapter
 overview comes. Any refactor waits until then and aims at what Silverston intended, not at
@@ -771,6 +864,11 @@ the literal drawing. The list moves under the chapter's last figure when it land
 44. **CERTIFICATION and DEGREE as type groups:** attribute-less subtypes, so rows in a
     `qualification_type` hierarchy. A degree with a thru date is flagged (ours: degrees
     don't lapse).
+45. **9.12a's note type box** is printed PERFORMANCE NOTE: read as PERFORMANCE NOTE TYPE.
+    RATING TYPE reuses Ch 3's table (supplier ratings), with three more rows.
+46. **MANAGER a person role** under PERSON_ROLE, as drawn; Dick Jones (Ch 6) manages John
+    Smith. Reviews, notes and their contents are ours (no sample data).
+47. **9.12b not built:** 9.14 keeps 9.12a's direct lines from EMPLOYEE.
 
 ## Design decisions (book → SQL)
 
@@ -920,6 +1018,22 @@ the literal drawing. The list moves under the chapter's last figure when it land
 - **Seed:** three degrees and three certifications; qualifications for the applicants,
   Sue Jones and ABC Corporation (ISO 9001); skills, three training classes, three
   resumes. Bad rows: Lee Wong's degree "expiring"; Sue Jones holding the DEGREE group.
+
+### Fig 9.12a
+- **`perf_review_item_type`** and **`performance_note_type`** lookups; Ch 3's
+  **`rating_type`** reused (point 45). MANAGER a Ch 2 role type (point 46).
+- **`performance_review`** with the book's id as a surrogate key, two plain FKs to Ch 2's
+  `party_role` (employee, manager), dated, and three optional outcomes: `pay_history`,
+  a `paycheck` (bonus), a `position`. **`performance_review_item`** (review + seq unique,
+  item type and rating not null). **`performance_note`** (employee, manager, type, dated,
+  communication date), the book's four-part key unique.
+- **Check:** a review or note not from a MANAGER role or not about an EMPLOYEE role, or
+  a review setting another employee's pay or paying another's bonus. **Queries:** each
+  review with its items and outcomes; John Smith's 2000 file in date order.
+- **Seed:** Dick Jones's manager role (94); three item types, three rating types, three
+  note types; bonus paycheck 1003; John Smith's 1997 and 2000 reviews (setting Table
+  9.9's raises, the 2000 one with the bonus) and two notes. Bad rows: a review from Sue
+  Jones's employee role; a review of Ana Ruiz that sets John Smith's pay.
 
 ## When NOT to use this
 - **A small company with one office:** a `job_title` and `manager_id` on the person, and

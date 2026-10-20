@@ -524,3 +524,65 @@ join party_display_name pd on pd.party_id = pq.party_id
 where q.parent_type_id is null
    or (q.parent_type_id = 'DEGREE' and pq.thru_date is not null)
 order by 1;
+
+-- ============================================================
+-- Fig 9.12a — Employee performance
+-- ============================================================
+
+-- name: 9.12a — Each review: who, from which manager, over which period, scored how on each item, and what it led to (a raise, a bonus, a new slot)
+select r.performance_review_id as review, ee.name as employee, mg.name as manager, r.from_date, r.thru_date,
+       (select string_agg(it.description || ': ' || rt.description, '; ' order by i.perf_review_seq_id)
+          from performance_review_item i
+          join perf_review_item_type it on it.perf_review_item_type_id = i.perf_review_item_type_id
+          join rating_type rt           on rt.rating_type_id = i.rating_type_id
+         where i.performance_review_id = r.performance_review_id) as items,
+       ph.amount as pay_set, ph.from_date as pay_from, bonus.amount as bonus, r.position_id as new_slot
+from performance_review r
+join party_role e  on e.party_role_id = r.employee_party_role_id
+join party_role m  on m.party_role_id = r.manager_party_role_id
+join party_display_name ee on ee.party_id = e.party_id
+join party_display_name mg on mg.party_id = m.party_id
+left join pay_history ph on ph.pay_history_id = r.pay_history_id
+left join payment bonus  on bonus.payment_id = r.payment_id
+where r.comments not like 'DATA ERROR%'
+order by employee, r.from_date;
+
+-- name: 9.12a — John Smith's file in 2000: notes and reviews in date order
+select n.from_date as day, 'note' as kind, nt.description as what, mg.name as by_manager, n.comment
+from performance_note n
+join performance_note_type nt on nt.performance_note_type_id = n.performance_note_type_id
+join party_role m on m.party_role_id = n.manager_party_role_id
+join party_display_name mg on mg.party_id = m.party_id
+where n.employee_party_role_id = 82 and extract(year from n.from_date) = 2000
+union all
+select r.thru_date, 'review', 'Review of ' || r.from_date || ' to ' || r.thru_date, mg.name, r.comments
+from performance_review r
+join party_role m on m.party_role_id = r.manager_party_role_id
+join party_display_name mg on mg.party_id = m.party_id
+where r.employee_party_role_id = 82 and r.from_date >= date '2000-01-01' and r.from_date < date '2001-01-01'
+  and r.comments not like 'DATA ERROR%'
+order by day;
+
+-- name: 9.12a — Data-quality check: a review or note not from a MANAGER role or not about an EMPLOYEE role, or a review setting another employee's pay or paying another employee's bonus (should be empty)
+with given as (
+  select 'review' as kind, performance_review_id as id, employee_party_role_id, manager_party_role_id from performance_review
+  union all
+  select 'note', performance_note_id, employee_party_role_id, manager_party_role_id from performance_note
+)
+select g.kind, g.id, e.role_type_id as about_role, m.role_type_id as from_role, 'wrong role type' as problem
+from given g
+join party_role e on e.party_role_id = g.employee_party_role_id
+join party_role m on m.party_role_id = g.manager_party_role_id
+where e.role_type_id <> 'EMPLOYEE' or m.role_type_id <> 'MANAGER'
+union all
+select 'review', r.performance_review_id, null, null, 'pay of another employee'
+from performance_review r
+join pay_history ph       on ph.pay_history_id = r.pay_history_id
+join party_relationship x on x.party_relationship_id = ph.party_relationship_id
+where x.to_party_role_id <> r.employee_party_role_id
+union all
+select 'review', r.performance_review_id, null, null, 'bonus to another employee'
+from performance_review r
+join paycheck pc on pc.payment_id = r.payment_id
+where pc.employee_party_role_id <> r.employee_party_role_id
+order by 1, 2;

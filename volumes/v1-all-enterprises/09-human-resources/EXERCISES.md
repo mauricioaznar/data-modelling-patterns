@@ -104,6 +104,13 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
 4. *(9.11)* Slot 101 needs an MBA and three years of business analysis. Nothing in Ch 9
    says what a position type requires. Where would you add it, by analogy with Ch 6's
    skill standards and 9.3's valid responsibilities, and what query would it unlock?
+### Submodel 6: performance and termination
+1. *(9.12a)* A review points at the pay record it set, the bonus it paid and the slot it
+   led to. Why put the lines on the review and not on PAY HISTORY, PAYCHECK and POSITION?
+   What question does each direction answer?
+2. *(9.12a, 9.12b)* 9.12b makes a review a purpose of a Ch 2 communication event. What do
+   you gain (think: one log of every exchange with an employee), and what gets harder to
+   ask? Why might 9.14 keep 9.12a?
 
 
 ## 1. Redraw from memory
