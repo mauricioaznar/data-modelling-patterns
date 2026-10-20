@@ -112,3 +112,49 @@ insert into position_responsibility (position_responsibility_id, position_id, re
   (4, 204, 'ENTER_BOOKKEEPING',   '2001-06-01', '2001-09-01', null),
   (5, 101, 'ENTER_BOOKKEEPING',   '2001-02-01', null,         'DATA ERROR: not a valid responsibility for a business analyst');
 select setval(pg_get_serial_sequence('position_responsibility', 'position_responsibility_id'), (select max(position_responsibility_id) from position_responsibility));
+
+-- ============================================================
+-- Fig 9.4 — Position type definition
+-- ============================================================
+-- 9.3's "System", 9.4's "Systems" Administrator: one type (point 13).
+insert into position_type (position_type_id, description, title) values
+  ('SYSTEMS_ADMINISTRATOR', 'Keeps the servers, networks and system software running', 'Systems Administrator');
+
+insert into position_classification_type (position_classification_type_id, description) values
+  ('COMPUTER',      'Computer'),
+  ('TECHNICAL',     'Technical'),
+  ('ADMIN_SUPPORT', 'Admin support'),
+  ('MIS',           'MIS');
+
+-- Table 9.3 (Business Analyst's Computer class thru Dec 31, 1999 stored
+-- Jan 1, 2000; the hours ours, point 11), then a bad row: Programmer classed
+-- as Computer again in 1998 while the 1995 row is still open.
+insert into position_type_class (position_type_class_id, position_type_id, position_classification_type_id, from_date, thru_date, standard_hours_per_week) values
+  (1, 'PROGRAMMER',            'COMPUTER',      '1995-01-01', null,         null),
+  (2, 'PROGRAMMER',            'TECHNICAL',     '1995-01-01', null,         null),
+  (3, 'SYSTEMS_ADMINISTRATOR', 'COMPUTER',      '1995-01-01', null,         null),
+  (4, 'SYSTEMS_ADMINISTRATOR', 'ADMIN_SUPPORT', '1997-04-01', null,         null),
+  (5, 'BUSINESS_ANALYST',      'COMPUTER',      '1995-01-01', '2000-01-01', null),
+  (6, 'BUSINESS_ANALYST',      'MIS',           '2000-01-01', null,         40),
+  (7, 'PROGRAMMER',            'COMPUTER',      '1998-01-01', null,         37.5);   -- DATA ERROR: overlaps row 1
+select setval(pg_get_serial_sequence('position_type_class', 'position_type_class_id'), (select max(position_type_class_id) from position_type_class));
+
+-- A union (ours, point 14) that represents accounting clerks, then a bad
+-- row: systems administrators "unionized by" ABC Corporation's internal
+-- organization role.
+insert into role_type (role_type_id, parent_type_id, applies_to_kind, description) values
+  ('UNION', 'ORGANIZATION_ROLE', 'ORGANIZATION', 'Union');
+
+insert into party (party_id, party_kind) values
+  (71, 'ORGANIZATION');
+select setval(pg_get_serial_sequence('party', 'party_id'), (select max(party_id) from party));
+
+insert into organization (party_id, organization_type_id, name) values
+  (71, 'LEGAL', 'Office Workers Union Local 12');
+
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (92, 71, 'UNION', '1970-01-01', null);
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+update position_type set union_party_role_id = 92 where position_type_id = 'ACCOUNTING_CLERK';
+update position_type set union_party_role_id = 73 where position_type_id = 'SYSTEMS_ADMINISTRATOR';   -- DATA ERROR: role 73 is ABC Corporation's internal organization role, not a union

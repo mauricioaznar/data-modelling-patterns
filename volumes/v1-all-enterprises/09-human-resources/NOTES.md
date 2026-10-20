@@ -427,6 +427,21 @@ the literal drawing. The list moves under the chapter's last figure when it land
   assigned rows (ours). Bad rows: slot 102 opened Nov 1, 2000, before its budget's
   approval; slot 101 given the clerk's bookkeeping.
 
+### Fig 9.4
+- **`position_classification_type`** a plain lookup; **`position_type_class`** (type ×
+  class, dated) with a surrogate key, the book's triple unique, standard hours per week
+  optional and between 0 and 168 (point 11).
+- **`position_type.union_party_role_id`**, a nullable plain FK to Ch 2's `party_role`;
+  UNION a role type under ORGANIZATION_ROLE (point 14).
+- **Checks:** a type classed the same way twice over overlapping dates; a type
+  "unionized by" a role that isn't a union. **Queries:** Table 9.3; which types were
+  Computer on two days (Business Analyst leaves in 2000); which union covers which type,
+  with its slot count.
+- **Seed:** SYSTEMS_ADMINISTRATOR (point 13); four classification types; Table 9.3 with
+  the analyst's 40 hours (ours); Office Workers Union Local 12 (party 71) for accounting
+  clerks. Bad rows: Programmer classed Computer again from 1998; systems administrators
+  "unionized by" ABC Corporation's internal organization role.
+
 ## When NOT to use this
 - **A small company with one office:** a `job_title` and `manager_id` on the person, and
   a hire date, is honest when nobody budgets slots or keeps a job-description history.

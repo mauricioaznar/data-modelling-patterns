@@ -91,3 +91,50 @@ join position_type t on t.position_type_id = p.position_type_id
 join budget_item bi  on bi.budget_item_id = p.budget_item_id
 where p.actual_from_date < coalesce((select min(bs.status_date) from budget_status bs
                                      where bs.budget_id = bi.budget_id and bs.status_type_id = 'BUDGET_APPROVED'), 'infinity'::date);
+
+-- ============================================================
+-- Fig 9.4 — Position type definition
+-- ============================================================
+
+-- name: 9.4 — Table 9.3: how each position type is classified, since when, for how many hours a week
+select t.title, c.description as classification, k.from_date, k.thru_date, k.standard_hours_per_week
+from position_type_class k
+join position_type t                on t.position_type_id = k.position_type_id
+join position_classification_type c on c.position_classification_type_id = k.position_classification_type_id
+order by t.title, k.from_date, c.description;
+
+-- name: 9.4 — Which position types were classed as Computer on Jan 1, 1999, and on Jan 1, 2001?
+select d.as_of, string_agg(distinct t.title, ', ') as computer_types
+from (values (date '1999-01-01'), (date '2001-01-01')) d(as_of)
+join position_type_class k on k.position_classification_type_id = 'COMPUTER'
+                          and k.from_date <= d.as_of and (k.thru_date is null or k.thru_date > d.as_of)
+join position_type t       on t.position_type_id = k.position_type_id
+group by d.as_of
+order by d.as_of;
+
+-- name: 9.4 — Which union represents each position type, and how many slots of that type exist
+select t.title, u.name as union_name, count(p.position_id) as slots
+from position_type t
+join party_role r         on r.party_role_id = t.union_party_role_id
+join party_display_name u on u.party_id = r.party_id
+left join position p      on p.position_type_id = t.position_type_id
+group by t.title, u.name
+order by t.title;
+
+-- name: 9.4 — Data-quality check: a position type classed the same way twice over overlapping dates (should be empty)
+select a.position_type_class_id, b.position_type_class_id as overlaps_with,
+       a.position_type_id, a.position_classification_type_id, a.from_date, b.from_date as other_from
+from position_type_class a
+join position_type_class b
+  on  b.position_type_id = a.position_type_id
+  and b.position_classification_type_id = a.position_classification_type_id
+  and b.position_type_class_id > a.position_type_class_id
+  and b.from_date < coalesce(a.thru_date, 'infinity')
+  and a.from_date < coalesce(b.thru_date, 'infinity');
+
+-- name: 9.4 — Data-quality check: position types "unionized by" a role that isn't a union (should be empty)
+select t.position_type_id, t.title, r.party_role_id, r.role_type_id, d.name
+from position_type t
+join party_role r         on r.party_role_id = t.union_party_role_id
+join party_display_name d on d.party_id = r.party_id
+where r.role_type_id <> 'UNION';

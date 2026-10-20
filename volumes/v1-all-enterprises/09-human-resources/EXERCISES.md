@@ -44,6 +44,11 @@ At most 5 per submodel. Answer in a sentence or three under each item. Group the
    goes wrong if POSITION gets an `authorized_flag`?
 3. *(9.3)* Why both VALID RESPONSIBILITY and POSITION RESPONSIBILITY? What would you lose
    with only the first, and what with only the second?
+4. *(9.4)* Standard hours per week sit on POSITION TYPE CLASS, not on POSITION TYPE or
+   POSITION. Argue for each of the three places. Which would you pick, and why?
+5. *(9.4)* The union represents a *type* of job, not a person or a slot. A contractor
+   fills a unionized slot: is the contractor covered? What does the model say, and what
+   would you change if the answer had to be "no"?
 
 ### Submodel 2: employment, fulfillment and reporting
 
