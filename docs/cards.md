@@ -253,7 +253,9 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   conversions.
 - **W:** a column per option on the product, or a separate product row for every combination
   (red-small, red-large, blue-small…): an explosion of near-duplicates and no rules between
-  them.
+  them. The other way round: whatever is sold alone, stocked or worked on in its own right (a
+  kit's contents, a substitute, a walk-in engraving) is a product. A feature only describes
+  what was bought, on a line ordered for the product's line.
 - **T:** applicability is feature ↔ **product**; interaction is feature ↔ **feature** (you mixed
   them up once). Null product on an interaction = it holds everywhere.
 - **D:** product ← applicability → feature; feature ← interaction → feature (twice) and →

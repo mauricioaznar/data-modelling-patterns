@@ -244,6 +244,13 @@ UNIT OF MEASURE CONVERSION         (no # attribute)
   combination into its own product (blue pen, black pen, red pen). Columns can't hold "comes in
   blue *or* black", and one product per combination explodes (5 options on a copier is 32
   products) and loses the fact that they're the same product.
+- **Feature or product, the other way round** (2026-10-19, the engraving talk): whatever is
+  sold alone, stocked or worked on in its own right is a product, not a feature: a kit's
+  contents, a substitute, toner powder in a cartridge (its 3 kg is the component row's quantity
+  used), a walk-in engraving. A feature only describes what was bought. The noun doesn't
+  decide, the business does: engraving ticked at a watch shop's checkout is a feature, with a
+  price per product (a product + feature row); at a kiosk that engraves whatever you bring,
+  it's a service product.
 - **Features are defined once and reused.** "Blue" is one PRODUCT FEATURE row used by the pen,
   a binder and a folder. PRODUCT FEATURE APPLICABILITY is the many-to-many that says which
   products offer which features, how (required, standard, optional, selectable), and when.

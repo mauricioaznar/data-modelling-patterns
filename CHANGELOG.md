@@ -139,6 +139,10 @@ and any decisions made.
   row, the roadmap row.
 - Ch 3 cards 8 and 9 rewritten in the user's words (overview step 2), checked against the
   keys; Anki export regenerated (51 cards).
+- Ch 3 high-level pass over submodels 4–5 (ten questions, logged with scores): base
+  competition and conditions reach 3, estimated cost 2, association direction 2, kit pricing
+  3, the BOM 1. Card 6's W and Fig 3.4's NOTES gain the feature-or-product test (the
+  engraving talk).
 
 **Decisions**
 - Card 8: hook "the price recipe" (the user's "product recipe" would cue card 9's bill of
@@ -195,6 +199,9 @@ and any decisions made.
 - Work effort purpose optional; production runs typed PROJECT for want of a level in the book.
 
 **Next**
+- Ch 3: open with recall on the quantity on a component link (lost four times) and the
+  substitute's direction; then the BOM explosion walk-through. Practice questions stay inside
+  settled material: Chs 4–8 are built, not read.
 - Ch 8's remaining figures (budget review, scenarios, usage and sources, the tie to the
   ledger, the overall model) when shared.
 - The Ch 4, 5, 6 and 7 overviews (Ch 6: 42 points, Ch 7: 29); then practice, submodel by

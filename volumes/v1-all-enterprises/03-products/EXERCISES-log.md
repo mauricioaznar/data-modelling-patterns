@@ -305,3 +305,31 @@ prices 0 → 2, charge kind 0 → 1. Parked at the column review; next: the valu
 - Questions paused by the user to reflect; the session ended with a commit.
 Scores (new rows): link 0 → 2, typed table 0 → 2, type-only attributes 0 → 1, kit pricing
 0 → 1; direction and BOM untested. Next: the paper question (a/b/c).
+
+### 2026-10-19: Submodels 4–5, high-level pass (during an NFL game)
+- The user's rewrites of cards 8 and 9 checked first: card 8's hook "the product recipe" cued
+  card 9's BOM (now "the price recipe"), discounts and surcharges "add up" became "stack per
+  unit"; card 9 listed package and component as two types ✗ (point 11: one COMPONENT row),
+  "named" in place of "dated", "replacement" for substitute (it named the successor on 10-17).
+- Q1 where the price paid lives: orders ✓, also "price component" ✗ (the rule, not the
+  receipt). Q2 42 everyone vs 40 Midwest: most specific wins ✓ cold. Q3 a bare 5% discount:
+  "all items" ✓ (empty = any). Q4 product + feature on one row: right shape, no business case.
+- Engraving digression (the user's): proposed engraving as a service linked by a complement,
+  a valid alternative. "An association is suggested on an order item" ✗ (catalogue data; the
+  order ties lines with "ordered for"); "a feature is part of the product" ✗ (it describes a
+  product, applicability says which). Agreed test: sold alone, stocked or worked on → product;
+  a choice describing the thing bought → feature. Card 6's W gains it.
+- Q5 one customer's price: listed five conditions (missed sale type and organization), didn't
+  know. Claude's slip: hinted at Ch 4, which the user hasn't read (chapters 4–8 are built,
+  not read). Answered within Ch 2–3: a party type (a real segment, not a type of one).
+- Q6 what 3.8 answers that one cost column can't: "cost by supplier" ✗ (not on the row);
+  after the columns were listed, components and history ✓; geography/organization missed.
+- Q7 premium stands in for standard: SUBSTITUTE, one row ✓, direction backwards ✗ (from =
+  the product wanted). Q8 gel pen vs carbon forms: one row, no direction ✓ unprompted.
+- Q9 copier, 2 cartridges, 3 kg powder each: 2 rows ✓, "sum" ✗ (multiply: 6 kg), powder as a
+  feature ✗ (third product squeezed into a feature), cartridge standalone ✓, "package" ~
+  (COMPONENT, an assembly). Redo: both rows mashed into one, the 2 lost again.
+- Q10 the kit's price: from the kit only ✓ cold.
+Scores: base competition 2 → 3, conditions 2 → 3, estimated cost 0 → 2, direction 0 → 2,
+kit pricing 1 → 3, BOM 0 → 1; feature prices and type-only attributes stay (2, 1). Next: the
+quantity on the link and the substitute's direction, retested cold.
