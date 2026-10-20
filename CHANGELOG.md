@@ -143,6 +143,8 @@ and any decisions made.
   competition and conditions reach 3, estimated cost 2, association direction 2, kit pricing
   3, the BOM 1. Card 6's W and Fig 3.4's NOTES gain the feature-or-product test (the
   engraving talk).
+- Ch 3 mixed drill (features, products, associations, categories), items 1–6 logged: the
+  bundle's quantities came unprompted (type-only attributes 1 → 2); item 7 left open.
 
 **Decisions**
 - Card 8: hook "the price recipe" (the user's "product recipe" would cue card 9's bill of
@@ -199,8 +201,9 @@ and any decisions made.
 - Work effort purpose optional; production runs typed PROJECT for want of a level in the book.
 
 **Next**
-- Ch 3: open with recall on the quantity on a component link (lost four times) and the
-  substitute's direction; then the BOM explosion walk-through. Practice questions stay inside
+- Ch 3: open with the drill's item 7 (two 250-sheet packs for a ream: the substitute's
+  direction and its quantity), then recall on dates on associations; then the BOM explosion
+  walk-through. Practice questions stay inside
   settled material: Chs 4–8 are built, not read.
 - Ch 8's remaining figures (budget review, scenarios, usage and sources, the tie to the
   ledger, the overall model) when shared.

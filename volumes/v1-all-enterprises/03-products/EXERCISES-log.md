@@ -333,3 +333,24 @@ Scores (new rows): link 0 → 2, typed table 0 → 2, type-only attributes 0 →
 Scores: base competition 2 → 3, conditions 2 → 3, estimated cost 0 → 2, direction 0 → 2,
 kit pricing 1 → 3, BOM 0 → 1; feature prices and type-only attributes stay (2, 1). Next: the
 quantity on the link and the substitute's direction, retested cold.
+
+### 2026-10-19: Mixed drill (features, products, associations, categories), items 1–6
+- 1 nibs on a fountain pen: product + selectable features ✓. The user's questions: a standard
+  size among others is STANDARD + SELECTABLE rows; a dearer size is a price row, not a new
+  product (that needs its own stock or barcode).
+- 2 a pack of 5 cartridges sold separately: complement ✓, a product ✓ (implied), direction
+  backwards ~ (pen → pack), `quantity_used` 5 on a complement ✗. Then "complement uses
+  quantity" ✗ (the substitute does). Printer → cartridge can be COMPONENT (ships inside) and
+  COMPLEMENT (refills) at once; only components explode. The user mapped the printer back onto
+  the pen (Claude's example invited it): the 5 is the pack's contents, not the pen's.
+- 3 "Writing instruments": category + classification ✓; subcategories + rollup the likelier
+  reading, not seen (Claude's plural made it ambiguous).
+- 4 the gel pen under two categories: two classifications, one primary ✓ unprompted; the
+  seasonal row's thru date added by Claude.
+- 5 X100 → X200: successor ✓, direction ✓ once asked to fill the row, from date ✗ again.
+- 6 a bundle of 3 notebooks and 2 gel pens: a product + two COMPONENT rows with 3 and 2 ✓
+  unprompted, the first quantity that came unprompted; the bundle kept apart from item 4's
+  category of the same name.
+- 7 (two 250-sheet packs for a 500-sheet ream) asked, unanswered: the user went to sleep.
+Scores: type-only attributes 1 → 2; direction stays 2; the link stays 2 (dates). Next: item 7
+opens the next session.
