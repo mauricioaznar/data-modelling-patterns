@@ -46,10 +46,10 @@ Chapter titles are from memory; verify them against the book's table of contents
 
 - [ ] Ch 01: Introduction (read only; key conventions go into README notation)
 - [ ] Ch 02: People and Organizations *(figures 2.1–2.13 built; exam done; practice trimmed 2026-10-09 to three submodels, ~3 h each)*
-  - [ ] Submodel 1: parties, roles and relationships (reinforce specific vs generic relationships, recall relationship naming + 2 rows, scenario, doc entry)
+  - [ ] Submodel 1: parties, roles and relationships (reinforce specific vs generic relationships, still 2 on 2026-10-21: the deciding factor is how many kinds; recall relationship naming + 2 rows, scenario, doc entry)
   - [ ] Submodel 2: contact mechanisms (non-solicitation closed at 3 on 2026-10-12; next: exercise 3a (Q3 asked, unanswered), scenario, doc entry)
   - [ ] Postal addresses, facilities and geography (Figs 2.8, 2.11): parked 2026-10-09 by the user's choice; practise them with Shipments
-  - [ ] Submodel 3: communication events and case (reinforce case + work effort, scenario, doc entry)
+  - [ ] Submodel 3: communication events and case (case vs work effort at 4 cold on 2026-10-21; event role → party, not party role, back to 2 the same day, self-caught; scenario, doc entry)
   - [ ] Confirm PERSON NAME → PERSON NAME TYPE optionality against the book
   - [ ] Try enforcing non-overlapping from/thru periods (exclusion constraint with `btree_gist`; check PGlite support)
   - [ ] Refactor `role_type` into a ROLE TYPE supertype with a PARTY ROLE TYPE subtype once another role-type subtype appears (see NOTES, Fig 2.4). Triggered 2026-10-18: Ch 4's ORDER ROLE TYPE, then ORDER ITEM ROLE TYPE (Fig 4.5), REQUIREMENT, REQUEST and QUOTE ROLE TYPE (Figs 4.9–4.11), AGREEMENT ROLE TYPE (Fig 4.12), then Ch 5's SHIPMENT RECEIPT ROLE TYPE (Fig 5.4) and ITEM ISSUANCE ROLE TYPE (Fig 5.5): nine role-type lookups now, each its own table (more since: Ch 6's work effort and timesheet role types, Ch 7's INVOICE ROLE TYPE and BILLING ACCOUNT ROLE TYPE, Ch 7 NOTES point 8); Ch 4 NOTES, points 5 and 15, decide at its overview (statuses went the other way: Ch 2's shared `status_type`)
@@ -66,7 +66,7 @@ Chapter titles are from memory; verify them against the book's table of contents
   - [x] 3.9a vs 3.9b: build 3.9b, the one Fig 3.11 keeps (the user's choice, 2026-10-16)
   - [x] 3.10: built as 3.11 keeps it (GOOD's subtypes + a COMPONENT association type), on assumptions (2026-10-16); 3.10b's PART discussed, not built. Point 11 settled 2026-10-17: COMPONENT is the one row for packages and assemblies
   - [ ] Submodel 4: pricing and costing (Figs 3.7–3.8): built 2026-10-16 (ponders 15–19); doc draft and card 8 done; walk-through of 3.7 from the user's own model 2026-10-17, parked at the column review (next: the value columns, price and percent); still to do: finish 3.7, 3.8, exercises
-  - [ ] Submodel 5: product associations and parts (Figs 3.9–3.10): built 2026-10-16 (ponders 20–23); doc draft and card 9 done; walk-through of 3.9b from the user's own model 2026-10-17, paused at the substitute's direction (a/b/c); still to do: finish 3.9b, 3.10a (BOM), exercises
+  - [ ] Submodel 5: product associations and parts (Figs 3.9–3.10): built 2026-10-16 (ponders 20–23); doc draft and card 9 done; walk-through of 3.9b from the user's own model 2026-10-17, paused at the substitute's direction (a/b/c); 2026-10-21 random recall: Q11 (A and B substitute each other: how many rows?) parked unanswered, opens the next session; still to do: finish 3.9b, 3.10a (BOM), exercises
   - [ ] Refactor candidate from the associations walk-through (NOTES, point 11; no change until the user agrees): give the seeded starter kit a base price
   - [x] New workflow catch-up (2026-10-16): cards 8–9; doc drafts for Ch 3 submodels 1–5; architecture entries for Ch 2 and Ch 3; Core patterns gains a Ch 3 column and three patterns (rules as rows, exclusive arc, catalogue vs physical instance); question index and roadmap updated
   - [x] Doc drafts for Ch 2 postal addresses, facilities and geography (with its two pitfalls from item 49, roadmap row added) and communication events (the "learnt so far" notes regrouped into the seven sections; "To verify" kept) (2026-10-16)

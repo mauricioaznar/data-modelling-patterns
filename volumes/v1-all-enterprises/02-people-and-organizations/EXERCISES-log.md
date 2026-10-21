@@ -309,3 +309,32 @@ Misunderstandings and reinforce attempts, oldest first.
   away: mechanism type, subtypes, purpose type. Missed the optional `role_type_id` (guessed
   "subtypes", then party_type); `contact_mechanism_link` and `facility_contact_mechanism`
   named for them. **Non-solicitation closed at 3** (user agreed).
+- **2026-10-21, random recall across Chs 2–3 (the Ch 2 questions; Ch 3's are in its log).**
+  An Acme story (three calls about a batch of broken pens).
+  Q1 (what ties the three calls together?): communication case ✓ unprompted (**case 3**).
+  Added "us" as an internal organization in the CALLEE role, then said it had linked the
+  event role to a party role, not the party: **the 10-09 gap came back, self-caught; event
+  roles 2**. Claude had first called it right without asking which table (Claude's slip).
+  Q4 (a small HR app with only employment, with a salary on it: generic or specific?):
+  framed it as a subtype table vs one fat table, salary as the reason ✓; no pick, and the
+  main driver missed (how many kinds of relationship: generic pays off when kinds keep
+  coming, or for "everything tied to party X"). **Specific vs generic stays 2.** Side
+  question, "kind" or "subtype": Claude first said `_kind` means subtype tables behind it,
+  then corrected itself (`inventory_item_kind` keeps one table, `order_kind` has no columns):
+  `_kind` is a fixed exclusive split, `_type` an open lookup the business extends.
+  Q7 (a technician sent to inspect the batch): a work effort off the last call through
+  `communication_event_work_effort`, not off the case ✓ cold, with the case sitting there as
+  bait from Q1 (**case vs work effort 4**). Claude added that the link is many-to-many.
+  Q8 (Acme's one number, for billing and general calls): one link, two purposes on it, the
+  digits in the telecom subtype ✓; purpose dates left out. Follow-up (where the flag lives):
+  on the link ✓, true = don't solicit ✓. Why there came only after pushback ("me through this
+  mechanism, but it's still my mechanism"; the second half, the link lives on for billing, is
+  the user's own point). Ending the link for a new row to keep the flag's history called
+  "bitemporal" ✗: it's valid time; bitemporal adds when we recorded it. Claude added the cost
+  of the new row: the purposes must move to the new link. **Contact mechanisms 3.**
+  Q10 (Acme is minority-owned and a customer): classification, role, and the relationship
+  CUSTOMER → INTERNAL_ORGANIZATION ✓; why it matters thin ("tags vs behaviour"). Claude tied
+  it to Ch 3, where market interest and price components condition on the party type.
+  "Categories" for party classifications (vocabulary). **Role vs classification 3.**
+  Process: the user found Claude "extra cold" in the read-backs, and a second "done?" made
+  them hesitate; from now on a yes to the read-back counts as done.

@@ -3,6 +3,26 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-21
+
+**Built**
+- Random recall across Chs 2–3, ten questions on one Acme story, scored and logged in both
+  chapters' logs: case 3, event roles 2 (the old party-role slip, self-caught), specific vs
+  generic 2, case vs work effort 4, contact mechanisms 3, role vs classification 3; feature
+  interaction 3, category rollup 3, inventory item 3, price components 3, classification 4.
+- Side answers in chat: `_kind` (a fixed exclusive split, with or without subtype tables) vs
+  `_type` (an open lookup); currency as a unit of measure subtype; one base price row per
+  currency; valid time vs bitemporal on the non-solicitation flag.
+
+**Decisions**
+- A yes to Claude's read-back counts as done (the user hesitated at a second "done?").
+- Grade only what the question asked: Q9 went 3 → 4 after the user's pushback (primary flag
+  defaults to false, dates weren't asked).
+
+**Next**
+- Q11 (substitution direction, A ↔ B) opens the next session, then the usual three recall
+  questions, favouring specific vs generic and event roles.
+
 ## 2026-10-20
 
 **Built**

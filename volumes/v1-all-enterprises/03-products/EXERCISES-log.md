@@ -377,3 +377,28 @@ Scores: type-only attributes 2 -> 3; direction stays 2 (the why); the link stays
   (two recursive CTEs here already), the cost is the business rules, worth it at scale.
   English: predecessor / successor; "first generation" over "original" (OEM in cartridges).
 Scores: the link stays 2 (one dated row; retest cold once more before 3).
+
+### 2026-10-21: Random recall across Chs 2–3 (the Ch 3 questions; Ch 2's are in its gaps log)
+- Q2 (on our pens, gold engraving can't go with the transparent barrel): product feature
+  interaction, INCOMPATIBILITY, read both ways ✓ unprompted; the type called
+  "interoperability" (vocabulary); the product context column left out. The applicability vs
+  interaction mix-up didn't come back.
+- Q3 (Gel pens under Pens and under Back to school): two rollup rows, one child, two parents ✓
+  unprompted, the first practice of the rollup.
+- Q5 (500 reams in Main, 200 in the Annex): two non-serialized inventory items, one per
+  facility, the count in quantity on hand ✓; the good each row is stock of left out, though
+  the question asked what each row points at.
+- Q6 (the Fine Pen's base is $2, the West region gets 10% off): two components on the pen,
+  the base with no conditions, the discount on the West boundary, "each says when it
+  applies" ✓. Left out: ONE_TIME on the base (agreed at the overview), the from dates, the
+  currency. The user's questions: currency vs unit of measure (a currency is a unit of measure
+  subtype); a price in pesos is a second base row, and the line's currency filters which rows
+  compete (a percent has no currency, an amount does).
+- Q9 (the Gel Pen 0.7 also in Back to school, September only): a classification row, dated,
+  kept apart from Q3's rollup ✓ cold. Claude first marked the primary flag and exact dates as
+  missing; the user pushed back (neither was asked, and `primary_flag` defaults to false) and
+  was right.
+- Q11 (Pens A and B substitute for each other: how many association rows, and why?) asked,
+  parked by the user unanswered.
+Scores: interaction 3; rollup 3; inventory item 3; price components 3; classification 4.
+Next: Q11 (direction) opens the next session.
