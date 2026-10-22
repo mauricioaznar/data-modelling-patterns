@@ -3,6 +3,26 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-22
+
+**Built**
+- Vol 1 Ch 4 overview started, on the orders submodel (Figs 4.1–4.5). The user recited
+  card 10's mantra first; the explode test waits for the drafts-and-cards step.
+
+**Decisions**
+- Point 1: Fig 4.1 stays unbuilt (its failure is structural).
+- Point 2: the strict reading. An order item names a product, a feature or neither, never
+  both; every feature gets its own line ordered for a product's line.
+- Point 3: the bill-to stays optional, the placer fallback stays; revisit at Ch 7 or the
+  core app.
+- Found under point 4: the generic `order_role` points at `party`, so it skips the column
+  version's "set up to be billed" rule. For the refactor: an order role type → required
+  standing role type mapping and a check (recorded under point 8).
+
+**Next**
+- Point 4 (ORDER ROLE's identifier): the user's answers to its three questions, then
+  points 5–9, then card 10's explode test and the rest of the chapter's points.
+
 ## 2026-10-21
 
 **Built**

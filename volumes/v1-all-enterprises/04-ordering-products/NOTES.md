@@ -1461,6 +1461,9 @@ the literal drawing.
 1. **4.1, not built:** read as the book's straw man, which 4.2 replaces, so it gets no SQL
    (STATUS.md lists it as not built). If you'd rather see its failures in data, as with Fig
    2.2a's `person_flat`, we build it at the overview.
+   **Outcome (2026-10-22): kept.** Left unbuilt: its failure is structural (every rule
+   twice, a party that buys and sells as two rows), which a seed wouldn't show better than a
+   sentence. Card 10's W already names it; no card fix.
 2. **4.2, product or feature:** no arc is drawn, yet read as "an item names a product or a
    feature, not both; a feature's item is ordered for a product's item, on the same order,
    and the feature must apply to that product; an item with neither carries a description".
@@ -1468,9 +1471,22 @@ the literal drawing.
    4.4 (shared later) seems to put a feature on the product's own line twice (the pen's blue,
    A2395's billing feature), beside feature lines of their own: if so, the book allows both
    shapes, and the "both or nothing" check should only flag "nothing".
+   **Outcome (2026-10-22): kept, the strict reading.** An exclusive arc: a line names a
+   product, a feature, or neither (a description-only line), never both, and every feature
+   gets its own line ordered for a product's line. Allowing both would give one fact two
+   spellings (Blue on the pen's line, or on a line under it), so every feature report would
+   need two query shapes, and it records nothing the strict reading can't. Table 4.4's blue
+   pen is read as the table squeezing a 0.00 feature onto its product's row. The checks stay
+   as they are. Card 10 already says "a product **or** a feature"; no card fix.
 3. **4.3 and 4.4, optionality of the party lines:** all seven on each side read as optional, so the columns are
    nullable. When no bill-to is given, the queries bill the placing customer. That fallback
    is ours, not the book's: is the bill-to meant to be mandatory instead?
+   **Outcome (2026-10-22): kept optional, to revisit.** The bill-to points at a role (BILL TO
+   CUSTOMER, or BILL TO PURCHASER on a purchase order), so only a party already set up to be
+   billed can be named, and an order may legitimately not know it yet. The fallback to the
+   placer stays in the queries for now; the user will see how it plays out (Ch 7's invoicing,
+   the core app) and change it then. Optionality alone doesn't depend on the column being
+   shared by both directions. No card fix.
 4. **4.3, ORDER ROLE's identifier:** read as order + party + type. Bars are visible on "of"
    and "described by" only, but two salespeople on one order need the party in it too.
 5. **4.3, ORDER ROLE TYPE vs Ch 2's ROLE TYPE:** this is the second kind of role type, the
@@ -1490,6 +1506,13 @@ the literal drawing.
    change), and built next to them, as Ch 2 kept Figs 2.5 and 2.6a: order 12571 uses only
    the generic tables, the others the columns, plus generic rows for jobs no column holds. If
    the chapter's overall figure keeps one version, the other becomes comparison only.
+   **Agreed addition (2026-10-22, found under point 4):** `order_role` points at `party`, so a
+   BILL_TO order role can name a party never set up to be billed, which the column version's
+   FK to `party_role` prevents. For the refactor: a mapping stored as rows, order role type →
+   the standing role type it requires (BILL_TO → BILL_TO_CUSTOMER, SALESPERSON → EMPLOYEE,
+   APPROVER → none), as Ch 2's medium-to-participant table does, and one data-quality query:
+   the party holds a current role of that type (or below it) on the order date, plus a bad
+   seed row it catches.
 9. **4.5, direction-neutral role types:** our new ORDER ROLE TYPE rows (PLACED_BY, TAKEN_BY,
    BILL_TO) serve both directions, and the order's kind says which side is ours. Silverston
    may mean one type per hat (placing customer, supplier, bill-to purchaser…), which keeps
