@@ -1506,6 +1506,13 @@ the literal drawing.
    change), and built next to them, as Ch 2 kept Figs 2.5 and 2.6a: order 12571 uses only
    the generic tables, the others the columns, plus generic rows for jobs no column holds. If
    the chapter's overall figure keeps one version, the other becomes comparison only.
+   **Outcome (2026-10-22): changed, generic all the way** (the user's call: that's
+   Silverston's point, and the overall figure keeps it). In the refactor every order moves to
+   `order_role` and the order and item contact-mechanism tables; the party and mechanism
+   columns of 4.3 and 4.4 go (whether they stay as a labelled comparison is confirmed then).
+   Point 9 still decides the role types. **Card fix:** card 10's S and D lead with the generic
+   tables, the columns at most as the W's half-step; the architecture card already keeps the
+   generic version.
    **Agreed addition (2026-10-22, found under point 4):** `order_role` points at `party`, so a
    BILL_TO order role can name a party never set up to be billed, which the column version's
    FK to `party_role` prevents. For the refactor: a mapping stored as rows, order role type →

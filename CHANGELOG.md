@@ -18,10 +18,12 @@ and any decisions made.
 - Found under point 4: the generic `order_role` points at `party`, so it skips the column
   version's "set up to be billed" rule. For the refactor: an order role type → required
   standing role type mapping and a check (recorded under point 8).
+- Point 8 (taken early): generic all the way. The refactor moves every order onto
+  `order_role` and the generic contact-mechanism tables, and card 10 leads with them.
 
 **Next**
 - Point 4 (ORDER ROLE's identifier): the user's answers to its three questions, then
-  points 5–9, then card 10's explode test and the rest of the chapter's points.
+  points 5–7 and 9, then card 10's explode test and the rest of the chapter's points.
 
 ## 2026-10-21
 
