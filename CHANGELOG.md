@@ -13,6 +13,9 @@ and any decisions made.
 - Side answers in chat: `_kind` (a fixed exclusive split, with or without subtype tables) vs
   `_type` (an open lookup); currency as a unit of measure subtype; one base price row per
   currency; valid time vs bitemporal on the non-solicitation flag.
+- Later session: Q11 (substitution direction) 2 → 3, the asymmetry as the why after a
+  follow-up; Q12 (Tom the caller) event roles 2 → 4 cold, after the user's pushback; Q13 (the
+  CRM, specific vs generic) asked, unanswered.
 
 **Decisions**
 - A yes to Claude's read-back counts as done (the user hesitated at a second "done?").
@@ -20,8 +23,8 @@ and any decisions made.
   defaults to false, dates weren't asked).
 
 **Next**
-- Q11 (substitution direction, A ↔ B) opens the next session, then the usual three recall
-  questions, favouring specific vs generic and event roles.
+- Q13 (the CRM: which relationship model, and why?) opens the next session; then check that
+  event roles hold at 4, and direction's why on the first pass.
 
 ## 2026-10-20
 

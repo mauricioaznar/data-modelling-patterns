@@ -402,3 +402,14 @@ Scores: the link stays 2 (one dated row; retest cold once more before 3).
   parked by the user unanswered.
 Scores: interaction 3; rollup 3; inventory item 3; price components 3; classification 4.
 Next: Q11 (direction) opens the next session.
+
+### 2026-10-21 (later session): Submodel 5, Q11 (A and B substitute for each other)
+- SUBSTITUTE (called "replacement"), not successor (OBSOLESCENCE in our seed) ✓; two rows,
+  "direction matters", quantity 1 ✓. The why was the claim again; after the follow-up "why
+  can't one row cover both ways?": substitution isn't symmetric (standard may stand in for
+  premium, not the reverse), and one row read both ways would imply the reverse and hand out
+  the luxury paper ✓. "Circular" for the implied reverse (wording). Claude tied it to Q2:
+  substitute = a row each way, incompatibility = one row read both ways.
+- The user asked why 3 and not 4: the why came after a narrowing follow-up (the Q8 flag
+  precedent, right but late).
+Scores: direction 2 → 3. For a 4: the asymmetry as the why on the first pass, in a new story.

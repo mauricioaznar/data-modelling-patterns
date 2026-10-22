@@ -338,3 +338,17 @@ Misunderstandings and reinforce attempts, oldest first.
   "Categories" for party classifications (vocabulary). **Role vs classification 3.**
   Process: the user found Claude "extra cold" in the read-backs, and a second "done?" made
   them hesitate; from now on a yes to the read-back counts as done.
+- **2026-10-21 (later session), recall: event roles and specific vs generic.**
+  Q12 (Tom, Acme's buyer, phones us: how do you record that Tom was the caller?): Acme and
+  Tom as the parties, event roles CALLER for Tom and CALLEE for us, PHONE's valid roles
+  checked by a data-quality query, the optional context Acme → us (the customer
+  relationship) ✓ cold, with Tom's CONTACT role there as bait. Claude first gave 3 because
+  the answer didn't say the row points at the party; the user pushed back ("Acme and Tom are
+  the parties", then the roles for them) and was right: the doubt came from the Q1 history,
+  not the text. **Event roles 2 → 4** (check it holds next time). Side point, not graded: Tom
+  ↔ Acme guessed as employment, "no relationship without an internal organization" ✗; it's
+  ORGANIZATION CONTACT (CONTACT → ORGANIZATION_ROLE), and employment runs from our internal
+  organization only. Clarified: `communication_event_role` holds event, party and role
+  type, no `party_role_id`; party roles reach the event only through the relationship context.
+  Q13 (a CRM with customers, suppliers, partners, agents and contacts: which relationship
+  model, and why?) asked, unanswered: the user stopped here. Opens the next session.
