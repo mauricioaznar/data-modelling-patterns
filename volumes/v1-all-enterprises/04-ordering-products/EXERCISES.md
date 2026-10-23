@@ -35,7 +35,12 @@ it's understood.
 
 | Concept | Fig | Tables | Level | Evidence |
 |---|---|---|---|---|
-|  |  |  | 0 | |
+| **Submodel 1: orders, items and order parties** (practice started early, 2026-10-23, the user's call: points 1–9 settled, refactor pending, so explanations use the agreed design, not the old columns) | | | | |
+| One order for both directions (supertype/subtype, the order kind) | 4.1–4.2 | `order`, `sales_order`, `purchase_order` | 1 | Q1: the kind named, on the right table |
+| The line: product, feature or neither, the agreed price as a snapshot, ordered for | 4.2 | `order_item`, `sales_order_item`, `purchase_order_item` | 2 | Q1: price snapshot on the line, unprompted |
+| Scoped roles on the order and the line (generic all the way) | 4.3–4.5 | `order_role`, `order_role_type`, `order_item_role`, `order_item_role_type` | 2 | Q1: order-level hat right, line ship-to missed; florist: line ship-to after a nudge, placer missed |
+| Where: contact mechanisms with a purpose, on the order and the line | 4.3–4.5 | `order_contact_mechanism`, `order_item_contact_mechanism` | 2 | Q1: both levels right; florist: billing address and purposes missed |
+| Rules beside facts: which hats each order kind allows, and the standing role each needs | 4.5 (points 7, 9) | `order_role_rule`, `order_item_role_rule` (refactor) | 3 | Florist: the rule row and its after-the-fact check, unprompted (Q1 had said "doesn't do anything") |
 
 ### Open threads
 -
