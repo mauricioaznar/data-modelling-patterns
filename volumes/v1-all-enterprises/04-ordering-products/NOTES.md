@@ -1552,6 +1552,16 @@ the literal drawing.
    BILL_TO) serve both directions, and the order's kind says which side is ours. Silverston
    may mean one type per hat (placing customer, supplier, bill-to purchaser…), which keeps
    the role names of 4.3 and 4.4 but doubles the list.
+   **Outcome (2026-10-23): kept neutral, with the rules in one table** (the user's call).
+   `order_role_rule` (order kind, role type, an optional required standing role type,
+   from/thru) holds the rules; `order_role` (order, party, role type, percent) holds the
+   facts. A rule row means "this hat is allowed on this kind of order"; several rows for
+   one hat mean "any of these standing roles" (SALESPERSON: EMPLOYEE or CONTRACTOR). Two
+   checks: a hat with no rule for the order's kind on its date, and a party holding none
+   of the required standing roles on the order date. The direction lives only in the rule
+   table, so the role types stay neutral (per-hat names would repeat the kind) and their
+   scope stays plain `order` (point 5); no parent types. Lines get the twin
+   `order_item_role_rule`. This is the point 8 mapping and point 7's rows, made concrete.
 10. **4.6, an order or an item:** no arc is drawn across the two "affecting" lines; read as
     one or the other, never both (a data-quality query). Other readings: an item's adjustment
     also names its order (redundant, but easy to sum), or both are allowed.

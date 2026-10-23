@@ -6,7 +6,7 @@ and any decisions made.
 ## 2026-10-23
 
 **Built**
-- Vol 1 Ch 4 overview, points 4–7 settled. Point 4 taught: what an identifier is (a uniqueness rule, which a
+- Vol 1 Ch 4 overview, points 4–7 and 9 settled. Point 4 taught: what an identifier is (a uniqueness rule, which a
   surrogate key moves to a check query rather than removing), and cardinality.
 
 **Decisions**
@@ -20,11 +20,14 @@ and any decisions made.
 - Point 7: on a purchase order, PLACED_BY and BILL_TO require INTERNAL_ORGANIZATION; SHIP_TO
   has no rule (drop ships pass). A rule tests only the party's own standing role, never a
   relationship; rules carry dates.
+- Point 9: neutral role types; one rules table, `order_role_rule` (order kind, role type,
+  optional required standing role, dated), beside the facts in `order_role`; two checks.
+  Lines get the twin. The orders submodel's points are all settled.
 - Composite keys stay out of the repo: the core app enforces its rules in the database, with
   negative tests, and takes the repo's data-quality checks as its spec (TODO, Core app).
 
 **Next**
-- Ch 4 overview: point 9 (direction-neutral role types; the mapping needs the direction), then card 10's explode test and the rest of the points.
+- Ch 4 overview: card 10's explode test (closes the orders submodel), then points 10–40.
 
 ## 2026-10-22
 
