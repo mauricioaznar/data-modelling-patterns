@@ -13,6 +13,11 @@ and any decisions made.
   sides as two rows, one party per job); T right (the price snapshot); D half right (arrows
   drawn parent to child, the association tables skipped, an FK drawn from `order_role` to
   the rules, which are matched on values). New mantra picked.
+- Design reference: *Orders, items and order parties* reviewed with the user and revised to
+  points 1–9 (lead, a sixth question, core entities on the generic tables, add-ons with the
+  role rules, seven design choices, patterns); Core patterns' Ch 4 cells updated (rules as
+  rows, typed rows, specific lines as a counter-example, one scoped ROLE TYPE); question
+  index row extended. Still a draft until practice.
 
 **Decisions**
 - Point 4: kept as read. Order + party + type is the identifier; order + type is a
@@ -32,8 +37,7 @@ and any decisions made.
   negative tests, and takes the repo's data-quality checks as its spec (TODO, Core app).
 
 **Next**
-- Next session (the user's call): review the *Orders, items and order parties* doc entry
-  first, then points 10–40 with their entries and cards, then the refactor (its running
+- Next session: points 10–40 with their entries and cards, then the refactor (its running
   list is in TODO under Ch 4). Watch D's arrow direction (FK from the holder) as a
   candidate trap for card 10.
 
