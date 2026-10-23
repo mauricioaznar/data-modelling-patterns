@@ -1521,6 +1521,15 @@ the literal drawing.
    under a new BUYER type, the mirror of CUSTOMER. Nothing drawn says they must be roles of
    our own organizations (or their employees), so nothing checks it. Should something? Table
    4.7 (shared later) gives every buyer role to one of ABC's own organizations.
+   **Outcome (2026-10-23): changed, rules in the mapping** (the user's call: keep it
+   simple, organizations where possible). In the point 8 mapping, on a purchase order:
+   PLACED_BY and BILL_TO require an INTERNAL_ORGANIZATION standing role (as Table 4.7 has
+   it; the person who raised the order goes under ENTERED_BY or APPROVER, with no such
+   rule); SHIP_TO on a purchase line gets no rule, so Ch 5's drop ship 4800 to Sellers
+   Assistance passes. **Principle:** a rule only tests the party's own standing role; a
+   check never follows a relationship (employment, subsidiary), so "our employee" is not a
+   rule. Rules are rows, so they carry from/thru dates and an order is judged by the rules
+   in force on its order date. The mapping needs the order's direction (point 9).
 8. **4.5 built beside 4.3 and 4.4:** read as an alternate (the text offers it for when roles
    change), and built next to them, as Ch 2 kept Figs 2.5 and 2.6a: order 12571 uses only
    the generic tables, the others the columns, plus generic rows for jobs no column holds. If
