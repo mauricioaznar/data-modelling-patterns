@@ -133,6 +133,7 @@ chapters. Vol 2's industry types are extra documentation on top.
 - **Gate (the user's decision, 2026-10-14):** before the app starts, every tracker row of Ch 2–9 reaches 4 (applies cold, later session, no hints).
 - [ ] Agree on the problem, the stack and the ops/testing practice. Ideas from the old per-3-chapter plan: Express + Knex with a deploy, Fastify + Drizzle with k6 stress testing, Next.js + Prisma with Playwright E2E.
 - [ ] Open: do the industry types get an app of their own, or versions of the core app?
+- [ ] Integrity in the database (the user's call, 2026-10-23): the repo keeps simple keys and data-quality checks; the app enforces its rules as constraints (composite FKs such as role type + scope, exclusive arcs, triggers or exclusion constraints where keys can't reach, e.g. date overlaps and shares adding to 100), each with a negative test (an insert that must fail). The repo's data-quality checks are its spec.
 
 ## Vol 2: A Library of Universal Data Models by Industry Types
 
