@@ -1512,6 +1512,11 @@ the literal drawing.
    (4.5 does the same; 4.6 draws it on ORDER ITEM only). Read as one attribute, kept on
    `order_item`. If Silverston meant a second one (the supplier's wording for the line, say),
    it moves to `purchase_order_item`.
+   **Outcome (2026-10-23): kept as read** (the user's call): one free-text field, on
+   `order_item` only. A supplier's own wording for a product, if ever needed, is a fact
+   about the supplier's offer (Ch 3's SUPPLIER PRODUCT), not about one line. Left for the
+   refactor: after point 8 takes the ship-to columns away, `purchase_order_item` has no
+   column of its own.
 7. **4.4, whose buyer roles:** PLACING BUYER, BILL TO PURCHASER and SHIP TO BUYER are grouped
    under a new BUYER type, the mirror of CUSTOMER. Nothing drawn says they must be roles of
    our own organizations (or their employees), so nothing checks it. Should something? Table

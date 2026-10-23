@@ -15,11 +15,13 @@ and any decisions made.
 - Point 5: one `role_type` table with a `scope` column for all 18 role-type lookups (Ch 2's
   three included), a scope check per role table; the composite FK noted as the production
   option the simple-keys rule leaves out. Branch a scope out only if it earns an attribute.
+- Point 6: item description stays one free-text field on `order_item`; a supplier's own
+  wording would belong to Ch 3's supplier product, not the line.
 - Composite keys stay out of the repo: the core app enforces its rules in the database, with
   negative tests, and takes the repo's data-quality checks as its spec (TODO, Core app).
 
 **Next**
-- Ch 4 overview: points 6–7 and 9, then card 10's explode test and the rest of the points.
+- Ch 4 overview: points 7 and 9, then card 10's explode test and the rest of the points.
 
 ## 2026-10-22
 
