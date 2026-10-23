@@ -32,8 +32,10 @@ and any decisions made.
   negative tests, and takes the repo's data-quality checks as its spec (TODO, Core app).
 
 **Next**
-- Ch 4 overview: points 10–40, then the doc drafts and the other cards. Watch D's arrow
-  direction (FK from the holder) as a candidate trap for card 10.
+- Next session (the user's call): review the *Orders, items and order parties* doc entry
+  first, then points 10–40 with their entries and cards, then the refactor (its running
+  list is in TODO under Ch 4). Watch D's arrow direction (FK from the holder) as a
+  candidate trap for card 10.
 
 ## 2026-10-22
 
