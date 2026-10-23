@@ -12,9 +12,12 @@ and any decisions made.
 **Decisions**
 - Point 4: kept as read. Order + party + type is the identifier; order + type is a
   per-role-type cardinality rule (one bill-to, many buyers), covered by 4.5's check.
+- Point 5: one `role_type` table with a `scope` column for all 18 role-type lookups (Ch 2's
+  three included), a scope check per role table; the composite FK noted as the production
+  option the simple-keys rule leaves out. Branch a scope out only if it earns an attribute.
 
 **Next**
-- Ch 4 overview: points 5–7 and 9, then card 10's explode test and the rest of the points.
+- Ch 4 overview: points 6–7 and 9, then card 10's explode test and the rest of the points.
 
 ## 2026-10-22
 

@@ -1499,6 +1499,15 @@ the literal drawing.
    ORDER ROLE TYPE subtypes). The figure draws ORDER ROLE TYPE alone, so it's its own lookup
    for now; decide at the overview, once more role types have shown up. Fig 4.12's AGREEMENT
    ROLE TYPE makes seven.
+   **Outcome (2026-10-23): changed, one table** (the user's call). All 18 role-type lookups
+   (Ch 2's facility, communication event and case ones included: same shape, same job,
+   our reading of Silverston's intention) fold into `role_type` with a `scope` column
+   (party, facility, communication event, order, …). Each role table gets a data-quality
+   check that its type has the right scope (deviation: a composite FK on (type, scope) with
+   a constant scope column would enforce it in the database, the production choice, left
+   out by the simple-keys rule). A scope branches out into a shared-key subtype table only
+   if it ever earns an attribute of its own. Done in the refactor; point 9 and the order
+   role → standing role mapping build on it.
 6. **4.4, PURCHASE ORDER ITEM's ITEM DESCRIPTION:** drawn on the subtype and on ORDER ITEM
    (4.5 does the same; 4.6 draws it on ORDER ITEM only). Read as one attribute, kept on
    `order_item`. If Silverston meant a second one (the supplier's wording for the line, say),
