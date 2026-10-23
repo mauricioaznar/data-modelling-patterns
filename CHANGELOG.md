@@ -8,6 +8,11 @@ and any decisions made.
 **Built**
 - Vol 1 Ch 4 overview, points 4–7 and 9 settled. Point 4 taught: what an identifier is (a uniqueness rule, which a
   surrogate key moves to a check query rather than removing), and cardinality.
+- Card 10's explode test: S missed the line roles and the contact mechanism tables (the old
+  mantra never named the "where"); W right at the core, the costs missing (a party on both
+  sides as two rows, one party per job); T right (the price snapshot); D half right (arrows
+  drawn parent to child, the association tables skipped, an FK drawn from `order_role` to
+  the rules, which are matched on values). New mantra picked.
 
 **Decisions**
 - Point 4: kept as read. Order + party + type is the identifier; order + type is a
@@ -27,7 +32,8 @@ and any decisions made.
   negative tests, and takes the repo's data-quality checks as its spec (TODO, Core app).
 
 **Next**
-- Ch 4 overview: card 10's explode test (closes the orders submodel), then points 10–40.
+- Ch 4 overview: points 10–40, then the doc drafts and the other cards. Watch D's arrow
+  direction (FK from the holder) as a candidate trap for card 10.
 
 ## 2026-10-22
 
