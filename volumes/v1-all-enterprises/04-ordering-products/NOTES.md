@@ -1489,6 +1489,11 @@ the literal drawing.
    shared by both directions. No card fix.
 4. **4.3, ORDER ROLE's identifier:** read as order + party + type. Bars are visible on "of"
    and "described by" only, but two salespeople on one order need the party in it too.
+   **Outcome (2026-10-23): kept as read.** Order + party + type is the uniqueness rule (our
+   surrogate key leaves it to the "one party twice in the same role" check). Order + type
+   alone is a per-role-type cardinality rule (one bill-to per order, many buyers or
+   salespeople), not the identifier; 4.5's "more than one of a job the columns held once"
+   check covers it for the types that need it.
 5. **4.3, ORDER ROLE TYPE vs Ch 2's ROLE TYPE:** this is the second kind of role type, the
    trigger for TODO's refactor (`role_type` as a ROLE TYPE supertype with PARTY ROLE TYPE and
    ORDER ROLE TYPE subtypes). The figure draws ORDER ROLE TYPE alone, so it's its own lookup

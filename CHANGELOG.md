@@ -3,6 +3,19 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-23
+
+**Built**
+- Vol 1 Ch 4 overview, point 4 discussed: what an identifier is (a uniqueness rule, which a
+  surrogate key moves to a check query rather than removing), and cardinality.
+
+**Decisions**
+- Point 4: kept as read. Order + party + type is the identifier; order + type is a
+  per-role-type cardinality rule (one bill-to, many buyers), covered by 4.5's check.
+
+**Next**
+- Ch 4 overview: points 5–7 and 9, then card 10's explode test and the rest of the points.
+
 ## 2026-10-22
 
 **Built**
