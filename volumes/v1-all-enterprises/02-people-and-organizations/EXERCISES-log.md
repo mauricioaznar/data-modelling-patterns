@@ -352,3 +352,14 @@ Misunderstandings and reinforce attempts, oldest first.
   type, no `party_role_id`; party roles reach the event only through the relationship context.
   Q13 (a CRM with customers, suppliers, partners, agents and contacts: which relationship
   model, and why?) asked, unanswered: the user stopped here. Opens the next session.
+- **2026-10-23, recall (Q13 reworded as a travel agency CRM).** Part 1: one general structure,
+  because everything that hangs off a relationship (roles at each end, contact mechanisms and
+  communication events in its context) would otherwise repeat per kind ✓ cold; the other
+  side not weighed (specific tables give readable columns and an FK per end, and a kind
+  earns a subtype when it has attributes of its own, e.g. an agent's commission). Part 2:
+  Marta as ORGANIZATION CONTACT ✓ (the Tom and Priya miss fixed), Luis as EMPLOYMENT ✓, Hotel
+  Sol as both SUPPLIER and CUSTOMER, the second dated from March ✓. Directions 2 of 5:
+  customer and contact drawn reversed (seed: CUSTOMER → INTERNAL_ORGANIZATION, CONTACT →
+  ORGANIZATION_ROLE). **Rafa missed**: DISTRIBUTION CHANNEL, AGENT → INTERNAL_ORGANIZATION.
+  People moving between companies: only Hotel Sol dated (an ended contact relationship and a
+  new one is the history). **Specific vs generic 2 → 3.**

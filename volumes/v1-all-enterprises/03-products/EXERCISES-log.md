@@ -413,3 +413,16 @@ Next: Q11 (direction) opens the next session.
 - The user asked why 3 and not 4: the why came after a narrowing follow-up (the Q8 flag
   precedent, right but late).
 Scores: direction 2 → 3. For a 4: the asymmetry as the why on the first pass, in a new story.
+
+### 2026-10-23: Submodel 4 cold retest (the Trail 29 bike)
+- Pricing: two bases, $950 on Colorado the more specific ✓; the $900 thru-dated at 2026-12-01
+  and a new $990 from 2026-12-01, no overwrite ✓ cold; club 10% as a discount on the party type
+  ✓, but without the product, so it reads as 10% off anything a club buys; carbon wheels called
+  a surcharge ✗: it's a base price on the feature, which adds to the winning base (the
+  selectable applicability named ✓). Missed again: the charge kind, the currency.
+- The order: two lines, the wheels ordered for the bike, each with its final price as a
+  snapshot ✓. The sum: (950 + 250) × 0.1 ✗, twice over: 10% *off* is × 0.9, and the discount
+  is the bike's only. Right: bike $855 (950 beats 990 on 15 Dec, then −10%), wheels $250,
+  $1,105. Same slip as 2026-10-19 (an adjustment applied the wrong way); Colorado comes from
+  the ship-to address, not named.
+Scores: price components 2 → 3; feature prices stay at 2.
