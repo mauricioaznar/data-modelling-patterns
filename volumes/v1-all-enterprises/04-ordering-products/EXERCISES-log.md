@@ -80,6 +80,16 @@ cardinality is a check query, as the seed's second bill-to shows). 3, Ana the sa
 4, ship to anyone: no rule row, so nothing is flagged (right). Rules: 3. Hats: the salesperson
 filed as the placer twice, minutes after "the buyer places, the seller takes".
 
+## Submodel 1 round (2026-10-24)
+
+**R1 (Apply): purchase order 9, Acme buys 500 reams from Paperco; Lin keys it in, Raj signs
+it off, the invoice goes to Acme.** PLACED_BY Acme (internal organization), TAKEN_BY Paperco,
+BILL_TO Acme (internal organization), Lin as "Captured By" (the hat right, ENTERED_BY's name
+forgotten), Raj as approver (right). Direction flipped right on a purchase, the person who
+keys the order kept off PLACED_BY, point 7's internal-organization rule named unprompted.
+The line (copy paper, 500) given though not asked. Score: 4 for the order hats; the row
+goes 2 → 3, with the line hats and SALESPERSON left to retest.
+
 ## Gaps log
 - 2026-10-23, Q1: who vs where on a line. Gave the ship-to address, not the ship-to party
   (`order_item_role`). Same gap as card 10's S. Reinforce.

@@ -426,3 +426,37 @@ Scores: direction 2 → 3. For a 4: the asymmetry as the why on the first pass, 
   $1,105. Same slip as 2026-10-19 (an adjustment applied the wrong way); Colorado comes from
   the ship-to address, not named.
 Scores: price components 2 → 3; feature prices stay at 2.
+
+### 2026-10-24: Submodel 5, BOM retest (Spokes' Tourer: 2 Rolla wheels; a wheel, 1 hub and 32 spokes; a hub, 2 bearings)
+- Before answering, asked: "something that doesn't get sold but is part of something is a
+  feature, correct?" ✗: the 2026-10-19 slip ("a feature is part of the product") back. The
+  agreed test restated: sold alone, stocked or worked on → product; a choice describing the
+  thing bought → feature. Being sold doesn't decide it. Feature row 3 → 2.
+- Pushback: "anything can be a feature or a product, depending on the operation" (half right:
+  it depends on what *this* business does with the thing; a shop that buys whole wheels could
+  hold "32 spokes" as a dimension feature of the wheel) and "a product is something you build
+  on your own" (the test misremembered: card 6 says sold alone, stocked *or* worked on in its
+  own right). Held: Spokes stocks spokes and builds with them, so they're products; a feature
+  can't have a supplier product, an inventory item or a `quantity_used` (all point at product).
+- The answer: Tourer → Rolla 2, Tourer → frame 1, Rolla → hub 1, Rolla → spoke 32, hub →
+  bearing 2, all COMPONENT, from = the whole ✓ cold (10-19's mashed row and lost 2 not
+  repeated). The spare: no row given ✓, "every product is in the catalogue, so what difference
+  does it make" ✓, then hedged with a "spare" category or an association "joined to whom" (no
+  association; a category is an optional extra for browsing). Not named: the one real
+  difference is a base price component on the Rolla, which its parts never get (the starter
+  kit gap, point 11). Score: 4 on the rows; BOM 1 → 3, the explosion still to retest.
+- Q3 (10 Tourers and 4 spare Rollas: spokes and bearings from stock): 20 + 4 = 24 wheels, 24 ×
+  32 spokes, 24 × (1 hub × 2) bearings, i.e. 768 and 48 ✓ cold, multiplied down (10-19's sum
+  not repeated), the spares merged at the wheel level. Slip in the follow-up: "each bicycle
+  carries 32 spokes and 2 bearings" (each *wheel*; a bike carries 64 and 4). Fair point raised:
+  the question assumed a build to order (blame Claude's). Asked: does ordering an assembly
+  always need its components? (no: the BOM is the recipe; an order line orders the Tourer, and
+  stock of finished Tourers ships as is) and do prices double count? (no: a line takes the
+  price of the product it orders, not a "root"; components carry no price into it, only
+  features ordered for the line add on top). Score: 4 on the explosion; BOM stays 3 until
+  `good_kind` is asked.
+- Follow-up (the user's, after the price point): "optional or selectable features get added
+  separately on the order line with their price" ✓, prompted by Claude's mention. Sharpened:
+  a SELECTABLE feature is always chosen (one of its type must be), so it always gets a line,
+  maybe at 0.00; the line is ordered for the product's line and names only the feature (Ch 4,
+  point 2). No score change (prompted).

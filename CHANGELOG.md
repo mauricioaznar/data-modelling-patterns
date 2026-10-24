@@ -3,6 +3,28 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-24
+
+**Built**
+- A question round, logged in the Ch 4 and Ch 3 logs. Ch 4 orders, R1 (purchase order 9,
+  Acme buys from Paperco): all five order hats right cold, the keyer kept off PLACED_BY,
+  ENTERED_BY's name forgotten; roles row 2 → 3.
+- Ch 3 associations, Spokes' Tourer: five COMPONENT rows (Q2) and the explosion, 768 spokes
+  and 48 bearings (Q3), both cold, multiplied down; BOM row 1 → 3, `good_kind` left. Before
+  Q2, "not sold but part of something = feature" (the 10-19 slip back): feature row 3 → 2.
+- Taught in chat: the product-or-feature test (sold alone, stocked or worked on → product;
+  being sold doesn't decide it); a spare needs no extra row, only a base price; the BOM is the
+  recipe, not a build order; a line counts only the price of the product it orders, plus the
+  features ordered for it on their own lines.
+
+**Decisions**
+- Question rounds stay inside reviewed material: only submodels past their overview (Ch 4:
+  orders only, as of today). Claude offered order adjustments and the user turned it down.
+
+**Next**
+- Ch 4 orders: Greenleaf (line hats and SALESPERSON), the line's wheres, the order kind.
+  Ch 3: `good_kind`, and the feature-vs-product test cold in a later session.
+
 ## 2026-10-23
 
 **Built**
