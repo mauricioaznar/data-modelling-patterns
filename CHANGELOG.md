@@ -18,8 +18,15 @@ and any decisions made.
   role rules, seven design choices, patterns); Core patterns' Ch 4 cells updated (rules as
   rows, typed rows, specific lines as a counter-example, one scoped ROLE TYPE); question
   index row extended. Still a draft until practice.
+- Ch 4 submodel 1 practice, started early (the user's call): Q1–Q4 (Remember to Evaluate) and
+  three reinforces (the florist, Contoso's laptops, the ops manager's four notes). Tracker:
+  the line and rules beside facts at 3; order kind, who and where at 2. Taught: the buyer
+  places and the seller takes; a customer's staff is an organization contact, not employment;
+  a rule row gives a hat's shape, a check query its count.
 
 **Decisions**
+- No `min_count` / `max_count` on `order_role_rule`: cardinality stays in check queries, as
+  point 4 settled (the user's call).
 - Point 4: kept as read. Order + party + type is the identifier; order + type is a
   per-role-type cardinality rule (one bill-to, many buyers), covered by 4.5's check.
 - Point 5: one `role_type` table with a `scope` column for all 18 role-type lookups (Ch 2's
@@ -37,7 +44,9 @@ and any decisions made.
   negative tests, and takes the repo's data-quality checks as its spec (TODO, Core app).
 
 **Next**
-- Next session: points 10–40 with their entries and cards, then the refactor (its running
+- Submodel 1 practice: reinforce the hats (placer, taker, salesperson, bill-to) and the
+  line's wheres beyond shipping, probe the order kind, then Create, the scenario and the doc
+  entry. Then points 10–40 with their entries and cards, and the refactor (its running
   list is in TODO under Ch 4). Watch D's arrow direction (FK from the holder) as a
   candidate trap for card 10.
 
