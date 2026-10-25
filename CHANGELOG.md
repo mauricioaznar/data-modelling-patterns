@@ -6,25 +6,41 @@ and any decisions made.
 ## 2026-10-25
 
 **Built**
-- A question round (seven planned, Q1–Q3 asked so far), logged in the Ch 3, Ch 4 and Ch 2
-  logs. Q1 Pedalia (Ch 3): frame size SELECTABLE, the €15 factory-fitted kickstand a feature,
+- A question round of seven, logged in the Ch 3, Ch 4 and Ch 2 logs (Q4–Q7 sent as text,
+  then answered in this session). Q1 Pedalia (Ch 3): frame size SELECTABLE, the €15 factory-fitted kickstand a feature,
   the shelved bell a product, all cold on a later day: feature and PRODUCT rows 3 → 4. Q2
   order 31 (Ch 4): END_USER for one party with two hats and split across two parties, the
   billing address on the order, cold: roles and wheres 3 → 4. Q3 FitZone (Ch 2): one case,
   event roles and work efforts on the event cold; a one-call clerk made a case stakeholder,
-  how the case ends (status, no thru) not given (3).
-- Taught in chat: events and cases carry no effectivity (a fact holds from/thru; an event
+  how the case ends (status, no thru) not given (3). Q4 Pedalia categories (Ch 3): two
+  parents for Kids' bikes cold, but the Rolla Junior classified under the leaf and both
+  parents, the 10-12 miss (2). Q5 (Ch 2): two costs of the generic relationship cold, the FK
+  per end fixed by a check query, readability by "documentation" (a view per kind) (3). Q6
+  Ane in Bilbao (Ch 3): the three rows right, the containment reversed, the €435 total not
+  given (2; the text leaned on Q1, which the offline copy lacked: mostly Claude's blame). Q7
+  Molina (Ch 3): `good_kind` never drilled, kinds not recalled (1, mostly Claude's blame).
+- Card 9: the key explains `good_kind` beside the component rows, and the mantra gains
+  "Each good is bought in, built in or sent out" (the user's request); Anki export rebuilt.
+- Taught in chat: `good_kind` (raw = bought input, subassembly = built input, finished =
+  sold as it comes; the kind tells a build line from a package line); a feature's price adds
+  when it's on the sale and its component applies, decided by the price row, not the
+  applicability type; product and feature on lines of their own, "ordered for"; a view is a
+  virtual table (a view per kind fixes generic readability, a subtype holds own attributes);
+  classify at the most specific true category, never at an ancestor of one the product
+  already has, and primary picks among categories where neither contains the other.
+- Also taught: events and cases carry no effectivity (a fact holds from/thru; an event
   happens, with timestamps; a case is a process with a status).
 - Ch 2 tracker fixed: the case and event-role rows hadn't taken 10-21's scores (case 3,
   event roles 4).
 
 **Decisions**
-- None.
+- The user's pushback on "classify at the leaf" accepted as an overstatement: the rule is
+  the most specific true category (Q4's grade held).
 
 **Next**
-- The round's Q4–Q7, sent as text for the user to answer offline (wording and key in the Ch 3 and Ch 2 logs, 2026-10-25): category rollup (Ch 3), the costs of generic relationships (Ch 2),
-  feature prices on top of the base (Ch 3), `good_kind` (Ch 3). Then Ch 4 orders: the line
-  and its children, Create, the scenario and the doc entry; Ch 2: retest how a case ends.
+- Retests cold on a later day: `good_kind`, classify at the most specific category,
+  containment in price conditions and the €435 sum, how a case ends, the view per kind.
+- Ch 4 orders: the line and its children, Create, the scenario and the doc entry.
 
 ## 2026-10-24
 

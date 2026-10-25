@@ -550,3 +550,9 @@ Scores: price components 2 → 3; feature prices stay at 2.
   category already used, since a rollup means containment. Grey categories are why the model
   is a dated network with a primary flag; the no-ancestor rule is Claude's normalisation
   reading, not a book quote. Grade held at 2 (the stated tree made both parent rows copies).
+  Follow-ups: "isn't primary for double counting?" Yes, across categories where neither
+  contains the other (primary picks one for one-bucket reports); it can't stop rows that copy
+  the tree. The user saw it: the full classification is built from the row plus the rollup,
+  never stored. The rule per product, not per category (Kids can still hold a helmet's row);
+  "real category" (Claude's vague word) = one not reached by climbing the rollup from a
+  category the product already has; walked through with a table.
