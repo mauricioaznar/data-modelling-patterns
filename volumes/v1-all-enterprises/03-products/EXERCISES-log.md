@@ -482,3 +482,12 @@ Scores: price components 2 → 3; feature prices stay at 2.
   as a grind is coffee jargon. Read right anyway, so no blame to split; "must pick one" would
   have been crisper. Score: 4. Feature row 2 → 3 and PRODUCT row 2 → 3; 4 waits for a later
   day, since the test slipped this morning.
+
+### 2026-10-25: question round Q1, Submodels 1–2 (Pedalia's City bike: a frame size the buyer must pick; a €15 kickstand the factory fits; a bell bought by the box, shelved, fitted to every bike)
+- Frame size: SELECTABLE, no standard ✓ cold.
+- Kickstand: a feature, "not stocked, sold or modified on its own" ✓ cold. The price is the
+  bait (being sold doesn't decide it) and it held.
+- Bell: a product, "it is stocked" ✓ cold. Not named, not needed: Pedalia also works on it
+  (fits it), and stock means a supplier product and an inventory item, both on product.
+- The test on a later day, in a new setting, with no slip. Score: 4. PRODUCT row 3 → 4
+  (good vs service still open), feature row 3 → 4.

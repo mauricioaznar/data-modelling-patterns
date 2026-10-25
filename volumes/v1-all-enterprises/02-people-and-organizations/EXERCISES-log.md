@@ -366,3 +366,17 @@ Misunderstandings and reinforce attempts, oldest first.
 - **2026-10-24, question round Q2 (effectivity).** Paula's work mobile from 1 March 2026,
   last day 31 August: from 2026-03-01, thru 2026-09-01 ✓ cold, the first answer without the
   inclusive or "minus a day" slip (10-07, 10-09, 10-12). No why asked. **Effectivity 2 → 3.**
+- **2026-10-25, question round Q3 (case and work effort).** FitZone: Iker phones about a
+  double charge (Sara takes it), e-mails a statement (Lola takes charge, asks Ana to refund),
+  Lola calls back and it's settled. One case over the three events ✓; event roles (caller /
+  callee, sender / recipient) ✓ cold; two work efforts off the 5 March e-mail, not the case ✓
+  cold (Lola's review counted as one, fine); Lola as owner and Iker as customer ✓ (names
+  loose, the user's question "how specific?": the part played counts, not the type name).
+  Sara, who only took one call, filed as a case participant ~: case roles are stakeholders
+  in the issue, event roles who took part in one event. **How the case ends not given**
+  (asked): its status moves to CLOSED or RESOLVED, no thru date (10-09 Q6's slip). The
+  user's follow-up "a finishing date and a status change?" corrected to the status only; then
+  asked whether events or cases carry effectivity: neither (a fact holds from/thru; an event
+  happens, with start/end timestamps; a case is a process with a status). Tracker fix: the
+  case row still said 2 from 10-12, though 10-21 had it at 3 (work effort at 4); now 3, the
+  ending to retest. Event roles row 3 → 4 (10-21's later 4 held).

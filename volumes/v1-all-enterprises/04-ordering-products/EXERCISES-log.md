@@ -112,6 +112,18 @@ that hangs off it (item roles, item mechanisms, the ordered-for lines), and "eve
 party is in" becoming a union; dates and types are columns, not doubled tables. Score: 3; the
 row goes 2 → 3.
 
+## Submodel 1 round (2026-10-25)
+
+**Q2 (Apply): order 31, Ofisur sells desks to Grupo Lema, which places and pays; the invoice
+to Calle Mayor 5; line 1, Norte Logística receives and uses 20; line 2, Norte receives 10 for
+its tenant Studio Vela.** First asked "who are we?": the wording ("in Ofisur's system")
+hinted rather than said, Claude's blame. Then: the sales kind, PLACED_BY and BILL_TO Grupo
+Lema, TAKEN_BY Ofisur, the billing address on `order_contact_mechanism` with BILLING; line 1
+SHIP_TO and END_USER both for Norte Logística (R2's END_USER miss fixed), line 2 SHIP_TO
+Norte and END_USER Studio Vela; SHIPPING per line. All cold. Not asked: both lines link one
+address row. Score: 4. Roles 3 → 4, wheres 3 → 4 (the billing address retested, the florist
+miss fixed).
+
 ## Gaps log
 - 2026-10-23, Q1: who vs where on a line. Gave the ship-to address, not the ship-to party
   (`order_item_role`). Same gap as card 10's S. Reinforce.

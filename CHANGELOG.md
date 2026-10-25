@@ -3,6 +3,29 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-25
+
+**Built**
+- A question round (seven planned, Q1–Q3 asked so far), logged in the Ch 3, Ch 4 and Ch 2
+  logs. Q1 Pedalia (Ch 3): frame size SELECTABLE, the €15 factory-fitted kickstand a feature,
+  the shelved bell a product, all cold on a later day: feature and PRODUCT rows 3 → 4. Q2
+  order 31 (Ch 4): END_USER for one party with two hats and split across two parties, the
+  billing address on the order, cold: roles and wheres 3 → 4. Q3 FitZone (Ch 2): one case,
+  event roles and work efforts on the event cold; a one-call clerk made a case stakeholder,
+  how the case ends (status, no thru) not given (3).
+- Taught in chat: events and cases carry no effectivity (a fact holds from/thru; an event
+  happens, with timestamps; a case is a process with a status).
+- Ch 2 tracker fixed: the case and event-role rows hadn't taken 10-21's scores (case 3,
+  event roles 4).
+
+**Decisions**
+- None.
+
+**Next**
+- The round's Q4–Q7: category rollup (Ch 3), the costs of generic relationships (Ch 2),
+  feature prices on top of the base (Ch 3), `good_kind` (Ch 3). Then Ch 4 orders: the line
+  and its children, Create, the scenario and the doc entry; Ch 2: retest how a case ends.
+
 ## 2026-10-24
 
 **Built**
