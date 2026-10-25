@@ -386,3 +386,11 @@ Misunderstandings and reinforce attempts, oldest first.
   may stand there (→ a check query against the type's role rules); its own attributes, e.g.
   salary (→ a subtype sharing the key, or a dated child); readable columns, from/to meaning
   per type and a type filter in every query (→ a view per kind).
+- **2026-10-25, Q5 answered the same day (pasted in this session).** Two losses named cold:
+  the single-purpose FK per end ✓ (fix: a data-quality query flags non-compliant rows ✓;
+  against what not said: the relationship type's valid from/to role types) and readable
+  columns ✓ (fix: "proper documentation?" ~; the stronger fix is a view per kind, e.g.
+  `employment` over `party_relationship` filtered by type, with employer / employee columns).
+  Not needed (two asked), not named: the kind's own attributes (salary → a subtype sharing
+  the key, or a dated child). Score: 3. Specific vs generic stays 3; the costs now weighed
+  cold (the 10-23 gap), the view to retest.
