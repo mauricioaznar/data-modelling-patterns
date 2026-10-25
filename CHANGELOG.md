@@ -16,14 +16,21 @@ and any decisions made.
   being sold doesn't decide it); a spare needs no extra row, only a base price; the BOM is the
   recipe, not a build order; a line counts only the price of the product it orders, plus the
   features ordered for it on their own lines.
+- A second question round (six questions, Chs 2–4). Q1 Greenleaf (Ch 4): SALESPERSON 70/30
+  on the order and SHIP_TO per line cold, END_USER missed (3). Q2 Paula's mobile (Ch 2):
+  exclusive thru cold, effectivity 2 → 3 (4). Q3 Greenleaf compost (Ch 3): SUBSTITUTE row
+  dated unprompted (wrong month), why half there; link and direction 2 → 3 (3). Q4 (Ch 4):
+  placing e-mail and delivery contact cold, wheres 2 → 3 (4). Q5 Tostado (Ch 3): grind as a
+  selectable feature, the shelved valve a product, cold; feature and PRODUCT 2 → 3 (4). Q6
+  (Ch 4): two order tables, the doubled children and the trade-off; one order 2 → 3 (3).
 
 **Decisions**
 - Question rounds stay inside reviewed material: only submodels past their overview (Ch 4:
   orders only, as of today). Claude offered order adjustments and the user turned it down.
 
 **Next**
-- Ch 4 orders: Greenleaf (line hats and SALESPERSON), the line's wheres, the order kind.
-  Ch 3: `good_kind`, and the feature-vs-product test cold in a later session.
+- Ch 4 orders: END_USER and the billing address, then Create, the scenario and the doc entry.
+  Ch 3: `good_kind`, and the feature-vs-product test cold on a later day (for 4).
 
 ## 2026-10-23
 

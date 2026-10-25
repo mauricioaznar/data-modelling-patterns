@@ -363,3 +363,6 @@ Misunderstandings and reinforce attempts, oldest first.
   ORGANIZATION_ROLE). **Rafa missed**: DISTRIBUTION CHANNEL, AGENT → INTERNAL_ORGANIZATION.
   People moving between companies: only Hotel Sol dated (an ended contact relationship and a
   new one is the history). **Specific vs generic 2 → 3.**
+- **2026-10-24, question round Q2 (effectivity).** Paula's work mobile from 1 March 2026,
+  last day 31 August: from 2026-03-01, thru 2026-09-01 ✓ cold, the first answer without the
+  inclusive or "minus a day" slip (10-07, 10-09, 10-12). No why asked. **Effectivity 2 → 3.**

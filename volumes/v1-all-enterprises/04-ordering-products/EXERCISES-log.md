@@ -90,6 +90,28 @@ keys the order kept off PLACED_BY, point 7's internal-organization rule named un
 The line (copy paper, 500) given though not asked. Score: 4 for the order hats; the row
 goes 2 → 3, with the line hats and SALESPERSON left to retest.
 
+**R2 (Apply): Greenleaf sells Hotel Sol palms and soil; the soil goes to Verde SL, which also
+uses it; Marta and Joel split the sale 70/30.** SALESPERSON twice on the order with the
+70/30 shares (right, cold), SHIP_TO per line (right, cold), and both line addresses with the
+SHIPPING purpose though not asked. Missed: END_USER for Verde SL on line 2 (it receives and
+uses, two hats). Score: 3. The row stays at 3; SALESPERSON is at 4, END_USER to retest.
+
+**R3 (Apply): the same order, placed from orders@hotelsol.es; for line 2 the driver rings
+Verde SL's site mobile first.** The e-mail on `order_contact_mechanism` with a placing
+purpose ("issuer", tied to the placed-by hat unprompted) and the mobile on
+`order_item_contact_mechanism` as DELIVERY_CONTACT, both cold: the two 10-23 misses (the
+placing e-mail at Contoso, the delivery contact on the order in Q3) not repeated. Score: 4;
+the wheres row goes 2 → 3 (billing address not retested).
+
+**R4 (Evaluate): two separate tables, `sales_order` and `purchase_order`, no shared order;
+what doubles besides the columns?** "Everything that hangs off an order repeats": the
+participants, the contact mechanisms, status, connected twice and maybe built twice; and the
+other side weighed, "specific only gains readability and a true FK", unprompted. The 10-23
+Q4 miss (judged by repeated columns only) not repeated. Not named: the line itself and all
+that hangs off it (item roles, item mechanisms, the ordered-for lines), and "every order a
+party is in" becoming a union; dates and types are columns, not doubled tables. Score: 3; the
+row goes 2 → 3.
+
 ## Gaps log
 - 2026-10-23, Q1: who vs where on a line. Gave the ship-to address, not the ship-to party
   (`order_item_role`). Same gap as card 10's S. Reinforce.
@@ -111,4 +133,6 @@ goes 2 → 3, with the line hats and SALESPERSON left to retest.
 - 2026-10-23, ops manager reinforce: dated rules and the after-the-fact check right, unprompted
   (rules back to 3); cardinality put in the rule table. SALESPERSON filed as PLACED_BY twice:
   the placer / taker / salesperson trio is a gap (roles down to 2). Reinforce.
+- 2026-10-24, R2 (Greenleaf): one party that receives and uses got only SHIP_TO; END_USER
+  missed. A party doing two things on a line needs two role rows.
 Misunderstandings and reinforce attempts, oldest first.

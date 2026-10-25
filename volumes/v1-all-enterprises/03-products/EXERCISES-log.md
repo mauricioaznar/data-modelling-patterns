@@ -460,3 +460,25 @@ Scores: price components 2 → 3; feature prices stay at 2.
   a SELECTABLE feature is always chosen (one of its type must be), so it always gets a line,
   maybe at 0.00; the line is ordered for the product's line and names only the feature (Ch 4,
   point 2). No score change (prompted).
+
+### 2026-10-24: question round Q3, Submodel 5 (Greenleaf: from 1 Nov 2026, offer two 10 L bags when the 20 L is out; not the reverse)
+- One SUBSTITUTE row, from = the 20 L wanted, to = the 10 L offered, 2 on `quantity` (not
+  `quantity_used`) ✓ cold. The from date given unprompted for the first time (missed 10-17,
+  10-19, 10-20), but 1 October, not 1 November (a misread, not a gap).
+- Why the direction: "read the other way, a 10 L request gets two 20 L bags, 40 L" ✓,
+  concrete, not circular as on 10-20. Not named: the row states the rule "when from is
+  wanted, offer quantity × to", so flipping it states a rule Greenleaf never made, and the
+  reverse, if allowed, is a second row with its own quantity. Score: 3. Link (dated) 2 → 3,
+  direction 2 → 3.
+
+### 2026-10-24: question round Q5, Submodels 1–2 (Tostado: a grind picked per bag; a bought, shelved valve sealed into every bag, never sold alone)
+- Grind: a SELECTABLE feature of the bag ✓ cold, OPTIONAL ruled out because one must be
+  picked, no STANDARD feature present ✓.
+- Valve: a product "because it gets stocked" ✓ cold, the morning slip named and corrected
+  unprompted ("I was only considering elements that could get sold"). Not named, not asked:
+  what follows (a COMPONENT row bag → valve, the supplier product, the shelf stock as an
+  inventory item, all pointing at product).
+- Fairness point (the user's): the wording didn't say a grind is required, and "whole bean"
+  as a grind is coffee jargon. Read right anyway, so no blame to split; "must pick one" would
+  have been crisper. Score: 4. Feature row 2 → 3 and PRODUCT row 2 → 3; 4 waits for a later
+  day, since the test slipped this morning.
