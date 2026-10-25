@@ -520,3 +520,14 @@ Scores: price components 2 → 3; feature prices stay at 2.
   check failure. Blame split: `good_kind` had never been tested or drilled (only settled at
   the overview, point 11), so the question tested something never taught in practice: mostly
   mine. Score: 1. Taught in chat. Retest cold on a later day.
+- **Q6 answered the same day (pasted in this session).** Catalogue rows: two bike bases and
+  one kickstand base ✓. Geography: "assuming the Basque Country is inside Bilbao's borders"
+  ✗, the containment reversed (Bilbao sits inside the Basque Country, so Ane's sale matches
+  the €420 condition; the 10-17 Springfield activation slip, again); why 420 beats 400 (most
+  specific wins) not said. The kickstand: the text pointed at Q1, which the WhatsApp copy
+  didn't carry, so the user branched (standard → 420; optional or selectable → its component
+  counted separately on the order; a product → its own line). Blame: mostly Claude's (the
+  question wasn't self-contained), though it did say "the feature" with its own €15 base.
+  "Counted separately" implies adding, but no total given: Ane pays 435 (the 420 base wins,
+  the feature's base adds on top and competes only with that feature's). Score: 2. Feature
+  prices stay at 2; conditions row keeps 3, the containment to retest.
