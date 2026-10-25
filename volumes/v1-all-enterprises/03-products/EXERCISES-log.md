@@ -491,3 +491,20 @@ Scores: price components 2 → 3; feature prices stay at 2.
   (fits it), and stock means a supplier product and an inventory item, both on product.
 - The test on a later day, in a new setting, with no slip. Score: 4. PRODUCT row 3 → 4
   (good vs service still open), feature row 3 → 4.
+
+### 2026-10-25: question round Q4, Q6, Q7, sent as text (the user answers offline, brings the answers to a later session)
+- Q4 (rollup): Pedalia's "Bikes", "Kids" (also helmets, gloves) and "Kids' bikes", which sits
+  under both. Which rows in which tables so the Rolla Junior (a kids' bike) shows under all
+  three, and how many classification rows does it need? Key: two rollup rows (Kids' bikes →
+  Bikes, → Kids), one classification row (→ Kids' bikes, primary, dated); the parents come
+  through the rollup; one parent column can't hold two parents.
+- Q6 (feature prices): City bike base €400 for anyone, €420 in the Basque Country; the
+  kickstand's base €15. Ane in Bilbao buys both: the rows, what she pays, why. Key: three
+  components; 435, the most specific product base wins (Bilbao inside the Basque Country),
+  the feature's base adds on top and competes only with that feature's.
+- Q7 (`good_kind`): Molina buys burrs, motors and casings, builds a burr set from 2 burrs, a
+  grinder from 1 burr set, 1 motor, 1 casing, and sells only the grinder. Each good's kind,
+  and what the kind tells that the COMPONENT rows can't. Key: grinder FINISHED_GOOD, burr set
+  SUBASSEMBLY, burr, motor, casing RAW_MATERIAL; packages and assemblies share the COMPONENT
+  row, only the kind tells a BOM line from a package line (and a raw material made of
+  something is caught by a check).

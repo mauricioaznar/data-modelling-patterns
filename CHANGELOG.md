@@ -22,7 +22,7 @@ and any decisions made.
 - None.
 
 **Next**
-- The round's Q4–Q7: category rollup (Ch 3), the costs of generic relationships (Ch 2),
+- The round's Q4–Q7, sent as text for the user to answer offline (wording and key in the Ch 3 and Ch 2 logs, 2026-10-25): category rollup (Ch 3), the costs of generic relationships (Ch 2),
   feature prices on top of the base (Ch 3), `good_kind` (Ch 3). Then Ch 4 orders: the line
   and its children, Create, the scenario and the doc entry; Ch 2: retest how a case ends.
 

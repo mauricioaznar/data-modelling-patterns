@@ -380,3 +380,9 @@ Misunderstandings and reinforce attempts, oldest first.
   happens, with start/end timestamps; a case is a process with a status). Tracker fix: the
   case row still said 2 from 10-12, though 10-21 had it at 3 (work effort at 4); now 3, the
   ending to retest. Event roles row 3 → 4 (10-21's later 4 held).
+- **2026-10-25, question round Q5, sent as text (answered offline, later session).** The
+  travel agency CRM used one generic party relationship table: name two things lost against
+  a specific `employment` table, and what to do about each. Key: an FK per end that says who
+  may stand there (→ a check query against the type's role rules); its own attributes, e.g.
+  salary (→ a subtype sharing the key, or a dated child); readable columns, from/to meaning
+  per type and a type filter in every query (→ a view per kind).
