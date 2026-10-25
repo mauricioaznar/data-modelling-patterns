@@ -536,3 +536,11 @@ Scores: price components 2 → 3; feature prices stay at 2.
   matches" is the wrong rule: the €400 base (no condition) matches Ane too (empty = any), and
   the more specific one wins. Asked whether the kickstand is STANDARD: no, OPTIONAL (Q1: the
   buyer can add it).
+- **Q4 answered the same day (pasted in this session).** Rollup: Kids' bikes under both Bikes
+  and Kids ✓ cold, the network read right (two parents). Helmets and gloves made
+  subcategories of Kids: a fair reading of "Kids also holds helmets and gloves" (Claude's
+  wording, ambiguous; meant products classified under Kids). Classification: three rows, the
+  Rolla Junior under Kids' bikes (primary ✓), Bikes and Kids ✗: the 10-12 Q6 gap again
+  (classified under the parents). One row is enough; the parents come through the rollup,
+  and the extra rows double-count in rolled-up totals and can drift from the rollup. Score:
+  2. Rollup stays at 2 (the rollup half at 3, classifying under parents still open).
