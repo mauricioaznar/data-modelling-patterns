@@ -544,3 +544,9 @@ Scores: price components 2 → 3; feature prices stay at 2.
   (classified under the parents). One row is enough; the parents come through the rollup,
   and the extra rows double-count in rolled-up totals and can drift from the rollup. Score:
   2. Rollup stays at 2 (the rollup half at 3, classifying under parents still open).
+  Pushback (the user's): "classify at the leaf" assumes products always sit on a leaf, and
+  what a category is stays grey. Half right, Claude's overstatement: the rule is the most
+  specific category that is true (it may be an inner node), and no row for an ancestor of a
+  category already used, since a rollup means containment. Grey categories are why the model
+  is a dated network with a primary flag; the no-ancestor rule is Claude's normalisation
+  reading, not a book quote. Grade held at 2 (the stated tree made both parent rows copies).
