@@ -335,8 +335,11 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   and "to" mean depends on the type) · `product_association_type` (component, substitute,
   obsolescence, complement, incompatibility; component is 3.9b's marketing package and
   3.10a's product component, one link for a kit and a BOM alike) · `quantity_used` and
-  `instruction` for components, `quantity` for substitutes · `good.good_kind` (raw material,
-  subassembly, finished good).
+  `instruction` for components, `quantity` for substitutes · `good.good_kind`: raw material (bought
+  input), subassembly (built input), finished good (sold as it comes). The kind is one
+  column on a good; the component rows link two goods (what goes into what, how many). Only
+  the kinds tell a build line (grinder → burr set) from a package line (gift box → grinder),
+  and a raw material with components is a check failure.
 - **W:** columns like `replaced_by_product_id` and `substitute_product_id`: one of each, no
   dates, no reason, and a new column for every new kind of link.
 - **T:** *(the naive-model trap until practice gives yours)* forgetting direction. Substitution

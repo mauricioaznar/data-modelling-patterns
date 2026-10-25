@@ -508,3 +508,15 @@ Scores: price components 2 → 3; feature prices stay at 2.
   SUBASSEMBLY, burr, motor, casing RAW_MATERIAL; packages and assemblies share the COMPONENT
   row, only the kind tells a BOM line from a package line (and a raw material made of
   something is caught by a check).
+- **Q7 answered the same day (in this session, not offline).** "Burr, motor, casing and
+  grinder are all products" ✓ (the burr set too, by the same test); "the burr set and the
+  grinder are assemblies made of components" ✓ for the structure, but no kinds given (asked):
+  RAW_MATERIAL, SUBASSEMBLY and FINISHED_GOOD not recalled, and "assembly" for both blurs the
+  subassembly with the finished good. What the kind tells: "which items are complete, not
+  add-ons" ~ (half the finished-good idea; "add-on" is feature vocabulary); "the good kind has
+  the inventory mechanism" ✗ (inventory item points at any good; the kind doesn't decide
+  stocking). Missed: the COMPONENT row is shared by assemblies and marketing packages, only
+  the kind tells a BOM line from a package line, and a raw material with components is a
+  check failure. Blame split: `good_kind` had never been tested or drilled (only settled at
+  the overview, point 11), so the question tested something never taught in practice: mostly
+  mine. Score: 1. Taught in chat. Retest cold on a later day.
