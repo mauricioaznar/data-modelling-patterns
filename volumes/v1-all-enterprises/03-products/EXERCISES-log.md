@@ -531,3 +531,8 @@ Scores: price components 2 → 3; feature prices stay at 2.
   "Counted separately" implies adding, but no total given: Ane pays 435 (the 420 base wins,
   the feature's base adds on top and competes only with that feature's). Score: 2. Feature
   prices stay at 2; conditions row keeps 3, the containment to retest.
+  The user's defence: 420 picked as "the one that belongs to Bilbao", one base only, so one
+  wins. Credit for one base winning and the right one; held at 2, since "the one that
+  matches" is the wrong rule: the €400 base (no condition) matches Ane too (empty = any), and
+  the more specific one wins. Asked whether the kickstand is STANDARD: no, OPTIONAL (Q1: the
+  buyer can add it).
