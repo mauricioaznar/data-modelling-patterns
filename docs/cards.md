@@ -327,7 +327,8 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Hook:** the product tree family *(the user's rewrite, 2026-10-19)*
 - **Mantra:** A typed, dated link joins two products: component (package or assembly),
   substitute, successor, complement, clash. Components explode level by level. *(the user's
-  rewrite, 2026-10-19)*
+  rewrite, 2026-10-19)* Each good is bought in, built in or sent out. *(added at the user's
+  request, 2026-10-25: raw material, subassembly, finished good)*
 
 <details><summary>Key</summary>
 
