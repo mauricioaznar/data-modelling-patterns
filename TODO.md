@@ -94,6 +94,7 @@ Chapter titles are from memory; verify them against the book's table of contents
     - [ ] Point 5: one `role_type` table with a `scope` column for all 18 role-type lookups (Ch 2's facility, communication event and case ones included), a scope check per role table; touches Chs 2 and 4–8
     - [ ] Points 7 and 9: `order_role_rule` (order kind, role type, optional required standing role, from/thru) and its twin `order_item_role_rule`; two checks each; seed rows (purchase PLACED_BY and BILL_TO → INTERNAL_ORGANIZATION, SALESPERSON → EMPLOYEE or CONTRACTOR, …) and a bad row per check; neutral role type names
     - [ ] Point 6: `purchase_order_item` left with no column of its own after point 8; decide what the empty subtype becomes
+    - [ ] Point 12: `sales_tax_lookup` gets from/thru dates; seed a rate change; the tax query takes the rate as of the order date; the duplicate check becomes an overlap check; card 11's key
     - [ ] Point 42: seed Table 4.8's four adjustments on order 12560 (the diskettes' discount stored as the 6.00 total, a recorded deviation); card 11's key: an amount is the total charged; point 43's convention (unit price before discounts, discounts as adjustments)
     - [ ] Card 10: the new mantra, S and D led by the generic tables plus `order_role_rule`; the doc entry updated to match
 - [ ] Ch 05: Shipments *(Figs 5.1–5.8 shared and built 2026-10-18; ready for the overview)*

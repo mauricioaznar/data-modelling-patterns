@@ -1586,6 +1586,13 @@ the literal drawing.
 12. **4.6, SALES TAX LOOKUP with no dates and no line to the adjustment:** read as a reference
     table the order copies its rate from (the snapshot again). Dates would keep old rates for
     late corrections; we stay with the book.
+    **Outcome (2026-10-26): changed, dated rates** (the user's call). `sales_tax_lookup` gets
+    `from_date` (not null) and `thru_date` (exclusive, null = current), as every effective-
+    dated table here. The rate copied onto an order is the one as of the order date, so a
+    late correction to an old order still finds the old rate. The duplicate-rate check
+    becomes an overlap check (two rates for one boundary and category on the same day).
+    Refactor: schema, seed (a Missouri rate change on 1 Jan, a December order corrected
+    after it), the tax query and the check; card 11's key mentions the dates.
 13. **4.7, TERM VALUE optional:** drawn mandatory, but Table 4.9 has a term with no value
     ("no exchanges or refunds"). Built nullable, the table's reading. If every term must carry
     a value, that one needs a made-up value (1 for yes?), which reads oddly. Fig 4.11 draws
