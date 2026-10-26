@@ -597,3 +597,6 @@ Scores: price components 2 → 3; feature prices stay at 2.
   but Granada it doesn't trigger a restock" muddled (read as: Granada follows only its own
   row); the rule not named; the general row's scope called "the general area" (it's empty =
   any). (3) 12 from Nieve ✓. Score: 3. Manufacturer vs supplier 2 → 3, reorder 2 → 3.
+  Clarified by the user: the Granada row triggers at ≤ 6 in Granada only, and never
+  elsewhere ✓ (the muddle was wording). Held at 3: the rule (most specific wins, the general
+  row loses in Granada) not named, and the general row's scope is empty = any.
