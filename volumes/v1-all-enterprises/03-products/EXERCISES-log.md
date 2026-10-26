@@ -579,3 +579,10 @@ Scores: price components 2 → 3; feature prices stay at 2.
   one-bucket report. Without Crime the book doesn't reach Fiction either. Arrival date not
   given in the question (Claude's blame, the user's −1 accepted). Score: 2. Rollup row
   stays 2: no ancestor rows ✓, the rule misread as "one per subtree".
+
+### 2026-10-26: question round Q4, Submodel 4 (Nevada Sports: Pico €300 any, €320 Andalusia; binding mount €20 any, €15 Andalusia; €25 off for Students; Lucía, a student in Granada)
+- Key: 320 (Andalusia contains Granada, more specific than any) + 15 (the mount's own bases
+  compete) − 25 (every matching discount applies) = 310; 300 and 20 match too but lose.
+- Answer: all of it ✓ cold, both "match but less specific" said, 310 given. The containment
+  (Granada inside Andalusia) used, not stated. Score: 4. Base competition 3 → 4, feature
+  prices 2 → 4 (the 10-25 gaps, containment and the sum, closed).
