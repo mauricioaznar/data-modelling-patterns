@@ -94,7 +94,7 @@ Chapter titles are from memory; verify them against the book's table of contents
     - [ ] Point 5: one `role_type` table with a `scope` column for all 18 role-type lookups (Ch 2's facility, communication event and case ones included), a scope check per role table; touches Chs 2 and 4–8
     - [ ] Points 7 and 9: `order_role_rule` (order kind, role type, optional required standing role, from/thru) and its twin `order_item_role_rule`; two checks each; seed rows (purchase PLACED_BY and BILL_TO → INTERNAL_ORGANIZATION, SALESPERSON → EMPLOYEE or CONTRACTOR, …) and a bad row per check; neutral role type names
     - [ ] Point 6: `purchase_order_item` left with no column of its own after point 8; decide what the empty subtype becomes
-    - [ ] Point 42: seed Table 4.8's four adjustments on order 12560 (the diskettes' discount stored as the 6.00 total, a recorded deviation); card 11's key: an amount is the total charged
+    - [ ] Point 42: seed Table 4.8's four adjustments on order 12560 (the diskettes' discount stored as the 6.00 total, a recorded deviation); card 11's key: an amount is the total charged; point 43's convention (unit price before discounts, discounts as adjustments)
     - [ ] Card 10: the new mantra, S and D led by the generic tables plus `order_role_rule`; the doc entry updated to match
 - [ ] Ch 05: Shipments *(Figs 5.1–5.8 shared and built 2026-10-18; ready for the overview)*
   - [x] Figs 5.1–5.3 with Tables 5.1–5.7 (2026-10-18): 5.1–5.2 built as submodel 1, shipments, items and status (card 17), 5.3 as submodel 2, shipments and orders (card 18); doc drafts for both; Core patterns gains a Ch 5 column and two patterns (item-to-item hand-over with its own quantity; plan beside the facts); ponders 1–5 and 1–4
@@ -143,6 +143,7 @@ chapters. Vol 2's industry types are extra documentation on top.
 - **Gate (the user's decision, 2026-10-14):** before the app starts, every tracker row of Ch 2–9 reaches 4 (applies cold, later session, no hints).
 - [ ] Agree on the problem, the stack and the ops/testing practice. Ideas from the old per-3-chapter plan: Express + Knex with a deploy, Fastify + Drizzle with k6 stress testing, Next.js + Prisma with Playwright E2E.
 - [ ] Open: do the industry types get an app of their own, or versions of the core app?
+- [ ] Revisit Ch 4 point 43 (2026-10-26): a discount folded into the unit price or kept as an adjustment. Convention for now: the unit price is before discounts, discounts are adjustments, but both are allowed and nothing checks it. Decide whether the app enforces it (a limit of Silverston's design: nothing tells the two apart)
 - [ ] Integrity in the database (the user's call, 2026-10-23): the repo keeps simple keys and data-quality checks; the app enforces its rules as constraints (composite FKs such as role type + scope, exclusive arcs, triggers or exclusion constraints where keys can't reach, e.g. date overlaps and shares adding to 100), each with a negative test (an insert that must fail). The repo's data-quality checks are its spec.
 
 ## Vol 2: A Library of Universal Data Models by Industry Types

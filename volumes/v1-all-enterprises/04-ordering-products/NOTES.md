@@ -1725,6 +1725,16 @@ the literal drawing.
     produced it. The cost: if the line's quantity changes, the adjustment is worked out
     again, as the unit price and the tax are (the snapshot). Refactor: seed Table 4.8's four
     rows; card 11's key says an amount is the total charged.
+43. **4.2 and 4.6, a discount in the unit price or as an adjustment (chat, 2026-10-26):**
+    the same discount can be folded into the line's unit price (6.00 a box) or kept as an
+    adjustment (7.00 a box, 6.00 off the line), and nothing tells the two apart. Both at
+    once counts it twice, "total discounts given" misses the folded ones, and the "agreed vs
+    list" query can't tell a discount from a negotiated price. The book gives both places
+    and no rule (as far as pages 125–127 go).
+    **Outcome (2026-10-26): a convention, not enforced** (the user's call): the unit price is
+    the price before discounts, and discounts are adjustments; both stay allowed and no check
+    is added. A limit of Silverston's design, to revisit when the core app is built (TODO).
+    Refactor: card 11's key states the convention.
 
 ## Design decisions (book → SQL)
 
