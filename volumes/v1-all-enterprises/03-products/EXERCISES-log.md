@@ -556,3 +556,13 @@ Scores: price components 2 → 3; feature prices stay at 2.
   never stored. The rule per product, not per category (Kids can still hold a helmet's row);
   "real category" (Claude's vague word) = one not reached by climbing the rollup from a
   category the product already has; walked through with a table.
+
+### 2026-10-26: question round Q1, Submodel 5 (Mecha: wax and wicks bought, a candle body poured, the Vela Lavanda sold; matchboxes bought and sold loose; a Gift Box of 3 candles and 1 matchbox)
+- Key: wax, wick RAW_MATERIAL; candle body SUBASSEMBLY; Vela Lavanda, matchbox, Gift Box
+  FINISHED_GOOD. Both kinds of line are COMPONENT rows; the child's kind tells them apart
+  (raw or subassembly → a build line; finished good → a package line).
+- Answer: all six kinds right, cold (the matchbox too, bought in but sold as it comes).
+  Part 2 ✗ half: "the association tree only tells how a product gets built" (no, Gift Box →
+  Vela Lavanda is a COMPONENT row too), and `good_kind` named as the lever but framed as
+  bought vs built (that tells raw from subassembly, not a build line from a package line).
+  Score: 3 (part 1 at 4, part 2 at 2). `good_kind` 1 → 3; the line rule to retest cold.
