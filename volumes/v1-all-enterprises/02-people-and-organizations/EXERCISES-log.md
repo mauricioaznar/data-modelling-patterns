@@ -418,3 +418,7 @@ Misunderstandings and reinforce attempts, oldest first.
   not given. (2) a subtype table ✓ and the why ✓ (salary means nothing on a supplier
   relationship); "with its history" missed: one column holds one value. Score: 3. Row stays
   3: the view closed; the source and the dated child to retest.
+  Follow-ups: the complete answer restated by the user; the view's joins through the roles
+  added. The dated salary first put on the `employment` subtype itself ✗ (it shares the key:
+  one row per employment); the user saw why: a second row reads as fired and rehired. The
+  child `pay_history` (own key, FK to employment, amount, from/thru) taken.
