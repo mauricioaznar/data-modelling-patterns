@@ -1703,6 +1703,15 @@ the literal drawing.
     intended: the order keeps what was agreed (price, adjustments, terms) and which agreement
     governed it is derived, so the mismatch shows up. Keep the view only, or also store the
     item that set the price on the line (one nullable column), with the view as its check?
+42. **4.6, Table 4.8 (shared 2026-10-26), an amount per unit:** order 12560 has four
+    adjustments: on line 3 (the diskettes, 6 at 7.00) a discount of 1.00, which the text
+    calls "off each unit"; on the whole order a 10% discount, a 10.00 surcharge for delivery
+    outside the normal area and a 1.50 order processing fee. Ours stores an amount as the
+    total for its order or line (the 75.00 set-up fee), so the diskette row would take 1.00
+    off where the book means 6.00. Per unit for every line adjustment, per unit only for some
+    types, or a column saying which? Ch 7 read its amounts per unit too. Table 4.8 isn't in
+    the seed yet: add it in the refactor. The table identifies the line by order + seq id, the
+    book's composite key, which is why its line row also shows the order (point 10).
 
 ## Design decisions (book → SQL)
 
