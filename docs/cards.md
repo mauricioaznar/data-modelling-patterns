@@ -236,7 +236,10 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **W:** a single `category_id` column on the product (one category, no history, no second
   hierarchy) and a column per code (`sku`, `upc`, `isbn`: empty for most products, a schema
   change for every new code).
-- **T:** the primary flag is a rule a plain FK can't hold (data-quality query). Rollup,
+- **T:** a product can belong to any true category, as long as that category neither
+  belongs to one that already contains the product nor contains one that does; when two are
+  in a line, keep the lower one (the rollup gives the rest; same subtree ≠ in a line: Crime
+  and Children's both). The primary flag is a rule a plain FK can't hold (data-quality query). Rollup,
   good/service and identification are still unpractised; expect this card to be shaky.
 - **D:** product ← classification → category; category ← rollup → category (parent, child);
   category ← market_interest → party_type; good (= product) ← good_identification →
