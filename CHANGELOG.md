@@ -18,6 +18,11 @@ and any decisions made.
   rows given for order items, the one-off engraving made a feature, the snapshot right in
   part 3 only (2; the line row 3 → 2). Q7 Nevada restocking (Ch 3, suppliers, reorder): all
   cold, rating misnamed, "most specific" not named (3; both rows 2 → 3).
+- Ch 4 overview, order adjustments alone (the user's call: settle card 11 without the whole
+  chapter, since the Overview tick is per submodel). Points 10–12 settled, Table 4.8 shared
+  (page 125–127), two new points (42, 43). Refactor: `sales_tax_lookup` dated with an overlap
+  check, Table 4.8 seeded on order 12560, card 11's mantra and key, the doc entry. Card 11
+  settled; the Anki export rebuilt.
 - Card 5: the classification rule in the key, a new mantra ("lowest true shelves, never two
   in a line"). Provenance notes and dates stripped from every card. Anki export rebuilt.
 - Taught in chat: the child's `good_kind` decides a build line from a package line, per
@@ -28,6 +33,11 @@ and any decisions made.
 
 **Decisions**
 - A question round is 7 questions (about 1 h 30). Cards carry no provenance notes or dates.
+- Ch 4 adjustments: on the order or one line, exactly one, the line winning in reports while
+  the check waits (10); a percentage of the value before any adjustment, kept for now, revisit
+  at Ch 7 (11); dated tax rates (12); an amount is the total charged, never per unit (42);
+  discounts as adjustments by convention, not enforced, revisit in the core app (43).
+- Questions and examples are self-contained: rows and decisions shown, not ids or point numbers.
 
 **Next**
 - Retests cold on a later day: order lines vs catalogue (product, feature or neither, the
@@ -35,6 +45,7 @@ and any decisions made.
   view's source and a history as a dated child; a new event onto an open case; build vs
   package per row.
 - Ch 4 orders: the line and its children, Create, the scenario and the doc entry.
+- Re-import the Anki export; move card 11 from Drafts to Settled by hand.
 
 ## 2026-10-25
 

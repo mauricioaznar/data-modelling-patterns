@@ -391,19 +391,21 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Cue:** "What changes an order's price besides quantity × unit price, and which tax rate applies where?"
 - **Hook:** a receipt covered in stickers
 - **Mantra:** Every price change is a typed row, on the order or one line; tax rate copied
-  from place and category.
+  from place, category and date.
 
 <details><summary>Key</summary>
 
-- **S:** `order_adjustment` (an amount **or** a percentage, stored positive; for the whole
-  order **or** one item) · `order_adjustment_type` (the book's six subtypes on top: discount,
+- **S:** `order_adjustment` (an amount **or** a percentage, stored positive; an amount is the
+  total charged, never per unit; for the whole order **or** one item; discounts live here, the
+  unit price is before discounts) · `order_adjustment_type` (the book's six subtypes on top: discount,
   surcharge, sales tax, shipping and handling, fee, miscellaneous; finer types under them) ·
-  `sales_tax_lookup` (a rate per geographic boundary, optionally per product category).
+  `sales_tax_lookup` (a rate per geographic boundary, optionally per product category, dated:
+  the rate in force on the order date).
 - **W:** a column per charge on the order (`discount`, `tax`, `freight`): every new kind of
   charge is a schema change, two discounts don't fit, and a discount on one line has nowhere
   to go.
 - **T:** *(the naive-model trap until practice gives yours)* pointing the tax adjustment at
-  the lookup row instead of copying its rate: a rate change rewrites old orders. And
+  the lookup row instead of copying its rate: correcting the row rewrites old orders. And
   forgetting the sign: a discount stored like a charge adds to the bill.
 - **D:** order ← adjustment → item (one or the other); adjustment → adjustment_type (→ its
   parent type); sales_tax_lookup → geographic_boundary (Ch 2), → product_category (Ch 3). No

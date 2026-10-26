@@ -12,7 +12,7 @@ Architecture figure: 4.17
 | # | Submodel | Figs | Doc draft | Overview | Practice | Doc done |
 |---|---|---|---|---|---|---|
 | 1 | Orders, items and order parties | 4.1–4.5 | 2026-10-18 | | | |
-| 2 | Order adjustments | 4.6 | 2026-10-18 | | | |
+| 2 | Order adjustments | 4.6 | 2026-10-18 | 2026-10-26 | | |
 | 3 | Order status, terms and item associations | 4.7–4.8 | 2026-10-18 | | | |
 | 4 | Requirements | 4.9 | 2026-10-18 | | | |
 | 5 | Requests and quotes | 4.10–4.11 | 2026-10-18 | | | |
