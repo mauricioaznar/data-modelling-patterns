@@ -1577,6 +1577,12 @@ the literal drawing.
     take each percentage of the value before any adjustment, so tax is charged on the
     undiscounted price. If Silverston means a sequence (discounts, then tax), an adjustment
     needs a sequence number, or its type an order of application.
+    **Outcome (2026-10-26): kept as built, for now** (the user's call: keep it simple). The
+    book is silent (pages 125–127 and Table 4.8 give no base and no order), so this is our
+    assumption, not Silverston's. Real billing applies discounts before tax (on Table 4.8's
+    order 12560: 10% of 164.00 after the diskettes' 6.00, not of 170.00); if invoicing
+    (Ch 7) needs it, add an order of application on the six top adjustment types then. No
+    card fix: card 11 doesn't say what a percentage is taken from.
 12. **4.6, SALES TAX LOOKUP with no dates and no line to the adjustment:** read as a reference
     table the order copies its rate from (the snapshot again). Dates would keep old rates for
     late corrections; we stay with the book.
