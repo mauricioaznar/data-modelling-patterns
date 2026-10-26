@@ -586,3 +586,14 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - Answer: all of it ✓ cold, both "match but less specific" said, 310 given. The containment
   (Granada inside Andalusia) used, not stated. Score: 4. Base competition 3 → 4, feature
   prices 2 → 4 (the 10-25 gaps, containment and the sum, closed).
+
+### 2026-10-26: question round Q7, Submodel 3 (Nevada Sports: Altura makes the Pico; Nieve preferred, 5 days, Montaña backup, 10 days; reorder at 4 → 10 in general, at 6 → 12 at the Granada store; Granada has 5)
+- Key: `product.manufacturer_party_id` → Altura; two `supplier_product` rows (preference
+  type, rating type, standard lead time, available from); two `reorder_guideline` rows for
+  the good, one unscoped (4, 10), one based on the Granada facility (6, 12), the most
+  specific wins; Granada at 5 ≤ 6 → reorder 12, from Nieve (the preference guides the buyer).
+- Answer: (1) all ✓ cold; the rating named "quality type" (purpose right). (2) two rows,
+  one scoped to Granada ✓, level read as "falls to" ✓; "if stock gets lower than 5 anywhere
+  but Granada it doesn't trigger a restock" muddled (read as: Granada follows only its own
+  row); the rule not named; the general row's scope called "the general area" (it's empty =
+  any). (3) 12 from Nieve ✓. Score: 3. Manufacturer vs supplier 2 → 3, reorder 2 → 3.
