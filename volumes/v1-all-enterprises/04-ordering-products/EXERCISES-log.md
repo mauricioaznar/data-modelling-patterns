@@ -148,3 +148,17 @@ miss fixed).
 - 2026-10-24, R2 (Greenleaf): one party that receives and uses got only SHIP_TO; END_USER
   missed. A party doing two things on a line needs two role rows.
 Misunderstandings and reinforce attempts, oldest first.
+
+### 2026-10-26: question round Q6, Submodel 1 (Nevada Sports order 77: Javier in Madrid, a Pico €300, the optional binding mount €20, a one-off engraving of his name at an agreed €12, not in the catalogue)
+- Key: three order items. Line 1 names the Pico (product), unit price 300. Line 2 names the
+  binding mount (feature), ordered for line 1, 20. Line 3 names neither, its description says
+  "engraving: Javier", 12, ordered for line 1 (it's on that board). Prices live on the lines,
+  agreed snapshots; the price components say what we'd charge, and the engraving has none.
+  The €330 rise changes nothing on order 77.
+- Answer: (1) catalogue rows instead of order items ✗ (product, features, applicability
+  OPTIONAL); the engraving made a feature with an applicability row ✗ (a one-off pollutes the
+  catalogue; the description line is the book's answer); the mount a feature "since it is
+  optional" (the reason is off: optional is the applicability type). Ordered for not named.
+  (2) prices on `price_component` ✗ (that's the list; the agreed price is on the line).
+  (3) nothing changes, snapshot on the order item ✓, which contradicts (2). Score: 2. The line
+  row 3 → 2: order items vs catalogue, the description line and ordered for to reinforce.
