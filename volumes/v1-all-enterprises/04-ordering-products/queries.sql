@@ -652,9 +652,11 @@ left join adjustment a   on a.order_id = o.order_id
 group by o.order_id, o.order_kind, l.lines_value
 order by o.order_id;
 
--- name: 4.6 — Sales tax on order 12561: the rate the lookup gives each line (where it ships, what it is) against the rate charged
+-- name: 4.6 — Sales tax on order 12561: the rate the lookup gives each line (where it ships, what it is, on the order date) against the rate charged
 -- Every boundary the ship-to address lies in adds its rate; per boundary, a
 -- rate for the product's category (or one above it) beats the general one.
+-- The rate is the one in force on the order date, so Missouri's 2026 rise
+-- doesn't touch this 2025 order (NOTES, point 12).
 with line as (
   select oi.order_item_id, oi.order_item_seq_id, oi.product_id, o.order_date,
          coalesce(p.name, f.description) as item,
@@ -690,9 +692,11 @@ rate as (
   select distinct on (b.order_item_id, b.geographic_boundary_id)
          b.order_item_id, b.geographic_boundary_id, t.sales_tax_percentage
   from boundary b
+  join line l             on l.order_item_id = b.order_item_id
   join sales_tax_lookup t on t.geographic_boundary_id = b.geographic_boundary_id
-  where t.product_category_id is null
-     or t.product_category_id in (select c.product_category_id from category c where c.order_item_id = b.order_item_id)
+                         and t.from_date <= l.order_date and (t.thru_date is null or t.thru_date > l.order_date)
+  where (t.product_category_id is null
+     or t.product_category_id in (select c.product_category_id from category c where c.order_item_id = b.order_item_id))
   order by b.order_item_id, b.geographic_boundary_id, (t.product_category_id is null), t.sales_tax_lookup_id
 )
 select l.order_item_seq_id as line, l.item, d.display_name as ships_to,
@@ -729,12 +733,18 @@ select order_adjustment_type_id, top_type_id
 from up
 where top_type_id not in ('DISCOUNT', 'SURCHARGE', 'SALES_TAX', 'SHIPPING_AND_HANDLING', 'FEE', 'MISCELLANEOUS_CHARGE');
 
--- name: 4.6 — Data-quality check: two sales tax rates for one boundary and category (should be empty)
-select t.geographic_boundary_id, g.name, t.product_category_id, count(*) as rates
-from sales_tax_lookup t
-join geographic_boundary g on g.geographic_boundary_id = t.geographic_boundary_id
-group by t.geographic_boundary_id, g.name, t.product_category_id
-having count(*) > 1;
+-- name: 4.6 — Data-quality check: two sales tax rates for one boundary and category on the same day (should be empty)
+select a.sales_tax_lookup_id, b.sales_tax_lookup_id as overlaps, g.name, a.product_category_id,
+       a.sales_tax_percentage, a.from_date, a.thru_date,
+       b.sales_tax_percentage as other_percentage, b.from_date as other_from, b.thru_date as other_thru
+from sales_tax_lookup a
+join sales_tax_lookup b    on b.geographic_boundary_id = a.geographic_boundary_id
+                          and b.product_category_id is not distinct from a.product_category_id
+                          and b.sales_tax_lookup_id > a.sales_tax_lookup_id
+                          and a.from_date < coalesce(b.thru_date, 'infinity')
+                          and b.from_date < coalesce(a.thru_date, 'infinity')
+join geographic_boundary g on g.geographic_boundary_id = a.geographic_boundary_id
+order by a.sales_tax_lookup_id, b.sales_tax_lookup_id;
 
 -- ============================================================
 -- Fig 4.7 — Order status and terms

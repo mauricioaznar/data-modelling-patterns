@@ -1887,6 +1887,12 @@ the literal drawing.
 - **An amount or a percentage, exactly one:** a data-quality query (seed: a rush surcharge with
   both). Check constraints keep the amount not negative and the percentage in (0, 100]. Where
   both are set, the queries use the amount.
+- **An amount is the total charged** (point 42), never per unit: Table 4.8's "1.00 off each"
+  diskette box is seeded as 6.00 on the six-box line, a recorded deviation. Table 4.8's other
+  three rows sit on order 12560 as printed, with two finer types of ours (out-of-area delivery
+  under SURCHARGE, order processing under FEE).
+- **Discounts are adjustments, by convention** (point 43): the unit price is the price before
+  discounts. Nothing checks it; both places stay possible.
 - **Where an adjustment names both an order and an item,** the queries let the item win (its
   value and its order), so nothing is counted twice while the check waits for a fix (point 10).
 - **The sign comes from the top-level type:** DISCOUNT reduces, every other type adds. The
@@ -1894,9 +1900,11 @@ the literal drawing.
 - **A percentage is of the value before any adjustment** (point 11): the order's lines for an
   order adjustment, the one line for an item adjustment. A feature's line is a line of its own.
 - **`sales_tax_lookup`:** the boundary (required), the category (null = every category) and
-  the percentage, with a surrogate key standing in for the book's seq id. No dates (point
-  12). A data-quality query finds two rates for one boundary and category (seed: Missouri's
-  general rate twice); the tax query takes the lower id.
+  the percentage, with a surrogate key standing in for the book's seq id. `from_date` and
+  `thru_date` are ours (point 12): the tax query takes the rate in force on the order date
+  (seed: Missouri's general rate rises on 1 Jan 2026, and 12561, dated 2025, keeps the old
+  one). A data-quality query finds two rates for one boundary and category on the same day
+  (seed: a 4.40 Missouri rate overlapping both); the tax query takes the lower id.
 - **Which rate applies to a line:** every boundary its ship-to address lies in (Ch 2's
   `postal_address_boundary`, walked up through `geographic_boundary_ancestor`) adds its own
   rate, and per boundary a rate for the product's category (or a category above it, Ch 3's

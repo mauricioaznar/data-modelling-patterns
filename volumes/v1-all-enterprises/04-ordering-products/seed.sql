@@ -364,6 +364,8 @@ insert into order_adjustment_type (order_adjustment_type_id, parent_type_id, des
   ('FREIGHT',               'SHIPPING_AND_HANDLING', 'Freight'),
   ('SETUP_FEE',             'FEE',                   'Set-up fee'),
   ('SMALL_ORDER_FEE',       'FEE',                   'Small order fee'),
+  ('OUT_OF_AREA_DELIVERY',  'SURCHARGE',             'Delivery outside the normal geographic area'),   -- Table 4.8
+  ('ORDER_PROCESSING_FEE',  'FEE',                   'Order processing fee'),                          -- Table 4.8
   ('GIFT_WRAP',             null,                    'Gift wrapping');   -- DATA ERROR: rolls up to none of the six (caught by a query)
 
 -- Items: 4 the copier on 12561, with 5 its duplex unit and 6 its finisher,
@@ -382,21 +384,28 @@ insert into order_adjustment (order_adjustment_id, order_adjustment_type_id, ord
   (10, 'FREIGHT',          12564, null, 45.00,  null),    -- the supplier's freight on our purchase order
   (11, 'VOLUME_DISCOUNT',  12562, 11,   null,   10),      -- DATA ERROR: names the order AND an item (caught by a query)
   (12, 'RUSH_SURCHARGE',   null,  20,   15.00,  5),       -- DATA ERROR: an amount AND a percentage (caught by a query)
-  (13, 'GIFT_WRAP',        null,  13,   3.00,   null);
+  (13, 'GIFT_WRAP',        null,  13,   3.00,   null),
+  -- Table 4.8, order 12560: 1.00 off each of line 3's six diskette boxes, stored
+  -- as the 6.00 total charged (NOTES, point 42); the rest on the whole order
+  (14, 'DISCOUNT',             null,  3,    6.00,   null),
+  (15, 'DISCOUNT',             12560, null, null,   10),
+  (16, 'OUT_OF_AREA_DELIVERY', 12560, null, 10.00,  null),
+  (17, 'ORDER_PROCESSING_FEE', 12560, null, 1.50,   null);
 
 select setval(pg_get_serial_sequence('order_adjustment', 'order_adjustment_id'), (select max(order_adjustment_id) from order_adjustment));
 
 -- Invented rates. Boundaries (Ch 2): 10 Illinois, 11 Missouri, 12 Sangamon
 -- County, 13 Springfield, 17 St. Louis. Category (Ch 3): 2 Paper, above
--- Bond paper.
-insert into sales_tax_lookup (sales_tax_lookup_id, geographic_boundary_id, product_category_id, sales_tax_percentage) values
-  (1, 10, null, 6.25),
-  (2, 12, null, 1.00),
-  (3, 13, null, 2.50),
-  (4, 11, null, 4.225),
-  (5, 11, 2,    3.00),    -- Missouri taxes paper lower
-  (6, 17, null, 5.454),
-  (7, 11, null, 4.50);    -- DATA ERROR: a second general rate for Missouri (caught by a query)
+-- Bond paper. Dated (NOTES, point 12); Missouri's 2026 rise is invented too.
+insert into sales_tax_lookup (sales_tax_lookup_id, geographic_boundary_id, product_category_id, sales_tax_percentage, from_date, thru_date) values
+  (1, 10, null, 6.25,  '2000-01-01', null),
+  (2, 12, null, 1.00,  '2000-01-01', null),
+  (3, 13, null, 2.50,  '2000-01-01', null),
+  (4, 11, null, 4.225, '2000-01-01', '2026-01-01'),   -- an order dated 2025 still finds it after the rise
+  (5, 11, 2,    3.00,  '2000-01-01', null),           -- Missouri taxes paper lower
+  (6, 17, null, 5.454, '2000-01-01', null),
+  (7, 11, null, 4.50,  '2026-01-01', null),
+  (8, 11, null, 4.40,  '2025-07-01', null);           -- DATA ERROR: overlaps both general rates for Missouri (caught by a query)
 
 select setval(pg_get_serial_sequence('sales_tax_lookup', 'sales_tax_lookup_id'), (select max(sales_tax_lookup_id) from sales_tax_lookup));
 
