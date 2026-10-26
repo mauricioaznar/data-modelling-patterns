@@ -1718,6 +1718,13 @@ the literal drawing.
     types, or a column saying which? Ch 7 read its amounts per unit too. Table 4.8 isn't in
     the seed yet: add it in the refactor. The table identifies the line by order + seq id, the
     book's composite key, which is why its line row also shows the order (point 10).
+    **Outcome (2026-10-26): changed, the amount is always the total charged** (the user's
+    call: no step through the quantity or a per-unit flag, and it reads like the percentage,
+    which is of the total too). Table 4.8's diskette row is stored as 6.00, a recorded
+    deviation from the book's 1.00; the "1.00 each" lives in Ch 3's price component that
+    produced it. The cost: if the line's quantity changes, the adjustment is worked out
+    again, as the unit price and the tax are (the snapshot). Refactor: seed Table 4.8's four
+    rows; card 11's key says an amount is the total charged.
 
 ## Design decisions (book → SQL)
 
