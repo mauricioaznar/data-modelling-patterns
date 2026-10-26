@@ -566,3 +566,16 @@ Scores: price components 2 → 3; feature prices stay at 2.
   Vela Lavanda is a COMPONENT row too), and `good_kind` named as the lever but framed as
   bought vs built (that tells raw from subassembly, not a build line from a package line).
   Score: 3 (part 1 at 4, part 2 at 2). `good_kind` 1 → 3; the line rule to retest cold.
+
+### 2026-10-26: question round Q3, Submodels 1 and 4 (Librería Faro: Books → Fiction → Crime, Books → Children's, Gifts on its own; a children's crime novel, shown in Gifts 1 Dec 2026 – 6 Jan 2027)
+- Key: three rows, Crime, Children's (neither contains the other) and Gifts from 2026-12-01
+  thru 2027-01-07 (exclusive); none for Fiction or Books (reached by the rollup). Primary:
+  one of Crime or Children's, a business call (the report that needs one bucket); not Gifts.
+- Answer: Gifts with 011226 / 070127 ✓ (exclusive thru cold); Children's ✓, primary ✓
+  (Gifts is temporary; children's books have their own section); no Books row ✓. Crime left
+  out ✗: "both leaves of the same subtree", plus a shopper's view (an adult browsing Crime).
+  Same subtree is not containment: Crime and Children's are siblings' descendants, both
+  true, so both get a row; what a shelf shows is a display choice, and primary covers the
+  one-bucket report. Without Crime the book doesn't reach Fiction either. Arrival date not
+  given in the question (Claude's blame, the user's −1 accepted). Score: 2. Rollup row
+  stays 2: no ancestor rows ✓, the rule misread as "one per subtree".
