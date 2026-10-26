@@ -3,6 +3,39 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-26
+
+**Built**
+- A question round of seven (Chs 2–4), logged in the chapter logs and trackers. Q1 Mecha
+  (Ch 3, `good_kind`): all six kinds cold, the matchbox too; the build-vs-package rule half
+  (3; `good_kind` 1 → 3). Q2 Hostal Lumbre (Ch 2, case): the end as a status cold, the same
+  case reopened, a dated status history invented (Ch 4's order status); the 12 Mar e-mail
+  not put on the case (3). Q3 Librería Faro (Ch 3, classification): Gifts dated with the
+  exclusive thru cold, Children's primary; Crime left out as "same subtree" (2). Q4 Nevada
+  (Ch 3, pricing): 320 + 15 − 25 = 310 cold (4; base competition 3 → 4, feature prices
+  2 → 4). Q5 Clínica Sol (Ch 2, view per kind): the view and the subtype cold; the view's
+  source and the salary history missed (3). Q6 Nevada order 77 (Ch 4, the line): catalogue
+  rows given for order items, the one-off engraving made a feature, the snapshot right in
+  part 3 only (2; the line row 3 → 2). Q7 Nevada restocking (Ch 3, suppliers, reorder): all
+  cold, rating misnamed, "most specific" not named (3; both rows 2 → 3).
+- Card 5: the classification rule in the key, a new mantra ("lowest true shelves, never two
+  in a line"). Provenance notes and dates stripped from every card. Anki export rebuilt.
+- Taught in chat: the child's `good_kind` decides a build line from a package line, per
+  row; a new event joins the open case before it reopens; a category row is ruled out only
+  by containment (ancestor or descendant), never by sharing a subtree, and keep the lower
+  one; a value with history is a dated child, not columns or rows on a key-sharing subtype
+  (Ch 9's pay history); the catalogue says what's possible, the order says what happened.
+
+**Decisions**
+- A question round is 7 questions (about 1 h 30). Cards carry no provenance notes or dates.
+
+**Next**
+- Retests cold on a later day: order lines vs catalogue (product, feature or neither, the
+  description line, ordered for, the price on the line); same subtree ≠ containment; the
+  view's source and a history as a dated child; a new event onto an open case; build vs
+  package per row.
+- Ch 4 orders: the line and its children, Create, the scenario and the doc entry.
+
 ## 2026-10-25
 
 **Built**
