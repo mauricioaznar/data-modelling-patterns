@@ -1567,6 +1567,12 @@ the literal drawing.
 10. **4.6, an order or an item:** no arc is drawn across the two "affecting" lines; read as
     one or the other, never both (a data-quality query). Other readings: an item's adjustment
     also names its order (redundant, but easy to sum), or both are allowed.
+    **Outcome (2026-10-26): kept, exactly one** (the user's call, as for point 2's product or
+    feature). A line's adjustment doesn't copy its order: the line already knows it, and a
+    copy can be read two ways (10% off line 3's 50.00, or off the order's 125.00, or both and
+    counted twice) or disagree with the line's own order. The check flags such a row to be
+    fixed; until then the queries let the line win (the user's tie-break, already how they
+    read it). No SQL change. Card 11 already says "one or the other"; no card fix.
 11. **4.6, a percentage of what, applied in which order:** the figure doesn't say. Our queries
     take each percentage of the value before any adjustment, so tax is charged on the
     undiscounted price. If Silverston means a sequence (discounts, then tax), an adjustment
@@ -1842,6 +1848,8 @@ the literal drawing.
 - **An amount or a percentage, exactly one:** a data-quality query (seed: a rush surcharge with
   both). Check constraints keep the amount not negative and the percentage in (0, 100]. Where
   both are set, the queries use the amount.
+- **Where an adjustment names both an order and an item,** the queries let the item win (its
+  value and its order), so nothing is counted twice while the check waits for a fix (point 10).
 - **The sign comes from the top-level type:** DISCOUNT reduces, every other type adds. The
   queries find the top with a recursive walk, as Ch 3's cost queries do.
 - **A percentage is of the value before any adjustment** (point 11): the order's lines for an
