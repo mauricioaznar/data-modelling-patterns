@@ -394,3 +394,15 @@ Misunderstandings and reinforce attempts, oldest first.
   Not needed (two asked), not named: the kind's own attributes (salary → a subtype sharing
   the key, or a dated child). Score: 3. Specific vs generic stays 3; the costs now weighed
   cold (the 10-23 gap), the view to retest.
+- **2026-10-26, question round Q2 (case and work effort).** Hostal Lumbre: Marta's noise
+  complaint (call 3 Mar, e-mail 4 Mar, desk meeting 5 Mar with a room move; Pablo owns it),
+  sorted, then back on 12 Mar by e-mail. Asked: what changes when it's sorted; the 12 Mar
+  return; can the model say when it was first sorted. Key: the case's status moves to
+  RESOLVED, no thru; the 12 Mar e-mail is a new event on the same case and the status goes
+  back to open; no, one status FK keeps only the present: add a dated status row per change
+  (as Ch 4's ORDER STATUS).
+  Answer: (1) status on the case row ✓ cold (the 10-09 / 10-25 gap closed). (2) the same
+  case reopened ✓, a new case weighed and rejected for continuity ✓; the 12 Mar e-mail not
+  put on the case ✗ (it's why the case reopens). (3) a status-change table with a date, the
+  latest row current, older rows history ✓ cold: Ch 4's ORDER STATUS reinvented. Score: 3.
+  Case row stays 3; the ending closed, the new event on the open case to watch.
