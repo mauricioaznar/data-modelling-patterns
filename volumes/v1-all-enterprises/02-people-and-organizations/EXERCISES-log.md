@@ -406,3 +406,15 @@ Misunderstandings and reinforce attempts, oldest first.
   put on the case ✗ (it's why the case reopens). (3) a status-change table with a date, the
   latest row current, older rows history ✓ cold: Ch 4's ORDER STATUS reinvented. Score: 3.
   Case row stays 3; the ending closed, the new event on the open case to watch.
+- **2026-10-26, question round Q5 (specific vs generic).** Clínica Sol: employments, patient
+  ↔ GP and suppliers all in `party_relationship`. Asked: what to give the HR analyst who wants
+  employment(employer, employee, from, thru) without changing the model, and built from
+  what; where each doctor's salary goes, with history. Key: a view over
+  `party_relationship` filtered to EMPLOYMENT, joined through its two party roles to the
+  parties (names via `party_display_name`); salary not on the generic row (meaningless for
+  the other kinds) but in a dated child of the employment (one row per salary, from/thru),
+  hung on an `employment` subtype sharing the key: Ch 9's EMPLOYMENT and PAY HISTORY.
+  Answer: (1) a view ✓ cold (needed a reworded question: Claude's blame); built from what
+  not given. (2) a subtype table ✓ and the why ✓ (salary means nothing on a supplier
+  relationship); "with its history" missed: one column holds one value. Score: 3. Row stays
+  3: the view closed; the source and the dated child to retest.
