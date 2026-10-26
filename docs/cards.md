@@ -118,7 +118,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 1 · V1 Ch 2 · Parties, roles and relationships (Figs 2.1–2.7)
 - **Cue:** "Who is this, what are they to us, and how are they tied to each other?"
-- **Hook:** people wearing hats *(Claude's, at the user's request)*
+- **Hook:** people wearing hats
 - **Mantra:** A party is who; a role is the hat it wears; a relationship joins two hats, and a
   type names each hat; a class says what it is underneath.
 
@@ -141,7 +141,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 2 · V1 Ch 2 · Contact mechanisms (Figs 2.9–2.10)
 - **Cue:** "How do we reach this party, for what, and since when?"
-- **Hook:** the switchboard *(Claude's, at the user's request)*
+- **Hook:** the switchboard
 - **Mantra:** Postal, phone and e-mail are one mechanism; the party's link to it owns the dates, the
   purposes and the "don't call"; mechanisms forward to mechanisms.
 
@@ -164,7 +164,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 3 · V1 Ch 2 · Postal addresses, facilities and geography (Figs 2.8, 2.11)
 - **Cue:** "Which areas is this address inside, and which physical places do parties use?"
-- **Hook:** the map and the floor plan *(Claude's, at the user's request)*
+- **Hook:** the map and the floor plan
 - **Mantra:** An address lies in many boundaries, boundaries in many boundaries; a facility nests
   in one, hosts roles, has mechanisms: a place isn't an address.
 
@@ -199,7 +199,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 4 · V1 Ch 2 · Communication events and case (Figs 2.7, 2.12–2.13)
 - **Cue:** "Who talked to whom, how, about what, and what happened next?"
-- **Hook:** the meeting minutes *(Claude's, at the user's request)*
+- **Hook:** the meeting minutes
 - **Mantra:** An event happens via a medium, with many parties in roles, for purposes; a case groups past
   events, a work effort is the work they trigger.
 
@@ -222,9 +222,9 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 5 · V1 Ch 3 · Product definition, categories, identification (Figs 3.1–3.3)
 - **Cue:** "What do we sell, how do we group it, and what codes is it known by?"
-- **Hook:** one product, many shelves, many barcodes *(Claude's, at the user's request)*
-- **Mantra:** A product sits on many dated shelves, one primary; shelves stack on shelves;
-  party types browse shelves; codes are rows, not columns.
+- **Hook:** one product, many shelves, many barcodes
+- **Mantra:** A product sits on its lowest true shelves, never two in a line, dated, one
+  primary; shelves stack on shelves; party types browse shelves; codes are rows, not columns.
 
 <details><summary>Key</summary>
 
@@ -248,7 +248,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 6 · V1 Ch 3 · Product features (Fig 3.4)
 - **Cue:** "What options does a product come in, which are standard, and which clash?"
-- **Hook:** build-your-own bike *(Claude's, at the user's request)*
+- **Hook:** build-your-own bike
 - **Mantra:** Features attach to products as required, standard, optional or selectable; features constrain
   features, needing or clashing, sometimes only inside one product.
 
@@ -275,7 +275,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 7 · V1 Ch 3 · Suppliers and inventory (Figs 3.5–3.6)
 - **Cue:** "Who can supply it, when do we reorder, and where is the physical stock?"
-- **Hook:** the warehouse floor *(Claude's, at the user's request)*
+- **Hook:** the warehouse floor
 - **Mantra:** Suppliers offer products, dated; guidelines say when to reorder a good, and where; items are the
   physical stock in one place; variances explain the count.
 
@@ -299,10 +299,10 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 8 · V1 Ch 3 · Pricing and costing (Figs 3.7–3.8)
 - **Cue:** "What do we charge, under which conditions, and what does it cost us?"
-- **Hook:** the price recipe *(the user's rewrite, 2026-10-19)*
+- **Hook:** the price recipe
 - **Mantra:** Price components are conditional rules: the most specific base wins, matching
   discounts and surcharges stack on it per unit; cost estimates hit a product or a feature,
-  never both. *(the user's rewrite, 2026-10-19)*
+  never both.
 
 <details><summary>Key</summary>
 
@@ -327,11 +327,9 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 9 · V1 Ch 3 · Product associations and parts (Figs 3.9–3.10)
 - **Cue:** "Which products go with, replace, clash with or are built from which others?"
-- **Hook:** the product tree family *(the user's rewrite, 2026-10-19)*
+- **Hook:** the product tree family
 - **Mantra:** A typed, dated link joins two products: component (package or assembly),
-  substitute, successor, complement, clash. Components explode level by level. *(the user's
-  rewrite, 2026-10-19)* Each good is bought in, built in or sent out. *(added at the user's
-  request, 2026-10-25: raw material, subassembly, finished good)*
+  substitute, successor, complement, clash. Components explode level by level. Each good is bought in, built in or sent out.
 
 <details><summary>Key</summary>
 
@@ -356,7 +354,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 10 · V1 Ch 4 · Orders, items and order parties (Figs 4.1–4.5)
 - **Cue:** "What was ordered, which way, at what price, and who placed, took, pays and receives it?"
-- **Hook:** one order pad, two desks *(Claude's, drafted when the figures landed)*
+- **Hook:** one order pad, two desks
 - **Mantra:** One order for buying and selling; items name a product or feature; roles name
   placer, taker, bill-to, ship-to, and anyone else.
 
@@ -391,7 +389,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 11 · V1 Ch 4 · Order adjustments (Fig 4.6)
 - **Cue:** "What changes an order's price besides quantity × unit price, and which tax rate applies where?"
-- **Hook:** a receipt covered in stickers *(Claude's, drafted when the figures landed)*
+- **Hook:** a receipt covered in stickers
 - **Mantra:** Every price change is a typed row, on the order or one line; tax rate copied
   from place and category.
 
@@ -416,7 +414,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 12 · V1 Ch 4 · Order status, terms and item associations (Figs 4.7–4.8)
 - **Cue:** "Where does an order or a line stand, under which agreed terms, and which purchase will fill a sales line?"
-- **Hook:** a parcel tracker with fine print *(Claude's, drafted when the figures landed)*
+- **Hook:** a parcel tracker with fine print
 - **Mantra:** Status rows stack in time, terms carry typed numbers, on order or line; purchase
   lines fill sales lines.
 
@@ -444,7 +442,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 13 · V1 Ch 4 · Requirements (Fig 4.9)
 - **Cue:** "What is needed, by whom, by when, and which order lines commit to filling it?"
-- **Hook:** a shopping list in pencil *(Claude's, drafted when the figures landed)*
+- **Hook:** a shopping list in pencil
 - **Mantra:** A need, split by whose and what, wants features, not products; order lines
   commit to it in quantities.
 
@@ -474,7 +472,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 14 · V1 Ch 4 · Requests and quotes (Figs 4.10–4.11)
 - **Cue:** "Whom did we ask for information, proposals or prices, what did they quote, and which quote became an order?"
-- **Hook:** sealed bids on the table *(Claude's, drafted when the figures landed)*
+- **Hook:** sealed bids on the table
 - **Mantra:** Request items carry needs, no product; quote items price product or work,
   answer them; order lines accept.
 
@@ -507,7 +505,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 15 · V1 Ch 4 · Agreements (Figs 4.12–4.13)
 - **Cue:** "Which standing agreements do we have, with whom, and which of their clauses apply to this order line?"
 - **Hook:** a signed binder, its clauses tabbed by customer, product and region, addenda
-  stapled at the back *(Claude's, drafted when the figures landed)*
+  stapled at the back
 - **Mantra:** Agreements name parties by role, maybe a relationship; items nest, apply by
   organization, product, place; addenda amend, never overwrite.
 
@@ -541,7 +539,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 16 · V1 Ch 4 · Agreement terms and pricing (Figs 4.14–4.16)
 - **Cue:** "Under which terms and at which prices did we agree, and which of them govern this order line?"
 - **Hook:** the contract's price sheet held up against each order line, and a tally counter
-  clicking toward the cap *(Claude's, drafted when the figures landed)*
+  clicking toward the cap
 - **Mantra:** Terms on agreement or item, dated inside it; agreed prices are program price
   components; orders find agreements by rule.
 
@@ -572,7 +570,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 17 · V1 Ch 5 · Shipments, items and status (Figs 5.1–5.2)
 - **Cue:** "What is being shipped, from whom and where to whom and where, which way does it go, and did it leave and arrive as planned?"
 - **Hook:** a delivery van with the planned times written on its side in marker, and a log
-  beside it stamped with the real ones *(Claude's, drafted when the figures landed)*
+  beside it stamped with the real ones
 - **Mantra:** Shipments run party to party, address to address; the type is the direction;
   plans on the header, facts in the history.
 
@@ -609,7 +607,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 18 · V1 Ch 5 · Shipments and orders (Fig 5.3)
 - **Cue:** "Which order lines does a shipment line fill, how much of each, and did what went out match what was ordered?"
 - **Hook:** a packing slip stapled to two orders, "700" and "300" pencilled beside its one
-  line of pens, and "black, not blue" circled *(Claude's, drafted when the figures landed)*
+  line of pens, and "black, not blue" circled
 - **Mantra:** Order lines and shipment lines meet in pairs with quantities; full is a sum;
   shipped features beside ordered ones.
 
@@ -638,7 +636,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 19 · V1 Ch 5 · Packages and receipts (Fig 5.4)
 - **Cue:** "Which packages hold which lines, how much of an incoming package was accepted or rejected and why, where did it go, and which order line does it settle?"
 - **Hook:** a clerk on the receiving dock with a box cutter and a clipboard, ticking
-  "accepted" and "rejected" carton by carton *(Claude's, drafted when the figures landed)*
+  "accepted" and "rejected" carton by carton
 - **Mantra:** Lines ride in packages; receipts count one good per package, accept or reject,
   stock it, settle an order line.
 
@@ -671,7 +669,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 20 · V1 Ch 5 · Issuances and picklists (Fig 5.5)
 - **Cue:** "Which stock was pulled for each outgoing line, by whom and from which picklist, and does each quantity on hand still match its movements?"
 - **Hook:** a picker with a pick sheet, pulling 800 pens off the floor and 200 from bin P-2,
-  while a ledger on the wall must still balance *(Claude's, drafted when the figures landed)*
+  while a ledger on the wall must still balance
 - **Mantra:** Picklist plans; each issuance pulls from one stock for a line; on hand equals
   received minus issued plus counted.
 
@@ -702,8 +700,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 21 · V1 Ch 5 · Shipping documents and route segments (Figs 5.6–5.7)
 - **Cue:** "Which papers go with a shipment, a line or a box, and which legs, carriers and vehicles does it travel by, planned against actual?"
 - **Hook:** a relay race: at the hand-over depot one driver passes a clipboard of papers
-  (bill of lading, packing slips) to the next truck *(Claude's, drafted when the figures
-  landed)*
+  (bill of lading, packing slips) to the next truck
 - **Mantra:** Papers name their level: shipment, line or box. Legs chain facility to
   facility: carrier, method, vehicle, plan beside actual.
 
@@ -736,7 +733,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Cue:** "What work is needed, of which type, to make which product, fix which machine or hand over which deliverable; and who asked, for whom, who answers for it and when?"
 - **Hook:** a workshop job board: each card says "make 2,000 pens", "fix engraving machine
   #12" or "write the 2002 plan", with a row of dated name tags pinned beneath it
-  *(Claude's, drafted when the figures landed)*
+
 - **Mantra:** The need for work is typed; the type picks its target: product, machine or
   deliverable. People pin on in dated roles.
 
@@ -767,8 +764,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 23 · V1 Ch 6 · Work effort generation (Fig 6.3a)
 - **Cue:** "What work is planned and done, at what level and for what purpose, where, which needs and order lines does it fill, and how many did a production run make and reject?"
 - **Hook:** a factory foreman holding two clipboards, "needs" and "orders", with strings
-  running from both to the same machines on the floor *(Claude's, drafted when the figures
-  landed)*
+  running from both to the same machines on the floor
 - **Mantra:** Effort fills needs many to many, or order lines direct. Level and purpose are
   two lookups; only a production run counts.
 
@@ -800,7 +796,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Cue:** "What is this work made of, which parts serve two jobs, what must finish before what or run alongside, which effort redoes which, and what's the standard time for each kind of work?"
 - **Hook:** a Gantt chart pinned on the factory wall: bars nested under bars, arrows from
   one bar's end to the next one's start, and one set-up bar with two parents
-  *(Claude's, drafted when the figures landed)*
+
 - **Mantra:** Efforts link to efforts: part-of, before, alongside, one typed dated table.
   Kinds of work carry standard hours.
 
@@ -827,7 +823,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Cue:** "Who works on this effort, as what, where and when; what can each party do; what state is the work in; and who spent how many hours on which effort, on whose approved timesheet?"
 - **Hook:** a project room door with a roster of dated name badges (one a consulting firm's
   logo), a skills chart beside it, and a punch clock whose cards are stamped with job
-  numbers *(Claude's, drafted when the figures landed)*
+  numbers
 - **Mantra:** Parties take efforts in dated roles; skills describe the party. Workers book
   hours on efforts, gathered per timesheet.
 
@@ -860,7 +856,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Cue:** "What does an hour of this person on this job cost us and bill the client, regular or overtime, on a given day, and what's the standard rate for a position or a party?"
 - **Hook:** a pay slip and an invoice side by side for the same hours, three price tags
   stapled above them: one for the job title, one for the person, one for this job only
-  *(Claude's, drafted when the figures landed)*
+
 - **Mantra:** Hours × the rate in force. Rates are dated and typed, on a position type, a
   party or an assignment; the most specific wins.
 
@@ -887,7 +883,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Cue:** "Which stock did this job use up; which machines, vehicles and tools are booked on which job and when; and who has which asset checked out, active or lost?"
 - **Hook:** a workshop booking board with machine names down the side and job cards pinned
   in dated slots, a bin of used-up parts below, and a sign-out sheet by the door where one
-  line says LOST *(Claude's, drafted when the figures landed)*
+  line says LOST
 - **Mantra:** Jobs use up stock items and book assets, one job at a time. Assets also go
   out to parties, active or lost.
 
@@ -917,7 +913,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Cue:** "What does a kind of work normally need and break into, is there enough for the jobs planned, and what did each job actually produce or repair?"
 - **Hook:** a recipe card clipped to a finished cake: the card lists the ingredients, the
   tins and the cooks for "a large batch"; the plate shows what came out of this one
-  *(Claude's, drafted when the figures landed)*
+
 - **Mantra:** The kind of work holds the recipe (skills, goods, asset types, its own
   breakdown); the job records what came out.
 
@@ -949,8 +945,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 29 · V1 Ch 7 · Invoices and invoice items (Fig 7.1a)
 - **Cue:** "What does this bill charge for, line by line, and which lines are tax, fees, discounts or corrections of other lines?"
 - **Hook:** a till receipt where the tax, the delivery fee and yesterday's refund are all
-  printed as lines, each with an arrow to the line it touches *(Claude's, drafted when the
-  figures landed)*
+  printed as lines, each with an arrow to the line it touches
 - **Mantra:** Every charge is a typed line; an adjustment points at what it adjusts, a
   feature at what it was sold with.
 
@@ -982,7 +977,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Cue:** "Who is billed and who bills, where did the invoice go, who else touched it, and when it's billed to an account, who actually owes?"
 - **Hook:** a family phone bill addressed to the account, not the person; inside the
   envelope, the account card lists Mum as primary payer and whoever is secondary this year
-  *(Claude's, drafted when the figures landed)*
+
 - **Mantra:** Billed from a party, billed to a party or an account; sent anywhere; extra
   people are dated roles.
 
@@ -1015,8 +1010,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 31 · V1 Ch 7 · Invoice status and terms (Fig 7.4)
 - **Cue:** "Where is this bill now and since when, and what are its payment terms, late fees and line-level conditions?"
 - **Hook:** an envelope stamped APPROVED, SENT and, in red, VOID, each with a date, and a
-  small-print box on the back: net 30, 2% late, one line marked "no returns" *(Claude's,
-  drafted when the figures landed)*
+  small-print box on the back: net 30, 2% late, one line marked "no returns"
 - **Mantra:** Status is a dated history, never PAID; terms copy onto the bill or one line,
   never both.
 
@@ -1042,8 +1036,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 32 · V1 Ch 7 · Billing for what was delivered (Figs 7.5–7.7)
 - **Cue:** "Which shipment lines, hours, jobs or order lines does this invoice line charge for, and what's delivered or worked but not billed?"
 - **Hook:** an invoice line with four strings pinned to it, running back to a delivery note,
-  a timesheet, a project plan and a purchase order *(Claude's, drafted when the figures
-  landed)*
+  a timesheet, a project plan and a purchase order
 - **Mantra:** An invoice line points back at what caused it: a shipment, hours, a job or an
   order line. One route per line.
 
@@ -1071,7 +1064,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 33 · V1 Ch 7 · Payments (Fig 7.8a)
 - **Cue:** "Who paid whom, how and how much, which invoices or which account it settles, and what's still owed?"
 - **Hook:** one check pinned across two bills, with the stub split $6,000 and $1,000, and a
-  second bill held by two smaller checks *(Claude's, drafted when the figures landed)*
+  second bill held by two smaller checks
 - **Mantra:** A payment goes party to party; applications split it over invoices, or on
   account. Balance is computed, never stored.
 
@@ -1098,8 +1091,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 34 · V1 Ch 7 · Financial accounts (Fig 7.9)
 - **Cue:** "Which payments went into which deposit or withdrawal, on which bank account, who may act on it, and what's its balance?"
 - **Hook:** a bank deposit slip with four checks stapled to it and a total of $917.04 at the
-  bottom, next to a statement with one line for the whole slip *(Claude's, drafted when the
-  figures landed)*
+  bottom, next to a statement with one line for the whole slip
 - **Mantra:** Payments aren't cash until banked: receipts gather into a deposit, a check
   clears as a withdrawal; parties hold the account in roles.
 
@@ -1129,7 +1121,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Cue:** "Which ledger accounts does each of our organizations keep, since when, of which kind, broken down by which customer, supplier or product, and how does each cut its year into periods?"
 - **Hook:** one printed chart of accounts pinned on the wall of two offices, with a
   different set of lines highlighted in each and "marketing" crossed out in only one; under
-  "receivables", a sticky note per customer *(Claude's, drafted when the figures landed)*
+  "receivables", a sticky note per customer
 - **Mantra:** One chart for everyone; each organization switches accounts on by date,
   splits them into subsidiaries about someone, and cuts its own periods.
 
@@ -1164,8 +1156,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Cue:** "What did each business event do to the books: which debits and credits on which accounts, from which invoice, payment or asset, which credit settled which debit, and what was each account's balance for a period?"
 - **Hook:** a cash register receipt for $900 stapled to a ledger page where it becomes three
   lines: $882 cash and $18 discount on the left, $900 receivables on the right; beside it a
-  machine's tag reading "1999 double-declining, 2000 straight-line" *(Claude's, drafted
-  when the figures landed)*
+  machine's tag reading "1999 double-declining, 2000 straight-line"
 - **Mantra:** One event, typed and traced to its document or asset, splits into debits and
   credits that cancel; balances are sums, stored only as checked caches.
 
@@ -1204,7 +1195,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Hook:** a department's budget sheet with a "why" column, a rubber stamp trail down the
   margin (created, submitted, SENT BACK, submitted, approved) with a reviewer's initials on
   each stamp, red pencil deltas beside three lines, and two sticky notes at the bottom:
-  "poor year −20%", "great year +25%" *(Claude's, drafted when the figures landed)*
+  "poor year −20%", "great year +25%"
 - **Mantra:** Budget: a party, a period; items say what and why; status and reviews
   approve; revisions are deltas; scenarios are what-ifs.
 
@@ -1245,8 +1236,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Cue:** "Which requirements, orders and payments draw on each budget item, how much is left, and which GL accounts does each kind of budget item land in?"
 - **Hook:** a budget line with three clips hanging off it (a requisition, a purchase order,
   a check torn in two halves for two lines) and a translation card pinned beside it:
-  "marketing = 50% trade shows (525) + 50% advertising (520)" *(Claude's, drafted when the
-  figures landed)*
+  "marketing = 50% trade shows (525) + 50% advertising (520)"
 - **Mantra:** Needs earmark, orders commit, checks spend, each against a budget item;
   item types map to ledger accounts by share.
 
@@ -1277,7 +1267,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Hook:** an org chart of empty boxes, each with a price tag clipped to a budget line
   ("analysts, 2001: $120,000 — APPROVED" stamped on it), a job-description card pinned
   under each box with ticked duties from a master list, and colored stickers on the card
-  (Computer, MIS) with dates on them *(Claude's, drafted when the figures landed)*
+  (Computer, MIS) with dates on them
 - **Mantra:** A position is a slot, not a person: typed, funded by a budget item, given
   valid duties, classed by dates.
 
@@ -1309,7 +1299,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Hook:** Mike Johnson climbing a ladder of five boxes (mail clerk to CEO), each box
   staying on the wall after he steps off, with dotted lines from box to box above him and
   one line drawn thicker (the primary), while an employment badge on his lapel never
-  changes *(Claude's, drafted when the figures landed)*
+  changes
 - **Mantra:** Employment is a relationship; people fill slots for a while; slots report
   to slots, one line primary.
 
@@ -1342,7 +1332,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Hook:** a ruler pinned to a job's door, marked lowest, average, highest, with a
   ladder of numbered steps beside it (the grade), and John Smith's own pay slips stacked
   on his badge, one per raise, next to a health card stamped "50%" crossed out to "60%"
-  and a jar of 15 vacation beans *(Claude's, drafted when the figures landed)*
+  and a jar of 15 vacation beans
 - **Mantra:** The job has a band, an amount or a grade step; the employment holds what was
   paid and the benefits.
 
@@ -1374,7 +1364,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Hook:** a paycheck torn into strips: four strips (federal, FICA, state, insurance)
   dropped in labelled bins, the rest cut in half and posted into two bank slots whose
   numbers come from a standing order card pinned to John Smith's badge and ABC's logo
-  *(Claude's, drafted when the figure landed)*
+
 - **Mantra:** Preferences plan the split and the withholding; a paycheck is a payment;
   deductions come off it.
 
@@ -1403,7 +1393,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Hook:** a pile of envelopes in a tray labelled with slot 101's box from the org
   chart, one envelope with a sticky note "sent by Sue", each opened onto a resume, a
   diploma that never expires and a certificate with a red expiry stamp, and a framed ISO
-  certificate on ABC's own wall *(Claude's, drafted when the figures landed)*
+  certificate on ABC's own wall
 - **Mantra:** People apply, for a slot or any job; parties show skills and
   qualifications; persons train.
 
@@ -1436,8 +1426,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Hook:** a report card with three graded lines, three arrows out of it (to a bigger
   pay slip, a bonus check, a door with a new title), sticky notes on the employee's file
   between report cards, and at the end an exit door with two tags, "layoff" and
-  "downsizing", and a claim form trailing behind *(Claude's, drafted when the figures
-  landed)*
+  "downsizing", and a claim form trailing behind
 - **Mantra:** Managers review employees by items, leading to pay, bonus or slot;
   employment ends with a type, a reason and claims.
 
@@ -1476,7 +1465,7 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
 
 ### Architecture · V1 Ch 2 · People and organizations (Fig 2.14)
 - **Cue:** "Everything we know about whoever we deal with, in one picture."
-- **Hook:** the bicycle wheel *(Claude's, at the user's request)*
+- **Hook:** the bicycle wheel
 - **Mantra:** One hub, the party: reached through mechanisms, found at facilities, heard in
   events that cases gather; it wears roles, and a relationship pairs two roles, never two
   parties.
@@ -1507,7 +1496,7 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
 
 ### Architecture · V1 Ch 3 · Products (Fig 3.11)
 - **Cue:** "Everything about what we sell, from the catalogue to the shelf to the price tag."
-- **Hook:** the catalogue and the warehouse *(Claude's, at the user's request)*
+- **Hook:** the catalogue and the warehouse
 - **Mantra:** Categories and features describe a product, suppliers offer it, associations
   link it to other products; a good is stocked as items at a facility; a price is built from
   components, never stored.
@@ -1542,7 +1531,7 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
 ### Architecture · V1 Ch 4 · Ordering products (Fig 4.17)
 - **Cue:** "Everything about what was needed, asked, offered, agreed and ordered, in one picture."
 - **Hook:** a conveyor belt (need, ask, offer) feeding the orders drawer; the contracts drawer
-  beside it, tied by a rulebook, not a string *(Claude's, drafted when the figure landed)*
+  beside it, tied by a rulebook, not a string
 - **Mantra:** Need, ask, offer, order: item to item. Orders and agreements, both header and
   items, meet by rule, never by key.
 
@@ -1573,8 +1562,7 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
 ### Architecture · V1 Ch 5 · Shipments (Fig 5.8)
 - **Cue:** "Everything about goods on the move, from order line to box, stock, paper and road, in one picture."
 - **Hook:** a loading dock seen from above: order lines arriving on one side, boxes and stock
-  shelves on the other, a truck backing up to the door *(Claude's, drafted when the figure
-  landed)*
+  shelves on the other, a truck backing up to the door
 - **Mantra:** The shipment line in the middle: orders fill it, boxes hold it, stock feeds or
   takes it, papers and legs carry it.
 
@@ -1608,8 +1596,7 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
 - **Cue:** "Everything about work, from the need or the sold line that starts it to the people, hours, stock and machines it takes and what it gives, in one picture."
 - **Hook:** a job ticket on a clipboard: a "why" box at the top (a need or an order line),
   sub-tasks with arrows, a roster with rates, a punch-card pocket, a parts list, a machine
-  booking, and a "what came out" box at the bottom *(Claude's, drafted when the figure
-  landed)*
+  booking, and a "what came out" box at the bottom
 - **Mantra:** Need and work apart. Work is broken down, staffed and priced, timed, fed stock
   and machines; its kind holds the standards, and it records what came out.
 
@@ -1645,7 +1632,7 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
 - **Hook:** an invoice in the middle of a corkboard: strings out to the delivery notes,
   timesheets and orders behind its lines, an address label and an account card above, a
   status stamp and small print in the corner, and checks clipped below, heading for a bank
-  slip *(Claude's, drafted when the figure landed)*
+  slip
 - **Mantra:** Typed lines point back at what caused them; parties and accounts are billed;
   status and terms ride along; payments apply, then bank.
 
@@ -1678,7 +1665,7 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
 - **Hook:** a ledger book open on the left, debits and credits in two columns that add up,
   a budget binder open on the right with stamped and red-pencilled lines, and a row of
   checks and purchase orders between them, each clipped to a budget line and stamped with
-  an account number *(Claude's, drafted when the figure landed)*
+  an account number
 - **Mantra:** Events post balanced to organization accounts; budgets plan by item;
   spending draws on items; item types map to accounts.
 
@@ -1715,7 +1702,7 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
   a person on the right holding an envelope, a diploma and a badge, and between them a
   signed contract (the employment) with pay slips, a health card, report cards and, at
   the bottom, an exit door, while a rope (the fulfillment) ties the person into one box
-  *(Claude's, drafted when the figure landed)*
+
 - **Mantra:** Slots are typed and funded; persons apply and fill them; the employment
   carries pay, benefits and its end.
 
