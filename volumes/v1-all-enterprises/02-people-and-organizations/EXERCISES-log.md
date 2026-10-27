@@ -422,3 +422,15 @@ Misunderstandings and reinforce attempts, oldest first.
   added. The dated salary first put on the `employment` subtype itself ✗ (it shares the key:
   one row per employment); the user saw why: a second row reads as fired and rehired. The
   child `pay_history` (own key, FK to employment, amount, from/thru) taken.
+
+### 2026-10-27: round Q2, Submodel 3 (Óptica Clara: Marta's loose frame, case 40 open with the 3 Nov call; her 5 Nov e-mail; the 12 Nov screw and call)
+- Key: (1) a new communication event, via EMAIL, 5 Nov, `communication_case_id` 40 (plus its
+  roles: Marta sender, the shop recipient). (2) a work effort (replace the screw) followed up
+  from the 5 Nov e-mail through `communication_event_work_effort`; a new event, via PHONE,
+  12 Nov, on case 40; the case's status changes OPEN → CLOSED, no thru date.
+- Answer: (1) the new event on case 40, the medium as its type (EMAIL, name half-remembered),
+  cold ✓, the retest from Hostal Lumbre passed. (2) the work effort off the 5 Nov e-mail, with
+  the reason (the call came after the work; a work effort looks ahead, not back) ✓ cold; the
+  12 Nov call ✓ (its case link not said, read as covered by "everything is tied together");
+  the case ended by its status, no thru date ✓ cold. Event roles not mentioned (not asked
+  outright). Score: 4. Case and work effort 3 → 4.
