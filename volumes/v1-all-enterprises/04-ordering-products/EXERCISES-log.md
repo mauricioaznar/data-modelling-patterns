@@ -236,3 +236,8 @@ Misunderstandings and reinforce attempts, oldest first.
   line's €0.50 discount row missed ✗. (3) discount_per_unit read as 50% ✗ (it's €0.50, an
   amount); "ours recalculates" ✗, the opposite of what was agreed earlier this session.
   Score: 2. Typed rows stays 2 (the delivery again); amount and percentage 2 → 1.
+- Revised after the user's pushback: under their reading (0.50 as 50%), "ours recalculates"
+  is right for a percentage row, so part 3 holds one mistake, the misreading (the question
+  said €0.50; the column name alone is ambiguous). No evidence on the stale amount: amount
+  and percentage back to 2. Part 2's missed line row held (the question asked for every
+  adjustment, "order or line"); the layout shares a little of the blame. Score stays 2.
