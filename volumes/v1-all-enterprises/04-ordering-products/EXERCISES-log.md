@@ -221,3 +221,18 @@ Misunderstandings and reinforce attempts, oldest first.
   adjustment pointing at the line ✓, the type and the copied percentage not said; the
   snapshot and the optional check ✓. Score: 3. Tax row 0 → 3. A habit across the session:
   numbers left out when asked for (recall 3 and Q2).
+
+### 2026-10-27: Q3, Submodel 2 (Ferretería Llano's columns: order discount_pct, shipping_cost, tax_rate; line discount_per_unit. Order 88: 20 boxes of screws at €5 with €0.50 off each, a drill at €120; 5% loyalty, 3% cash, €9 normal delivery, €4 rush, VAT 21% on both lines)
+- Key: (1) the two discounts squeeze into one 8 (they compound differently and lose their
+  reasons); no column for the rush; a per-line tax column is one more column per charge (the
+  naive trap again). (2) DISCOUNT on line 1, amount 10.00; DISCOUNT on the order, 5; DISCOUNT
+  on the order, 3; SHIPPING_AND_HANDLING on the order, amount 9.00; SURCHARGE on the order,
+  amount 4.00; SALES_TAX on each line, 21. (3) We store 10.00, the total. At 30 boxes their
+  0.50 × 30 = 15 follows by itself; our 10.00 goes stale until the line is repriced. On this
+  point their design is better; it's the cost of storing amounts as totals.
+- Answer: (1) the 8 losing its audit trail ✓, the rush with no column ✓, then a tax_per_line
+  column proposed ✗ (the column-per-charge trap). (2) both order discounts, the rush, the tax
+  per line ✓; the €9 normal delivery typed FEE ✗ (third time, half an hour after FLOUTS); the
+  line's €0.50 discount row missed ✗. (3) discount_per_unit read as 50% ✗ (it's €0.50, an
+  amount); "ours recalculates" ✗, the opposite of what was agreed earlier this session.
+  Score: 2. Typed rows stays 2 (the delivery again); amount and percentage 2 → 1.
