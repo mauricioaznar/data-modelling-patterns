@@ -451,3 +451,16 @@ Misunderstandings and reinforce attempts, oldest first.
   relationship's, "nothing enforces it" (a check query would). Part 3 needed one
   clarification (the per-membership fee, not a plan's list price: a fair ambiguity).
   Score: 4. Specific vs generic 3 → 4.
+- **2026-10-27, question round Q7 (contact mechanisms).** Bodega Sierra: Pablo and Inés share
+  Calle Luna 5, move to Calle Sol 8 on 1 Mar; a typo (Sol 9) found on 3 Mar; Pablo's invoices
+  and Inés's deliveries to Sol 8. Key: (1) one new contact mechanism + postal address row,
+  shared; two new links from 1 Mar; the two Luna links ended thru 1 Mar; the Luna row
+  untouched. (2) fix the address row in place: a typo was never true, so there is no history
+  to keep; a move was true until 1 Mar, so the old link is ended, not overwritten.
+  (3) purpose rows on each party's own link: BILLING on Pablo's, SHIPPING on Inés's, dated
+  inside the link.
+  Answer: (1) all right, one shared address row, the subtype, the four link dates, cold ✓.
+  (2) update in place ✓; the why not given ✗ (asked outright). (3) purpose rows ✓, invoices
+  and deliveries guessed as purpose types ✓ (BILLING, SHIPPING), "wine deliveries" put in a
+  description ~ (the type says it); which link each purpose sits on not said ~. Score: 3.
+  Move vs typo stays 3 (the why to say cold); purpose stays 3 (per party's link).
