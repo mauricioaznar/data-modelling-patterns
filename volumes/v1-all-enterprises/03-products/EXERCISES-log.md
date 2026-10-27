@@ -619,3 +619,16 @@ Scores: price components 2 → 3; feature prices stay at 2.
   finished) ✓. (2) not answered as asked: the kinds re-justified, no row called build or
   package, no lever named ✗ (the same gap as Mecha's part 2). Score: 2. Row stays 3: the
   kinds are solid on a second day; the line rule (the child's kind) still to retest cold.
+
+### 2026-10-27: round Q6, Submodel 3 (Farmacia Ribera: paracetamol 40 boxes lot B-221 and 25 boxes lot B-305 on shelf A3; two blood pressure monitors BP-9001, BP-9002 on shelf C1; reorder level 30 chain-wide, 60 at the Calle Mayor store)
+- Key: (1) four items: two NON_SERIALIZED (paracetamol, one per lot, 40 and 25, in container
+  A3), two SERIALIZED (monitor, serial each, no quantity, in container C1); the location
+  arc: a container or a facility, exactly one (here the shelf, which sits in the store).
+  (2) 60: the facility-scoped guideline is more specific than the chain-wide one; most
+  specific wins.
+- Answer: (1) one row per lot with its quantity ✓, one row per serial ✓, quantity empty on a
+  serialized item ✓ (first said 0, then "assumed 1"); the kind first given as "container"
+  then corrected to serialized / non-serialized, self-caught ✓; where it is not given for
+  any row ✗ (the shelf, through the container arc). (2) 60, "the facility wins over the
+  whole chain" ✓ cold, most specific in its own words. Score: 3. Inventory item stays 3
+  (the location arc to retest); reorder guideline 3 → 4.
