@@ -3,6 +3,46 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-27
+
+**Built**
+- Ch 4 adjustments practice: recall 1 Tostadero Luna (normal delivery typed FEE, the six not
+  named: 2, typed rows 3 → 2); recall 3 Panadería Olmo (the 10% taken after the line discount,
+  300 not 298; the unit price convention missed: 2, amount row 0 → 2); Q2 Pinecone (sales tax:
+  rows per boundary and category, the order date, the snapshot, cold; the rates not added
+  up: 3, tax row 0 → 3); Q3 Llano's columns (delivery FEE a third time, the line discount
+  missed, €0.50 read as 50%: 2, revised after the user's pushback); R1 Olmo's e-mail (every
+  row and number cold, the van as shipping: 3, typed rows and amount rows 2 → 3).
+- Ch 4 orders: recall 2 Ciclos Brava (order items, product/feature/neither and the snapshot
+  cold; ordered for guessed as a link to the product: 3, the line row 2 → 3).
+- Card 11: the FLOUTS hook (Fee, Less, Other, Upcharge, Tax, Shipping) for the six top types;
+  the mantra adds "typed by what it pays for"; the key maps each letter. Anki export rebuilt.
+- Explorer: order items labelled by order, line and product, not the customer PO number
+  several lines share.
+- Taught in chat: the catalogue suggests, the order item and its adjustments are the real
+  charge; repricing is an app rule (pricing proposes, a person settles, a freeze point, a
+  mismatch report); percentages follow quantity changes, stored amounts go stale; source vs
+  derived (unit vs extended amount); scoped rules either compete (base price, reorder
+  guideline) or accumulate (tax boundaries, discounts); a list component applies to anyone
+  matching, an agreement component to its parties only, MSRP is never charged; an agreement
+  is a standing deal found by the order, never created with it.
+
+**Decisions**
+- Exercises at most three parts for now; all charges in one list, hidden adjustments marked
+  "(watch the lines)".
+- Core app (TODO): an optional `order_adjustment.price_component_id` for provenance, beside the
+  copied value, decided with the repricing rule.
+- Book order through Ch 4's submodels: agreements wait for submodels 3–5.
+
+**Next**
+- Session start: 3 recall questions, favouring the six top types cold (FLOUTS), the
+  percentage's base (before any adjustment), ordered for (line to line).
+- Ch 4 adjustments: finish practice (one more question, the scenario, the doc entry).
+- Ch 4 orders: the line's children, Create, the scenario and the doc entry.
+- Open, asked and unanswered: add the reorder guideline's missing selection rule (facility,
+  boundary, organization, depth) to Ch 3's overview points?
+- Re-import the Anki export (card 11's new hook).
+
 ## 2026-10-26
 
 **Built**
