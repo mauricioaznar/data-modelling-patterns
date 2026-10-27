@@ -185,3 +185,14 @@ Misunderstandings and reinforce attempts, oldest first.
   (3) FEE ✓; (4) DISCOUNT ✓. The six not named; the level and amount vs percentage not
   answered. Score: 2. Typed rows 3 → 2: the delivery has gone wrong twice, in two different
   ways. Test: "what is the charge paying for?" Moving the goods means SHIPPING_AND_HANDLING.
+
+### 2026-10-27: session recall 2, Submodel 1 (Ciclos Brava: Lucía orders a Turia bike listed at €900, its optional rear rack €40, a one-off hand-painted club logo on the frame at an agreed €60; the Turia's list price rises to €950 a week later)
+- Key: three order items. Line 1 names the Turia (product), unit price 900. Line 2 names the
+  rack (feature), ordered for line 1, 40. Line 3 names neither: its description says what it
+  is ("hand-painted club logo"), 60, ordered for line 1 (it's on that frame). Each price is the
+  line's unit price, an agreed snapshot. The rise to €950 changes nothing on the order.
+- Answer: order items this time, not catalogue rows ✓ (the slip from order 77 fixed);
+  product, feature and neither ✓; the rack "linked to the product" (a guess) ✗: it's linked to
+  the bike's line, through ordered for; the painting's description and its ordered for missed;
+  prices on the order as a snapshot ✓ (on each line, as its unit price); the rise changes
+  nothing ✓. Score: 3. The line row 2 → 3; ordered for (one line to another) still to reinforce.

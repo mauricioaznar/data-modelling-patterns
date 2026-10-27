@@ -175,6 +175,20 @@ function readQueries() {
 
 const LABEL_COLUMNS = ['name', 'description', 'title', 'note'];
 
+// Tables whose generic label misleads. An order item has no name, and its
+// subtype's text is the customer's PO number, shared by several lines: label
+// it by order, line and what it's for (product, feature or its description).
+const CUSTOM_LABELS = {
+  order_item: (t, row, depth) => {
+    const refLabel = (column) => {
+      const fk = t.fks.find((f) => f.column === column);
+      return fk && row[column] != null ? label(fk.ref, row[column], depth + 1) : null;
+    };
+    const what = refLabel('product_id') ?? refLabel('product_feature_id') ?? row.item_description;
+    return [`${row.order_id} · line ${row.order_item_seq_id}`, what].filter(Boolean).join(' · ');
+  },
+};
+
 function ownText(t, row) {
   const fkCols = new Set(t.fks.map((fk) => fk.column));
   return t.columns
@@ -191,6 +205,7 @@ function label(table, id, depth = 0) {
   const t = meta[table];
   const row = data[table]?.byPk.get(String(id));
   if (!t || !row) return String(id);
+  if (CUSTOM_LABELS[t.name]) return CUSTOM_LABELS[t.name](t, row, depth);
   for (const c of LABEL_COLUMNS) if (row[c] != null) return String(row[c]);
   for (const sub of t.subtypes) {
     const subRow = data[sub]?.byPk.get(String(id));
