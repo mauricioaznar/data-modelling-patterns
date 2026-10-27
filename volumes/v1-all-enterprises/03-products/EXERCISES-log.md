@@ -600,3 +600,12 @@ Scores: price components 2 → 3; feature prices stay at 2.
   Clarified by the user: the Granada row triggers at ≤ 6 in Granada only, and never
   elsewhere ✓ (the muddle was wording). Held at 3: the rule (most specific wins, the general
   row loses in Granada) not named, and the general row's scope is empty = any.
+
+### 2026-10-27: round Q3, Submodel 1 (Ferretería Roble: Tools → Power tools → Cordless, Tools → Garden tools; a cordless hedge trimmer from 1 Mar 2027; a one-bucket report at the second level)
+- Key: two rows, Cordless and Garden tools, from 2027-03-01, thru null; none for Power tools
+  (an ancestor of Cordless) or Tools (reached by the rollup). Both under Tools, neither
+  contains the other, so both get a row. The report: primary on one of the two, a business
+  call.
+- Answer: Cordless and Garden tools, dates right, no ancestor rows, cold ✓; the primary flag
+  on either one, not both ✓. Same subtree vs containment passed cold, a day after Faro.
+  Score: 4. Rollup 2 → 4 (the most specific true categories, none an ancestor of another).
