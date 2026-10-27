@@ -437,3 +437,17 @@ Misunderstandings and reinforce attempts, oldest first.
 - Follow-up, unprompted: Marta a stakeholder on the case, the technician not ✓ (the work
   reaches him through the work effort; a case OWNER is about responsibility, not doing the
   work). Three different "who"s kept apart: case roles, event roles, work effort assignments.
+- **2026-10-27, question round Q5 (specific vs generic).** Colmena (coworking): members,
+  staff, mentors, new kinds every few months. Asked: one table per kind or generic, and what
+  decides; membership(member, from, thru) for the accountant, built from what; a fee per
+  membership that changes (€150, €180 from 1 March), with history. Key: generic, because the
+  kinds keep coming; a view over `party_relationship` filtered to MEMBERSHIP, joined through
+  its party roles to the parties (`party_display_name`); the fee in a dated child of the
+  membership (amount, from/thru), its dates inside the membership's, a check query.
+  Answer: (1) generic ✓, "scales without code changes" (the kinds keep coming, said
+  loosely), attributes → a subtype table ✓. (2) the view, filtered by type, from/thru, joined
+  through the roles ✓ cold (the source, missed on 10-26). (3) a dated child with amount and
+  from/thru, linked to the relationship ✓ cold (missed on 10-26); its dates inside the
+  relationship's, "nothing enforces it" (a check query would). Part 3 needed one
+  clarification (the per-membership fee, not a plan's list price: a fair ambiguity).
+  Score: 4. Specific vs generic 3 → 4.
