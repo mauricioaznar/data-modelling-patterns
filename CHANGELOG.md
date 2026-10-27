@@ -30,6 +30,17 @@ and any decisions made.
   by containment (ancestor or descendant), never by sharing a subtree, and keep the lower
   one; a value with history is a dated child, not columns or rows on a key-sharing subtype
   (Ch 9's pay history); the catalogue says what's possible, the order says what happened.
+- Ch 4 order adjustments practice started: three tracker rows; Q1 Harina Norte (two rows on
+  the order, typed, cold; a plain delivery typed SURCHARGE, not SHIPPING_AND_HANDLING): 3,
+  typed rows 0 → 3.
+- Taught in chat (adjustments): Ch 3 components stack per unit (10 − 1 + 10 = 19 a unit,
+  190 for 10, the user's 10-19 slip again, twice); the app turns components into line
+  adjustments when it prices the line (base → unit price, a per-unit amount → its total, a
+  percentage kept), the user may change a type only within its top type, the sign from the
+  top type; percentage vs amount (not discount vs surcharge) decides what a quantity change
+  touches, and the app re-prices the line while the order is open; no link between
+  `price_component_type` and `order_adjustment_type`, only matching text ids, and how the
+  recursive top-type walk works.
 
 **Decisions**
 - A question round is 7 questions (about 1 h 30). Cards carry no provenance notes or dates.
@@ -45,6 +56,8 @@ and any decisions made.
   view's source and a history as a dated child; a new event onto an open case; build vs
   package per row.
 - Ch 4 orders: the line and its children, Create, the scenario and the doc entry.
+- Ch 4 adjustments: Q2 onward (the amount as the total, the percentage's base, the discount
+  convention, tax rates), and retest the six top types (delivery vs surcharge).
 - Re-import the Anki export; move card 11 from Drafts to Settled by hand.
 
 ## 2026-10-25
