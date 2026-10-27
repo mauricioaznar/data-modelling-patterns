@@ -434,3 +434,6 @@ Misunderstandings and reinforce attempts, oldest first.
   12 Nov call ✓ (its case link not said, read as covered by "everything is tied together");
   the case ended by its status, no thru date ✓ cold. Event roles not mentioned (not asked
   outright). Score: 4. Case and work effort 3 → 4.
+- Follow-up, unprompted: Marta a stakeholder on the case, the technician not ✓ (the work
+  reaches him through the work effort; a case OWNER is about responsibility, not doing the
+  work). Three different "who"s kept apart: case roles, event roles, work effort assignments.
