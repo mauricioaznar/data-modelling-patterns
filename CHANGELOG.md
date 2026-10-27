@@ -6,6 +6,16 @@ and any decisions made.
 ## 2026-10-27
 
 **Built**
+- A question round of seven (Chs 2–4, the user tired, Ch 4 kept to Q1 at their request). Q1 Vivero
+  Alba (Ch 4): the six cold, delivery typed shipping, the base cold; the rush typed
+  MISCELLANEOUS, not SURCHARGE (3). Q2 Óptica Clara (Ch 2): the e-mail onto the open case,
+  the work effort off it, CLOSED, cold; case roles kept apart unprompted (4; case 3 → 4).
+  Q3 Ferretería Roble (Ch 3): Cordless and Garden tools, no ancestors, primary (4; rollup
+  2 → 4). Q4 Panal (Ch 3): the five kinds cold; build vs package per row not answered (2).
+  Q5 Colmena (Ch 2): generic, the view through the roles, the fee as a dated child (4;
+  specific vs generic 3 → 4). Q6 Farmacia Ribera (Ch 3): rows per lot and serial; no
+  location given (3; reorder 3 → 4). Q7 Bodega Sierra (Ch 2): the shared move cold; the
+  typo fixed in place, the why not given (3).
 - Ch 4 adjustments practice: recall 1 Tostadero Luna (normal delivery typed FEE, the six not
   named: 2, typed rows 3 → 2); recall 3 Panadería Olmo (the 10% taken after the line discount,
   300 not 298; the unit price convention missed: 2, amount row 0 → 2); Q2 Pinecone (sales tax:
@@ -28,6 +38,7 @@ and any decisions made.
   is a standing deal found by the order, never created with it.
 
 **Decisions**
+- The "(watch the lines)" marker dropped (the user's call): a missed line row counts again.
 - Exercises at most three parts for now; all charges in one list, hidden adjustments marked
   "(watch the lines)".
 - Core app (TODO): an optional `order_adjustment.price_component_id` for provenance, beside the
@@ -35,6 +46,9 @@ and any decisions made.
 - Book order through Ch 4's submodels: agreements wait for submodels 3–5.
 
 **Next**
+- Retests from the round: the rush as SURCHARGE and the base on a later day (Ch 4); build vs
+  package by the child's kind (Ch 3); the inventory item's location arc (Ch 3); why a typo
+  is fixed in place (Ch 2); a purpose on one party's link (Ch 2).
 - Session start: 3 recall questions, favouring the six top types cold (FLOUTS), the
   percentage's base (before any adjustment), ordered for (line to line).
 - Ch 4 adjustments: finish practice (one more question, the scenario, the doc entry).
