@@ -241,3 +241,16 @@ Misunderstandings and reinforce attempts, oldest first.
   said €0.50; the column name alone is ambiguous). No evidence on the stale amount: amount
   and percentage back to 2. Part 2's missed line row held (the question asked for every
   adjustment, "order or line"); the layout shares a little of the blame. Score stays 2.
+
+### 2026-10-27: R1 reinforce, Submodel 2 (Panadería Olmo's e-mail: 30 bags of flour at €12 with "the usual €1 off each bag", 5 trays of yeast at €8, the normal van €10; then 40 bags)
+- Key: two items (flour 30 at 12, yeast 5 at 8); DISCOUNT on line 1, amount 30.00;
+  SHIPPING_AND_HANDLING on the order, amount 10.00. At 40 bags the quantity becomes 40 and the
+  discount's 30.00 goes stale (should be 40.00): the row stores the total, not "€1 a bag", so
+  nothing in the model notices. Before the freeze the app reprices; a check can only compare
+  against a rule stored somewhere (a price component for Olmo's €1).
+- Answer: every row and number right, cold; the delivery typed shipping ✓ (first time today);
+  the stale 30 → 40 ✓; "frozen" used for stale (the freeze is the business rule, staleness
+  comes from storing the total), and a data-quality query said to flag it (it can't without a
+  stored rule). Score: 3. Typed rows 2 → 3, amount and percentage 2 → 3.
+- Layout note for Q3 (Llano): the €0.50 sat in the line list under a separate "on the whole
+  order" list; blame about half and half. Hidden adjustments now marked "(watch the lines)".
