@@ -124,6 +124,18 @@ Norte and END_USER Studio Vela; SHIPPING per line. All cold. Not asked: both lin
 address row. Score: 4. Roles 3 → 4, wheres 3 → 4 (the billing address retested, the florist
 miss fixed).
 
+## Submodel 2 exam (2026-10-26)
+
+**Q1 (Remember): Harina Norte's order 40, 20 sacks of flour at €30, a 5% loyalty discount
+and a €25 delivery charge on the whole order.** Two independent `order_adjustment` rows,
+both on the order and not the line (right); the discount typed DISCOUNT with a 5 percentage
+(right; LOYALTY_DISCOUNT under it not named, not needed); the delivery stored as a 25 amount
+(right) but typed SURCHARGE ✗: a plain delivery charge is SHIPPING_AND_HANDLING (FREIGHT
+under it). Blame about 80/20 the user's: the six top types name shipping and handling, but
+Table 4.8, seen this morning, files a delivery *outside the normal area* under SURCHARGE.
+Score: 3. Typed rows 0 → 3; amount or percentage: the split right, its points (the total,
+the base, the convention) untested.
+
 ## Gaps log
 - 2026-10-23, Q1: who vs where on a line. Gave the ship-to address, not the ship-to party
   (`order_item_role`). Same gap as card 10's S. Reinforce.
