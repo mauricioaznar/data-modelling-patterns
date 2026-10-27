@@ -44,7 +44,7 @@ it's understood.
 | **Submodel 2: order adjustments** (practice started 2026-10-26, after its overview) | | | | |
 | Every price change a typed row, on the order or one line (not a column per charge; the six top types, the sign from the type) | 4.6 (point 10) | `order_adjustment`, `order_adjustment_type` | 2 | 2026-10-27 recall 1 (Tostadero Luna): normal delivery typed FEE, surcharge, fee and discount right, the six not named (3 → 2). Q1 Harina Norte: two rows on the order, typed, cold; the plain delivery typed SURCHARGE, not SHIPPING_AND_HANDLING ✗ (retest the six) |
 | An amount or a percentage: the amount the total charged, the percentage of the value before any adjustment, discounts as adjustments by convention | 4.6 (points 11, 42, 43) | `order_adjustment` | 2 | 2026-10-27 recall 3 (Panadería Olmo): amount vs percentage and levels right; the 20.00 total not said, the unit price convention missed, the 10% taken after the line discount (300, not 298). Q1: the percentage vs amount split right; the total, the base and the convention untested |
-| Sales tax: a dated rate per boundary and optional category, copied onto the order | 4.6 (point 12) | `sales_tax_lookup` | 0 | |
+| Sales tax: a dated rate per boundary and optional category, copied onto the order | 4.6 (point 12) | `sales_tax_lookup` | 3 | 2026-10-27 Q2 (Pinecone, Austin): rows per boundary and category right, the order date not the ship date, the snapshot, cold; the rates 8.25 and 2.0 and the stored percentage not said |
 
 ### Open threads
 -

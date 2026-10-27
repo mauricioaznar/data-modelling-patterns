@@ -209,3 +209,15 @@ Misunderstandings and reinforce attempts, oldest first.
   named, the reason given was "totals are calculated", not the convention ✗; the 10% taken
   after the line discount (32), total 300 ✗. Score: 2. Amount and percentage row 0 → 2: the
   base before any adjustment and the 15-not-14 convention to reinforce.
+
+### 2026-10-27: Q2, Submodel 2 (Pinecone Supplies, order 501 dated 2026-10-20 to an Austin café, shipped 2026-11-05: an espresso machine (Equipment) and coffee beans (Food); lookup rows Texas 6.25, Texas Food 0, Austin 2.0 to 2026-11-01, Austin 2.5 from it; in December Texas 6.25 corrected to 6.5)
+- Key: every boundary the ship-to lies in adds its rate, and per boundary a category rate
+  beats the general one, as of the order date (not the ship date). Line 1: Texas 6.25 + Austin
+  2.0 = 8.25; line 2: Texas Food 0 + Austin 2.0 = 2.0. Two SALES_TAX adjustments, one on each
+  line, the rate copied into the percentage column (8.25, 2.0); no link to the lookup row. The
+  December fix changes nothing on order 501: the copy is a snapshot.
+- Answer: rows A+C and B+C ✓, C not D by the order date ✓ (the ship date bait avoided);
+  the totals 8.25 and 2.0 not said; why B beats A not said (not asked); on the order
+  adjustment pointing at the line ✓, the type and the copied percentage not said; the
+  snapshot and the optional check ✓. Score: 3. Tax row 0 → 3. A habit across the session:
+  numbers left out when asked for (recall 3 and Q2).
