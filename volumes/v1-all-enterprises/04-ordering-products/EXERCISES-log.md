@@ -254,3 +254,16 @@ Misunderstandings and reinforce attempts, oldest first.
   stored rule). Score: 3. Typed rows 2 → 3, amount and percentage 2 → 3.
 - Layout note for Q3 (Llano): the €0.50 sat in the line list under a separate "on the whole
   order" list; blame about half and half. Hidden adjustments now marked "(watch the lines)".
+
+### 2026-10-27: round Q1, Submodel 2 (Vivero Alba: 20 pots at €8, 10% off the pots, a 5% rush on the order, the van €12)
+- Key: (1) the six cold. (2) DISCOUNT on line 1, percentage 10; SURCHARGE on the order,
+  percentage 5; SHIPPING_AND_HANDLING on the order, amount 12.00. (3) Both percentages are
+  taken on the value before any adjustment: the line's 20 × 8 = 160, so −16; the rush also
+  on 160, so +8. Total 160 − 16 + 8 + 12 = 164.
+- Answer: (1) all six named cold, through FLOUTS ✓. (2) the discount and the delivery right,
+  delivery typed shipping cold ✓; the rush typed MISCELLANEOUS ✗ (an extra charge on top is a
+  surcharge; "other" is the leftover bin, only when nothing else fits). (3) 160 as the base,
+  each adjustment on the source and independent of the others, −16, the rush +8, cold ✓
+  (part 3 worded badly at first; reworded on request). Score: 3. Typed rows stays 3 (the six
+  and the delivery cold, the rush in the leftover bin); amount and percentage stays 3 (the
+  base cold, the same day as its mistake: 4 on a later day).
