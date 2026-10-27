@@ -196,3 +196,16 @@ Misunderstandings and reinforce attempts, oldest first.
   the bike's line, through ordered for; the painting's description and its ordered for missed;
   prices on the order as a snapshot ✓ (on each line, as its unit price); the rise changes
   nothing ✓. Score: 3. The line row 2 → 3; ordered for (one line to another) still to reinforce.
+
+### 2026-10-27: session recall 3, Submodel 2 (Harinera Sur to Panadería Olmo: 10 bags of yeast at €4, 20 boxes of flour at €15; €1 off each box, 10% off the order, €12 for delivery outside the usual zone)
+- Key: three rows. DISCOUNT on line 2, amount 20.00 (the total charged, never the €1 per
+  unit); DISCOUNT on the order, percentage 10; SURCHARGE on the order, amount 12.00. Line 2's
+  unit price stays 15: the unit price is before discounts, and the discount is an adjustment
+  so that reports can see it. The 10% is taken from the value before any adjustment, 340, so
+  it's 34. Total: 340 − 20 − 34 + 12 = 298.
+- Answer: types, levels and amount vs percentage all right, the surcharge with its reason ✓;
+  the numbers not given (the 20.00 total never said); the "total" example muddled (2 × 10 + 1
+  each = 22 is the line's charge, the adjustment's amount is 2); line 2's unit price not
+  named, the reason given was "totals are calculated", not the convention ✗; the 10% taken
+  after the line discount (32), total 300 ✗. Score: 2. Amount and percentage row 0 → 2: the
+  base before any adjustment and the 15-not-14 convention to reinforce.
