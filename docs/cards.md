@@ -389,16 +389,18 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 11 · V1 Ch 4 · Order adjustments (Fig 4.6)
 - **Cue:** "What changes an order's price besides quantity × unit price, and which tax rate applies where?"
-- **Hook:** a receipt covered in stickers
-- **Mantra:** Every price change is a typed row, on the order or one line; tax rate copied
-  from place, category and date.
+- **Hook:** a receipt whose stickers FLOUTS the printed price
+- **Mantra:** Every price change is a typed row, on the order or one line, typed by what it
+  pays for; tax rate copied from place, category and date.
 
 <details><summary>Key</summary>
 
 - **S:** `order_adjustment` (an amount **or** a percentage, stored positive; an amount is the
   total charged, never per unit; for the whole order **or** one item; discounts live here, the
-  unit price is before discounts) · `order_adjustment_type` (the book's six subtypes on top: discount,
-  surcharge, sales tax, shipping and handling, fee, miscellaneous; finer types under them) ·
+  unit price is before discounts) · `order_adjustment_type` (the book's six subtypes on top, FLOUTS: **F**ee,
+  **L**ess = discount, **O**ther = miscellaneous, **U**pcharge = surcharge, an extra on top of
+  the normal, **T**ax = sales tax, **S**hipping = shipping and handling, moving the goods; finer
+  types under them) ·
   `sales_tax_lookup` (a rate per geographic boundary, optionally per product category, dated:
   the rate in force on the order date).
 - **W:** a column per charge on the order (`discount`, `tax`, `freight`): every new kind of

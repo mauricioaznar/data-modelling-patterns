@@ -174,3 +174,14 @@ Misunderstandings and reinforce attempts, oldest first.
   (2) prices on `price_component` ✗ (that's the list; the agreed price is on the line).
   (3) nothing changes, snapshot on the order item ✓, which contradicts (2). Score: 2. The line
   row 3 → 2: order items vs catalogue, the description line and ordered for to reinforce.
+
+### 2026-10-27: session recall 1, Submodel 2 (Tostadero Luna, €400 of beans to a café in Zaragoza: €8 normal van delivery, €12 extra outside the usual zone, €2.50 order processing, 5% off for three years as a customer)
+- Key: the six top types are DISCOUNT, SURCHARGE, SALES_TAX, SHIPPING_AND_HANDLING, FEE and
+  MISCELLANEOUS_CHARGE. (1) SHIPPING_AND_HANDLING (it pays for moving the goods); (2) SURCHARGE
+  (an extra on top of the normal, like the book's out-of-area delivery); (3) FEE; (4) DISCOUNT
+  (a loyalty discount). All four go on the order, and none on a line. Rows 1–3 hold an amount
+  and row 4 a percentage of the €400.
+- Answer: (1) FEE ✗, the delivery mis-typed again (it was SURCHARGE in Q1); (2) SURCHARGE ✓;
+  (3) FEE ✓; (4) DISCOUNT ✓. The six not named; the level and amount vs percentage not
+  answered. Score: 2. Typed rows 3 → 2: the delivery has gone wrong twice, in two different
+  ways. Test: "what is the charge paying for?" Moving the goods means SHIPPING_AND_HANDLING.
