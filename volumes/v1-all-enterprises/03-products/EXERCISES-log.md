@@ -609,3 +609,13 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - Answer: Cordless and Garden tools, dates right, no ancestor rows, cold ✓; the primary flag
   on either one, not both ✓. Same subtree vs containment passed cold, a day after Faro.
   Score: 4. Rollup 2 → 4 (the most specific true categories, none an ancestor of another).
+
+### 2026-10-27: round Q4, Submodel 5 (Panal: bulk honey and glass jars filled into Miel de Azahar 250 g, sold; dippers bought and sold as they come; a Breakfast Set of 2 jars and 1 dipper; four COMPONENT rows shown)
+- Key: (1) honey, jar RAW_MATERIAL; Miel de Azahar, dipper, Breakfast Set FINISHED_GOOD.
+  (2) Miel → honey and Miel → jar are build lines (the child is a raw material); Set → Miel
+  and Set → dipper are package lines (the child is a finished good). The database tells them
+  apart by the child's `good_kind`, not the association type.
+- Answer: (1) all five right, cold, Miel too (worked on and a component, but sold, so
+  finished) ✓. (2) not answered as asked: the kinds re-justified, no row called build or
+  package, no lever named ✗ (the same gap as Mecha's part 2). Score: 2. Row stays 3: the
+  kinds are solid on a second day; the line rule (the child's kind) still to retest cold.
