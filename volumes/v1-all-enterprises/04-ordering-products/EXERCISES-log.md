@@ -295,3 +295,14 @@ Misunderstandings and reinforce attempts, oldest first.
   an amount and a percentage mix (here: the €10 first gives 45, the 10% first gives 44).
   Not counted against the user. Score: 1. Amount and percentage row 3 → 2: the base before
   any adjustment, and its why (no sequence stored), to reinforce.
+
+### 2026-10-28: session recall 3, Submodel 1 (Muebles Roca, order 14: Ana orders two Lino sofas (€700), one in grey velvet (+€60), one in blue linen (+€40), both fabrics selectable features)
+- Key: (1, Apply) four order items: line 1 the Lino (product), 1 at 700; line 2 grey velvet
+  (feature), 1 at 60, ordered for line 1; line 3 the Lino, 1 at 700; line 4 blue linen
+  (feature), 1 at 40, ordered for line 3. Two sofa lines, not one at quantity 2: they
+  differ. (2, Analyze) `ordered_for_order_item_id` points line to line; a link to the
+  product couldn't tell the two sofas apart.
+- Answer: all four lines exactly as the key, with the quantities and prices on the lines,
+  cold ✓; ordered for named as the item id ✓, line to line (yesterday's guess, a link to the
+  product, fixed on a later day). Score: 4. The line row stays 3: ordered for at 4, the
+  description line (a one-off, neither product nor feature) still to retest cold.
