@@ -304,5 +304,8 @@ Misunderstandings and reinforce attempts, oldest first.
   product couldn't tell the two sofas apart.
 - Answer: all four lines exactly as the key, with the quantities and prices on the lines,
   cold ✓; ordered for named as the item id ✓, line to line (yesterday's guess, a link to the
-  product, fixed on a later day). Score: 4. The line row stays 3: ordered for at 4, the
-  description line (a one-off, neither product nor feature) still to retest cold.
+  product, fixed on a later day). Score: 4, revised to 3: the user then said the two sofa
+  lines were a guess, and asked how they differ (taught: a line holds units alike in
+  everything the line and its children say; ordered for points at a line, not a unit, so
+  units that differ in a feature, price, ship-to or date split). The line row stays 3:
+  ordered for cold; when to split a line and the description line to retest cold.
