@@ -267,3 +267,16 @@ Misunderstandings and reinforce attempts, oldest first.
   (part 3 worded badly at first; reworded on request). Score: 3. Typed rows stays 3 (the six
   and the delivery cold, the rush in the leftover bin); amount and percentage stays 3 (the
   base cold, the same day as its mistake: 4 on a later day).
+
+### 2026-10-28: session recall 1, Submodel 2 (Floristería Brisa, order 18, a bouquet of roses: an €8 same-day rush, the €6 normal delivery, €2 for paying by bank card)
+- Key: (1, Remember) the six top types: DISCOUNT, SURCHARGE, SALES_TAX,
+  SHIPPING_AND_HANDLING, FEE and MISCELLANEOUS_CHARGE. (2, Apply) the rush SURCHARGE (an
+  extra on top of the normal), the delivery SHIPPING_AND_HANDLING (it pays for moving the
+  goods), the card FEE. All three go on the order (not asked).
+- Answer: (1) all six ✓, but not cold: Claude called the user "Señor FLOUTS" just before,
+  the hook itself (Claude's slip; yesterday's cold naming stands). (2) all three ✓ cold: the
+  rush SURCHARGE (yesterday's MISCELLANEOUS fixed on a later day), the delivery shipping,
+  the card FEE. Levels given unasked: the card fee put on the item, from a question that
+  named no lines and a follow-up that offered "a card" as one (about 70/30 Claude's); once
+  the card read as a bank card, the order, "a payment fee for the order, not one item" ✓.
+  Score: 4. Typed rows 3 → 4.

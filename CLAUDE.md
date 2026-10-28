@@ -92,6 +92,10 @@ the user, tease with nicknames, so the sessions stay fun.
 - **Time budget: about 3 hours of practice per submodel.** Go over only when a gap still needs
   reinforcing, and say so first. Don't write more exercises than fit the budget.
 - **Ask one question at a time** and wait for the answer.
+- **Name the Bloom level being graded** (the user's call, 2026-10-28): every question, recall
+  and question-round ones included, says which level it grades (Remember, Understand, Apply,
+  Analyze, Evaluate, Create, as in `docs/practice.md`). A question with several parts names
+  the level of each part.
 - **The user answers in short bits** (the user's call, 2026-10-20): don't treat a reply as the
   whole answer, and don't grade it, until the user says they're done. Respond to each bit only
   as far as it needs. Never ask, preview or remind them of the next question until the user
