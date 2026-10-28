@@ -645,3 +645,15 @@ Scores: price components 2 → 3; feature prices stay at 2.
   (both parents finished, no difference) ✓; the rule offered as "we can suspect", raw only
   (subassembly too, and it's the rule we built, not a hunch). Score: 3. Row stays 3: the
   child's kind to retest cold.
+
+### 2026-10-28: Q5, Submodel 3 (Vinoteca Duero's Valladolid warehouse: 30 bottles of Ribera Crianza in rack R2; a wine-cooling cabinet, serial WC-77, on the floor in no rack)
+- Key: (1, Apply) bottles NON_SERIALIZED, quantity 30, `container_id` R2, no facility;
+  cabinet SERIALIZED, `serial_num` WC-77, no quantity, `facility_id` the warehouse, no
+  container. (2, Understand) the container only: R2 already sits in the warehouse, and the
+  arc allows exactly one, so the location can't contradict itself.
+- Answer: (1) the bottles exactly as the key, the arc named unprompted ✓; the cabinet's kind,
+  null quantity (first "0q", corrected in the same line) and the facility ✓; the serial
+  WC-77 not written ✗ (asked: "quantity or serial"). (2) the container only, with the why: a
+  facility as well would have to agree with the container's, and could drift ✓ cold.
+  Score: 3 (the serial). Inventory item 3 → 4: yesterday's gap, the location arc, cold with
+  its why; the serial per item was right yesterday. Neighbourhood still to ask.
