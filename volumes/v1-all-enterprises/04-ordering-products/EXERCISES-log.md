@@ -317,7 +317,9 @@ Misunderstandings and reinforce attempts, oldest first.
   stands alone and no order of application is needed; `order_adjustment` stores none.
 - Answer: (1) −10 and 93 ✓, the source per line and the delivery kept out of the base,
   unhinted (taught this morning in recall 2, so 3 at most). The grinder's discount written as
-  quantity × 5 ~: the stored 5.00 is already the total (point 42), harmless at quantity 1.
+  quantity × 5: a fair reading of "€5 off the grinder" (per grinder × 1 = the 5.00 total);
+  Claude's note against it withdrawn after the user's pushback (the wording put a per-unit
+  phrase beside the stored total, and at quantity 1 the two can't be told apart).
   (2) "from the source total, not the total with adjusted items" ✓; the why only "we have
   decided" ~ (the convention, not its reason). Score: 3. Amount and percentage 2 → 3; the
   base with its why, and the amount as the total, cold on a later day for 4.
