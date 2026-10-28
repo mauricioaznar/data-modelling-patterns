@@ -464,3 +464,14 @@ Misunderstandings and reinforce attempts, oldest first.
   and deliveries guessed as purpose types ✓ (BILLING, SHIPPING), "wine deliveries" put in a
   description ~ (the type says it); which link each purpose sits on not said ~. Score: 3.
   Move vs typo stays 3 (the why to say cold); purpose stays 3 (per party's link).
+- **2026-10-28, round Q6 (contact mechanisms).** Lumen SL and Carmen, its owner, both use
+  hola@lumen.es from 1 Feb: Lumen for sales enquiries, Carmen as her work address; on 5 Feb
+  it's found keyed as hola@lumne.es. Key: (1) one contact mechanism (electronic address)
+  row, shared; a `party_contact_mechanism` link per party from 1 Feb, thru null; a purpose
+  row on each party's own link: SALES on Lumen's, WORK on Carmen's, dated from 1 Feb.
+  (2) fix the address in place: a typo was never true, so there's no history to keep; the
+  links and their dates were right all along.
+  Answer: (1) all of it cold ✓: the mechanism once, a dated link per party, the purpose table
+  named, each purpose on its own party's link with its dates (yesterday's gap). (2) the row
+  corrected in place, "not a fact update: the original fact was stored wrong; the dates were
+  right" ✓ cold (yesterday's missing why). Score: 4. Purpose 3 → 4, move vs typo 3 → 4.
