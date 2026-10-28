@@ -280,3 +280,18 @@ Misunderstandings and reinforce attempts, oldest first.
   named no lines and a follow-up that offered "a card" as one (about 70/30 Claude's); once
   the card read as a bank card, the order, "a payment fee for the order, not one item" ✓.
   Score: 4. Typed rows 3 → 4.
+
+### 2026-10-28: session recall 2, Submodel 2 (Papelería Sol, order 9: 10 notebooks at €6; on the line a DISCOUNT stored as the 10.00 total; on the order a 10% loyalty DISCOUNT)
+- Key: (1, Apply) the 10% is of the value before any adjustment, 10 × 6 = 60, so 6.00;
+  total 60 − 10 − 6 = 44. (2, Understand) every percentage is taken from the source value,
+  so each adjustment row stands alone and no order of application is needed:
+  `order_adjustment` stores none (point 11, our assumption, not the book's; real billing
+  takes discounts before tax, revisit at Ch 7).
+- Answer: (1) the line discount first, then 10% of 50: 5 and 45 ✗, the Olmo slip again on a
+  later day. (2) "by convention" ✓, but the convention's direction reversed ✗; no why. After
+  "it runs the other way", 60 − (10 × 1) − (60 × 0.10) ✓ (picked between the two). The
+  follow-up (a 5% rush beside the 10%: which first, and where is that stored?) was a dud,
+  Claude's: two percentages give the same total in either order. The order only bites when
+  an amount and a percentage mix (here: the €10 first gives 45, the 10% first gives 44).
+  Not counted against the user. Score: 1. Amount and percentage row 3 → 2: the base before
+  any adjustment, and its why (no sequence stored), to reinforce.
