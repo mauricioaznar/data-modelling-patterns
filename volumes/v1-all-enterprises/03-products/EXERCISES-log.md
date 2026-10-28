@@ -632,3 +632,16 @@ Scores: price components 2 → 3; feature prices stay at 2.
   any row ✗ (the shelf, through the container arc). (2) 60, "the facility wins over the
   whole chain" ✓ cold, most specific in its own words. Score: 3. Inventory item stays 3
   (the location arc to retest); reorder guideline 3 → 4.
+
+### 2026-10-28: Q4, Submodel 5 (Jabonería Clara: olive oil and lye bought, the Jabón de Oliva bar made and sold; sponges bought and sold as they come; a Bath Set of 2 bars and 1 sponge; four COMPONENT rows shown)
+- Key: (1, Analyze) Jabón → olive oil and Jabón → lye are build lines; Bath Set → Jabón and
+  Bath Set → sponge are package lines. (2, Analyze) the child's `good_kind`, on `good`: a
+  RAW_MATERIAL or SUBASSEMBLY child makes a build line, a FINISHED_GOOD child a package line.
+  The parent can't decide it: both parents are finished goods.
+- Answer: (1) all four right, cold ✓ (first time: Mecha and Panal never sorted the rows).
+  (2) `good_kind` named cold ✓, the kinds right (no subassembly) ✓; the table and whose kind
+  not said. Guiding question: "goods" ✓; "whose kind" not understood (Claude's question too
+  compressed); with a table of rows a and c and an a/b choice, the child's ✓, with the why
+  (both parents finished, no difference) ✓; the rule offered as "we can suspect", raw only
+  (subassembly too, and it's the rule we built, not a hunch). Score: 3. Row stays 3: the
+  child's kind to retest cold.
