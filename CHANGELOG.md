@@ -3,6 +3,43 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-28
+
+**Built**
+- A question round of seven (Chs 2–4): three session recalls, then yesterday's retests and one
+  reinforce. Recall 1 Floristería Brisa (Ch 4): the rush SURCHARGE, the delivery shipping, the
+  card FEE, cold; the six named after Claude's FLOUTS slip, not counted (4; typed rows
+  3 → 4). Recall 2 Papelería Sol (Ch 4): the 10% taken after the line discount again, 5 and
+  45, not 6 and 44 (1; amount and percentage 3 → 2). Recall 3 Muebles Roca (Ch 4): ordered
+  for line to line cold; the two sofa lines a guess, owned up (3). Q4 Jabonería Clara (Ch 3):
+  build and package rows sorted cold, `good_kind` named; the child's kind from an a/b choice
+  (3). Q5 Vinoteca Duero (Ch 3): the location arc cold with its why; the serial not written
+  (3; inventory item 3 → 4). Q6 Lumen (Ch 2): a purpose per party's link and the typo's why,
+  cold (4; purpose and move vs typo 3 → 4). Q7 Tueste (Ch 4, reinforce): the 100 base, the
+  delivery out of it, total 93; the why only "we decided" (3; amount and percentage 2 → 3).
+- Taught in chat: every percentage takes the value before any adjustment (a line's quantity ×
+  unit price, or the sum of the lines for the order), amounts are added as stored, so no row
+  depends on another and no order of application is needed; the order only matters when an
+  amount and a percentage mix (the €10 first gives 45, the 10% first 44); a line holds units
+  alike in everything the line and its children say, and ordered for points at a line, not a
+  unit, so units that differ in a feature, price, ship-to or date split; on a COMPONENT row
+  the child's `good_kind` decides build (raw or subassembly) from package (finished good).
+- CLAUDE.md: every practice question names the Bloom level it grades, per part.
+
+**Decisions**
+- Name the Bloom level on every question, recall and round ones included (the user's call).
+
+**Next**
+- Session start: 3 recall questions, favouring the percentage's base with its why (no sequence
+  stored) and the amount as the total; when to split a line and the description line (Ch 4);
+  the child's `good_kind` (Ch 3).
+- Ch 4 adjustments: then the scenario and the doc entry.
+- Ch 4 orders: the line's children, Create, the scenario and the doc entry.
+- Ch 3 inventory item: the neighbourhood question, then close the row.
+- Open, asked and unanswered: add the reorder guideline's missing selection rule (facility,
+  boundary, organization, depth) to Ch 3's overview points?
+- Re-import the Anki export (card 11's new hook).
+
 ## 2026-10-27
 
 **Built**

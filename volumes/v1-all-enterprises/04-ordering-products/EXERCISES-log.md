@@ -309,3 +309,15 @@ Misunderstandings and reinforce attempts, oldest first.
   everything the line and its children say; ordered for points at a line, not a unit, so
   units that differ in a feature, price, ship-to or date split). The line row stays 3:
   ordered for cold; when to split a line and the description line to retest cold.
+
+### 2026-10-28: round Q7, Submodel 2 reinforce (Tueste Café Supplies, order 30: 4 bags of coffee at €10; a grinder at €60 with a DISCOUNT of amount 5.00 on its line; on the order an €8 SHIPPING_AND_HANDLING and a 10% loyalty DISCOUNT)
+- Key: (1, Apply) the source is 40 + 60 = 100; the 10% is of that, 10.00 (not of 95 after the
+  grinder's discount, not of 108 with the delivery). Total 100 − 5 + 8 − 10 = 93. (2,
+  Understand) every percentage is taken from the value before any adjustment, so each row
+  stands alone and no order of application is needed; `order_adjustment` stores none.
+- Answer: (1) −10 and 93 ✓, the source per line and the delivery kept out of the base,
+  unhinted (taught this morning in recall 2, so 3 at most). The grinder's discount written as
+  quantity × 5 ~: the stored 5.00 is already the total (point 42), harmless at quantity 1.
+  (2) "from the source total, not the total with adjusted items" ✓; the why only "we have
+  decided" ~ (the convention, not its reason). Score: 3. Amount and percentage 2 → 3; the
+  base with its why, and the amount as the total, cold on a later day for 4.
