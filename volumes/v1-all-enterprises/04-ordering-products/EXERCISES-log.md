@@ -319,7 +319,10 @@ Misunderstandings and reinforce attempts, oldest first.
   unhinted (taught this morning in recall 2, so 3 at most). The grinder's discount written as
   quantity × 5: a fair reading of "€5 off the grinder" (per grinder × 1 = the 5.00 total);
   Claude's note against it withdrawn after the user's pushback (the wording put a per-unit
-  phrase beside the stored total, and at quantity 1 the two can't be told apart).
+  phrase beside the stored total, and at quantity 1 the two can't be told apart). The user
+  then explained it unprompted: the stored amount is the total, quantity × the per-unit
+  discount, so two grinders would store 10 ✓ (the amount as the total, a day after Olmo's
+  R1).
   (2) "from the source total, not the total with adjusted items" ✓; the why only "we have
   decided" ~ (the convention, not its reason). Score: 3. Amount and percentage 2 → 3; the
   base with its why, and the amount as the total, cold on a later day for 4.

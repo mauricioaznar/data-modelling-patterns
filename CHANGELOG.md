@@ -31,8 +31,9 @@ and any decisions made.
 
 **Next**
 - Session start: 3 recall questions, favouring the percentage's base with its why (no sequence
-  stored) and the amount as the total; when to split a line and the description line (Ch 4);
-  the child's `good_kind` (Ch 3).
+  stored); when to split a line and the description line (Ch 4); the child's `good_kind`
+  (Ch 3). The amount as the total was explained unprompted in Q7 (quantity × the per-unit
+  discount).
 - Ch 4 adjustments: then the scenario and the doc entry.
 - Ch 4 orders: the line's children, Create, the scenario and the doc entry.
 - Ch 3 inventory item: the neighbourhood question, then close the row.
