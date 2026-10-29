@@ -25,6 +25,8 @@ and any decisions made.
 - The overview's new order (the user's call): doubts first even before the concepts,
   concepts learnt from the finished doc, cards last.
 - Never present the next bit until the user closes the current one, in walk-throughs too.
+- Question rounds keep 2 of 7 questions for maintenance: rows already at 4, oldest evidence
+  first, in a fresh scenario (CLAUDE.md, practice.md).
 
 **Next**
 - Session start: 3 recall questions, one on "on order or line" (status and term rows), plus

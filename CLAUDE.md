@@ -95,6 +95,9 @@ the user, tease with nicknames, so the sessions stay fun.
 - **Time budget: about 3 hours of practice per submodel.** Go over only when a gap still needs
   reinforcing, and say so first. Don't write more exercises than fit the budget.
 - **Ask one question at a time** and wait for the answer.
+- **Maintenance, not only gaps** (the user's call, 2026-10-29): 2 of every question round's 7
+  questions retest rows already at 4, the longest untested first, in a fresh scenario, so
+  what's understood doesn't decay unnoticed (details in `docs/practice.md`).
 - **Name the Bloom level being graded** (the user's call, 2026-10-28): every question, recall
   and question-round ones included, says which level it grades (Remember, Understand, Apply,
   Analyze, Evaluate, Create, as in `docs/practice.md`). A question with several parts names
