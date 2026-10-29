@@ -3,6 +3,35 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-29
+
+**Built**
+- Ch 4 overview, order status, terms and item associations (Figs 4.7–4.8): points 13–17
+  settled, all kept as built: the term value nullable (a flag term is complete in its
+  type), one target per status or term row (an exclusive arc we add; not drawn on 4.7),
+  one shared lookup per kind (`role_type`, `status_type`, `term_type`: Silverston's
+  attribute-less subtypes collapsed into rows), the association narrow (sales to purchase,
+  FK-enforced; the user's wide design noted as the way out) and without a quantity (a
+  pointer; quantities go through requirements). The doc entry gained the four whys.
+- Concepts walk-through (new step): stored vs derived statuses (the fact wins, the copy
+  drifts), terms as "what should happen if" outside the totals, the association's reach
+  and limits (backordered needs Ch 5's receipts too), and how Ch 5 and Ch 7 link back to
+  the order item. The slips are in NOTES as candidate traps.
+- Card 12: explode test half; "on order or line" missed. Mantra kept (the user's call).
+- `/overview` reordered: points (teaching inside) → doc → refactor → concepts walk-through
+  → card review last.
+
+**Decisions**
+- The overview's new order (the user's call): doubts first even before the concepts,
+  concepts learnt from the finished doc, cards last.
+- Never present the next bit until the user closes the current one, in walk-throughs too.
+
+**Next**
+- Session start: 3 recall questions, one on "on order or line" (status and term rows), plus
+  the percentage's base and the child's `good_kind` from 10-28's Next.
+- Ch 4 overview: submodel 4, requirements (points 18–20), then 5–7 and the architecture.
+- Re-import the Anki export; move card 12 to Submodels::Settled.
+
 ## 2026-10-28
 
 **Built**
