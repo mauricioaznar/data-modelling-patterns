@@ -1597,21 +1597,63 @@ the literal drawing.
     ("no exchanges or refunds"). Built nullable, the table's reading. If every term must carry
     a value, that one needs a made-up value (1 for yes?), which reads oddly. Fig 4.11 draws
     QUOTE TERM's value optional.
+    **Outcome (2026-10-29): kept nullable** (the user's call). The mandatory mark read as a
+    slip: a flag term (no refunds) is complete in its type, the row's presence is the fact,
+    and a stored 1 could never be 0, so it would carry nothing. No card fix (card 12 already
+    says "an optional number").
 14. **4.7, statuses and terms on an order or an item:** no arcs drawn; read as for 4.6's
     adjustments (point 10), one or the other, checked by a data-quality query. Settle the
     three together. Fig 4.11 draws the arc on QUOTE TERM's same pair of lines, which backs
     the reading.
+    **Outcome (2026-10-29): kept, exactly one per row** (the user's call, as for point 10).
+    One `order_status` (or `order_term`) row names the order or one line, never both, never
+    neither; any number of rows per target, and a status value is shared freely (SHIPPED on
+    three lines and on the order is four legal rows). A line's row doesn't copy its order:
+    ambiguous, redundant, and it can disagree. The arc isn't drawn on 4.7 (confirmed); ours
+    is a design call, backed by Fig 4.11's drawn arc on QUOTE TERM's same pair. No SQL
+    change; card 12 already says "one or the other", no card fix. Found on the way: the
+    question was first read as an arc between status and term (independent entities,
+    never in question), and the rule as "one status per target"; both cleared up.
 15. **4.7, ORDER STATUS TYPE in Ch 2's `status_type`, TERM TYPE on its own:** order statuses
     joined Ch 2's shared status table, as its notes foresaw, while each role type so far got
     a lookup of its own (point 5). Settle both at once. TERM TYPE is a flat lookup with a
     general name, ready for other terms; Fig 4.11 reuses it for QUOTE TERM. By Fig 4.11 there
     are six role-type lookups (order, order item, requirement, request, quote, and Ch 2's).
+    **Outcome (2026-10-29): kept, one shared table per kind of lookup** (the user's call):
+    `role_type` (by `scope`, point 5), `status_type` (by group: Ch 2's relationship
+    statuses, ORDER_STATUS) and `term_type` (order, quote and agreement terms), none split
+    per entity. Statuses and terms stay apart: different kinds, not an exclusive arc (the
+    user first called it one; an arc is one row's choice among its FK lines, point 14). No
+    SQL change beyond point 5's role-type merge; no card fix. Revisited the same day and
+    kept: generic within a kind, specific between kinds. It's Silverston's STATUS TYPE and
+    ROLE TYPE supertypes, with their attribute-less subtypes (ORDER STATUS TYPE, ORDER ROLE
+    TYPE) collapsed into rows plus a discriminator; TERM TYPE is shared in the book itself.
 16. **4.8, sales to purchase only:** the lines land on the subtypes, so we link a sales line
     to a purchase line and nothing else. The entity's general name could mean any item to any
     item, with a type (a replacement line, a split line); not built.
+    **Outcome (2026-10-29): kept narrow** (the user's call). One kind of link in the chapter
+    (a purchase fills a sale), so the wide version buys unused flexibility at the cost of the
+    FK guarantee: the FKs to the subtype tables enforce the direction by structure, no check
+    needed. The way out, if replacements, splits or returns appear (the user's design):
+    `order_item` ↔ `order_item` through the association with an association type, as Ch 2's
+    party relationship; each type fixes its direction (not "any direction"), a rule table
+    (type → from kind, to kind, like `order_role_rule`) with a data-quality check, and guards
+    against self-links and duplicate pairs. Cleared up on the way: the order items have
+    subtype tables sharing `order_item_id` (point 8's "generic" was roles only), and the
+    narrow link isn't recursive (two different tables). No SQL change; no card fix.
 17. **4.8, no quantity:** built without one, as drawn. When a purchase line fills several
     sales lines, or a sales line draws on several purchase lines, the split is unknown. A
     quantity on the association would fix it.
+    **Outcome (2026-10-29): kept, no quantity** (the user's call, as drawn). The association
+    is a pointer: which purchases are in charge of filling a sale, not how many of each.
+    The cost: a sales line drawing on two purchases can't say how short it is when one runs
+    late. The gain: no balancing rule (links on a line summing past its quantity) to check
+    and keep up. When quantities matter, the need goes through requirements (Fig 4.9): the
+    sale raises a requirement and each purchase line commits a quantity to it. Cleared up on
+    the way: ORDER REQUIREMENT COMMITMENT was cited as a precedent for a quantity on a link,
+    not as a substitute (a requirement is a need, an entity of its own; the association only
+    pairs two existing lines). No SQL change; card 12 already says "No quantity on the
+    association", no card fix.
 18. **4.9, the product line:** read as leaving PRODUCT REQUIREMENT and optional, since Table
     4.11 names no product and its desired features say what's wanted. If it leaves
     REQUIREMENT instead, a work requirement could name a product too (the PC to repair).
