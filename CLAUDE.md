@@ -70,10 +70,11 @@ the user, tease with nicknames, so the sessions stay fun.
 ### The overview (after the chapter's last figure)
 - One pass over the whole chapter, before practice, in this order (the user's call,
   2026-10-29): the "Points to discuss" first, with Claude teaching whatever concept a point
-  needs; then an ungraded **concepts walk-through** per submodel (problem, entities, links,
-  about 20 minutes, no scores); then feedback on the doc entry drafts; then the refactor of
-  NOTES, SQL, doc and cards, still aiming at Silverston's intention; the **card review comes
-  last** (explode test, hook), so it tests understood concepts and the final card. Each
+  needs; then feedback on the doc entry drafts; then the refactor of NOTES, SQL, doc and
+  cards, still aiming at Silverston's intention; then an ungraded **concepts walk-through**
+  per submodel on the finished model and doc (problem, entities, links, about 20 minutes, no
+  scores); the **card review comes last** (explode test, hook), so it tests understood
+  concepts and the final card. Each
   agreed point notes the cards it touches; every card is checked against NOTES once the
   refactor is finished (the user's call, 2026-10-16).
 - **Card pass:** every submodel has its card, the chapter has its architecture card, each
