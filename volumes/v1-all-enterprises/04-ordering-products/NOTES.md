@@ -658,6 +658,14 @@ lines from different suppliers: many to many, hence the association.
 - **No quantity.** Who gets how many from a purchase line that fills several sales lines? The
   association can't say, and Fig 4.9's ORDER REQUIREMENT COMMITMENT, which links an order line
   to a need, carries a quantity where this one doesn't. (Ponder 4.)
+- **Concepts walk-through (overview, 2026-10-29), slips to keep as candidate Traps:** the
+  order/item arc first read as an arc between status and term, then as "one status per
+  target" (it's one target per row, any rows per target); when a stored status and its
+  fact disagree, "neither is true" (the fact wins, the copy is fixed); terms kept out of
+  the total "to ease debugging" (it's correctness: the event may never happen). Also
+  settled: the order item holds no FK to shipments or invoices; Ch 5's `order_shipment`
+  and `shipment_receipt` and Ch 7's `order_item_billing` point back at it, with
+  quantities, and a shipment or invoice may exist with no order.
 
 ### Fig 4.9 — Requirements
 **Transcription** (accepted: ☐; one landscape photo, with Table 4.11 in two photos; open
