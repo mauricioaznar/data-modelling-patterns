@@ -68,12 +68,14 @@ the user, tease with nicknames, so the sessions stay fun.
   words. `book-refs/` is gitignored and must stay that way.
 
 ### The overview (after the chapter's last figure)
-- One pass over the whole chapter, before practice: the user gives feedback on the
-  transcriptions, the "Points to discuss" list, the doc entry drafts and the cards. Claude then
-  refactors NOTES, SQL, doc and cards from that feedback, still aiming at Silverston's intention.
-  Each time a point or a piece of feedback is agreed, Claude checks the cards it touches
-  against NOTES, and checks every card again once the refactor is finished (the user's call,
-  2026-10-16).
+- One pass over the whole chapter, before practice, in this order (the user's call,
+  2026-10-29): the "Points to discuss" first, with Claude teaching whatever concept a point
+  needs; then an ungraded **concepts walk-through** per submodel (problem, entities, links,
+  about 20 minutes, no scores); then feedback on the doc entry drafts; then the refactor of
+  NOTES, SQL, doc and cards, still aiming at Silverston's intention; the **card review comes
+  last** (explode test, hook), so it tests understood concepts and the final card. Each
+  agreed point notes the cards it touches; every card is checked against NOTES once the
+  refactor is finished (the user's call, 2026-10-16).
 - **Card pass:** every submodel has its card, the chapter has its architecture card, each
   pattern new to Core patterns gets a pattern card, `npm run cards:anki` regenerates the
   export, and the user re-imports it. Card headings keep the `Card N · VN Ch N · name (Figs …)`

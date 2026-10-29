@@ -1,10 +1,14 @@
 ---
 name: overview
-description: Fixed procedure for a chapter's overview, once all its figures are built and drafted. Discusses the points one at a time, collects feedback on the doc drafts and cards, checks the cards against NOTES after each agreement, refactors, runs the card pass, then hands over to practice.
+description: Fixed procedure for a chapter's overview, once all its figures are built and drafted. Discusses the points one at a time (teaching as needed), walks through the concepts, collects feedback on the doc drafts, refactors, then reviews the cards last, runs the card pass and hands over to practice.
 argument-hint: vN/NN
 ---
 
-# /overview: feedback, refactor, card pass
+# /overview: points, concepts, doc, refactor, cards
+
+Order (the user's call, 2026-10-29): doubts first, then concepts, then the doc, then the
+refactor; the cards come last, so the explode test runs on understood concepts and on the
+final card.
 
 ## 0. Preconditions
 - `npm run check -- vN/NN` shows no ✗, every figure is classified, and every submodel row
@@ -13,34 +17,44 @@ argument-hint: vN/NN
 ## 1. Points to discuss, one at a time
 - Read the "Points to discuss after the overview" lists in NOTES.md. Take one point per
   message: explain the reading and its alternative, ask one question, wait for the answer.
+  The points come first even when the concepts behind them aren't in place yet: teach
+  whatever the point needs (the problem, a few rows, the tables) inside the discussion.
   The book is the source of truth: ask for a photo when one would settle it. Hold a position
   under pushback unless the evidence changes.
-- Record each outcome under its point: kept or changed, and why.
-- Once a point is agreed, check the cards it touches (submodel and architecture) against the
-  agreed reading, with the card-vs-NOTES check from `/close-submodel` §2 (the user's call,
-  2026-10-16). Note any card fix under the point's outcome; the refactor applies it.
+- Record each outcome under its point: kept or changed, and why, with the alternative
+  and when it would win. Note any concept cleared up on the way.
+- Once a point is agreed, note under its outcome any card it touches (submodel and
+  architecture); the fix waits for the refactor, the check for §5.
 
-## 2. Drafts and cards
-- Per submodel, and then for the architecture entry, ask for feedback on its doc draft and its
-  card: does the mantra explode, does the hook stick? When the user rewrites a mantra, check
-  it still unpacks into the key. Once the feedback is agreed, run the same card-vs-NOTES
-  check on that card.
+## 2. Concepts walk-through (per submodel, ungraded)
+- After its points, walk the submodel through at the Understand level: the problem it
+  solves, the core entities with a few rows, how they connect, and where it plugs into
+  earlier chapters. About 20 minutes; skip what the points already taught.
+- Tell and check ("does this click?"); no scores and no exam questions: finding the gaps
+  is practice's job. A misunderstanding found here goes into NOTES, under the figure's
+  Discussion, and becomes a candidate Trap for the card.
 
-## 3. Refactor
+## 3. Doc drafts
+- Per submodel, and then for the architecture entry, ask for feedback on its doc draft:
+  the agreed outcomes and their whys, anything that reads wrong.
+
+## 4. Refactor
 - Apply what changed: NOTES, SQL (one commit per figure touched, after
-  `npm run db:rebuild && npm run queries -- vN/NN`), the doc entries and the cards. Aim at
-  Silverston's intention, not the literal drawing.
+  `npm run db:rebuild && npm run queries -- vN/NN`), the doc entries and the cards' fixes
+  noted in §1. Aim at Silverston's intention, not the literal drawing.
 
-## 4. Card pass
+## 5. Card review (last)
+- Per submodel card, then the architecture card: the explode test (the user unpacks the
+  mantra into the key without looking) and does the hook stick? When the user rewrites a
+  mantra, check it still unpacks into the key.
 - Every submodel has its card, and the chapter has its architecture card (rewritten if the
   refactor changed "How it flows"). Every pattern new to Core patterns gets a pattern card in
   `docs/cards.md` (P-numbers continue).
-- With the refactor finished, run the card-vs-NOTES check once more on every card of the
-  chapter, the architecture card included: the refactor may have moved NOTES past what was
-  agreed point by point.
-- The export waits for §5: it reads the `Overview` tick.
+- Run the card-vs-NOTES check from `/close-submodel` §2 on every card of the chapter, the
+  architecture card included, against NOTES as the refactor left it.
+- The export waits for §6: it reads the `Overview` tick.
 
-## 5. Close
+## 6. Close
 - Tick `Overview` with today's date for every submodel row and the `A` row. This settles the
   chapter's cards (the user's call, 2026-10-18): run `npm run cards:anki`, and the export
   turns them from draft to reviewed and puts them in the Settled subdecks.
