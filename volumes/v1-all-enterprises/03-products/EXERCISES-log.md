@@ -682,3 +682,20 @@ Scores: price components 2 → 3; feature prices stay at 2.
   Write the rows. Key: colour features (one category) black, red, white each SELECTABLE on
   Brío 2; frother OPTIONAL; grinder STANDARD; the travel case a product, not a feature (sold
   alone), linked to Brío 2 by a product association if anything (complement).
+
+### 2026-10-30: round Q3 answered, Products and parts (Cera Viva; key above)
+- Answer: four COMPONENT rows, whole → part ✓; candle builds, gift set packages ✓; the child
+  decides ✓; "raw or subassembly → build" ✓. But subassembly also listed under package (a
+  contradiction), and raw justified as "only bought in" ✗ (the matchbox is bought in and
+  finished: `good_kind` is the good's role in making, not its source). No quantities.
+- Score: 3. Rows and decider cold; the reasons need one clean pass for 4.
+
+### 2026-10-30: round Q4 answered, Suppliers and inventory (Farmacia Tajo; key above)
+- Answer: L-77 in B4 (200) ✓, L-77 at Toledo with no container (100) ✓, facility XOR
+  container applied ✓; the Toledo total looks through containers, 350 ✓ (the gap, cold).
+  The L-81 item written with "no lot" ✗; `lot` and `container` rows not written (the lot's
+  dates described ✓); recall found items by lot ✓ but places not resolved (container's
+  facility or the item's own).
+- Score: 3. Where stock is fixed cold; the lot dropped once, so lot stays the open gap.
+- After grading: lot quantities given (L-77 300, L-81 50) ✓. Taught: `lot.quantity` is as
+  made or received; on hand is the sum of items. Score kept.

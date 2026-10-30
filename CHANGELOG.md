@@ -15,9 +15,14 @@ and any decisions made.
 - The round of seven defined in CLAUDE.md and practice.md (3 recalls, 2 gaps or retests,
   2 maintenance). The 10-24 Lena reinforce (score 2), left unpushed on one machine, merged
   into the Ch 4 log and tracker, levels kept (later evidence raised them).
+- Round Q1–Q4 answered and logged: Q1 (Ch 4 status, terms) 1: backorder as an
+  association, net 30 as an adjustment, no-return on the order; Q2 (Ch 4 percentage base) 3:
+  base right cold, arithmetic slip, why reached with help; Q3 (Ch 3 parts) 3: child decides
+  ✓, raw justified by "bought in"; Q4 (Ch 3 inventory) 3: look-through cold, L-81 lot dropped.
 
 **Next**
-- Answer the pending round, one question at a time, then grade and log.
+- Finish the round: Q5–Q7 (later today), then grade and log.
+- Reinforce Ch 4 submodel 3: what status, term and adjustment each record (Q1).
 - Then 10-29's Next: the Ch 4 overview, submodel 4 (requirements, points 18–20).
 
 ## 2026-10-29

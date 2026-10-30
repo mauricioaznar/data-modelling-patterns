@@ -366,3 +366,29 @@ Misunderstandings and reinforce attempts, oldest first.
   for the walnut chair's line (oak: no line if standard, or a €0 feature line ordered for
   the oak line if selectable; either, said why); the fix a line with no product and no
   feature, a description and the agreed €25 as its snapshot. Prices on every line.
+
+### 2026-10-30: round Q1 answered, Submodel 3 (Mercado Lume, order 52; key above)
+- Answer: (1) `order_status` APPROVED on order 52 with its date ✓, and unprompted: statuses
+  stack in time, one row points at the order or a line ✓. (2) The backorder as an item
+  association (sales line linked, purchase not yet) ✗: it is an ORDER_BACKORDERED status on
+  line 2; an association is the later link to the purchase line that restocks it. (3) Net 30
+  as an `order_adjustment` DISCOUNT of 30 on the order ✗: a condition, not money, so
+  `order_term` PAYMENT_DUE_DAYS 30 (days). (4) `order_term` with no value ✓, but on the
+  order ✗: only the robes, so line 2.
+- Score: 1. Placement (order or line) right once in three; terms vs adjustments and status
+  vs association blurred. Reinforce: what each of the three tables records.
+- Pushback: "pays net 30" read as paid now, so an adjustment (+). Wording partly Claude's
+  (present tense), but a payment now is a payment (invoicing chapter), not an adjustment
+  either: adjustments change what's owed, payments settle it. Score kept. Line statuses
+  seen as unusual; taught they are routine (lines move apart: backordered, shipped, cancelled).
+
+### 2026-10-30: round Q2 answered, Submodel 2 (Lámpara Norte, order 61; key above)
+- Answer: base 200 = 10 × 20 ✓, the 10% of 200 not 185 ✓ (cold, unhinted), the €15 once as
+  a total ✓. Arithmetic slip: wrote −10 for 200 × −0.10, total 175 (key 165). Rows not
+  written (two `order_adjustment` DISCOUNT rows on line 1, one amount 15, one percentage 10).
+  No why given.
+- Score: 3. The base applied cold on a later day, but the why (each row stands alone, no
+  order of application) still missing for 4.
+- The why reached with help (asked what deleting the €15 would do if the 10% were taken
+  from 185): "chained adjustments need a stored order; from baseline values (the line's or
+  the order's) they're independent" ✓. Score kept at 3; the why unprompted for 4.
