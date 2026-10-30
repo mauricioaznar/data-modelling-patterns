@@ -657,3 +657,28 @@ Scores: price components 2 → 3; feature prices stay at 2.
   facility as well would have to agree with the container's, and could drift ✓ cold.
   Score: 3 (the serial). Inventory item 3 → 4: yesterday's gap, the location arc, cold with
   its why; the serial per item was right yesterday. Neighbourhood still to ask.
+
+### 2026-10-30: question round, pending (asked 10-29, answered in a later session; order in TODO)
+- **Q3 · Product associations and parts · Apply, Understand (recall: the child's
+  `good_kind`).** Cera Viva makes a candle from wax and a cotton wick, both bought in, and
+  sells it alone; it also sells a gift set: one candle and a matchbox (bought in, also sold
+  alone). Write the component rows and say for each whether it's a build (BOM) or a package
+  line, and what decides. Key: candle ← wax, candle ← wick: build (children raw material);
+  gift set ← candle, gift set ← matchbox: package (children finished goods). The child's
+  `good_kind` decides, not the parent's; the row itself is the same COMPONENT link.
+- **Q4 · Suppliers and inventory · Apply, Analyze (gap: where stock is, lot).** Farmacia
+  Tajo's Toledo warehouse holds ibuprofen 400 mg: 200 boxes of lot L-77 (made 2026-03-01,
+  expires 2027-03-01) in bin B4; 100 boxes of L-77 on the receiving floor, in no bin; 50
+  boxes of lot L-81 in bin B4. A recall of L-77 arrives. Write the rows, then say how you
+  find every place holding L-77 and how much ibuprofen is at Toledo. Key: `lot` rows L-77
+  and L-81 (creation date, quantity, expiry); `container` B4 (type bin) located at Toledo;
+  three non-serialized `inventory_item` rows, each with its lot: L-77 in B4 (200), L-77 at
+  Toledo directly (100), L-81 in B4 (50); facility XOR container on each. Recall: items by
+  lot, place = the container's facility or the item's own. Toledo total 350, which must look
+  through containers (filtering on the item's facility alone gives 100).
+- **Q7 · Product features · Apply (maintenance: feature + applicability, last 4 on 10-25).**
+  Brío 2 espresso machine: the buyer must pick black, red or white; a milk frother can be
+  added; a built-in grinder comes with every machine; a travel case is also sold on its own.
+  Write the rows. Key: colour features (one category) black, red, white each SELECTABLE on
+  Brío 2; frother OPTIONAL; grinder STANDARD; the travel case a product, not a feature (sold
+  alone), linked to Brío 2 by a product association if anything (complement).

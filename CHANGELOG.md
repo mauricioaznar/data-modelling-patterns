@@ -3,6 +3,23 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-30
+
+**Built**
+- A question round of seven written out as pending, to answer in a later session (the
+  user's call): 3 recalls (Ch 4 on order or line, Ch 4 the percentage's base, Ch 3 the
+  child's `good_kind`), 2 gaps (Ch 3 where stock is and lot, Ch 4 splitting lines and the
+  description line), 2 maintenance (Ch 2 event roles, Ch 3 feature applicability, both
+  last at 4 on 10-25). The order is in TODO, wording and keys in each chapter's log. Q1 was
+  first asked in chat on 10-29 and is unanswered.
+- The round of seven defined in CLAUDE.md and practice.md (3 recalls, 2 gaps or retests,
+  2 maintenance). The 10-24 Lena reinforce (score 2), left unpushed on one machine, merged
+  into the Ch 4 log and tracker, levels kept (later evidence raised them).
+
+**Next**
+- Answer the pending round, one question at a time, then grade and log.
+- Then 10-29's Next: the Ch 4 overview, submodel 4 (requirements, points 18–20).
+
 ## 2026-10-29
 
 **Built**

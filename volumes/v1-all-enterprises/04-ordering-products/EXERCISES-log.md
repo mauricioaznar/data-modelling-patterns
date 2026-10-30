@@ -342,3 +342,27 @@ Misunderstandings and reinforce attempts, oldest first.
   (2) "from the source total, not the total with adjusted items" ✓; the why only "we have
   decided" ~ (the convention, not its reason). Score: 3. Amount and percentage 2 → 3; the
   base with its why, and the amount as the total, cold on a later day for 4.
+
+### 2026-10-30: question round, pending (asked 10-29, answered in a later session; order in TODO)
+- **Q1 · Order status, terms and item associations · Apply (recall: on order or line).**
+  Mercado Lume takes sales order 52 from Hostal Brisa: line 1, 40 towels; line 2, 12
+  bathrobes. On 2026-10-29 the order is approved; the same day line 2 goes on backorder
+  (robes out of stock). Brisa pays net 30 on the whole order, and the robes can't be
+  returned. Write the rows: table, type, what each points at. Key: `order_status`
+  ORDER_APPROVED on order 52 (item null), ORDER_BACKORDERED on line 2 (order null), each
+  with its datetime; `order_term` PAYMENT_DUE_DAYS 30 on the order, NO_EXCHANGE_OR_REFUND
+  on line 2 with no value (the type says it all). One target per row, never both.
+- **Q2 · Order adjustments · Apply (recall: the percentage's base).** Lámpara Norte's order
+  61, line 1: 10 desk lamps at €20. On that line, a €15 goodwill discount and a 10% trade
+  discount. Write the rows and the line's total. Key: two `order_adjustment` rows on line 1,
+  both DISCOUNT (or a subtype), one amount 15 (the total, not per lamp), one percentage 10;
+  the 10% taken from 200, the value before any adjustment (20, not 18.50), so 200 − 15 − 20
+  = 165; why: no row depends on another, no order of application.
+- **Q5 · Orders, items and order parties · Apply (gap: splitting lines, the description
+  line).** Taller Pino takes order 63: 3 Nórdica chairs at €90, two in oak, one in walnut
+  (walnut a €40 feature); and a one-off fix of a wobbly leg on the customer's old chair,
+  agreed by phone at €25, not in the catalogue. Write the order items. Key: two chair lines
+  (2 and 1), because units differ in a feature; a walnut feature line (qty 1, €40) ordered
+  for the walnut chair's line (oak: no line if standard, or a €0 feature line ordered for
+  the oak line if selectable; either, said why); the fix a line with no product and no
+  feature, a description and the agreed €25 as its snapshot. Prices on every line.

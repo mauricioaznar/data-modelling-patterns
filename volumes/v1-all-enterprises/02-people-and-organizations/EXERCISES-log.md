@@ -475,3 +475,15 @@ Misunderstandings and reinforce attempts, oldest first.
   named, each purpose on its own party's link with its dates (yesterday's gap). (2) the row
   corrected in place, "not a fact update: the original fact was stored wrong; the dates were
   right" ✓ cold (yesterday's missing why). Score: 4. Purpose 3 → 4, move vs typo 3 → 4.
+
+### 2026-10-30: question round, pending (asked 10-29, answered in a later session; order in TODO)
+- **Q6 · Communication events and case · Apply (maintenance: event + roles, last 4 on
+  10-25).** Clínica Sol buys from Medisur. Inés (Clínica Sol's purchasing manager) phones
+  Tomás (Medisur's account rep) to renegotiate the contract and to chase a late delivery;
+  Pablo, Inés's colleague, joins the call. Next day Tomás e-mails a summary to Inés, copying
+  Pablo. Write the rows. Key: two `communication_event` rows (the call, the e-mail), each
+  under the Clínica Sol – Medisur relationship, with its contact mechanism type and dates;
+  `communication_event_role` per party per event: call Inés CALLER, Tomás CALLEE, Pablo
+  ATTENDEE (or a callee: say which and why); e-mail Tomás SENDER, Inés RECIPIENT, Pablo CC;
+  two `communication_event_purpose` rows on the call (renegotiation, delivery follow-up), a
+  summary purpose on the e-mail. Persons, not their organizations, hold the event roles.

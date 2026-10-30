@@ -40,6 +40,19 @@ blockers, but each one unlocks something:
 - [x] Card status (the user's call, 2026-10-18): draft / reviewed / done from each chapter's STATUS.md, tagged `dm::status::…`; Submodels and Architecture split into *Drafts* (look up only) and *Settled*; a card joins the study loop at its chapter's overview, which settles it (cards.md, CLAUDE.md, the three skills)
 - [ ] Anki, once, after the next re-import: create *Data Models::Submodels::Settled*, *::Architecture::Drafts* and *::Architecture::Settled* if the import didn't; give both Drafts an options preset with *New cards/day* 0 and *Maximum reviews/day* 0; move the existing cards: `"deck:Data Models::Submodels" tag:dm::status::draft` → *Submodels::Drafts*, `"deck:Data Models::Submodels" -tag:dm::status::draft` → *Submodels::Settled*, and both Architecture cards → *Architecture::Drafts*
 
+## Pending question round (asked 2026-10-29, to answer in a later session)
+
+Seven questions, one at a time, in this order. Each one's wording and key is in its chapter's
+`EXERCISES-log.md`, under "2026-10-30: question round, pending". **Read only the wording**:
+the key sits right under it. Grade, log and update the trackers as usual, then tick here.
+- [ ] Q1 · Ch 4 · order status, terms and item associations · recall (Mercado Lume, order 52)
+- [ ] Q2 · Ch 4 · order adjustments · recall (Lámpara Norte, order 61)
+- [ ] Q3 · Ch 3 · product associations and parts · recall (Cera Viva)
+- [ ] Q4 · Ch 3 · suppliers and inventory · gap (Farmacia Tajo)
+- [ ] Q5 · Ch 4 · orders, items and order parties · gap (Taller Pino, order 63)
+- [ ] Q6 · Ch 2 · communication events and case · maintenance (Clínica Sol and Medisur)
+- [ ] Q7 · Ch 3 · product features · maintenance (Brío 2)
+
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 
 Chapter titles are from memory; verify them against the book's table of contents.
