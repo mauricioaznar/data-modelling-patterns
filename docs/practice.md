@@ -88,8 +88,12 @@ of the chapter's `EXERCISES.md`.
   the ponders, so the same rule applies. Keep it closed for the exam and gap checks.
 - **Next session start:** open with 3 quick recall questions on the most recently finished
   submodel, favouring its open gaps.
-- **Maintenance in question rounds** (the user's call, 2026-10-29): of a round's 7 questions,
-  2 go to rows already at 4, picked across chapters by the oldest evidence date in the
-  comprehension tables, each in a fresh scenario. A slip drops the row to 3 and back into
-  the gap pool; a pass adds the new date, which pushes its next check further out. The
-  other 5 stay on gaps and retests.
+- **The question round of seven** (one per session, across finished and in-practice
+  submodels of all chapters): 3 recalls first (the session-start ones above), then 2 gaps
+  and retests (rows below 4 and the last session's misses, a reinforce when a gap needs
+  teaching), then 2 maintenance questions. One question at a time, each naming its Bloom level.
+- **Maintenance in question rounds** (the user's call, 2026-10-29): the round's 2
+  maintenance questions go to rows already at 4, picked across chapters by the oldest
+  evidence date in the comprehension tables, each in a fresh scenario. A slip drops the row
+  to 3 and back into the gap pool; a pass adds the new date, which pushes its next check
+  further out. The other 5 stay on gaps and retests.

@@ -80,6 +80,18 @@ cardinality is a check query, as the seed's second bill-to shows). 3, Ana the sa
 4, ship to anyone: no rule row, so nothing is flagged (right). Rules: 3. Hats: the salesperson
 filed as the placer twice, minutes after "the buyer places, the seller takes".
 
+**Reinforce (hats and wheres), 2026-10-24, Lena's copier purchase from Globex:** PLACED_BY
+Northwind (internal organization), APPROVER Dana, BILL_TO Northwind, two lines (2 and 1
+copiers), SHIP_TO Northwind and a SHIPPING address on each line (right). Lena filed as
+SALESPERSON (wrong, third time: she keyed it in, ENTERED_BY; a purchase credits no sale).
+TAKEN_BY Globex missed. Order kind never stated. Placing and taking e-mails missed (again).
+HQ address on the order with no purpose (BILLING). Denver's front desk phone on the order
+(again: the Denver line's DELIVERY_CONTACT). Sara (END_USER) and TechFix (INSTALLER) missed on
+the Denver line; TechFix sent to work effort instead (the job is Ch 6's, the hat is the line's).
+Left out: the e-mail as a communication event (fair), Marco not mentioned (fine: Globex's
+organization contact, Ch 2). Asked about a subcontractor relationship (not needed: neither end
+is ours). Score: 2.
+
 ## Submodel 1 round (2026-10-24)
 
 **R1 (Apply): purchase order 9, Acme buys 500 reams from Paperco; Lin keys it in, Raj signs
@@ -159,6 +171,10 @@ the base, the convention) untested.
   the placer / taker / salesperson trio is a gap (roles down to 2). Reinforce.
 - 2026-10-24, R2 (Greenleaf): one party that receives and uses got only SHIP_TO; END_USER
   missed. A party doing two things on a line needs two role rows.
+- 2026-10-24, Lena's copiers: SALESPERSON misfiled a third time (now for the person who keyed
+  it in), TAKEN_BY missed on a purchase, order kind unstated. Wheres: the delivery contact on
+  the order again, placing e-mail missed again, purposes dropped at the order level. The
+  line's other hats (END_USER, INSTALLER) unknown. Roles and wheres stay at 2.
 Misunderstandings and reinforce attempts, oldest first.
 
 ### 2026-10-26: question round Q6, Submodel 1 (Nevada Sports order 77: Javier in Madrid, a Pico €300, the optional binding mount €20, a one-off engraving of his name at an agreed €12, not in the catalogue)
