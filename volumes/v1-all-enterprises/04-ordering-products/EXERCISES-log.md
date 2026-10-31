@@ -392,3 +392,13 @@ Misunderstandings and reinforce attempts, oldest first.
 - The why reached with help (asked what deleting the €15 would do if the 10% were taken
   from 185): "chained adjustments need a stored order; from baseline values (the line's or
   the order's) they're independent" ✓. Score kept at 3; the why unprompted for 4.
+
+### 2026-10-30: round Q5 answered, Submodel 1 (Taller Pino, order 63; key above)
+- Answer: two chair lines, 2 oak at €90 and 1 walnut at €90 ✓ (the split cold, no hint);
+  oak taken as standard, so no feature line ✓ (assumption said); the walnut feature line,
+  qty 1, €40, ordered for the walnut chair's line ✓; the fix a line with no product and no
+  feature, a description and €25 ✓; prices on every line ✓. Unprompted: TAKEN_BY Taller
+  Pino, PLACED_BY the unnamed customer ✓. Slip: order kind called "not disclosed", but
+  "takes" makes Taller Pino the seller, so a sales order.
+- Score: 4. The split and the description line applied cold on a later day (the 10-28
+  retest). The why of the split (units differing in a feature) was shown, not said.

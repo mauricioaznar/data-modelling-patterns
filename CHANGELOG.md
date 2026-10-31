@@ -19,9 +19,11 @@ and any decisions made.
   association, net 30 as an adjustment, no-return on the order; Q2 (Ch 4 percentage base) 3:
   base right cold, arithmetic slip, why reached with help; Q3 (Ch 3 parts) 3: child decides
   ✓, raw justified by "bought in"; Q4 (Ch 3 inventory) 3: look-through cold, L-81 lot dropped.
+- Round Q5 answered and logged: Q5 (Ch 4 order items, Taller Pino) 4: the 2 + 1 split and
+  the description line cold (row 3 → 4); order kind missed, the split's why not said.
 
 **Next**
-- Finish the round: Q5–Q7 (later today), then grade and log.
+- Finish the round: Q6–Q7 (later today), then grade and log.
 - Reinforce Ch 4 submodel 3: what status, term and adjustment each record (Q1).
 - Then 10-29's Next: the Ch 4 overview, submodel 4 (requirements, points 18–20).
 

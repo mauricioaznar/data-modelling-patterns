@@ -49,7 +49,7 @@ the key sits right under it. Grade, log and update the trackers as usual, then t
 - [x] Q2 · Ch 4 · order adjustments · recall (Lámpara Norte, order 61)
 - [x] Q3 · Ch 3 · product associations and parts · recall (Cera Viva)
 - [x] Q4 · Ch 3 · suppliers and inventory · gap (Farmacia Tajo)
-- [ ] Q5 · Ch 4 · orders, items and order parties · gap (Taller Pino, order 63)
+- [x] Q5 · Ch 4 · orders, items and order parties · gap (Taller Pino, order 63)
 - [ ] Q6 · Ch 2 · communication events and case · maintenance (Clínica Sol and Medisur)
 - [ ] Q7 · Ch 3 · product features · maintenance (Brío 2)
 
