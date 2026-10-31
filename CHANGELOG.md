@@ -20,10 +20,14 @@ and any decisions made.
   base right cold, arithmetic slip, why reached with help; Q3 (Ch 3 parts) 3: child decides
   ✓, raw justified by "bought in"; Q4 (Ch 3 inventory) 3: look-through cold, L-81 lot dropped.
 - Round Q5 answered and logged: Q5 (Ch 4 order items, Taller Pino) 4: the 2 + 1 split and
-  the description line cold (row 3 → 4); order kind missed, the split's why not said.
+  the description line cold (row 3 → 4); the split's why not said (order kind left open: the question never said whose system).
+- Round Q6–Q7 answered and logged, the round done: Q6 (Ch 2 events, Clínica Sol) 4 kept:
+  roles, purposes and media cold, the relationship context only as optional, the e-mail
+  left off the case; Q7 (Ch 3 features, Brío 2) 4 → 3: the applicability types cold, but
+  filed under interaction and "comes with every machine" read as a dependency.
 
 **Next**
-- Finish the round: Q6–Q7 (later today), then grade and log.
+- Retest Ch 3 applicability vs interaction cold (Q7).
 - Reinforce Ch 4 submodel 3: what status, term and adjustment each record (Q1).
 - Then 10-29's Next: the Ch 4 overview, submodel 4 (requirements, points 18–20).
 

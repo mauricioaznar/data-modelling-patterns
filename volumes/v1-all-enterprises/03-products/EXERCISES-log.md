@@ -699,3 +699,13 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - Score: 3. Where stock is fixed cold; the lot dropped once, so lot stays the open gap.
 - After grading: lot quantities given (L-77 300, L-81 50) ✓. Taught: `lot.quantity` is as
   made or received; on hand is the sum of items. Score kept.
+
+### 2026-10-30: round Q7 answered, Product features (Brío 2; key above; the shop's catalogue)
+- Answer: black, red, white SELECTABLE ✓, frother OPTIONAL ✓, grinder STANDARD ✓, the
+  travel case a product of its own, not a feature ✓, "some kind of association" hinted
+  (the complement, not named). But the rows filed in the interaction table ("leaning
+  interaction") ✗: they are `product_feature_applicability`; and "comes with every machine"
+  read as a dependency, possibly a global applicability rule ✗: that is STANDARD; a
+  dependency is an interaction between two features. The colour category not mentioned.
+- Score: 4 → 3. The applicability types right cold, but the table that holds them named
+  wrong and the two rule tables confused: retest applicability vs interaction cold.

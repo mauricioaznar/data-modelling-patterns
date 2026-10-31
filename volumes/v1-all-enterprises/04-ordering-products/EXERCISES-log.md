@@ -398,7 +398,7 @@ Misunderstandings and reinforce attempts, oldest first.
   oak taken as standard, so no feature line ✓ (assumption said); the walnut feature line,
   qty 1, €40, ordered for the walnut chair's line ✓; the fix a line with no product and no
   feature, a description and €25 ✓; prices on every line ✓. Unprompted: TAKEN_BY Taller
-  Pino, PLACED_BY the unnamed customer ✓. Slip: order kind called "not disclosed", but
-  "takes" makes Taller Pino the seller, so a sales order.
+  Pino, PLACED_BY the unnamed customer ✓. Order kind "not disclosed": fair, since the
+  question never said whose system it is (the question's gap, not the user's).
 - Score: 4. The split and the description line applied cold on a later day (the 10-28
   retest). The why of the split (units differing in a feature) was shown, not said.

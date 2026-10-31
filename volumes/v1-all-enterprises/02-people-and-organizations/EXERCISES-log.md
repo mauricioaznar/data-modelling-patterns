@@ -487,3 +487,17 @@ Misunderstandings and reinforce attempts, oldest first.
   ATTENDEE (or a callee: say which and why); e-mail Tomás SENDER, Inés RECIPIENT, Pablo CC;
   two `communication_event_purpose` rows on the call (renegotiation, delivery follow-up), a
   summary purpose on the e-mail. Persons, not their organizations, hold the event roles.
+
+### 2026-10-30: round Q6 answered, communication events and case (Clínica Sol and Medisur; key above; Medisur's system)
+- Answer: two events, phone and e-mail as their media ✓; call Inés CALLER, Tomás CALLEE,
+  Pablo an attendee-like role ✓ (no why for attendee over callee); e-mail Tomás SENDER, Inés
+  RECIPIENT, Pablo CC ✓; two purposes on the call, a summary purpose on the e-mail ✓;
+  persons, not organizations, hold the event roles ✓, said unprompted. The relationship
+  first said to play no part, then "can be added as context": optional since Fig 2.12, but
+  here a customer relationship exists, so the events hang on it (half). Extra: a case
+  grouping the call ✓ (a fair choice), the e-mail left off it. Warm-up, unasked: the
+  role-for-medium rule (`valid_contact_mechanism_role`) used for data-quality checks ✓, the
+  tables misnamed as contact mechanism roles (they are `communication_event_role` and its
+  type).
+- Score: 4 kept. Roles, purposes and media cold on a later day; the relationship context
+  half.
