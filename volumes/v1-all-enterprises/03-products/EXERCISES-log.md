@@ -709,3 +709,14 @@ Scores: price components 2 → 3; feature prices stay at 2.
   dependency is an interaction between two features. The colour category not mentioned.
 - Score: 4 → 3. The applicability types right cold, but the table that holds them named
   wrong and the two rule tables confused: retest applicability vs interaction cold.
+
+### 2026-10-30: random, Submodel 4 (Gimnasio Roble: membership €40 a month, a €25 sign-up, sauna €3 per visit; our catalogue)
+- Asked: Apply, write the price rows. Key: three BASE `price_component` rows on the
+  membership (a service): 40 RECURRING per MONTH (`per_time_frequency_id`), 25 ONE_TIME, 3
+  UTILIZATION per visit (`per_uom_id`); currency and from date on each.
+- Answer: membership a service ✓; 40 a base ✓ "of monthly kind" (the kind is RECURRING,
+  the month its "per": two columns, merged); 25 a SURCHARGE ✗ (a sign-up is a price of its
+  own, a one-time base beside the recurring one; a surcharge adds to a base under a
+  condition), ONE_TIME ✓; 3 "something × 3", UTILIZATION not recalled, per visit not said.
+- Score: 1 → 2. The three-way split applied cold and unhinted, but one kind name of three,
+  the "per" folded into the kind, and the one-time base filed as a surcharge.

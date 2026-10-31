@@ -25,6 +25,8 @@ and any decisions made.
   roles, purposes and media cold, the relationship context only as optional, the e-mail
   left off the case; Q7 (Ch 3 features, Brío 2) 4 → 3: the applicability types cold, but
   filed under interaction and "comes with every machine" read as a dependency.
+- Random (Ch 3 pricing, Gimnasio Roble): charge kind 1 → 2; card 8's mantra gains "once,
+  every or per use" (the user's mnemonic), Anki export regenerated.
 
 **Next**
 - Retest Ch 3 applicability vs interaction cold (Q7).
