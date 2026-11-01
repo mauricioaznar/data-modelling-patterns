@@ -788,3 +788,14 @@ Scores: price components 2 → 3; feature prices stay at 2.
   condition = any; Catalonia contains Girona), €1,140 wins (most specific: more conditions
   match); both rack prices match, €45 wins, competing only with the rack's own prices, never
   the bike's; the feature price adds on top of the base: 1,140 + 45 = €1,185.
+
+### 2026-11-01: round Q5, product + good/service gap (Imprenta Sol; key above)
+- Answer: business cards PRODUCT + GOOD ✓; logo design PRODUCT + SERVICE ✓; paper reams
+  PRODUCT + GOOD ✓, the mill a `supplier_product` row unprompted ✓; gloss a feature applied
+  to the cards ✓ (OPTIONAL, not asked: fair), its feature type guessed PRODUCT_QUALITY (a
+  fair pick from the nine; OTHER also defensible; the subtypes not known, owned up); the
+  press not a product, flatly ✓ ("an internal operation", the work effort chapter's ground:
+  printing is the work, the press a fixed asset it uses, Ch 6). No hedge this time.
+- Score: PRODUCT + good/service 3 → 4 (the not-a-product called cold on a later day, the
+  10-31 oven hedge gone). Feature row stays 4.
+
