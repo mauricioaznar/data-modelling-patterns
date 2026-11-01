@@ -476,3 +476,45 @@ Misunderstandings and reinforce attempts, oldest first.
   END_USER written on line 2, a typo by the user's word); line 2 SHIP_TO the warehouse ✓.
   Missed: TAKEN_BY Oficina Viva, line 2's END_USER, and INSTALLER Montajes Sur on line 2.
 - Score: scoped roles 4 → 3 (three hats left off either way; the per-line split and the placer's why cold).
+
+### 2026-11-01: question round, pending (written for the phone; wording in `docs/round-2026-11-01.md`; order in TODO)
+- **Q1 · Submodel 3 recall · term or adjustment (the 10-31 Q3 retest) · Apply.** Tostadero
+  Brío, sales order 90 to Restaurante Ola (line 1 beans, line 2 grinders): paid within 15
+  days; 4% off the order, a launch promotion; the grinders cancellable without penalty up to
+  5 days before delivery; €10 for delivery. Key: `order_term` PAYMENT_DUE_DAYS 15 on the
+  order (item null); `order_adjustment` DISCOUNT, percentage 4, on the order (money, so not a
+  term, though it was promised); `order_term` PENALTY_FREE_CANCEL_DAYS 5 on line 2 only;
+  `order_adjustment` SHIPPING_AND_HANDLING, amount 10, on the order (a normal delivery: not
+  FEE or SURCHARGE). Test: does it change the money? One target per row. The list sits
+  under "the order confirmation lists", not "agreed", so the wording leans neither way.
+- **Q2 · Submodel 3 recall · status on the line, named · (a) Apply, (b) Understand.**
+  Sales order 91 to Hotel Mar (line 1 beans, line 2 a roasting machine): approved 3 Nov, the
+  machine cancelled 4 Nov, the beans shipped 6 Nov. Key: (a) `order_status` ORDER_APPROVED
+  on order 91 (item null), 3 Nov; ORDER_CANCELLED on line 2 (order null), 4 Nov, not on the
+  order, which lives on; ORDER_SHIPPED on line 1, 6 Nov; each with its datetime. (b)
+  ORDER_SHIPPED: the latest row pointing at line 1 with a datetime on or before 7 Nov; rows
+  stack, none is overwritten. The order's APPROVED row is the order's, not line 1's.
+- **Q3 · Submodel 3 recall · a stored status vs its fact (the 10-29 walk-through slip) ·
+  (a) Evaluate, (b) Understand.** Mercado Lume, sales order 75: an "invoiced" status row
+  dated 10 Nov, the invoice record dated 12 Nov. Key: (a) 12 Nov: the fact wins, the status
+  is a copy, so fix the status row (re-date it or remove it); not "neither is true". (b) Two
+  places hold one fact, so one can change without the other (a status keyed by hand, an
+  invoice re-dated or cancelled later); stored anyway as a quick, dated history of where the
+  order stands without joining shipments and invoices, with a data-quality query comparing
+  the two to catch the drift (or derive it instead).
+- **Q4 · Submodel 1 gap · scoped roles (10-31 Q7: TAKEN_BY, END_USER, INSTALLER) · Apply.**
+  Clima Sur, sales order 82: Pablo of Hotel Faro places it; our reps Inés and Raúl split the
+  commission; Grupo Faro (the parent) pays; line 1 air conditioners to the hotel, installed by
+  Frío Norte, used by the hotel; line 2 filters to Grupo Faro's depot, used by its team. Key:
+  `order_role` PLACED_BY Hotel Faro (Pablo as its contact, or Pablo himself; said which),
+  TAKEN_BY Clima Sur, SALESPERSON Inés 50 and Raúl 50 (`percent_contribution`), BILL_TO Grupo
+  Faro. `order_item_role` line 1: SHIP_TO Hotel Faro, INSTALLER Frío Norte, END_USER Hotel
+  Faro; line 2: SHIP_TO Grupo Faro (the depot is the where, a contact mechanism, not asked),
+  END_USER Grupo Faro. Inés is not TAKEN_BY: the organization takes the order. "Handles the
+  sale" was chosen over "takes it", so the TAKEN_BY recall is unhinted either way.
+- **Q6 · Submodel 1 maintenance · contact mechanisms with a purpose on the order and the line
+  (last 4 on 10-25) · Apply.** Librería Atlas, sales order 84 from Colegio Pinar. Key:
+  `order_contact_mechanism` secretaria@pinar.example ORDER_PLACING, pedidos@atlas.example
+  ORDER_TAKING, Calle Mayor 5 BILLING; `order_item_contact_mechanism` line 1 Calle Olmo 2
+  SHIPPING, line 1 600 111 222 DELIVERY_CONTACT, line 2 Calle Mayor 5 SHIPPING. Calle Mayor 5
+  is one `contact_mechanism` row, linked twice with a different purpose on each link.

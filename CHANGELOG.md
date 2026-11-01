@@ -3,6 +3,30 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-01
+
+**Built**
+- Pulled. Anki export regenerated (68 cards, no change from the pulled one) for a fresh
+  import.
+- A question round of seven written for the phone (the user's call: answered on WhatsApp,
+  graded in a later session): 3 recalls on Ch 4 submodel 3 (term or adjustment, status on
+  the line, a stored status vs its fact), 2 gaps (Ch 4 scoped roles, Ch 3 not a product),
+  2 maintenance (Ch 4 order contact mechanisms, last 4 on 10-25; Ch 3 base and feature
+  prices, last 4 on 10-26). Wording in `docs/round-2026-11-01.md` with no keys; keys in the
+  Ch 3 and Ch 4 logs; order in TODO.
+- Ch 4 tracker: submodel 3's rows added (status 3, term 2, item association 4), from the
+  10-30 and 10-31 log entries, where they were only logged.
+
+**Decisions**
+- A round written ahead gets its own file holding only the questions, so it can be read on
+  the phone without seeing the keys (on 10-30 each question's wording and key sat together
+  in the logs). The questions avoid giving each other away, since all seven are visible at once.
+
+**Next**
+- Paste the round's answers back: read each one back, grade, log, update the trackers, tick
+  TODO.
+- Then the Ch 4 overview, submodel 4 (requirements, points 18–20).
+
 ## 2026-10-31
 
 **Built**

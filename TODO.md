@@ -63,6 +63,21 @@ the key sits right under it. Grade, log and update the trackers as usual, then t
 - [x] Q6 · Ch 3 · product + good/service · maintenance (last 4 on 10-25)
 - [x] Q7 · Ch 4 · scoped roles on the order and the line · maintenance (last 4 on 10-25)
 
+## Pending question round (written 2026-11-01, answered on the phone)
+
+Seven questions, written to paste into WhatsApp. The wording is in
+[docs/round-2026-11-01.md](docs/round-2026-11-01.md), with no keys. The keys are in the Ch 3
+and Ch 4 logs under "2026-11-01: question round, pending": **don't open those before
+grading**. When the answers come back, read each one back, grade, log and update the
+trackers as usual, then tick here.
+- [ ] Q1 · Ch 4 · order status, terms and item associations · recall: term or adjustment (Tostadero Brío, order 90)
+- [ ] Q2 · Ch 4 · order status, terms and item associations · recall: status on the line (Hotel Mar, order 91)
+- [ ] Q3 · Ch 4 · order status, terms and item associations · recall: a stored status vs its fact (Mercado Lume, order 75)
+- [ ] Q4 · Ch 4 · scoped roles on the order and the line · gap (10-31 Q7) (Clima Sur, order 82)
+- [ ] Q5 · Ch 3 · product + good/service · gap (10-31 Q6, not a product) (Imprenta Sol)
+- [ ] Q6 · Ch 4 · contact mechanisms on the order and the line · maintenance (last 4 on 10-25) (Librería Atlas, order 84)
+- [ ] Q7 · Ch 3 · base prices compete + feature prices add on top · maintenance (last 4 on 10-26) (Bicis Alba)
+
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 
 Chapter titles are from memory; verify them against the book's table of contents.

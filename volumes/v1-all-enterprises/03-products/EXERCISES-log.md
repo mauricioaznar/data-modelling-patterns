@@ -771,3 +771,20 @@ Scores: price components 2 → 3; feature prices stay at 2.
   blank: not a product, nothing we offer; an asset we use).
 - Score: product + good/service 4 → 3 (the offered test failed on the one thing not
   offered). The feature price hedged, the feature-price row not lowered: retest.
+
+### 2026-11-01: question round, pending (written for the phone; wording in `docs/round-2026-11-01.md`; order in TODO)
+- **Q5 · Product + good/service · gap (10-31 Q6, the oven) · Apply; Understand for the
+  whys.** Imprenta Sol: business cards, a logo design service, reams of paper bought from a
+  mill, a gloss finish on the cards, the press it prints on. Key: business cards PRODUCT +
+  GOOD; logo design PRODUCT + SERVICE; paper reams PRODUCT + GOOD (offered and stocked; buying
+  them in doesn't stop them being a product; the mill a `supplier_product` row, not asked);
+  gloss a PRODUCT FEATURE on the business cards (chosen on a product, never sold alone; its
+  applicability type not asked); the press not a product (never offered; an asset the shop
+  uses). A hedge on the press counts as a blank, as with the oven.
+- **Q7 · Base prices compete + feature prices add on top · maintenance (both last 4 on
+  10-26; the feature price also the 10-31 Q6 retest) · Apply; Understand for the why.**
+  Bicis Alba: the Ruta's base €1,200 any, €1,140 Catalonia; its rack (a feature) €60 any,
+  €45 for the Club party type; Marta, Club, in Girona (Catalonia). Key: both bases match (no
+  condition = any; Catalonia contains Girona), €1,140 wins (most specific: more conditions
+  match); both rack prices match, €45 wins, competing only with the rack's own prices, never
+  the bike's; the feature price adds on top of the base: 1,140 + 45 = €1,185.
