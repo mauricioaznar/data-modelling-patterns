@@ -120,8 +120,8 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 1 · V1 Ch 2 · Parties, roles and relationships (Figs 2.1–2.7)
 - **Cue:** "Who is this, what are they to us, and how are they tied to each other?"
 - **Hook:** people wearing hats
-- **Mantra:** A party is who; a role is the hat it wears; a relationship joins two hats, and a
-  type names each hat; a class says what it is underneath.
+- **Mantra:** A party is who; a role is one end it holds; a relationship is the bond between
+  two ends, and a type names each end; a class says what it is underneath.
 
 <details><summary>Key</summary>
 
