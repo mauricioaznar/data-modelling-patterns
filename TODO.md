@@ -76,7 +76,7 @@ trackers as usual, then tick here.
 - [x] Q4 · Ch 4 · scoped roles on the order and the line · gap (10-31 Q7) (Clima Sur, order 82) · 3, TAKEN_BY and line 1 END_USER missed
 - [x] Q5 · Ch 3 · product + good/service · gap (10-31 Q6, not a product) (Imprenta Sol) · 3 → 4, the press not a product, flatly
 - [x] Q6 · Ch 4 · contact mechanisms on the order and the line · maintenance (last 4 on 10-25) (Librería Atlas, order 84) · holds 4; the annex made a ship-to party (roles note)
-- [ ] Q7 · Ch 3 · base prices compete + feature prices add on top · maintenance (last 4 on 10-26) (Bicis Alba)
+- [x] Q7 · Ch 3 · base prices compete + feature prices add on top · maintenance (last 4 on 10-26) (Bicis Alba) · both hold 4; customer written as the party type (a role)
 
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 

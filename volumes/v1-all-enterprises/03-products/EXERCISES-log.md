@@ -799,3 +799,14 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - Score: PRODUCT + good/service 3 → 4 (the not-a-product called cold on a later day, the
   10-31 oven hedge gone). Feature row stays 4.
 
+### 2026-11-01: round Q7, base and feature prices maintenance (Bicis Alba; key above)
+- Answer: both bike bases match, €1,140 (Catalonia) wins over the no-condition €1,200, most
+  specific ✓; the line takes 1,140 ✓; the rack's two base prices (on the feature) match, €45
+  wins ✓, added on top: 1,140 + 45 = €1,185 ✓, all cold. That the rack's prices compete only
+  among themselves shown by the layout, not said. Slips: Catalonia called a province (it's
+  an autonomous community; Girona is the province; the boundary type doesn't change the
+  match); the condition written "party type: customer" and "a member = customer": CUSTOMER is
+  a party role (Ch 2), the party type is CLUB. Blame on member/customer about 70/30
+  Claude's: the wording said "Club customers (a party type)" and then "a Club member".
+- Score: base prices holds 4, feature prices holds 4. Note for Ch 2: party type vs party role.
+
