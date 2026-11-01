@@ -531,3 +531,15 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: scoped roles stays 3 (INSTALLER and line 2's END_USER now cold; TAKEN_BY still
   missing, and the END_USER moved lines). Next retest: TAKEN_BY cold, END_USER on every line.
 
+### 2026-11-01: round Q1, Submodel 3 recall (term or adjustment; Tostadero Brío, sales order 90; key above)
+- Answer: (a) a term on the order, 15 ✓, typed "net pay in 15 days" (PAYMENT_DUE_DAYS) ✓;
+  (b) an adjustment on the order, DISCOUNT, a percentage ✓, with the why cold (money changes,
+  so not a term, though agreed: the 10-31 slip fixed) ✓, but the value written 5, not 4 ✗
+  (a slip); (c) a term on line 2 only, 5 ✓; (d) an adjustment on the order, amount 10 ✓,
+  typed "shipping and delivery" (SHIPPING_AND_HANDLING, close enough) ✓. Extra ✗: a link from
+  the term to a time-frequency unit, "otherwise 5 what?": the type answers that
+  (PENALTY_FREE_CANCEL_DAYS); the value is bare and read through its type (ponder 96's "what
+  would you add if terms needed units" is where a unit link would come in).
+- Score: term row 2 → 3 (all four sorted right, the discount's why cold); not 4 while the
+  unit link stands in for the type.
+
