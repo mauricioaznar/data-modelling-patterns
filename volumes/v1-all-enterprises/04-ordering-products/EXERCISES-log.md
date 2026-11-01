@@ -543,3 +543,12 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: term row 2 → 3 (all four sorted right, the discount's why cold); not 4 while the
   unit link stands in for the type.
 
+### 2026-11-01: round Q2, Submodel 3 recall (status on the line; Tostadero Brío, sales order 91 to Hotel Mar; key above)
+- Answer: (a) APPROVED 3 Nov on order 91 ✓; CANCELLED 4 Nov on line 2 ✓ (the order lives
+  on); SHIPPED 6 Nov on line 1 ✓; all cold. "Linked to order 91, line item #2" read as the
+  item of order 91 (the row points at the line, order_id null: one target per row); the table
+  (`order_status`) implied by "order status rows", not named. (b) SHIPPED, the latest row
+  pointing at line 1 ✓; the as-of cut (on or before 7 Nov) left out, harmless here.
+- Score: the line-level status cold on a later day (10-31 put the backorder on the order):
+  the status part at 4; the row waits for Q3 (the fact wins).
+

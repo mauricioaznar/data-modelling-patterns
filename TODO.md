@@ -71,7 +71,7 @@ and Ch 4 logs under "2026-11-01: question round, pending": **don't open those be
 grading**. When the answers come back, read each one back, grade, log and update the
 trackers as usual, then tick here.
 - [x] Q1 · Ch 4 · order status, terms and item associations · recall: term or adjustment (Tostadero Brío, order 90) · 3, unit link instead of the type
-- [ ] Q2 · Ch 4 · order status, terms and item associations · recall: status on the line (Hotel Mar, order 91)
+- [x] Q2 · Ch 4 · order status, terms and item associations · recall: status on the line (Hotel Mar, order 91) · status on the line cold (4 on its part; the row after Q3)
 - [ ] Q3 · Ch 4 · order status, terms and item associations · recall: a stored status vs its fact (Mercado Lume, order 75)
 - [x] Q4 · Ch 4 · scoped roles on the order and the line · gap (10-31 Q7) (Clima Sur, order 82) · 3, TAKEN_BY and line 1 END_USER missed
 - [ ] Q5 · Ch 3 · product + good/service · gap (10-31 Q6, not a product) (Imprenta Sol)
