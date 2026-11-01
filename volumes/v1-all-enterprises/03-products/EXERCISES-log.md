@@ -720,3 +720,13 @@ Scores: price components 2 → 3; feature prices stay at 2.
   condition), ONE_TIME ✓; 3 "something × 3", UTILIZATION not recalled, per visit not said.
 - Score: 1 → 2. The three-way split applied cold and unhinted, but one kind name of three,
   the "per" folded into the kind, and the one-time base filed as a surcharge.
+
+### 2026-10-31: round Q4, Submodel 2 gap (applicability vs interaction; Arco 14 laptop; our catalogue)
+- Asked: Apply. Arco 14: the buyer must pick 8 GB or 16 GB of memory; a touchscreen can be
+  added; a matte screen finish can be added; a webcam comes with every one; the touchscreen
+  needs the 16 GB; the matte finish can't go with the touchscreen. Write the rows, saying
+  which table each goes in. Key: `product_feature_applicability` on Arco 14: 8 GB and 16 GB
+  SELECTABLE, touchscreen OPTIONAL, matte OPTIONAL, webcam STANDARD; `product_feature_interaction`
+  (feature to feature, Arco 14 as context or none): touchscreen DEPENDENCY → 16 GB (one
+  way), matte INCOMPATIBILITY touchscreen (both ways, one row). Product + feature =
+  applicability; feature + feature = interaction.
