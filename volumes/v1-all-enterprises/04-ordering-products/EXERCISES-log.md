@@ -564,4 +564,7 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: status row stays 3. Q2's status on the line cold (4 on its part), but the fact
   wins only half: named, then left standing ("both right", the 10-29 hedge again). Retest:
   the action when the copy and the fact disagree.
+- After grading: the user's reading was the invoice re-dated later, the status left stale;
+  the fix (update the status date, or remove the row) said once asked. Score held at 3: the
+  written answer said leave it; retest cold on a later day.
 
