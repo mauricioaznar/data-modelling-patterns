@@ -552,3 +552,16 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: the line-level status cold on a later day (10-31 put the backorder on the order):
   the status part at 4; the row waits for Q3 (the fact wins).
 
+### 2026-11-01: round Q3, Submodel 3 recall (a stored status vs its fact; Mercado Lume, sales order 75; key above)
+- Answer: (a) "both are right, one more right": the invoice is the fact ✓, it drifts with
+  nothing to stop it, the guards named (write the status with the invoice, a job, a
+  data-quality query) ✓; then "leave it as is, a snapshot of the invoice date" ✗: a status
+  saying invoiced on 10 Nov when no invoice existed until 12 Nov is wrong, not a snapshot;
+  re-date or remove it, or an as-of query on 11 Nov answers wrong. (b) the drift and decisions
+  made on the copy ✓; stored for a fast, dated history without the joins ✓; beyond the key:
+  statuses with no fact behind them (APPROVED) are themselves the truth, and you must know the
+  catalogue to tell the two kinds apart ✓.
+- Score: status row stays 3. Q2's status on the line cold (4 on its part), but the fact
+  wins only half: named, then left standing ("both right", the 10-29 hedge again). Retest:
+  the action when the copy and the fact disagree.
+
