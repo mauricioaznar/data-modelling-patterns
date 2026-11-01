@@ -250,13 +250,16 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 6 · V1 Ch 3 · Product features (Fig 3.4)
 - **Cue:** "What options does a product come in, which are standard, and which clash?"
 - **Hook:** build-your-own bike
-- **Mantra:** Features attach to products as required, standard, optional or selectable; features constrain
-  features, needing or clashing, sometimes only inside one product.
+- **Mantra:** Features come as a BBQ DiSCo SHOw (brand, billing, quality; dimension, size,
+  colour; software, hardware, other) and attach to products as required, standard, optional
+  or selectable; features constrain features, needing or clashing, sometimes only inside one
+  product.
 
 <details><summary>Key</summary>
 
-- **S:** `product_feature` (a colour, size, quality, dimension…; dimensions carry a unit of
-  measure) · `product_feature_applicability` (this feature on this product is required,
+- **S:** `product_feature`, typed by `product_feature_type`, the nine subtypes as rows
+  (BRAND, BILLING, PRODUCT_QUALITY; DIMENSION, SIZE, COLOR; SOFTWARE, HARDWARE, OTHER: a
+  BBQ DiSCo SHOw; dimensions carry a unit of measure) · `product_feature_applicability` (this feature on this product is required,
   standard, optional or selectable) · `product_feature_interaction` (feature A needs feature B,
   or A and B can't go together, optionally only within one product) · `unit_of_measure` with
   conversions. The product's unit says how it's counted (EACH); a dimension says what's inside
