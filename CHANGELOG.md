@@ -16,6 +16,14 @@ and any decisions made.
   Ch 3 and Ch 4 logs; order in TODO.
 - Ch 4 tracker: submodel 3's rows added (status 3, term 2, item association 4), from the
   10-30 and 10-31 log entries, where they were only logged.
+- The phone round graded (later the same day): Q1 terms 2 → 3 (all four sorted, a unit link
+  where the type gives the unit); Q2 status on the line cold; Q3 the fact named but the copy
+  left standing (status stays 3); Q4 scoped roles stays 3 (TAKEN_BY and line 1's END_USER
+  missed); Q5 product + good/service 3 → 4 (the press not a product, flatly); Q6 contact
+  mechanisms holds 4 (the annex made a ship-to party); Q7 base and feature prices hold 4.
+- Card 10's mantra names every order and line role (PTB SEAR / SEI; roles say who,
+  mechanisms say where), its key leading with the eight generic tables; card 6's names the
+  nine feature subtypes (BBQ DiSCo SHOw). Export regenerated.
 
 **Decisions**
 - A round written ahead gets its own file holding only the questions, so it can be read on
@@ -23,8 +31,9 @@ and any decisions made.
   in the logs). The questions avoid giving each other away, since all seven are visible at once.
 
 **Next**
-- Paste the round's answers back: read each one back, grade, log, update the trackers, tick
-  TODO.
+- Retests cold on a later day: TAKEN_BY and END_USER on every line, the organization (not
+  the place) as SHIP_TO; fix the copy when a status and its fact disagree; terms as a bare
+  value read through the type.
 - Then the Ch 4 overview, submodel 4 (requirements, points 18–20).
 
 ## 2026-10-31
