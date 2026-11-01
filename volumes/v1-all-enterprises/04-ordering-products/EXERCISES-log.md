@@ -568,3 +568,16 @@ Misunderstandings and reinforce attempts, oldest first.
   the fix (update the status date, or remove the row) said once asked. Score held at 3: the
   written answer said leave it; retest cold on a later day.
 
+### 2026-11-01: round Q6, Submodel 1 maintenance (contact mechanisms with a purpose; Librería Atlas, sales order 84; key above)
+- Answer: on the order: pedidos@ "taken by", secretaria@ "placed by", the postal address
+  "bill to" ✓ (the purposes named with role words: ORDER_TAKING, ORDER_PLACING, BILLING; the
+  billing address not named Calle Mayor 5); on line 1: Calle Olmo 2 SHIPPING ✓ (discussed
+  earlier that day, a freebie), 600 111 222 DELIVERY_CONTACT ✓ (on the line, not the order:
+  the old 10-24 slip gone); line 2 Calle Mayor 5 SHIPPING ✓. Calle Mayor 5 as one mechanism
+  linked twice not said (not asked). Roles added unasked: PLACED_BY, TAKEN_BY, BILL_TO ✓ (the
+  10-31 and Q4 TAKEN_BY gap filled, prompted by the question naming "we take it"); SHIP_TO on
+  line 1 given to "the school annex" as a party ✗: the annex is a place of Colegio Pinar,
+  the where (Calle Olmo 2), so SHIP_TO Colegio Pinar (the Q4 depot point again).
+- Score: contact mechanisms stays 4 (every row cold, both levels, the delivery contact on
+  the line). Note for the roles row: place-as-party slip, retest with the TAKEN_BY one.
+
