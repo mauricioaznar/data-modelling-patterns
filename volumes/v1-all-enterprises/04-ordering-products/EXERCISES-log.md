@@ -581,3 +581,4 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: contact mechanisms stays 4 (every row cold, both levels, the delivery contact on
   the line). Note for the roles row: place-as-party slip, retest with the TAKEN_BY one.
 
+- After grading: SHIP_TO the organization, the place a SHIPPING mechanism; purposes renamed ORDER_TAKING, ORDER_PLACING, BILLING; both by the user, once pointed out.
