@@ -402,3 +402,59 @@ Misunderstandings and reinforce attempts, oldest first.
   question never said whose system it is (the question's gap, not the user's).
 - Score: 4. The split and the description line applied cold on a later day (the 10-28
   retest). The why of the split (units differing in a feature) was shown, not said.
+
+### 2026-10-31: round Q1, Submodel 3 recall (Mercado Lume: what a status, a term and an adjustment each record)
+- Asked: Understand, one line each with a grocery example. Key: status = a dated state
+  (where the order or one line stands; the latest row is current), e.g. ORDER_SHIPPED;
+  term = an agreed condition on the order or a line, one bare value read through its type
+  (or none), e.g. PAYMENT_DUE_DAYS 30, NO_EXCHANGE_OR_REFUND; adjustment = money that
+  changes the total, on the order or a line, e.g. a 5% DISCOUNT, SHIPPING_AND_HANDLING.
+- Answer: status a dated history, latest is current, shipped / invoiced ✓; "a copy from
+  the fact": fair, a SHIPPED status restates what the shipment records. Term "what should
+  happen if an event" (half: agreed conditions, some conditional), but the example a 25
+  discount for 1000 units ✗ (a catalogue price rule with a quantity break, an adjustment once
+  applied); asked whether a term carries two numbers (no: one value, its type says what it
+  means). Adjustment: extra charges and discounts on a line or the order, the types listed,
+  30% discount ✓; terms called "suggestions" ✗ (agreed and binding, just not money); "check the
+  catalogue and recalculate" first read as the total coming from the catalogue; the user's
+  meaning: the order stores what was agreed, and how it was reached (which base won, which
+  discount matched) is read from the price components as of the order date ✓ (the misreading
+  mine). Status "a copy from the fact": a dated handshake, the live truth in the related
+  tables (shipments, invoices) ✓; a check can catch the two disagreeing.
+- Score: status 3, adjustment 3, term 1 → 2 (the condition sense half there, the example
+  still money). Mnemonic given: where it stands, what's agreed, what it costs.
+
+### 2026-10-31: round Q2, Submodel 3 recall (Mercado Lume, sales order 70: honey backordered, bought in)
+- Asked: Apply. Mercado Lume's sales order 70, line 1: 200 jars of honey, none in stock on
+  3 Nov. On 4 Nov Mercado Lume orders 500 jars from Apiarios Sol (purchase order 15, line 1);
+  200 of them are meant for order 70. Write the rows for 3 Nov and for 4 Nov. Key: 3 Nov an
+  `order_status` ORDER_BACKORDERED on sales line 1 (the line, not the order), with its
+  datetime; 4 Nov purchase order 15 with its line (a purchase, Mercado Lume the placer,
+  Apiarios Sol the taker) and an `order_item_association` sales line 1 → purchase line 1 (no
+  quantity on it, as drawn; the 200 is a known gap, NOTES point 17). Not an adjustment, not a
+  term. The backorder status stays until a later status (e.g. shipped) stacks on top.
+- Answer: order 70 and line 70-1 taken as existing (the wording left the order date open:
+  the question's gap). 3 Nov: "could have" a status on order 70, "waiting on goods": a
+  status, not an association ✓ (the 10-30 Q1 mistake not repeated), but on the order, not
+  the line, ORDER_BACKORDERED not named, and offered rather than written. 4 Nov: the purchase
+  order and its line ✓ (numbered 69, not 15; parties not named); the sales line linked to
+  the purchase line through the subtypes ✓, and unprompted: the link carries no quantity ✓.
+  An ORDERED status dated 4 Nov on "line 1" (which order's line not said).
+- Score: item association 4 (cold, a later day, its gap seen unprompted); backorder as a
+  status 3 (right table, unprompted; the line level and the name missing).
+
+### 2026-10-31: round Q3, Submodel 3 recall (Mercado Lume, sales order 71 to Hotel Brisa)
+- Asked: Apply. Order 71 (already placed): line 1 olive oil, line 2 fresh fish. Agreed with
+  the hotel: pay within 30 days; the oil delivered within 5 days; no returns on the fish
+  once delivered; 5% off the whole order for loyalty. Write the rows. Key: three
+  `order_term` rows: PAYMENT_DUE_DAYS 30 on the order; DELIVERY_WITHIN_DAYS 5 on line 1;
+  NO_EXCHANGE_OR_REFUND on line 2 with no value; the 5% an `order_adjustment` DISCOUNT,
+  percentage 5, on the order (money, so not a term). Each term on the order or one line,
+  never both.
+- Answer: four terms: net 30 ✓ (level not said), delivery within 5 days on line 1 ✓, no
+  returns with no value ✓ (its line not said), and the 5% loyalty discount as a term ✗
+  ("all terms, what was agreed"): money, so an `order_adjustment`. The Q1 boundary (money or
+  not) missed again, 20 minutes after it was taught.
+- Score: term 2 kept (typed values, a line-level term and a valueless one right; the
+  money-vs-condition line failed again). The wording shares the blame: the list sat under
+  "Agreed with the hotel", the mnemonic's word for a term. Retest on a later day.

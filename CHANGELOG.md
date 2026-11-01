@@ -3,6 +3,23 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-10-31
+
+**Built**
+- Round of seven started live (plan in TODO). Q1 (Ch 4 status, term, adjustment: what each
+  records) status 3, adjustment 3, term 1 → 2; Q2 (honey backorder) item association 4,
+  backorder as a status 3 (on the order, not the line); Q3 (Hotel Brisa terms) term 2 kept:
+  the 5% loyalty discount filed as a term (the wording's "agreed" shares the blame).
+- Card 12's mantra gains the user's mnemonic, tightened after Q3: where it stands, what's
+  agreed besides money, what it costs. Anki export regenerated.
+
+**Decisions**
+- The round of seven stays as it is (a same-round retest rule offered, declined).
+
+**Next**
+- Finish the round: Q4–Q7.
+- Retest term vs adjustment on a later day.
+
 ## 2026-10-30
 
 **Built**

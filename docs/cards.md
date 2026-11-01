@@ -419,8 +419,9 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 12 · V1 Ch 4 · Order status, terms and item associations (Figs 4.7–4.8)
 - **Cue:** "Where does an order or a line stand, under which agreed terms, and which purchase will fill a sales line?"
 - **Hook:** a parcel tracker with fine print
-- **Mantra:** Status rows stack in time, terms carry typed numbers, on order or line; purchase
-  lines fill sales lines.
+- **Mantra:** Where it stands, what's agreed besides money, what it costs: status, term,
+  adjustment. Status rows stack in time, terms carry typed numbers, on order or line;
+  purchase lines fill sales lines.
 
 <details><summary>Key</summary>
 

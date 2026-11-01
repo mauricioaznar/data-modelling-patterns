@@ -53,6 +53,16 @@ the key sits right under it. Grade, log and update the trackers as usual, then t
 - [x] Q6 · Ch 2 · communication events and case · maintenance (Clínica Sol and Medisur)
 - [x] Q7 · Ch 3 · product features · maintenance (Brío 2)
 
+## Question round 2026-10-31 (asked live, one at a time)
+
+- [x] Q1 · Ch 4 · order status, terms and adjustments · recall (Mercado Lume: what each records)
+- [x] Q2 · Ch 4 · order status, terms and item associations · recall (backorder and restock)
+- [x] Q3 · Ch 4 · order status, terms and item associations · recall (terms on the order and the line)
+- [ ] Q4 · Ch 3 · feature applicability vs interaction · gap (10-30 Q7)
+- [ ] Q5 · Ch 3 · charge kind: base one-time vs surcharge · gap (10-30 Gimnasio Roble)
+- [ ] Q6 · Ch 3 · product + good/service · maintenance (last 4 on 10-25)
+- [ ] Q7 · Ch 4 · scoped roles on the order and the line · maintenance (last 4 on 10-25)
+
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 
 Chapter titles are from memory; verify them against the book's table of contents.
