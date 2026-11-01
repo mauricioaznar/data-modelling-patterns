@@ -356,12 +356,18 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 10 · V1 Ch 4 · Orders, items and order parties (Figs 4.1–4.5)
 - **Cue:** "What was ordered, which way, at what price, and who placed, took, pays and receives it?"
 - **Hook:** one order pad, two desks
-- **Mantra:** One order for buying and selling; items name a product or feature; roles name
-  placer, taker, bill-to, ship-to, and anyone else.
+- **Mantra:** One order for buying and selling; items name a product or feature. The order
+  wears PTB SEAR (placer, taker, bill-to; salesperson, entered-by, approver, reviewer), every
+  line wears SEI (ship-to, end user, installer); roles say who, mechanisms say where.
 
 <details><summary>Key</summary>
 
-- **S:** `"order"` (the header: order date, entry date; `order_kind` SALES or PURCHASE) ·
+- **S:** the generic set (4.5), eight tables: `"order"` · `order_item` · `order_role` +
+  `order_role_type` (PLACED_BY, TAKEN_BY, BILL_TO; SALESPERSON with a percent share,
+  ENTERED_BY, APPROVER, REVIEWER) · `order_item_role` + `order_item_role_type` (SHIP_TO,
+  END_USER, INSTALLER) · `order_contact_mechanism` and `order_item_contact_mechanism` (a
+  mechanism with a purpose, straight on the order or the line, never on a role). In detail:
+  `"order"` (the header: order date, entry date; `order_kind` SALES or PURCHASE) ·
   `order_item` (one line, numbered within its order: quantity and the unit price agreed that
   day; for a product **or** a feature, the feature's line "ordered for" the product's line) ·
   `sales_order` (placed by, taken by, bill-to: party roles; placed using, taken via, billed
