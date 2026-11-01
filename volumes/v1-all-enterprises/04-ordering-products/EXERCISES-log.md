@@ -458,3 +458,15 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: term 2 kept (typed values, a line-level term and a valueless one right; the
   money-vs-condition line failed again). The wording shares the blame: the list sat under
   "Agreed with the hotel", the mnemonic's word for a term. Retest on a later day.
+
+### 2026-10-31: round Q7, Submodel 1 maintenance (scoped roles; Oficina Viva, sales order 80 to Grupo Lema)
+- Asked: Apply. We are Oficina Viva (office furniture). Grupo Lema's buyer Lucía places
+  order 80 by phone; our rep Diego takes it and gets the full commission; Nora, our clerk,
+  keys it in; Grupo Lema's head office pays. Line 1, 10 desks: delivered to the Sevilla
+  branch, whose team uses them. Line 2, 20 chairs: delivered to Grupo Lema's warehouse, then
+  assembled at the Sevilla branch by Montajes Sur. Write the role rows. Key: on the order:
+  PLACED_BY Grupo Lema (Lucía too, or as the placer's contact, said which), TAKEN_BY
+  Oficina Viva, SALESPERSON Diego (100%), ENTERED_BY Nora, BILL_TO Grupo Lema head office.
+  Line 1: SHIP_TO and END_USER the Sevilla branch. Line 2: SHIP_TO the warehouse, INSTALLER
+  Montajes Sur, END_USER the Sevilla branch. Nora not PLACED_BY or SALESPERSON; roles per
+  line where lines differ.
