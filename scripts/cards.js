@@ -1,7 +1,9 @@
-// Reads docs/cards.md: the submodel cards, the architecture cards and the pattern cue lines.
+// Reads docs/cards.md: the submodel cards, the architecture cards, the distinction cards and
+// the pattern cue lines.
 // Shared by cards-anki.js (writes the Anki file) and check.js (checks it's current).
 // Each note gets a stable id (Anki's GUID) from its volume, chapter and figures,
-// its volume and chapter (architecture), or its pattern number, so renumbering or
+// its volume and chapter (architecture), its pattern number or its D number (distinction),
+// so renumbering or
 // rewording a card updates the note and keeps its review history instead of adding
 // a duplicate.
 // A submodel or architecture card's status (draft, reviewed, done) comes from its row in
@@ -109,6 +111,22 @@ export function buildAnki(src, statusRows = readStatusRows()) {
       `v${volume}::ch${chapter}${arch ? ' architecture' : ''}${olap ? ' dm::olap' : ''} dm::status::${status}`,
       deck,
       arch ? `dm-v${volume}-ch${chapter}-arch` : `dm-v${volume}-ch${chapter}-${figs}`,
+    ]);
+  }
+
+  // "### Distinction D1 · Term or adjustment? (V1 Ch 4)": a two-way choice; the front asks it,
+  // the back gives the test first (the user's call, 2026-10-31).
+  for (const block of src.split(/\n(?=#{1,3} )/).filter((b) => /^### Distinction /.test(b))) {
+    const [, id, name, volume, ch] = block.match(/^### Distinction (D\d+) · (.+?) \(V(\d+) Ch (\d+)\)/);
+    const back = ['Test', 'Sides', 'Mnemonic', 'Trap']
+      .map((label) => `<b>${label}:</b> ${html(field(block, label))}`)
+      .join('<br><br>');
+    rows.push([
+      `Distinction ${id} · ${html(name)}<br><br>${html(field(block, 'Cue'))}`,
+      back,
+      `distinction v${volume}::ch${ch.padStart(2, '0')}`,
+      'Data Models::Distinctions',
+      `dm-distinction-${id.toLowerCase()}`,
     ]);
   }
 

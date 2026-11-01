@@ -6,12 +6,13 @@ understanding; this keeps it from fading. No Claude needed, about 30 minutes, pe
 **Anki:** `npm run cards:anki` writes `docs/cards-anki.txt`; import it with File → Import.
 This file stays the source of truth: edit here, rerun, re-import. Each note's id comes from
 the volume, chapter and figures in its heading (an architecture card's from its volume and
-chapter, a pattern's from its number), so renumbering or rewording a card updates its note;
+chapter, a pattern's from its number, a distinction's from its D number), so renumbering or rewording a card updates its note;
 keep those stable. Anki's scheduling replaces the boxes below; still write S · W · T · D on
 paper before you flip.
 
 **Decks and status** (the user's call, 2026-10-18). Submodel and architecture cards each
-split into *Drafts* and *Settled*; patterns stay in *Data Models::Patterns*:
+split into *Drafts* and *Settled*; patterns stay in *Data Models::Patterns*, distinctions in
+*Data Models::Distinctions*:
 
 | Status (tag) | Comes from the chapter's STATUS.md | Deck |
 |---|---|---|
@@ -1738,6 +1739,96 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
   party_qualification, resume; **person** ← person_training. Bold = from Ch 2 to 8. Kept:
   9.12a over 9.12b.
 </details>
+
+---
+
+## Deck: distinctions
+
+Two-way choices where both sides are known and the wrong one gets picked (the user's call,
+2026-10-31). Front: the choice and a cue. Say the **test** out loud, sort the cue's examples,
+then flip. Each card's Trap is a real mistake from practice, with its date. Ids come from the
+D number, so keep it stable. Add a card when practice shows a new mix-up between two known
+options; one that misses a fact goes to its submodel card instead.
+
+### Distinction D1 · Term or adjustment? (V1 Ch 4)
+- **Cue:** "Net 30; no refunds on the fish; 5% off for loyalty; delivery within 5 days."
+- **Test:** Does it change the money? Yes: an `order_adjustment`. No: an `order_term`.
+- **Sides:** A term is an agreed condition, one bare value read through its type, or none
+  (PAYMENT_DUE_DAYS 30, NO_EXCHANGE_OR_REFUND). An adjustment is money on the order or a line
+  (DISCOUNT 5%, SHIPPING_AND_HANDLING). Both are agreed: "agreed" never decides it.
+- **Mnemonic:** Where it stands, what's agreed besides money, what it costs.
+- **Trap:** net 30 as a 30 discount (2026-10-30); 25% off for 1000 units as a term
+  (2026-10-31); the 5% loyalty discount filed under "agreed" as a term (2026-10-31).
+
+### Distinction D2 · Base or surcharge? (V1 Ch 3)
+- **Cue:** "€25 sign-up; +€5 a month in Sierra Alta; seeds on the loaf for €0.50."
+- **Test:** Is it the price of a thing, or an extra because of a circumstance?
+- **Sides:** A base is what a product or a feature costs; bases for the same thing compete
+  and the most specific wins (one per product, plus one per chosen feature). A surcharge adds
+  to a base when its conditions match; every match stacks (a discount is the mirror).
+- **Mnemonic:** A base is the price of a thing; a surcharge, the price of a circumstance.
+- **Trap:** the gym sign-up as a surcharge (2026-10-30); the seeds' €0.50 "a surcharge?"
+  (2026-10-31). A surcharge with no condition hits every customer (2026-10-31, Sierra Alta).
+
+### Distinction D3 · Applicability or interaction? (V1 Ch 3)
+- **Cue:** "Pick black or red; a frother can be added; a grinder comes with it; the
+  touchscreen needs 16 GB; matte can't go with the touchscreen."
+- **Test:** Product and feature, or feature and feature?
+- **Sides:** `product_feature_applicability` says which features a product takes, and how:
+  STANDARD, OPTIONAL, SELECTABLE. `product_feature_interaction` relates two features:
+  DEPENDENCY (one way), INCOMPATIBILITY (both ways), with a product as context or none.
+- **Mnemonic:** One feature on a product: applicability. Two features: interaction.
+- **Trap:** the Brío 2 rows filed under interaction, and "comes with every machine" read
+  as a dependency (2026-10-30).
+
+### Distinction D4 · Product, feature or neither? (V1 Ch 3)
+- **Cue:** "Loaves; a baking class; bags of bought-in flour; seeds on top; the wood oven."
+- **Test:** Do we offer it? On its own: a product. Only as an option on a product: a
+  feature. Not offered at all: not a product.
+- **Sides:** A product is what we offer, made or bought in (good or service). A feature is
+  a characteristic picked for a product and not sold alone. What we use but never offer is
+  an asset or a work effort (Ch 6), not a product.
+- **Mnemonic:** Sold alone: product. Sold on something: feature. Not sold: not a product.
+- **Trap:** the wood oven hedged ("if considered a product… I don't know", 2026-10-31);
+  toner powder as a feature (2026-10-19).
+
+### Distinction D5 · Catalogue feature or description line? (V1 Ch 4)
+- **Cue:** "Walnut at €40 on the Nórdica; a one-off fix of a wobbly leg, agreed by phone at €25."
+- **Test:** Is it in the catalogue?
+- **Sides:** A catalogue feature gets a line naming the `product_feature`, ordered for its
+  product's line. A one-off gets a line with no product and no feature: a description and
+  the agreed price.
+- **Mnemonic:** In the catalogue: name it. Not in it: describe it.
+- **Trap:** the Nevada one-off engraving made a feature (2026-10-26).
+
+### Distinction D6 · Status or item association? (V1 Ch 4)
+- **Cue:** "No honey for line 1 of order 70; next day a purchase of 500 jars, 200 meant for it."
+- **Test:** A state of one line, or a link between a sales line and a purchase line?
+- **Sides:** The backorder is an `order_status` (ORDER_BACKORDERED) on the waiting line. The
+  `order_item_association` links that sales line to the purchase line that fills it, once
+  the purchase exists; it carries no quantity.
+- **Mnemonic:** Waiting is a state; filling is a link.
+- **Trap:** the backorder as an association before any purchase existed (2026-10-30).
+
+### Distinction D7 · On the order or on a line? (V1 Ch 4)
+- **Cue:** "Only the honey line is backordered; net 30; the fish can't be returned; ship
+  line 2 to the branch."
+- **Test:** Does it hold for every line?
+- **Sides:** Statuses, terms, adjustments, roles and contact mechanisms can each sit on the
+  whole order or on one line, never both. Every line: the order. Some lines: each line.
+- **Mnemonic:** All lines: the order. Some lines: the line.
+- **Trap:** the backorder status put on order 70, not its honey line (2026-10-31); ship-to
+  said "per product", not per line.
+
+### Distinction D8 · Recurring or utilization? (V1 Ch 3)
+- **Cue:** "€30 a month; €0.10 per GB; €1 per 10 pages; €50 to install."
+- **Test:** Per period of time, per unit of use, or neither?
+- **Sides:** RECURRING: `per_time_frequency_id` (a month, a year). UTILIZATION:
+  `per_uom_id` (a GB, an hour, a page) and `quantity` (per how many; empty = 1). ONE_TIME:
+  no "per". The kind and its "per" are two columns.
+- **Mnemonic:** Once, every (per time frequency), per use (per unit of measure, quantity).
+- **Trap:** "monthly" given as the kind (2026-10-30); utilization recalled as "quantity
+  based" and no "per" columns (2026-10-31).
 
 ---
 

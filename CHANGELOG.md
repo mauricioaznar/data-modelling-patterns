@@ -12,12 +12,19 @@ and any decisions made.
   the 5% loyalty discount filed as a term (the wording's "agreed" shares the blame).
 - Card 12's mantra gains the user's mnemonic, tightened after Q3: where it stands, what's
   agreed besides money, what it costs. Anki export regenerated.
+- Round Q4 (Arco 14) feature applicability and interaction 3 → 4; Q5 (Red Faro) charge kind
+  2 → 3, the region left off the surcharge (conditions row flagged); Q6 (Horno Lino) product
+  + good/service 4 → 3, the wood oven hedged.
+- A distinctions deck (D1–D8, *Data Models::Distinctions*): two-way choices with a test, the
+  sides, a mnemonic and a real trap each; the export parses `### Distinction` headings.
 
 **Decisions**
 - The round of seven stays as it is (a same-round retest rule offered, declined).
+- Distinctions get their own deck (the user's call): mix-ups between known options, not
+  missing facts.
 
 **Next**
-- Finish the round: Q4–Q7.
+- Finish the round: Q7.
 - Retest term vs adjustment on a later day.
 
 ## 2026-10-30

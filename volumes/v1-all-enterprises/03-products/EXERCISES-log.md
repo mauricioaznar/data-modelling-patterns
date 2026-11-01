@@ -746,3 +746,28 @@ Scores: price components 2 → 3; feature prices stay at 2.
   `geographic_boundary_id` condition. The installation a second base (a price of its own),
   the region extra a surcharge (adds to a base under a condition). Currency and from date on
   each.
+- Answer: four `price_component` rows on the product ✓; 30 BASE RECURRING ✓; 50 BASE
+  ONE_TIME ✓ (the 10-30 sign-up-as-surcharge miss not repeated); 0.10 BASE "quantity based"
+  (UTILIZATION by name); 5 SURCHARGE RECURRING ✓. Missing: the "per" columns (month, GB) and
+  the Sierra Alta condition on the surcharge ✗ (without it, every customer pays the €5).
+- Score: charge kind 2 → 3 (kinds right cold, one-time base vs surcharge fixed; UTILIZATION
+  and the "per" columns missing for 4). Conditions row kept at 3, the region missed: retest.
+
+### 2026-10-31: round Q6, Submodel 1 maintenance (product + good/service; Horno Lino bakery; our catalogue)
+- Asked: Apply. Horno Lino bakes and sells sourdough loaves; runs a Saturday baking class;
+  sells bags of flour it buys from a mill (the same flour goes into its loaves); a loaf can
+  have seeds on top for €0.50 more; it bakes in a wood oven. Which are products, which goods
+  and which services, and which are not products at all? Key: loaf PRODUCT + GOOD; class
+  PRODUCT + SERVICE; flour bag PRODUCT + GOOD (offered for sale, stocked; buying it in
+  doesn't stop it being a product; its use in the loaf is a component link, not asked); seeds
+  a PRODUCT FEATURE on the loaf (not sold on its own); the oven not a product (not offered;
+  an asset).
+- Answer: loaf PRODUCT + GOOD ✓ (baking itself a work effort, not sold: a good aside); class
+  PRODUCT + SERVICE ✓ (Saturdays: no place in the product, a schedule); flour bag PRODUCT +
+  GOOD ✓, bought in and still a product, and unprompted: flour → loaf a COMPONENT
+  association ✓, the mill a `supplier_product` row ✓ (called "guideline"); seeds a FEATURE ✓,
+  its €0.50 "a surcharge? one time" (hedged; a feature's own price component, adding to the
+  loaf's base); the oven "if considered a product… I don't know" ✗ (a hedge counts as a
+  blank: not a product, nothing we offer; an asset we use).
+- Score: product + good/service 4 → 3 (the offered test failed on the one thing not
+  offered). The feature price hedged, the feature-price row not lowered: retest.
