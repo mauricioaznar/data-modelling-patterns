@@ -730,3 +730,19 @@ Scores: price components 2 → 3; feature prices stay at 2.
   (feature to feature, Arco 14 as context or none): touchscreen DEPENDENCY → 16 GB (one
   way), matte INCOMPATIBILITY touchscreen (both ways, one row). Product + feature =
   applicability; feature + feature = interaction.
+- Answer: applicability rows on Arco 14: 8 GB and 16 GB SELECTABLE ✓, touchscreen and matte
+  OPTIONAL ✓, webcam "required" (STANDARD by name). Interaction rows scoped to Arco 14 ✓:
+  touchscreen DEPENDENCY on 16 GB, one way ✓ (said unprompted); matte vs touchscreen a
+  "clash", non-directional ✓ (INCOMPATIBILITY not recalled). Product + feature and feature
+  + feature kept apart, both tables named right.
+- Score: feature + applicability 3 → 4; feature interaction 3 → 4 (rows, scope, direction
+  and symmetry cold, a later day). Two type names loose: STANDARD, INCOMPATIBILITY.
+
+### 2026-10-31: round Q5, Submodel 4 gap (charge kind; Red Faro internet plan; our catalogue)
+- Asked: Apply. Red Faro's Fibra plan: €30 a month; €50 to install, once; €0.10 per GB
+  used; customers in the Sierra Alta region pay €5 a month more. Write the price rows. Key:
+  on the Fibra plan (a service), BASE 30 RECURRING per MONTH; BASE 50 ONE_TIME; BASE 0.10
+  UTILIZATION per GB (`per_uom_id`); SURCHARGE 5 RECURRING per MONTH with the Sierra Alta
+  `geographic_boundary_id` condition. The installation a second base (a price of its own),
+  the region extra a surcharge (adds to a base under a condition). Currency and from date on
+  each.
