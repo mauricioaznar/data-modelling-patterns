@@ -15,6 +15,8 @@ and any decisions made.
 - Round Q4 (Arco 14) feature applicability and interaction 3 → 4; Q5 (Red Faro) charge kind
   2 → 3, the region left off the surcharge (conditions row flagged); Q6 (Horno Lino) product
   + good/service 4 → 3, the wood oven hedged.
+- Round Q7 (Oficina Viva) scoped roles 4 → 3: TAKEN_BY, line 1 END_USER and INSTALLER
+  missed. The round is done.
 - A distinctions deck (D1–D8, *Data Models::Distinctions*): two-way choices with a test, the
   sides, a mnemonic and a real trap each; the export parses `### Distinction` headings.
 
@@ -24,7 +26,7 @@ and any decisions made.
   missing facts.
 
 **Next**
-- Finish the round: Q7.
+- Retest scoped roles (TAKEN_BY, END_USER, INSTALLER) and product vs not-a-product.
 - Retest term vs adjustment on a later day.
 
 ## 2026-10-30

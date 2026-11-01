@@ -470,3 +470,9 @@ Misunderstandings and reinforce attempts, oldest first.
   Line 1: SHIP_TO and END_USER the Sevilla branch. Line 2: SHIP_TO the warehouse, INSTALLER
   Montajes Sur, END_USER the Sevilla branch. Nora not PLACED_BY or SALESPERSON; roles per
   line where lines differ.
+- Answer: PLACED_BY Grupo Lema with Lucía as its contact ✓, with the why unprompted (a
+  person with two employers would leave the placer ambiguous); SALESPERSON Diego ✓;
+  ENTERED_BY Nora ✓; BILL_TO Grupo Lema ✓. Line 1 SHIP_TO Sevilla ✓; line 2 SHIP_TO the
+  warehouse ✓ and END_USER Sevilla ✓. Missed: TAKEN_BY Oficina Viva, line 1's END_USER, and
+  INSTALLER Montajes Sur on line 2.
+- Score: scoped roles 4 → 3 (three hats left off; the per-line split and the placer's why cold).

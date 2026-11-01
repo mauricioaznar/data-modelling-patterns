@@ -61,7 +61,7 @@ the key sits right under it. Grade, log and update the trackers as usual, then t
 - [x] Q4 · Ch 3 · feature applicability vs interaction · gap (10-30 Q7)
 - [x] Q5 · Ch 3 · charge kind: base one-time vs surcharge · gap (10-30 Gimnasio Roble)
 - [x] Q6 · Ch 3 · product + good/service · maintenance (last 4 on 10-25)
-- [ ] Q7 · Ch 4 · scoped roles on the order and the line · maintenance (last 4 on 10-25)
+- [x] Q7 · Ch 4 · scoped roles on the order and the line · maintenance (last 4 on 10-25)
 
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 
