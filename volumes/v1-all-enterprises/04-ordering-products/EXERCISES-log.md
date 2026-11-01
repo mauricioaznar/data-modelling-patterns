@@ -518,3 +518,16 @@ Misunderstandings and reinforce attempts, oldest first.
   ORDER_TAKING, Calle Mayor 5 BILLING; `order_item_contact_mechanism` line 1 Calle Olmo 2
   SHIPPING, line 1 600 111 222 DELIVERY_CONTACT, line 2 Calle Mayor 5 SHIPPING. Calle Mayor 5
   is one `contact_mechanism` row, linked twice with a different purpose on each link.
+
+### 2026-11-01: round Q4, Submodel 1 gap (scoped roles; Clima Sur, sales order 82; key above)
+- Answer: PLACED_BY Hotel Faro with Pablo as its contact ✓; SALESPERSON Inés 50 and Raúl 50 ✓;
+  BILL_TO Grupo Faro ✓. Line 1 SHIP_TO Hotel Faro ✓, INSTALLER Frío Norte ✓ (missed on
+  10-31); line 2 SHIP_TO and END_USER Grupo Faro ✓ (missed on 10-31). Missed: TAKEN_BY Clima
+  Sur (second round running) and line 1's END_USER Hotel Faro ("the hotel uses them" was in
+  the question). Side slip, not scored here: invented `order_role_contact` /
+  `order_item_role_contact` tables hanging the e-mail and the depot off the role; in the
+  generic model a contact mechanism hangs off the order or the line with a purpose
+  (`order_contact_mechanism`, `order_item_contact_mechanism`). Q6 tests that.
+- Score: scoped roles stays 3 (INSTALLER and line 2's END_USER now cold; TAKEN_BY still
+  missing, and the END_USER moved lines). Next retest: TAKEN_BY cold, END_USER on every line.
+

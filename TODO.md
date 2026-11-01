@@ -73,7 +73,7 @@ trackers as usual, then tick here.
 - [ ] Q1 · Ch 4 · order status, terms and item associations · recall: term or adjustment (Tostadero Brío, order 90)
 - [ ] Q2 · Ch 4 · order status, terms and item associations · recall: status on the line (Hotel Mar, order 91)
 - [ ] Q3 · Ch 4 · order status, terms and item associations · recall: a stored status vs its fact (Mercado Lume, order 75)
-- [ ] Q4 · Ch 4 · scoped roles on the order and the line · gap (10-31 Q7) (Clima Sur, order 82)
+- [x] Q4 · Ch 4 · scoped roles on the order and the line · gap (10-31 Q7) (Clima Sur, order 82) · 3, TAKEN_BY and line 1 END_USER missed
 - [ ] Q5 · Ch 3 · product + good/service · gap (10-31 Q6, not a product) (Imprenta Sol)
 - [ ] Q6 · Ch 4 · contact mechanisms on the order and the line · maintenance (last 4 on 10-25) (Librería Atlas, order 84)
 - [ ] Q7 · Ch 3 · base prices compete + feature prices add on top · maintenance (last 4 on 10-26) (Bicis Alba)
