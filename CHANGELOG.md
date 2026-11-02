@@ -30,11 +30,14 @@ and any decisions made.
 - The 11-01 and 11-02 rounds reviewed for mix-ups: six new distinctions, D9–D14 (status or
   its fact; who or where; payer or receiver; placer, taker, seller or keyer; subtype or
   dated child; party type or role). Repeats went to existing cards as traps (D7: the
-  delivery term and the association pointed at the order). Export regenerated.
+  delivery term and the association pointed at the order). Export regenerated. Card 10's mantra drops "roles say who,
+  mechanisms say where" (now D10's mnemonic).
 
 **Decisions**
 - A round spreads its questions across rows and topics where it can; overlap is allowed
   (the user's call, in practice.md).
+- After each graded round, Claude suggests distinction cards for its mix-ups, without
+  repeating a concept (practice.md, CLAUDE.md).
 - A term can be about money (a penalty, a rebate): what makes it a term is that it only
   happens if something does. "Besides money" was wrong, not just fuzzy. D1's mnemonic
   rewritten from the user's summary: a condition for later is a term, money or not; a price

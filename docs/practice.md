@@ -101,3 +101,8 @@ of the chapter's `EXERCISES.md`.
   rows and topics, but it isn't required. When two questions share a row, the discussion of
   the first means the second can't count as cold, so that row can't reach 4 this round; the
   user accepts that.
+- **Distinctions after each round** (the user's call, 2026-11-02): once a round is graded,
+  review its mistakes and suggest distinction cards (`docs/cards.md`, *Deck: distinctions*)
+  for the mix-ups between two known options. Don't repeat a concept: when a card already
+  covers it, add the mistake to that card's Trap instead. Slips that aren't a choice (a
+  typo, a skipped part) get no card.

@@ -98,6 +98,8 @@ the user, tease with nicknames, so the sessions stay fun.
 - **Question round of seven** (one per session): 3 recalls, 2 gaps or retests, 2 maintenance.
   **Maintenance, not only gaps** (the user's call, 2026-10-29): those 2 retest rows already at 4, the longest untested first, in a fresh scenario, so
   what's understood doesn't decay unnoticed (details in `docs/practice.md`).
+- **After each round, suggest distinction cards** (the user's call, 2026-11-02) for its
+  mix-ups; a concept already on a card gets the mistake added to that card's Trap instead.
 - **Name the Bloom level being graded** (the user's call, 2026-10-28): every question, recall
   and question-round ones included, says which level it grades (Remember, Understand, Apply,
   Analyze, Evaluate, Create, as in `docs/practice.md`). A question with several parts names

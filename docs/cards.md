@@ -361,7 +361,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Hook:** one order pad, two desks
 - **Mantra:** One order for buying and selling; items name a product or feature. The order
   wears PTB SEAR (placer, taker, bill-to; salesperson, entered-by, approver, reviewer), every
-  line wears SEI (ship-to, end user, installer); roles say who, mechanisms say where.
+  line wears SEI (ship-to, end user, installer).
 
 <details><summary>Key</summary>
 
