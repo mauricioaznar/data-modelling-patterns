@@ -654,3 +654,17 @@ Misunderstandings and reinforce attempts, oldest first.
   delivery-on-the-order slip still keeps it off 4. Taught: a term is the rule (what happens
   if), and if the penalty triggers, the fact lands downstream on the invoice (Ch 7), not as
   an order adjustment; the order keeps what was agreed when it was placed.
+
+### 2026-11-02: round Q2, Submodel 3 recall (a stored status vs its fact; Panadería Trigo, sales order 120; key above)
+- Answer: (a) trust the shipments ✓; the status a copy that doesn't reflect the truth, likely
+  added ahead of time ✓ (a cause named); remove the status row ✓, cold: the 11-01 Q3 slip
+  ("keep both as a snapshot") fixed. (b) the latest status row for the order ✓; "it could be
+  nothing" ✓ given the wording.
+- Not given, offered as upgrades: the goods waiting for flour is itself a status worth
+  recording (ORDER_BACKORDERED, dated now), so the order doesn't go silent once the wrong row
+  is gone; and a data-quality query comparing SHIPPED rows with shipments catches the next
+  one. "On or before the as-of time" left implicit.
+- Blame on (b): Claude's. The question listed no other rows, so "the latest left, maybe
+  none" was the only possible answer.
+- Score: this part at 4 cold (the fix and its why). The status row's level is set after Q3,
+  which tests the status on the line.
