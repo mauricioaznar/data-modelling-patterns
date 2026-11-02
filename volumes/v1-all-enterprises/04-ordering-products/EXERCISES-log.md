@@ -626,3 +626,23 @@ Misunderstandings and reinforce attempts, oldest first.
   stores an order of application (no sequence on the adjustment or its type); so the result
   doesn't depend on which row is read first. The book is silent; real billing would usually
   discount first (point 11).
+
+### 2026-11-02: round Q1, Submodel 3 recall (term or adjustment; Quesería Valle, purchase order 40; key above)
+- Answer: (a) the late-milk penalty an `order_adjustment` SURCHARGE, percentage 3, on line 1,
+  "I don't know how to model the condition" ✗; delivery within 2 days a term ✓ but on the
+  order ✗ (the question said "the milk": line 1); the rennet's no-returns a term on line 2 ✓;
+  transport an adjustment on the order, amount 25, "shipping and delivery" ✓. (b) the 2's
+  days from the type's name ✓; the 3's percent from the adjustment's percentage column
+  (consistent with the misfiling).
+- Why the penalty is a term: nothing is charged unless the milk is late, so the order's
+  price doesn't change; the condition the user couldn't place is exactly what the term's
+  type holds (NONPERFORMANCE_PENALTY_PCT: "if they fail, they pay this %"). And a SURCHARGE
+  runs the wrong way: on our purchase order it raises what we pay Granja Roble, while the
+  penalty is money they'd pay us. If it's ever triggered, the money appears later (on the
+  invoice, Ch 7), not on the order.
+- Blame: about 70/30 the user's. "Pays us 3%" was a deliberate money-sounding twist, and the
+  D1 test ("does it change the money?") reads ambiguously for money that may come later;
+  the delivery line slip is the user's alone.
+- Score: term row 3 → 2. D1's test sharpened to "the order's price, now", with this trap.
+  Next retest: a conditional penalty or rebate as a term, and the target line when the
+  wording names one item.

@@ -1760,13 +1760,15 @@ options; one that misses a fact goes to its submodel card instead.
 
 ### Distinction D1 · Term or adjustment? (V1 Ch 4)
 - **Cue:** "Net 30; no refunds on the fish; 5% off for loyalty; delivery within 5 days."
-- **Test:** Does it change the money? Yes: an `order_adjustment`. No: an `order_term`.
+- **Test:** Does it change the order's price, now? Yes: an `order_adjustment`. No (or only
+  if something happens later): an `order_term`.
 - **Sides:** A term is an agreed condition, one bare value read through its type, or none
   (PAYMENT_DUE_DAYS 30, NO_EXCHANGE_OR_REFUND). An adjustment is money on the order or a line
   (DISCOUNT 5%, SHIPPING_AND_HANDLING). Both are agreed: "agreed" never decides it.
 - **Mnemonic:** Where it stands, what's agreed besides money, what it costs.
 - **Trap:** net 30 as a 30 discount (2026-10-30); 25% off for 1000 units as a term
-  (2026-10-31); the 5% loyalty discount filed under "agreed" as a term (2026-10-31).
+  (2026-10-31); the 5% loyalty discount filed under "agreed" as a term (2026-10-31); a late-delivery
+  penalty ("pays us 3%") as a surcharge (2026-11-02).
 
 ### Distinction D2 · Base or surcharge? (V1 Ch 3)
 - **Cue:** "€25 sign-up; +€5 a month in Sierra Alta; seeds on the loaf for €0.50."

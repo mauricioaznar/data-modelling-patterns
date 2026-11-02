@@ -85,7 +85,7 @@ Seven questions, written to paste into WhatsApp. The wording is in
 Ch 3 and Ch 4 logs under "2026-11-02: question round, pending": **don't open those before
 grading**. When the answers come back, read each one back, grade, log and update the
 trackers as usual, then tick here.
-- [ ] Q1 · Ch 4 · order status, terms and item associations · recall: term or adjustment, the bare value (Quesería Valle, purchase order 40)
+- [x] Q1 · Ch 4 · order status, terms and item associations · recall: term or adjustment, the bare value (Quesería Valle, purchase order 40) · 3 → 2, the penalty a surcharge, delivery on the order
 - [ ] Q2 · Ch 4 · order status, terms and item associations · recall: fix the copy when a status and its fact disagree (Panadería Trigo, order 120)
 - [ ] Q3 · Ch 4 · order status, terms and item associations · recall: backorder on the line + item association (Ferretería Nudo, orders 130 and 55)
 - [ ] Q4 · Ch 4 · scoped roles on the order and the line · gap (11-01 Q4: TAKEN_BY, END_USER on every line) (Muebles Encina, order 140)
