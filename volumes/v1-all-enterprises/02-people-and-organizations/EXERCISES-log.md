@@ -513,3 +513,20 @@ Misunderstandings and reinforce attempts, oldest first.
   attributes of its own, like employment's salary. (b) The fee as a dated child of the
   exchange relationship (one row per year with from/thru), not a column on the relationship:
   one column holds one value and loses last year's.
+
+### 2026-11-02: round Q6, maintenance (specific vs generic relationships; Academia Brillo; key above)
+- Answer: (a) each table repeats the dates and the two party FKs ✓; and every model that
+  points at a relationship would need an FK per kind: a communication event in the context
+  of a relationship would link to four tables instead of one ✓ (a cost the key didn't list,
+  unprompted). What to build instead only implied in (b), and misnamed: "relationship type is
+  the supertype" (it's `party_relationship`; the type is its lookup). Not said: a view per
+  kind for readable queries; the union to list all of a party's relationships.
+- (b) the fee on an `exchange_partnership` subtype ✓ (a kind's own attribute), "with
+  effectivity dates on that subtype table, current fee thru null" ✗: a subtype shares its
+  relationship's key, one row per relationship, so it can't hold a fee per year. The history
+  needs a dated child table (relationship id, fee, from, thru; many rows per relationship).
+  The 10-26 Clínica Sol slip again (salary history: one column, one value).
+- Blame: the user's; "changes every year" asked for the history.
+- Score: specific vs generic 4 → 3 (the costs strong and partly new; the alternative misnamed
+  and the fee's history on a one-row subtype). Next: an attribute that changes over time on a
+  subtype: where the history goes.

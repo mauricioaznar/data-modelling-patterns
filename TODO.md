@@ -90,7 +90,7 @@ trackers as usual, then tick here.
 - [x] Q3 · Ch 4 · order status, terms and item associations · recall: backorder on the line + item association (Ferretería Nudo, orders 130 and 55) · the wait skipped (status stays 3); the link owned by the purchase line (association 4 → 3)
 - [x] Q4 · Ch 4 · scoped roles on the order and the line · gap (11-01 Q4: TAKEN_BY, END_USER on every line) (Muebles Encina, order 140) · stays 3: TAKEN_BY cold, but line 2 given to the gestoría, not Laura
 - [x] Q5 · Ch 4 · an amount or a percentage, the base and its why · gap (10-28 Q7) (Floristería Alba, order 150) · 3 → 4, all cold with the why
-- [ ] Q6 · Ch 2 · specific vs generic relationships · maintenance (last 4 on 10-27) (Academia Brillo)
+- [x] Q6 · Ch 2 · specific vs generic relationships · maintenance (last 4 on 10-27) (Academia Brillo) · 4 → 3: the fee's history on the one-row subtype
 - [ ] Q7 · Ch 3 · category rollup (network, not tree) · maintenance (last 4 on 10-27) (Tienda Raíz)
 
 ## Vol 1: A Library of Universal Data Models for All Enterprises

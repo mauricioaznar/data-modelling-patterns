@@ -24,7 +24,9 @@ and any decisions made.
   (Ferretería Nudo): the wait on the line skipped, status stays 3; the association owned by
   the purchase line, 4 → 3. Q4 (Muebles Encina): TAKEN_BY cold at last; line 2's SHIP_TO and
   END_USER given to the payer, not Laura; roles stay 3. Q5 (Floristería Alba): the base, the total and the why
-  cold, amount or percentage 3 → 4.
+  cold, amount or percentage 3 → 4. Q6 (Academia Brillo): the costs strong (an FK per
+  kind from the communication event), but the yearly fee dated on the one-row subtype;
+  specific vs generic 4 → 3.
 
 **Decisions**
 - A term can be about money (a penalty, a rebate): what makes it a term is that it only
