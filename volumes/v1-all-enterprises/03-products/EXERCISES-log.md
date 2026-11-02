@@ -820,3 +820,12 @@ Scores: price components 2 → 3; feature prices stay at 2.
   primary, from a start date, thru null; kombucha → Gifts, not primary, from 1 Dec, thru
   1 Jan (exclusive). No rows for Drinks or Organic: the ancestor view gives them. Gifts needs
   its own category row first.
+
+### 2026-11-02: round Q7, maintenance (category rollup, a network; Tienda Raíz; key above)
+- Answer: rollup Drinks → Organic drinks and Organic → Organic drinks ✓ (two parents, cold);
+  Food left without rows ✓. Classification: kombucha → Organic drinks, primary ✓ (no start
+  date: none was given, Claude's wording); kombucha → Gifts, 1 Dec to 1 Jan with the thru
+  exclusive ✓, not primary ✓. No rows for Drinks or Organic ✓.
+- The user flagged Gifts as missing from the category list: fair, the wording should have
+  listed it (the key only noted that Gifts needs its own category row). Blame Claude's.
+- Score: category rollup holds 4 (new date).

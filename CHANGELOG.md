@@ -26,9 +26,11 @@ and any decisions made.
   END_USER given to the payer, not Laura; roles stay 3. Q5 (Floristería Alba): the base, the total and the why
   cold, amount or percentage 3 → 4. Q6 (Academia Brillo): the costs strong (an FK per
   kind from the communication event), but the yearly fee dated on the one-row subtype;
-  specific vs generic 4 → 3.
+  specific vs generic 4 → 3. Q7 (Tienda Raíz): category rollup holds 4. The round is done.
 
 **Decisions**
+- A round spreads its questions across rows and topics where it can; overlap is allowed
+  (the user's call, in practice.md).
 - A term can be about money (a penalty, a rebate): what makes it a term is that it only
   happens if something does. "Besides money" was wrong, not just fuzzy. D1's mnemonic
   rewritten from the user's summary: a condition for later is a term, money or not; a price
@@ -36,7 +38,10 @@ and any decisions made.
   order adjustment (one home per fact; the order keeps what was agreed).
 
 **Next**
-- Grade the round when the answers come back; then the Ch 4 overview, submodel 4.
+- Retests cold on a later day: a conditional penalty as a term; a backorder on the line and
+  the association as its own row; line roles for a person who isn't the payer; a changing
+  attribute of a relationship kind on a dated child.
+- Then the Ch 4 overview, submodel 4.
 
 ## 2026-11-01
 
