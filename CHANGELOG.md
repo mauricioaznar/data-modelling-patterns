@@ -23,7 +23,10 @@ and any decisions made.
 
 **Decisions**
 - A term can be about money (a penalty, a rebate): what makes it a term is that it only
-  happens if something does. "Besides money" was wrong, not just fuzzy.
+  happens if something does. "Besides money" was wrong, not just fuzzy. D1's mnemonic
+  rewritten from the user's summary: a condition for later is a term, money or not; a price
+  change now is an adjustment. A triggered penalty's fact goes on the invoice, not as an
+  order adjustment (one home per fact; the order keeps what was agreed).
 
 **Next**
 - Grade the round when the answers come back; then the Ch 4 overview, submodel 4.

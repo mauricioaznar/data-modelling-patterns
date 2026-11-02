@@ -1765,7 +1765,8 @@ options; one that misses a fact goes to its submodel card instead.
 - **Sides:** A term is an agreed condition, one bare value read through its type, or none
   (PAYMENT_DUE_DAYS 30, NO_EXCHANGE_OR_REFUND). An adjustment is money on the order or a line
   (DISCOUNT 5%, SHIPPING_AND_HANDLING). Both are agreed: "agreed" never decides it.
-- **Mnemonic:** Where it stands, what's agreed besides money, what it costs.
+- **Mnemonic:** A condition for later is a term, money or not; a price change now is an
+  adjustment.
 - **Trap:** net 30 as a 30 discount (2026-10-30); 25% off for 1000 units as a term
   (2026-10-31); the 5% loyalty discount filed under "agreed" as a term (2026-10-31); a late-delivery
   penalty ("pays us 3%") as a surcharge (2026-11-02).
