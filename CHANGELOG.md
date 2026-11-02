@@ -20,6 +20,9 @@ and any decisions made.
   the order, not the milk line. First 3 → 2; back to 3 on the user's pushback (the cards'
   "what's agreed besides money" taught the misfile). D1's test sharpened to "the order's
   price, now", the penalty added to its trap; export regenerated.
+- Round Q2 (Panadería Trigo): the wrong SHIPPED copy removed, cold (4 on its part). Q3
+  (Ferretería Nudo): the wait on the line skipped, status stays 3; the association owned by
+  the purchase line, 4 → 3.
 
 **Decisions**
 - A term can be about money (a penalty, a rebate): what makes it a term is that it only

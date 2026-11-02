@@ -668,3 +668,19 @@ Misunderstandings and reinforce attempts, oldest first.
   none" was the only possible answer.
 - Score: this part at 4 cold (the fix and its why). The status row's level is set after Q3,
   which tests the status on the line.
+
+### 2026-11-02: round Q3, Submodel 3 recall (backorder on the line + item association; Ferretería Nudo, orders 130 and 55; key above)
+- Answer: (a) the wait not written ✗ (key: `order_status` ORDER_BACKORDERED on sales order
+  130's line 2, order null, 5 Nov); the link as "the purchase line has a link to the sales
+  order; the purchase line owns the link" ✗: it is its own row in `order_item_association`,
+  pointing at both lines (sales order 130 line 2 → purchase order 55 line 1), owned by
+  neither, many to many. (b) no quantity on the link, "only a pointer" ✓; where the 10 lives
+  (the sales line's own quantity, the 15 go to stock) not said.
+- The user asked why the association came back when its row was at 4: the recall targeted
+  the wait on the line (10-31 put a backorder on the order), and the link rode along to check
+  it hadn't decayed. The answer took it as an association question and skipped the wait.
+- Blame: about 80/20 the user's; "the rows that record the wait and the link" named both,
+  but bundling a fresh target with a familiar one invited the skip.
+- Score: status row stays 3 (the fix-the-copy part at 4 in Q2, the wait on the line missed
+  here); item association 4 → 3 (the link pointed at the order and owned by the purchase
+  line). Next: a line-level backorder cold, the association as its own row between two lines.
