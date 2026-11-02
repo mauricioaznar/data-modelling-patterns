@@ -501,3 +501,15 @@ Misunderstandings and reinforce attempts, oldest first.
   type).
 - Score: 4 kept. Roles, purposes and media cold on a later day; the relationship context
   half.
+
+### 2026-11-02: question round, pending (written for the phone; wording in `docs/round-2026-11-02.md`; order in TODO)
+- **Q6 · Maintenance · specific vs generic relationships (last 4 on 10-27) · (a) Evaluate,
+  (b) Apply.** Academia Brillo: teachers employed, families as customers, partner schools
+  for exchanges, publishers as suppliers; a table per kind proposed. Key: (a) costs: a new
+  table (and code) for every new kind; "all of the school's relationships with X" becomes a
+  union over every table; nothing ties each end to the right role. Instead: one typed
+  `party_relationship` (type + from/to `party_role`, dated), with a view per kind for
+  readable queries; a kind gets its own subtype table (sharing the key) only when it has
+  attributes of its own, like employment's salary. (b) The fee as a dated child of the
+  exchange relationship (one row per year with from/thru), not a column on the relationship:
+  one column holds one value and loses last year's.

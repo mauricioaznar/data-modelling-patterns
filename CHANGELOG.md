@@ -3,6 +3,26 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-02
+
+**Built**
+- Pulled. Card 12's mantra loses the mnemonic (where it stands, what's agreed, what it costs;
+  status, term, adjustment), the user's call; the rest stays. Anki export regenerated (68
+  cards). Distinction D1 keeps the same line as its Mnemonic.
+- A question round of seven written for the phone, in `docs/round-2026-11-02.md` (no
+  keys): 3 recalls on Ch 4 submodel 3 (a late-delivery penalty as a term and the bare value
+  read through the type; fix the copy when a status contradicts its fact; a backorder on the
+  line linked to a purchase line), 2 gaps (Ch 4 scoped roles: TAKEN_BY, END_USER on every
+  line; Ch 4 the percentage's base with its why), 2 maintenance (Ch 2 specific vs generic
+  relationships, Ch 3 category rollup, both last 4 on 10-27). Keys in the Ch 2, 3 and 4
+  logs; order in TODO.
+
+**Decisions**
+- None new.
+
+**Next**
+- Grade the round when the answers come back; then the Ch 4 overview, submodel 4.
+
 ## 2026-11-01
 
 **Built**

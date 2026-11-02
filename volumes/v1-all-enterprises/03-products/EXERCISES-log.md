@@ -810,3 +810,13 @@ Scores: price components 2 → 3; feature prices stay at 2.
   Claude's: the wording said "Club customers (a party type)" and then "a Club member".
 - Score: base prices holds 4, feature prices holds 4. Note for Ch 2: party type vs party role.
 
+
+### 2026-11-02: question round, pending (written for the phone; wording in `docs/round-2026-11-02.md`; order in TODO)
+- **Q7 · Maintenance · category rollup, a network (last 4 on 10-27) · Apply.** Tienda Raíz:
+  Food, Drinks, Organic, Organic drinks (under Drinks and Organic); a kombucha, also under
+  Gifts in December. Key: `product_category_rollup` Drinks (parent) → Organic drinks (child)
+  and Organic → Organic drinks: two parents, a network, not a tree. Food has no rows (nothing
+  says Drinks sits under it). `product_category_classification`: kombucha → Organic drinks,
+  primary, from a start date, thru null; kombucha → Gifts, not primary, from 1 Dec, thru
+  1 Jan (exclusive). No rows for Drinks or Organic: the ancestor view gives them. Gifts needs
+  its own category row first.

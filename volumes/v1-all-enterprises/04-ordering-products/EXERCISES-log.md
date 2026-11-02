@@ -582,3 +582,47 @@ Misunderstandings and reinforce attempts, oldest first.
   the line). Note for the roles row: place-as-party slip, retest with the TAKEN_BY one.
 
 - After grading: SHIP_TO the organization, the place a SHIPPING mechanism; purposes renamed ORDER_TAKING, ORDER_PLACING, BILLING; both by the user, once pointed out.
+
+### 2026-11-02: question round, pending (written for the phone; wording in `docs/round-2026-11-02.md`; order in TODO)
+- **Q1 · Submodel 3 recall · term or adjustment, the bare value read through the type ·
+  (a) Apply, (b) Understand.** Quesería Valle, purchase order 40 to Granja Roble (line 1
+  milk, line 2 rennet). Key: (a) `order_term` NONPERFORMANCE_PENALTY_PCT 3 on line 1 (a
+  condition: money only if the milk is late, so the order's price doesn't change; the book
+  files it as a term); `order_term` DELIVERY_WITHIN_DAYS 2 on line 1; `order_term`
+  NO_EXCHANGE_OR_REFUND on line 2, no value; `order_adjustment` SHIPPING_AND_HANDLING, amount
+  25, on the order (it changes the money now). One target per row. (b) The type: its name and
+  description say percent or days, so `term_value` stays a bare number and no unit link is
+  needed (the 11-01 Q1 extra). The penalty is the twist: "pays us 3%" sounds like money, but
+  nothing is charged unless the condition happens.
+- **Q2 · Submodel 3 recall · a stored status vs its fact (the 11-01 Q3 retest: fix the copy)
+  · (a) Evaluate, (b) Understand.** Panadería Trigo, sales order 120: a "shipped" status row
+  dated 14 Nov, no shipment at all. Key: (a) trust the shipments (the fact); the status row
+  is a copy that was keyed wrong, so remove it (or record the truth with a new row, e.g.
+  ORDER_BACKORDERED, if the history should show the mistake); a data-quality query comparing
+  statuses with shipments catches the drift. Not "keep both". (b) The latest `order_status`
+  row for order 120 left after the fix (e.g. ORDER_APPROVED, or ORDER_BACKORDERED if added),
+  found as the row with the greatest datetime on or before today; rows stack, none overwritten.
+- **Q3 · Submodel 3 recall · backorder on the line + item association · (a) Apply,
+  (b) Understand.** Ferretería Nudo, sales order 130 (line 2 drills) and purchase order 55
+  (line 1, 25 drills). Key: (a) `order_status` ORDER_BACKORDERED on sales line 2 (order
+  null), 5 Nov; `order_item_association` sales order 130 line 2 → purchase order 55 line 1
+  (through `sales_order_item` and `purchase_order_item`). Not on the order: the cement isn't
+  waiting. (b) Nowhere on the link: the association has no quantity. The 10 is the sales
+  line's own quantity; the other 15 just go to stock (Ch 3's inventory once received).
+- **Q4 · Submodel 1 gap · scoped roles (11-01 Q4: TAKEN_BY, END_USER on every line; SHIP_TO
+  the organization) · Apply.** Muebles Encina, sales order 140. Key: `order_role` PLACED_BY
+  Gestoría Prado (Laura as its contact, or Laura herself; said which), TAKEN_BY Muebles
+  Encina (the organization, not Tomás, though he "takes the call"), SALESPERSON Tomás 100,
+  BILL_TO Gestoría Prado. `order_item_role` line 1: SHIP_TO Gestoría Prado (Calle Sauce 4 is
+  the where, a SHIPPING contact mechanism, not a party), INSTALLER Montajes Río, END_USER
+  Gestoría Prado; line 2: SHIP_TO Laura, END_USER Laura (a person can hold line roles).
+- **Q5 · Submodel 2 gap · amount or percentage, the base and its why (10-28 Q7: the base and
+  why cold on a later day) · (a) Apply, (b) Apply, (c) Understand.** Floristería Alba, sales
+  order 150 (line 1 20 × €15 = 300, line 2 5 × €8 = 40). Key: (a) `order_adjustment` DISCOUNT
+  amount 40 on line 1 (the amount is the total charged, not €2 per unit); DISCOUNT (or
+  LOYALTY_DISCOUNT) percentage 10 on the order; SHIPPING_AND_HANDLING amount 12 on the order.
+  (b) 10% of 340 (the lines before any adjustment) = 34; total 340 − 40 − 34 + 12 = 278.
+  (c) Our convention: every percentage is of the value before any adjustment, because nothing
+  stores an order of application (no sequence on the adjustment or its type); so the result
+  doesn't depend on which row is read first. The book is silent; real billing would usually
+  discount first (point 11).
