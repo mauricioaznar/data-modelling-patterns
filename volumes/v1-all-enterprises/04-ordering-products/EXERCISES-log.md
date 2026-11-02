@@ -700,3 +700,11 @@ Misunderstandings and reinforce attempts, oldest first.
   line); the line roles defaulted to the payer on line 2, and ENTERED_BY misused. Next: a
   line whose receiver and user aren't the customer organization; ENTERED_BY vs the placer's
   contact.
+
+### 2026-11-02: round Q5, Submodel 2 gap (amount or percentage, the base and its why; Floristería Alba, sales order 150; key above)
+- Answer: (a) line 1 DISCOUNT amount 40 (20 × €2, the total, not per unit) ✓; the order
+  DISCOUNT percentage 10 ✓; the order SHIPPING_AND_HANDLING amount 12 ✓. (b) 10% of 340 = 34 ✓,
+  total 300 + 40 − 40 − 34 + 12 = 278 ✓. (c) every adjustment is taken from the source
+  values, because nothing records an order of application between them ✓, cold.
+- Score: amount or percentage 3 → 4 (the base, the total as the amount and the why, all cold
+  in a later session, unhinted).
