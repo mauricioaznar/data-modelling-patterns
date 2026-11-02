@@ -16,9 +16,14 @@ and any decisions made.
   line; Ch 4 the percentage's base with its why), 2 maintenance (Ch 2 specific vs generic
   relationships, Ch 3 category rollup, both last 4 on 10-27). Keys in the Ch 2, 3 and 4
   logs; order in TODO.
+- Round Q1 (Quesería Valle) graded: the late-milk penalty filed as a SURCHARGE, delivery on
+  the order, not the milk line. First 3 → 2; back to 3 on the user's pushback (the cards'
+  "what's agreed besides money" taught the misfile). D1's test sharpened to "the order's
+  price, now", the penalty added to its trap; export regenerated.
 
 **Decisions**
-- None new.
+- A term can be about money (a penalty, a rebate): what makes it a term is that it only
+  happens if something does. "Besides money" was wrong, not just fuzzy.
 
 **Next**
 - Grade the round when the answers come back; then the Ch 4 overview, submodel 4.

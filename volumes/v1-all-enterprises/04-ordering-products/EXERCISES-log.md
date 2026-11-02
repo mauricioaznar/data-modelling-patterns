@@ -646,3 +646,11 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: term row 3 → 2. D1's test sharpened to "the order's price, now", with this trap.
   Next retest: a conditional penalty or rebate as a term, and the target line when the
   wording names one item.
+- Pushback (the same day): the user filed the penalty by the mnemonic on the cards, "what's
+  agreed besides money", and the 3% is money. Fair: that wording (tightened by Claude on
+  10-31) says a term is never about money, and the book's own terms include money ones
+  (NONPERFORMANCE_PENALTY_PCT, CANCELLATION_CHARGE_PCT). The misfile is the rule taught, not
+  a recall failure, so the blame turns about 70/30 Claude's on that part. Row back to 3; the
+  delivery-on-the-order slip still keeps it off 4. Taught: a term is the rule (what happens
+  if), and if the penalty triggers, the fact lands downstream on the invoice (Ch 7), not as
+  an order adjustment; the order keeps what was agreed when it was placed.
