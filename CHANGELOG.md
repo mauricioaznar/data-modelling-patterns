@@ -31,8 +31,8 @@ and any decisions made.
   its fact; who or where; payer or receiver; placer, taker, seller or keyer; subtype or
   dated child; party type or role). Repeats went to existing cards as traps (D7: the
   delivery term and the association pointed at the order). Export regenerated. Card 10's mantra drops "roles say who,
-  mechanisms say where" (now D10's mnemonic). Card 8's drops "the most specific base wins" and "each base
-  says its charge" (D2 and D8 hold them).
+  mechanisms say where" (now D10's mnemonic). Card 8's mantra puts "the most specific base wins" and "each
+  base says its charge" side by side, both about the base.
 
 **Decisions**
 - A round spreads its questions across rows and topics where it can; overlap is allowed
