@@ -1829,7 +1829,9 @@ options; one that misses a fact goes to its submodel card instead.
   whole order or on one line, never both. Every line: the order. Some lines: each line.
 - **Mnemonic:** All lines: the order. Some lines: the line.
 - **Trap:** the backorder status put on order 70, not its honey line (2026-10-31); ship-to
-  said "per product", not per line.
+  said "per product", not per line; the milk's 2-day delivery term on the order, not the
+  milk line (2026-11-02); the item association pointed at the sales order, not its line
+  (2026-11-02).
 
 ### Distinction D8 · Recurring or utilization? (V1 Ch 3)
 - **Cue:** "€30 a month; €0.10 per GB; €1 per 10 pages; €50 to install."
@@ -1840,6 +1842,68 @@ options; one that misses a fact goes to its submodel card instead.
 - **Mnemonic:** Once, every (per time frequency), per use (per unit of measure, quantity).
 - **Trap:** "monthly" given as the kind (2026-10-30); utilization recalled as "quantity
   based" and no "per" columns (2026-10-31).
+
+### Distinction D9 · The stored status or its fact? (V1 Ch 4)
+- **Cue:** "An 'invoiced' status dated 10 Nov, the invoice dated 12 Nov; a 'shipped' status
+  with no shipment at all."
+- **Test:** Is there a record of the event itself (a shipment, an invoice)?
+- **Sides:** The fact is the event's own record, and it wins. A status row is a dated copy
+  kept for a quick history; when the two disagree, fix the copy (re-date or remove it, and
+  record the true state as a new row). A data-quality query compares them.
+- **Mnemonic:** The fact wins; fix the copy.
+- **Trap:** "both right, leave it as a snapshot of the invoice date" (2026-11-01).
+
+### Distinction D10 · Who or where? (V1 Ch 4)
+- **Cue:** "Ship to the school's annex; send the confirmation to compras@; call the
+  caretaker on 600 111 222."
+- **Test:** Is it a party that acts (receives, pays, uses), or an address, phone or e-mail?
+- **Sides:** A party gets a role on the order or a line (`order_role`, `order_item_role`).
+  A place or channel is a contact mechanism with a purpose on the order or a line
+  (`order_contact_mechanism`, `order_item_contact_mechanism`). A branch or annex is a place
+  of its organization, unless the organization's units are tracked as parties.
+- **Mnemonic:** Roles say who; mechanisms say where.
+- **Trap:** the annex made the ship-to party (2026-11-01); an e-mail hung off the role in an
+  invented `order_role_contact` table (2026-11-01).
+
+### Distinction D11 · Payer or receiver? (V1 Ch 4)
+- **Cue:** "The firm pays; the bookcase goes to Laura's home, and she uses it."
+- **Test:** Who pays, and who gets it and uses it, line by line?
+- **Sides:** BILL_TO is on the order: who pays. SHIP_TO (who receives) and END_USER (who
+  uses it) are on each line, and can be another party, a person included.
+- **Mnemonic:** Paying isn't receiving.
+- **Trap:** line 2's SHIP_TO and END_USER given to the paying gestoría, not Laura
+  (2026-11-02).
+
+### Distinction D12 · Placer, taker, seller or keyer? (V1 Ch 4)
+- **Cue:** "Laura phones in the order for her firm; our rep Tomás takes the call and earns
+  the commission; a clerk types it in."
+- **Test:** Whose side is the person on, and what did they do?
+- **Sides:** The customer's side: PLACED_BY, the organization (its person as contact). Our
+  side: TAKEN_BY, our organization, never the rep; SALESPERSON, the rep credited, with a
+  share; ENTERED_BY, whoever keyed it in.
+- **Mnemonic:** They place; we take; reps sell; clerks key.
+- **Trap:** TAKEN_BY missed (2026-10-31, 2026-11-01); the placer's contact made ENTERED_BY
+  (2026-11-02); SALESPERSON for the one who keyed it in (2026-10-24).
+
+### Distinction D13 · On the subtype or a dated child? (V1 Ch 2)
+- **Cue:** "An exchange partnership's yearly fee; an employee's salary; a partnership's
+  signing city."
+- **Test:** One value for the owner's whole life, or a value that changes over time?
+- **Sides:** A subtype shares its owner's key: one row, so it holds what doesn't change. A
+  value that changes gets a dated child table (owner id, value, from, thru; many rows per
+  owner). If the subtype has nothing else left, drop it and hang the child off the owner.
+- **Mnemonic:** One row holds one value; history needs its own rows.
+- **Trap:** the salary as one column on the subtype (2026-10-26); the yearly fee dated on
+  the one-row subtype (2026-11-02).
+
+### Distinction D14 · Party type or party role? (V1 Ch 2)
+- **Cue:** "A Club member; a customer; a minority-owned business; a supplier."
+- **Test:** Is it true of the party alone, or only toward someone else?
+- **Sides:** A party type is a classification of the party itself, dated
+  (`party_classification`: a Club member, MINORITY_OWNED). A role is a part it plays toward
+  another party (`party_role`: CUSTOMER, SUPPLIER). Ch 3's price conditions use the type.
+- **Mnemonic:** A type is what you are; a role is what you are to someone.
+- **Trap:** the Club price condition written as the CUSTOMER role (2026-11-01).
 
 ---
 

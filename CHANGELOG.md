@@ -27,6 +27,10 @@ and any decisions made.
   cold, amount or percentage 3 → 4. Q6 (Academia Brillo): the costs strong (an FK per
   kind from the communication event), but the yearly fee dated on the one-row subtype;
   specific vs generic 4 → 3. Q7 (Tienda Raíz): category rollup holds 4. The round is done.
+- The 11-01 and 11-02 rounds reviewed for mix-ups: six new distinctions, D9–D14 (status or
+  its fact; who or where; payer or receiver; placer, taker, seller or keyer; subtype or
+  dated child; party type or role). Repeats went to existing cards as traps (D7: the
+  delivery term and the association pointed at the order). Export regenerated.
 
 **Decisions**
 - A round spreads its questions across rows and topics where it can; overlap is allowed
