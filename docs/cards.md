@@ -304,9 +304,8 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 8 · V1 Ch 3 · Pricing and costing (Figs 3.7–3.8)
 - **Cue:** "What do we charge, under which conditions, and what does it cost us?"
 - **Hook:** the price recipe
-- **Mantra:** Price components are conditional rules: the most specific base wins, matching
-  discounts and surcharges stack on it per unit; each base says its charge: once, every or
-  per use; cost estimates hit a product or a feature, never both.
+- **Mantra:** Price components are conditional rules: matching discounts and surcharges
+  stack on the base per unit; cost estimates hit a product or a feature, never both.
 
 <details><summary>Key</summary>
 
