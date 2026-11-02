@@ -97,3 +97,7 @@ of the chapter's `EXERCISES.md`.
   evidence date in the comprehension tables, each in a fresh scenario. A slip drops the row
   to 3 and back into the gap pool; a pass adds the new date, which pushes its next check
   further out. The other 5 stay on gaps and retests.
+- **Spread a round's scope** (the user's call, 2026-11-02): prefer questions on different
+  rows and topics, but it isn't required. When two questions share a row, the discussion of
+  the first means the second can't count as cold, so that row can't reach 4 this round; the
+  user accepts that.
