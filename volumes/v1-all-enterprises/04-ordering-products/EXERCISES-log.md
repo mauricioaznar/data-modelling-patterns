@@ -684,3 +684,19 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: status row stays 3 (the fix-the-copy part at 4 in Q2, the wait on the line missed
   here); item association 4 → 3 (the link pointed at the order and owned by the purchase
   line). Next: a line-level backorder cold, the association as its own row between two lines.
+
+### 2026-11-02: round Q4, Submodel 1 gap (scoped roles; Muebles Encina, sales order 140; key above)
+- Answer: on the order PLACED_BY Gestoría Prado ✓, TAKEN_BY Muebles Encina ✓ (cold, after two
+  rounds missing it, and Tomás kept off it despite "takes the call"), SALESPERSON Tomás 100 ✓,
+  BILL_TO Gestoría Prado ✓; Laura as ENTERED_BY ✗ (that's whoever keys it in on our side; she
+  is the placer's contact). Line 1 SHIP_TO Gestoría Prado with Calle Sauce 4 as a SHIPPING
+  `order_item_contact_mechanism` ✓ (the 11-01 place-as-party slip fixed), INSTALLER Montajes
+  Río ✓, END_USER Gestoría Prado ✓ ("sensing a division": the branch could be its own
+  organization if the gestoría's units are tracked; the question gave none). Line 2 SHIP_TO
+  Gestoría Prado ✗ and END_USER Gestoría Prado ✗: Laura receives it and uses it, so both are
+  Laura, a person; the gestoría only pays (BILL_TO on the order).
+- Blame: the user's; "delivered to Laura's home ... she uses it" named her twice.
+- Score: scoped roles stays 3. Both 11-01 targets met cold (TAKEN_BY, END_USER on every
+  line); the line roles defaulted to the payer on line 2, and ENTERED_BY misused. Next: a
+  line whose receiver and user aren't the customer organization; ENTERED_BY vs the placer's
+  contact.
