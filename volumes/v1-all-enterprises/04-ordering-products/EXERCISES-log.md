@@ -751,3 +751,19 @@ Misunderstandings and reinforce attempts, oldest first.
   matters because the level is the 11-02 gap.
 - Score: association stays 3. Next: the level (line to line, never the order) and the
   how-many read from the sales line.
+
+### 2026-11-03: round Q4, Submodel 1 retest (scoped roles; Clínica Delta, sales order 240)
+- Asked live. Andrés (the clinic's office manager) phones it in, Sofía (our clerk) keys
+  it, Hugo gets full credit, the clinic pays. Line 1 a reception desk to the clinic, used
+  by its front desk; line 2 a chair to Dr. Paula Ríos's home, used by her.
+- Answer: (a) PLACED_BY Clínica Delta, TAKEN_BY Oficinas Lux, BILL_TO Clínica Delta,
+  ENTERED_BY Sofía, SALESPERSON Hugo 100 ✓ (the 11-02 ENTERED_BY misuse fixed). (b) line 1
+  SHIP_TO the clinic ✓, END_USER "front desk" ~ (a party only if the clinic's units are
+  tracked as organizations; the question gave none, so the clinic); line 2 SHIP_TO and
+  END_USER Dr. Ríos ✓, with SHIPPING postal addresses as `order_item_contact_mechanism`
+  rows on each line ✓ (unasked). (c) not answered; Andrés left off the order, which is
+  right: the clinic places it, Sofía keys it; he is the clinic's contact, a Ch 2
+  relationship, not an order role.
+- The 11-02 targets (line roles for a person who isn't the payer, ENTERED_BY vs the
+  placer's contact) met cold.
+- Score: scoped roles 3 → 4 (the why in (c) unsaid; second skipped last part this round).

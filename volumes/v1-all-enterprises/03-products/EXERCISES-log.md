@@ -829,3 +829,14 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - The user flagged Gifts as missing from the category list: fair, the wording should have
   listed it (the key only noted that Gifts needs its own category row). Blame Claude's.
 - Score: category rollup holds 4 (new date).
+
+### 2026-11-03: question round, pending (written for the phone; wording in `docs/round-2026-11-03.md`; order in TODO)
+- **Q6 · Maintenance · reorder guideline, a scoped rule (last 4 on 10-27) · Apply,
+  Analyze.** Papelería Mar, the black cartridge. Key: (a) `reorder_guideline` rows, all
+  for the cartridge (a good): chain-wide (scoped to the internal organization Papelería
+  Mar, or unscoped) level 20, quantity 50, from its start, thru 1 Dec (exclusive); chain-
+  wide level 30, quantity 50, from 1 Dec, thru null (a new row, the old one ended, not
+  updated); Valencia shop (facility) level 40, quantity 100, from its start, thru null.
+  (b) Valencia at 35: its own facility row wins (the most specific scope), 35 ≤ 40, so it
+  reorders 100. Sagunto at 25: no facility row, so the chain-wide row current on 10 Dec
+  (level 30), 25 ≤ 30, reorders 50. The old level-20 row no longer applies (as-of test).

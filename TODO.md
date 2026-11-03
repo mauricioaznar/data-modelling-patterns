@@ -93,6 +93,21 @@ trackers as usual, then tick here.
 - [x] Q6 · Ch 2 · specific vs generic relationships · maintenance (last 4 on 10-27) (Academia Brillo) · 4 → 3: the fee's history on the one-row subtype
 - [x] Q7 · Ch 3 · category rollup (network, not tree) · maintenance (last 4 on 10-27) (Tienda Raíz) · holds 4
 
+## Question round 2026-11-03 (Q1–Q4 live, Q5–Q7 on the phone)
+
+Q5–Q7 are written to paste into WhatsApp, in
+[docs/round-2026-11-03.md](docs/round-2026-11-03.md), with no keys. The keys are in the
+Ch 2 and Ch 3 logs under "2026-11-03: question round, pending": **don't open those before
+grading**. When the answers come back, read each one back, grade, log and update the
+trackers as usual, then tick here.
+- [x] Q1 · Ch 4 · order status, terms and item associations · retest: a conditional penalty as a term (Pastelería Nube, purchase order 210) · 3 → 4, all cold
+- [x] Q2 · Ch 4 · order status, terms and item associations · retest: the wait on one line (Tienda Coral, order 220) · 3 → 4; "the fact wins" skipped (cold on 11-02)
+- [x] Q3 · Ch 4 · order status, terms and item associations · retest: item association (Distribuciones Faro, orders 230, 231, 88) · stays 3: how-many and the order-level column missed
+- [x] Q4 · Ch 4 · scoped roles on the order and the line · retest: line roles for a non-payer person (Clínica Delta, order 240) · 3 → 4; (c) Andrés's why unsaid
+- [ ] Q5 · Ch 2 · specific vs generic relationships · retest: a changing attribute on a dated child (Coworking Faro)
+- [ ] Q6 · Ch 3 · reorder guideline, a scoped rule · maintenance (last 4 on 10-27) (Papelería Mar)
+- [ ] Q7 · Ch 2 · communication events and case · maintenance (last 4 on 10-27) (Taller Ruedas)
+
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 
 Chapter titles are from memory; verify them against the book's table of contents.

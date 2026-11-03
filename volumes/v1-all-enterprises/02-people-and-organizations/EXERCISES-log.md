@@ -530,3 +530,27 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: specific vs generic 4 → 3 (the costs strong and partly new; the alternative misnamed
   and the fee's history on a one-row subtype). Next: an attribute that changes over time on a
   subtype: where the history goes.
+
+### 2026-11-03: question round, pending (written for the phone; wording in `docs/round-2026-11-03.md`; order in TODO)
+- **Q5 · Retest · specific vs generic relationships (11-02 Q6: a changing attribute on the
+  one-row subtype) · Analyze, Apply, Evaluate.** Coworking Faro, Lucía's membership. Key:
+  (a) generic: `party_relationship` + its type, because the kinds are many and keep
+  coming (a new kind is a type row, not a table); a specific table only pays off for a
+  few stable kinds with attributes of their own. (b) the plan and the fee are dated
+  children of the one membership relationship row (from/thru each): plan rows hot desk
+  from Mar 2023, fixed desk from its 2024 date (the hot desk row's thru set to that day);
+  fee rows likewise, the old one ending on 1 Jan 2025. Not columns on a subtype, which
+  keep one value and lose the history. (c) the relationship's dates say when Lucía is a
+  member, not when an attribute changed: chopping it makes one continuous membership look
+  like several (member since March 2023 lost, member counts inflated, gaps or overlaps at
+  each cut), and anything pointing at the relationship has to pick a piece.
+- **Q7 · Maintenance · case and work effort (last 4 on 10-27) · Apply, Understand.** Taller
+  Ruedas, Marta's battery. Key: (a) `communication_case` "Marta's e-bike battery",
+  start 3 Nov, CASE_OPEN; case roles Marta CUSTOMER (or REPORTER), Andrés OWNER. Three
+  communication events, each with the case FK: the 3 Nov phone call, the 5 Nov e-mail,
+  the 12 Nov call; each with event roles (Marta and Andrés, on the event, to the party).
+  The job is a `work_effort` (battery replacement), linked to the 5 Nov e-mail through
+  `communication_event_work_effort`, not to the case. (b) the case's status moves to
+  CASE_RESOLVED or CASE_CLOSED; the case has no thru date and nothing is deleted; the
+  events and the job stay as history (the job's own completion is the work effort's
+  business, Ch 6).
