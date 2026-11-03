@@ -708,3 +708,46 @@ Misunderstandings and reinforce attempts, oldest first.
   values, because nothing records an order of application between them ✓, cold.
 - Score: amount or percentage 3 → 4 (the base, the total as the amount and the why, all cold
   in a later session, unhinted).
+
+### 2026-11-03: round Q1, Submodel 3 retest (term or adjustment; Pastelería Nube, purchase order 210)
+- Asked live. Line 1 500 cake boxes, line 2 200 rolls of ribbon; (a) the boxes within 5
+  days, (b) 10% off the ribbon if it arrives late, (c) 2% off the whole order, regular
+  customer.
+- Answer: (a) a term on the boxes line, the days read from the type's name, value 5 ✓.
+  (b) a term on the ribbon line, the percent read from the type, value 10, "an agreement
+  applied somewhere else if true" ✓ (the triggered money lands later, on the invoice).
+  (c) an `order_adjustment` DISCOUNT on the order, 2 in the percentage column, taken from
+  the order's total ✓.
+- Both 11-02 slips fixed cold: the conditional penalty as a term, and the line the wording
+  names.
+- Score: term row 3 → 4.
+
+### 2026-11-03: round Q2, Submodel 3 retest (status on the order and the line; Tienda Coral, sales order 220)
+- Asked live. Line 1 6 desk lamps, line 2 4 office chairs; approved Monday, lamps shipped
+  Tuesday, chairs out of stock until they ship the next Tuesday.
+- Answer: (a) APPROVED on the order (Monday), SHIPPED on the lamps line and BACKORDERED on
+  the chairs line (Tuesday) ✓. (b) a new SHIPPED row on the chairs line, dated the
+  shipment's day; earlier rows kept, never updated ✓. (c) the latest row is current, the
+  rest is history ✓; which wins when the shipments disagree: not answered.
+- The 11-02 miss (the wait on the line not written) fixed cold. The skipped half was shown
+  cold on 11-02 Q2 (the shipments win, fix the copy), so every part of the row now has a
+  cold pass on a later day.
+- Score: status row 3 → 4 (the skip noted; a slip on "the fact wins" next time drops it).
+
+### 2026-11-03: round Q3, Submodel 3 retest (item association; Distribuciones Faro, sales orders 230 and 231, purchase order 88)
+- Asked live. Sales 230 (Hotel Brisa) line 1 10 kettles, sales 231 (Café Muro) line 1 5
+  kettles, both filled by purchase 88 (Hervidores Sur) line 1 15 kettles. (a) the rows,
+  (b) how many go to Hotel Brisa and why no quantity, (c) a `purchase_order_id` column on
+  the sales order instead.
+- Answer: (a) `order_item_association` rows, purchase line to sales line, no quantity ✓
+  (a row of its own between two lines: the 11-02 slip fixed), but not counted out (two
+  rows: 88/1 to 230/1, 88/1 to 231/1). (b) the link says which, not how many; a quantity
+  would mean handling allocation ✓; many-to-many both ways ✓; how Hotel Brisa's 10 is
+  known not answered (its own sales line's quantity) ✗. (c) read as a column on the sales
+  line: "one purchase line per sales line" ✓ for that reading, but the column was on the
+  sales order: it points at an order, not a line, so it can't say which sales line waits
+  on which purchase line, and a sales order filled by two purchases can't be written ✗.
+- Blame: (c) about 80/20 the user's (the question said "on the sales order"); the misread
+  matters because the level is the 11-02 gap.
+- Score: association stays 3. Next: the level (line to line, never the order) and the
+  how-many read from the sales line.
