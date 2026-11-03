@@ -10,7 +10,7 @@ or resumes, not every session.
   (b) say how it **relates** to its neighbours, conceptually rather than column by column; and
   (c) **spot a wrong implementation** of it and say what data it would lose or corrupt.
   Attribute lists, syntax and exact cardinalities are out of scope. Going deeper risks
-  overlearning; a concept can be revisited later (recall questions, the core app, later chapters).
+  overlearning; a concept can be revisited later (question rounds, the core app, later chapters).
 - **Patterns over tables.** Every submodel is practised through the patterns it uses (see Core
   patterns in the design reference doc). At least one question per submodel asks which pattern
   is at work, or which entity owns a fact.
@@ -86,12 +86,11 @@ of the chapter's `EXERCISES.md`.
   the explorer open scores 2 at most ("with help").
 - **The design reference doc, too:** its drafts now exist before practice and answer some of
   the ponders, so the same rule applies. Keep it closed for the exam and gap checks.
-- **Next session start:** open with 3 quick recall questions on the most recently finished
-  submodel, favouring its open gaps.
 - **The question round of seven** (one per session, across finished and in-practice
-  submodels of all chapters): 3 recalls first (the session-start ones above), then 2 gaps
-  and retests (rows below 4 and the last session's misses, a reinforce when a gap needs
-  teaching), then 2 maintenance questions. One question at a time, each naming its Bloom level.
+  submodels of all chapters): 5 gaps and retests (rows below 4 and the last session's
+  misses, a reinforce when a gap needs teaching), then 2 maintenance questions. No recalls
+  (the user's call, 2026-11-03): no session-start questions and nothing between rounds.
+  One question at a time, each naming its Bloom level.
 - **Maintenance in question rounds** (the user's call, 2026-10-29): the round's 2
   maintenance questions go to rows already at 4, picked across chapters by the oldest
   evidence date in the comprehension tables, each in a fresh scenario. A slip drops the row

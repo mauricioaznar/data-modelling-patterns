@@ -95,21 +95,21 @@ the user, tease with nicknames, so the sessions stay fun.
 - **Time budget: about 3 hours of practice per submodel.** Go over only when a gap still needs
   reinforcing, and say so first. Don't write more exercises than fit the budget.
 - **Ask one question at a time** and wait for the answer.
-- **Question round of seven** (one per session): 3 recalls, 2 gaps or retests, 2 maintenance.
+- **Question round of seven** (one per session): 5 gaps or retests, 2 maintenance. **No recalls**
+  (the user's call, 2026-11-03): no session-start questions and nothing between rounds; the
+  practice is a round of seven or nothing.
   **Maintenance, not only gaps** (the user's call, 2026-10-29): those 2 retest rows already at 4, the longest untested first, in a fresh scenario, so
   what's understood doesn't decay unnoticed (details in `docs/practice.md`).
 - **After each round, suggest distinction cards** (the user's call, 2026-11-02) for its
   mix-ups; a concept already on a card gets the mistake added to that card's Trap instead.
-- **Name the Bloom level being graded** (the user's call, 2026-10-28): every question, recall
-  and question-round ones included, says which level it grades (Remember, Understand, Apply,
+- **Name the Bloom level being graded** (the user's call, 2026-10-28): every question, round
+  ones included, says which level it grades (Remember, Understand, Apply,
   Analyze, Evaluate, Create, as in `docs/practice.md`). A question with several parts names
   the level of each part.
 - **The user answers in short bits** (the user's call, 2026-10-20): don't treat a reply as the
   whole answer, and don't grade it, until the user says they're done. Respond to each bit only
   as far as it needs. Never ask, preview or remind them of the next question until the user
   says they're done with the current one and its discussion.
-- **Next session start:** open with 3 quick recall questions on the most recently finished
-  submodel, favouring its open gaps.
 - **Cards (solo, every morning):** `docs/cards.md` holds one mantra card per submodel, drafted by
   Claude when the figures land. A card joins the morning loop only at its chapter's overview;
   until then it sits in Anki's Drafts subdecks, to look up but not to study (the user's call,
