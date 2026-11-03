@@ -554,3 +554,37 @@ Misunderstandings and reinforce attempts, oldest first.
   CASE_RESOLVED or CASE_CLOSED; the case has no thru date and nothing is deleted; the
   events and the job stay as history (the job's own completion is the work effort's
   business, Ch 6).
+
+### 2026-11-03: round Q5, retest (specific vs generic relationships; Coworking Faro; key above)
+- Answer: (a) generic: with separate tables every shared column and every mechanism that
+  hangs on a relationship is built once per kind; with `party_relationship` they hang
+  once, kinds are rows, and a kind gets a subtype table only for attributes of its own;
+  generic because of four kinds and more coming ✓. (b) a `membership_fee` child of the
+  membership, a row per change holding the plan (and the fee) with its date; the
+  relationship keeps the fact and the span of the membership; either from/thru or a
+  status-style dated row, the latest current ✓. (c) ending and restarting says a
+  membership ended and a new one began, so it misstates how many times she has been a
+  member; plan changes belong on the child ✓.
+- Notes: the fee value wasn't named in the row (implied by the table's name); one row for
+  both attributes repeats the plan when only the fee changes (fine, a snapshot per change;
+  two children if they change often and apart). The status-style row (from only, latest
+  current) works while there are no gaps; from/thru also covers a gap or a future-dated
+  change, so it stays the convention. "Maria" for Lucía.
+- Score: specific vs generic 3 → 4 (the 11-02 slip, the fee's history on the one-row
+  subtype, fixed cold).
+
+### 2026-11-03: round Q7, maintenance (case and work effort; Taller Ruedas; key above)
+- Answer: (a) the 3 Nov phone call (Marta caller, Andrés receiver, purpose the dying
+  battery) ✓, joined to the case once it exists ✓; the case "e-bike repair" with Marta in
+  a customer case role ✓, Andrés as owner offered then dropped ("not stated") ~; the 5 Nov
+  e-mail on the case, Marta sender, Andrés recipient, purpose evidence ✓; the replacement
+  job a work effort linked to the 5 Nov e-mail ✓; the 12 Nov call on the case ✓, but a
+  second work effort linked to it for the replacement itself ✗: it's the same job, already
+  scheduled on 5 Nov; doing it is that effort's progress (Ch 6), and the call only reports
+  it. "Stakeholders (roles for the event)" under the case: case roles and event roles
+  blurred in the wording, kept apart in the rows. (b) the case's status set to closed, no
+  thru date ✓; the close date not stored, read from the last event ~ (true of our model:
+  the case keeps one status column); the events and the job stay (implied).
+- Blame: the user's; "the job" was singular in the question.
+- Score: case and work effort 4 → 3. Next: one job, one work effort, whatever events
+  mention it.

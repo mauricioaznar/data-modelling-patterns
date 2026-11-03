@@ -1905,6 +1905,18 @@ options; one that misses a fact goes to its submodel card instead.
 - **Mnemonic:** A type is what you are; a role is what you are to someone.
 - **Trap:** the Club price condition written as the CUSTOMER role (2026-11-01).
 
+### Distinction D15 · Facility, boundary or internal organization? (V1 Ch 3)
+- **Cue:** "Reorder rules for the cartridge: the Valencia shop; every shop in Murcia; our
+  online division; the whole chain."
+- **Test:** Is the rule for one place, an area, or one of our own organizations?
+- **Sides:** A `reorder_guideline` is always for one good, with three optional scopes: a
+  facility (one shop or warehouse), a geographic boundary (every place in an area) and an
+  internal organization (a division of ours, never a customer or supplier). No scope: the
+  whole chain. The most specific matching row wins; a facility beats a boundary.
+- **Mnemonic:** A place is a facility, an area a boundary, a part of us an organization.
+- **Trap:** the Valencia shop scoped by the Valencia boundary, so a second shop there would
+  inherit its rule (2026-11-03).
+
 ---
 
 ## Deck: patterns

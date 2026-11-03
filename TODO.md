@@ -104,9 +104,9 @@ trackers as usual, then tick here.
 - [x] Q2 · Ch 4 · order status, terms and item associations · retest: the wait on one line (Tienda Coral, order 220) · 3 → 4; "the fact wins" skipped (cold on 11-02)
 - [x] Q3 · Ch 4 · order status, terms and item associations · retest: item association (Distribuciones Faro, orders 230, 231, 88) · stays 3: how-many and the order-level column missed
 - [x] Q4 · Ch 4 · scoped roles on the order and the line · retest: line roles for a non-payer person (Clínica Delta, order 240) · 3 → 4; (c) Andrés's why unsaid
-- [ ] Q5 · Ch 2 · specific vs generic relationships · retest: a changing attribute on a dated child (Coworking Faro)
-- [ ] Q6 · Ch 3 · reorder guideline, a scoped rule · maintenance (last 4 on 10-27) (Papelería Mar)
-- [ ] Q7 · Ch 2 · communication events and case · maintenance (last 4 on 10-27) (Taller Ruedas)
+- [x] Q5 · Ch 2 · specific vs generic relationships · retest: a changing attribute on a dated child (Coworking Faro) · 3 → 4, the dated child cold
+- [x] Q6 · Ch 3 · reorder guideline, a scoped rule · maintenance (last 4 on 10-27) (Papelería Mar) · 4 → 3: Valencia as a boundary, Sagunto at 25 under 30 not reordered
+- [x] Q7 · Ch 2 · communication events and case · maintenance (last 4 on 10-27) (Taller Ruedas) · 4 → 3: a second work effort on the confirmation call
 
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 

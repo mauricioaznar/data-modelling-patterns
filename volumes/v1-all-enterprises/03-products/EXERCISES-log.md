@@ -840,3 +840,15 @@ Scores: price components 2 → 3; feature prices stay at 2.
   (b) Valencia at 35: its own facility row wins (the most specific scope), 35 ≤ 40, so it
   reorders 100. Sagunto at 25: no facility row, so the chain-wide row current on 10 Dec
   (level 30), 25 ≤ 30, reorders 50. The old level-20 row no longer applies (as-of test).
+
+### 2026-11-03: round Q6, maintenance (reorder guideline; Papelería Mar; key above)
+- Answer: (a) row 1 chain-wide ("no condition"), level 20, quantity 50, ended on 1 Dec ✓;
+  row 2 Valencia scoped by geographic boundary ✗ (the question named the shop: a
+  facility; a boundary covers every shop in the area), level 50 ✗ (40); row 3 chain-wide
+  level 30, quantity 50, from 1 Dec ✓ (a new row, the old one ended, not updated); the
+  current rows given "thru date set" ~ (null while current). (b) Valencia: its own row
+  wins, most specific ✓, reorders 100 ✓. Sagunto: row 3 by the as-of test ✓, but "30 or
+  less is not the case ... 5 short" ✗: 25 is below the level of 30, so it reorders 50.
+- Blame: the user's; "when stock falls to" was in the wording.
+- Score: reorder guideline 4 → 3 (back in the gap pool). Next: the shop as a facility
+  scope, and the level as the floor.

@@ -3,6 +3,33 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-03
+
+**Built**
+- Pulled. A question round of seven: Q1–Q4 live, Q5–Q7 written for the phone in
+  `docs/round-2026-11-03.md` (keys in the Ch 2 and Ch 3 logs), then answered here.
+- Q1 (Pastelería Nube): the late-ribbon penalty a term on its line, delivery on the boxes
+  line, the loyalty 2% a DISCOUNT, cold: terms 3 → 4. Q2 (Tienda Coral): the wait on the
+  chairs line, the new SHIPPED row: status 3 → 4 ("the fact wins" skipped, cold on 11-02).
+  Q3 (Distribuciones Faro): two association rows, no quantity, but how-many and the
+  order-level column missed: association stays 3. Q4 (Clínica Delta): line roles for
+  Dr. Ríos, ENTERED_BY Sofía, Andrés kept off: roles 3 → 4. Q5 (Coworking Faro): the plan
+  and fee on a dated child of the membership: specific vs generic 3 → 4. Q6 (Papelería
+  Mar, maintenance): the shop scoped as a boundary, Sagunto misread: reorder guideline
+  4 → 3. Q7 (Taller Ruedas, maintenance): a second work effort on the confirmation call:
+  case and work effort 4 → 3.
+- Distinction D15 (facility, boundary or internal organization) from Q6; export
+  regenerated (75 cards).
+
+**Decisions**
+- No recalls (the user's call): practice is a round of seven, 5 gaps or retests and 2
+  maintenance, or nothing; no session-start questions (CLAUDE.md, practice.md).
+
+**Next**
+- Retests cold on a later day: the association's level and the how-many; the shop as a
+  facility scope and the level as a floor; one job, one work effort.
+- Today's new topic, after the round.
+
 ## 2026-11-02
 
 **Built**
