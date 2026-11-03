@@ -1665,12 +1665,27 @@ the literal drawing.
 18. **4.9, the product line:** read as leaving PRODUCT REQUIREMENT and optional, since Table
     4.11 names no product and its desired features say what's wanted. If it leaves
     REQUIREMENT instead, a work requirement could name a product too (the PC to repair).
+    **Outcome (2026-11-03): kept** on PRODUCT REQUIREMENT, optional. Evidence: Fig 6.1 gives
+    WORK REQUIREMENT its own PRODUCT line ("produce") and a FIXED ASSET line ("worked on"),
+    so each subtype's product line means something different (to get, to make); one column
+    on REQUIREMENT would mix the two. The alternative wins only if every kind of need
+    named its product the same way. Cleared up on the way: the PRODUCT kind means "filled by
+    getting a product", services included (43006, a cleaning service), and WORK means
+    "filled by doing work" (Ch 6). No SQL change, no card fix (card 13 already says
+    `product_requirement` → product, optional).
 19. **4.9, Table 4.11's dates and 34988:** "May 16 2002" read as 2001 (parts made the day
     after their parent, and before the 2002 request for quotes on them). 34988 seeded with no
     parent, beside 24905, as Table 4.13 pairs them; Table 4.11 has it under ACME's 30003.
+    **Outcome (2026-11-03): kept**, both readings. Seeding the print literally would win only
+    if the seed had to match the book row for row; ours aims at what was meant. Seed only,
+    no SQL change, no card fix.
 20. **4.9, who owns a part:** 30003 is ACME's, its parts ABC Subsidiary's. Read as "owner"
     meaning who answers for the requirement: ABC Subsidiary breaks ACME's need into lines it
     will fill. If "owner" means whose need it is, the parts should be ACME's too.
+    **Outcome (2026-11-03): kept** (A): OWNER is who answers for the requirement, set per
+    requirement, so a part may be owned by someone other than its parent's owner. B (whose need
+    it is, the same down the tree, with another role for whoever fills it) would win if
+    requirements were reported by the needing party. Seed and SQL unchanged, no card fix.
 21. **4.10, Table 4.12's dates and types:** 23498 read as January 12, 2002; as printed, it
     predates both requirements it carries and gives thirteen months to answer. 38967 read as
     an RFP, as Table 4.12 has it (Table 4.13 says RFQ).

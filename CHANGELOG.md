@@ -20,6 +20,9 @@ and any decisions made.
   case and work effort 4 → 3.
 - Distinction D15 (facility, boundary or internal organization) from Q6; export
   regenerated (75 cards).
+- Ch 4 overview, Requirements (Fig 4.9): points 18–20 kept as built. The product line
+  stays on PRODUCT REQUIREMENT (Fig 6.1 gives WORK REQUIREMENT its own, meaning "produce");
+  Table 4.11 read as 2001, 34988 with no parent; OWNER set per requirement. Outcomes in NOTES.
 
 **Decisions**
 - No recalls (the user's call): practice is a round of seven, 5 gaps or retests and 2
@@ -28,7 +31,9 @@ and any decisions made.
 **Next**
 - Retests cold on a later day: the association's level and the how-many; the shop as a
   facility scope and the level as a floor; one job, one work effort.
-- Today's new topic, after the round.
+- Ch 4 Requirements overview: doc draft feedback (three edits proposed: the product
+  line's whys, owner per requirement, the role type folding into ROLE TYPE), the
+  walk-through, card 13.
 
 ## 2026-11-02
 
