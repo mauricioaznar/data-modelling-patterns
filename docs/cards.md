@@ -447,6 +447,9 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **T:** *(the naive-model trap until practice gives yours)* storing "backordered" or
   "shipped" and trusting it: those follow from the association, shipments and invoices, and a
   stored copy can contradict them. And reading a term's value without its type: 10 of what?
+  Yours: the association pointed at the sales **order** (or owned by the purchase line), not a
+  row between two lines; and "how many go to this customer?" sought on the link, when the
+  sales line's own quantity says it.
 - **D:** order ← status → item (one or the other); status → status_type (Ch 2, ORDER_STATUS
   group); order ← term → item (one or the other); term → term_type; sales_order_item ←
   association → purchase_order_item. No quantity on the association.
@@ -1916,6 +1919,18 @@ options; one that misses a fact goes to its submodel card instead.
 - **Mnemonic:** A place is a facility, an area a boundary, a part of us an organization.
 - **Trap:** the Valencia shop scoped by the Valencia boundary, so a second shop there would
   inherit its rule (2026-11-03).
+
+### Distinction D16 · A new work effort or the same one? (V1 Ch 2)
+- **Cue:** "5 Nov: from her e-mail we schedule a battery replacement. 12 Nov: she calls, the
+  battery's replaced. 20 Nov: she calls, the new battery's charger is faulty."
+- **Test:** Is it new work, or news about work already there?
+- **Sides:** New work gets its own `work_effort`, linked to the event that triggered it. A
+  later event about the same job links to the **existing** effort (the event to work effort
+  link is many to many); doing or finishing the job is that effort's progress (Ch 6), not
+  a new row.
+- **Mnemonic:** One job, one work effort; events only point at it.
+- **Trap:** a second work effort for the replacement, hung on the call that confirmed it
+  (2026-11-03).
 
 ---
 
