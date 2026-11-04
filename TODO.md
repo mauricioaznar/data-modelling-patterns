@@ -113,7 +113,7 @@ trackers as usual, then tick here.
 - [x] Q1 · Ch 4 · order status, terms and item associations · retest: item association (Vinos Altamar, orders 300, 301, 95, 96) · 3 → 4; Claude's "how-many from the sales line" key was an allocation, conceded
 - [x] Q2 · Ch 3 · reorder guideline · retest: the shop as a facility scope, the level as the floor (Ferretería Duna) · 3 → 4; the why for the facility only after discussion
 - [x] Q3 · Ch 2 · case and work effort · retest: one job, one work effort (Informática Pinar, Hostal Mirlo) · 3 → 4; the event to work effort link is its own table (D16)
-- [ ] Q4 · Ch 3 · where stock is (facility XOR container) + lot · gap (level 2)
+- [x] Q4 · Ch 3 · where stock is (facility XOR container) + lot · gap (Lácteos Sierra, lot Y-118) · 2 → 3: the arc cold, product put on the lot
 - [ ] Q5 · Ch 3 · estimated cost (product or feature arc) · gap (level 2)
 - [ ] Q6 · Ch 2 · move vs typo; shared mechanism · maintenance (last 4 on 10-28)
 - [ ] Q7 · Ch 4 · every price change a typed row · maintenance (last 4 on 10-28)

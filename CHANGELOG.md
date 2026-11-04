@@ -3,6 +3,29 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-04
+
+**Built**
+- Pulled. A question round of seven, asked live; Q1–Q4 done here, Q5–Q7 to continue on
+  another computer (order in TODO).
+- Q1 (Vinos Altamar): item association 3 → 4. Claude's key ("read the how-many off the
+  sales line") was an allocation the model doesn't store (point 17); conceded on the user's
+  pushback, and Card 12's trap fixed. Q2 (Ferretería Duna): reorder guideline 3 → 4, the
+  facility scope and the level as floor cold, the why for the facility only after
+  discussion. Q3 (Informática Pinar): case and work effort 3 → 4, one job one effort for
+  both jobs; the event to work effort link is its own many-to-many table. Q4 (Lácteos
+  Sierra): where stock is + lot 2 → 3, the arc cold, a product put on the lot.
+- D16 gets the rule of thumb as its mnemonic ("an event creates an effort or reports on
+  one; only a new job makes a new effort") and today's slips; export regenerated (76 cards).
+
+**Decisions**
+- None new. A memory note: round questions go in the closing message, after the wrap-up.
+
+**Next**
+- Round Q5–Q7: estimated cost (gap, level 2), move vs typo (maintenance, 10-28), every
+  price change a typed row (maintenance, 10-28).
+- Ch 4 Requirements overview, as on 11-03.
+
 ## 2026-11-03
 
 **Built**

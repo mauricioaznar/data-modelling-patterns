@@ -870,3 +870,21 @@ Scores: price components 2 → 3; feature prices stay at 2.
   user gave the full why (a boundary or division row would catch a new shop silently); not
   counted cold.
 - Score: reorder guideline 3 → 4 (the why for the facility to watch at its next maintenance).
+
+### 2026-11-04: round Q4, Submodel 3 gap (where stock is + lot; Lácteos Sierra, yogurt lot Y-118)
+- Asked live. One warehouse in Getafe, a cold room with shelves, a dock with an open floor.
+  Lot Y-118 of Natural yogurt 4-pack: 400 packs, made 1 Nov, best before 20 Nov; 300 on
+  shelf F2, 100 on the dock floor. (a) the lot and item rows, (b) the recall: every pack
+  and its building, (c) why facility or container, never both.
+- Answer: (a) two NON_SERIALIZED items, 300 with container F2, 100 with the facility (the
+  dock as a facility, or the warehouse if the dock isn't one), both on Y-118 ✓ cold; the
+  lot with 1 Nov, 20 Nov and 400 ✓ (a batch, not an origin: the 10-14 gap fixed), but a
+  product on the lot ✗ (it's reached through the items; a copy could disagree). (b) filter
+  items by lot; the building directly or through `container.facility_id` ✓. (c) the
+  container knows its facility, two links could disagree, one fact in one place ✓ cold.
+- Discussion: a lot with no items can't say its product (the price of keeping product off;
+  born with its items, items stay at 0 on hand so the recall still reaches the product, a
+  DQ query for itemless lots); `lot.quantity` is the batch's size, not the sum on hand; an
+  item is "part of" the lot, not an allocation; only `inventory_item` points at `lot`;
+  production runs, consumption and shipments reach it through the items (Ch 5, Ch 6).
+- Score: where stock is + lot 2 → 3. Next: the lot holds no product.
