@@ -852,3 +852,21 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - Blame: the user's; "when stock falls to" was in the wording.
 - Score: reorder guideline 4 → 3 (back in the gap pool). Next: the shop as a facility
   scope, and the level as the floor.
+
+### 2026-11-04: round Q2, Submodel 3 retest (reorder guideline; Ferretería Duna, screws 4×40)
+- Asked live. One chain-wide row (from 2026-01-01, level 40, quantity 100). From 1 Dec 2026
+  the Calle Mayor shop in Elche reorders at 60, 150 boxes; Alicante stays chain-wide; a
+  second Elche shop opening next year starts chain-wide too. (a) the rows, (b) 3 Dec:
+  Calle Mayor has 60, Alicante 41, (c) why that scope and not another.
+- Answer: (a) the chain-wide row kept as is; a new row with the Calle Mayor facility, from
+  1 Dec 2026, thru null, 60 and 150 ✓ cold (the 11-03 boundary scope and thru on current
+  rows fixed). (b) Calle Mayor: its row, most specific, reorders 150 ✓; Alicante: the
+  chain-wide row, no reorder until "40 or less" ✓ (the 11-03 floor miss fixed). (c) "the
+  most specific zone wins" ✗: the mechanism, not why the facility over the Elche boundary
+  (which would catch the new shop) or an internal organization; "zone" blurs the three (D15).
+- Pushback: Claude wrote that an internal-organization scope is "wider still"; the user
+  was right that it isn't wider than the chain-wide row, and it isn't wider than a boundary
+  in general either: it scopes by who runs the shops, not which shop. After discussion the
+  user gave the full why (a boundary or division row would catch a new shop silently); not
+  counted cold.
+- Score: reorder guideline 3 → 4 (the why for the facility to watch at its next maintenance).
