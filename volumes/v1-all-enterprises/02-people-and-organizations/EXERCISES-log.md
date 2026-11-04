@@ -588,3 +588,25 @@ Misunderstandings and reinforce attempts, oldest first.
 - Blame: the user's; "the job" was singular in the question.
 - Score: case and work effort 4 → 3. Next: one job, one work effort, whatever events
   mention it.
+
+### 2026-11-04: round Q3, retest (case and work effort; Informática Pinar and Hostal Mirlo)
+- Asked live. We are Informática Pinar; Raúl our technician, Elena owns Hostal Mirlo. 4 Nov
+  call: room Wi-Fi drops, a case opened, a router replacement booked for 6 Nov. 6 Nov
+  e-mail: router replaced. 9 Nov call: rooms fine; a terrace extender asked, booked for
+  12 Nov. 12 Nov: installed, case ended. (a) events, case, efforts; (b) where "replaced on
+  6 Nov" lives; (c) the extender on the same case or a new one.
+- Answer: (a) the three events with medium, caller/callee or sender/recipient, purpose,
+  each on the case ✓; the router effort on the 4 Nov call, the 6 Nov e-mail pointing at it
+  ✓; the extender effort on the 9 Nov call ✓; the 12 Nov install written "a work effort row
+  is created linked to the previous", read as a second effort ✗, then shown to mean the
+  same effort (two efforts, not four) ✓. Claude had read the near-identical router sentence
+  generously and this one literally: blame 50/50. Case roles both "interest party", Pinar
+  as owner (OWNER Raúl, CUSTOMER Elena or the hostal) ~; case closed by status ✓. (b) "on a
+  work effort linked to the event" ~ (the job lives on the effort itself; its completion
+  needs Ch 6's actual dates and status rows); the e-mail adds the communication ✓. (c) two
+  cases, one issue each, the "re-add the roles" convenience overruled ✓. Taught: an event
+  sits on at most one case, so the 9 Nov call goes on the extender case.
+- After grading: the event to work effort link proposed as an FK on `work_effort` ✗; it's
+  its own many-to-many table (Fig 2.13), else the 6 Nov e-mail can't point at the router
+  effort. D16's mnemonic, sides and trap updated.
+- Score: case and work effort 3 → 4 (the case role types to recall).

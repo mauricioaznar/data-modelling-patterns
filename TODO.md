@@ -108,6 +108,16 @@ trackers as usual, then tick here.
 - [x] Q6 · Ch 3 · reorder guideline, a scoped rule · maintenance (last 4 on 10-27) (Papelería Mar) · 4 → 3: Valencia as a boundary, Sagunto at 25 under 30 not reordered
 - [x] Q7 · Ch 2 · communication events and case · maintenance (last 4 on 10-27) (Taller Ruedas) · 4 → 3: a second work effort on the confirmation call
 
+## Question round 2026-11-04 (asked live)
+
+- [x] Q1 · Ch 4 · order status, terms and item associations · retest: item association (Vinos Altamar, orders 300, 301, 95, 96) · 3 → 4; Claude's "how-many from the sales line" key was an allocation, conceded
+- [x] Q2 · Ch 3 · reorder guideline · retest: the shop as a facility scope, the level as the floor (Ferretería Duna) · 3 → 4; the why for the facility only after discussion
+- [x] Q3 · Ch 2 · case and work effort · retest: one job, one work effort (Informática Pinar, Hostal Mirlo) · 3 → 4; the event to work effort link is its own table (D16)
+- [ ] Q4 · Ch 3 · where stock is (facility XOR container) + lot · gap (level 2)
+- [ ] Q5 · Ch 3 · estimated cost (product or feature arc) · gap (level 2)
+- [ ] Q6 · Ch 2 · move vs typo; shared mechanism · maintenance (last 4 on 10-28)
+- [ ] Q7 · Ch 4 · every price change a typed row · maintenance (last 4 on 10-28)
+
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 
 Chapter titles are from memory; verify them against the book's table of contents.

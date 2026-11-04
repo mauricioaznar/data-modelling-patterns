@@ -1927,10 +1927,13 @@ options; one that misses a fact goes to its submodel card instead.
 - **Sides:** New work gets its own `work_effort`, linked to the event that triggered it. A
   later event about the same job links to the **existing** effort (the event to work effort
   link is many to many); doing or finishing the job is that effort's progress (Ch 6), not
-  a new row.
-- **Mnemonic:** One job, one work effort; events only point at it.
+  a new row. Name the effort for the job ("install the extender"), never for its booking.
+- **Mnemonic:** An event creates an effort or reports on one; only a new job makes a new
+  effort.
 - **Trap:** a second work effort for the replacement, hung on the call that confirmed it
-  (2026-11-03).
+  (2026-11-03); the effort named "booking a Wi-Fi extender", then "a work effort row is
+  created" for the install (2026-11-04); the link put on `work_effort` as an FK, which
+  leaves the e-mail reporting on a job no place to point (2026-11-04).
 
 ---
 
