@@ -787,3 +787,17 @@ Misunderstandings and reinforce attempts, oldest first.
   from the sales line) was Claude's key and contradicted NOTES; the 11-02 and 11-03 "how
   many" misses were the key's fault, not the user's (11-03's order-level miss stands).
 - Score: association 3 → 4.
+
+### 2026-11-04: question round, pending (written for the phone; wording in `docs/round-2026-11-04.md`; order in TODO)
+- **Q7 · Maintenance · every price change a typed row (last 4 on 10-28) · Apply,
+  Evaluate.** Juguetería Nogal, order 410. Key: (a) `order_adjustment` rows typed by
+  `order_adjustment_type`, exactly one of amount or percentage each: DISCOUNT 10% on
+  line 1 (order_item_id, not the order; its base is the line's €90, line 2 stays full
+  price); SHIPPING_AND_HANDLING €12 on the order; SURCHARGE €6 on the order (an extra on
+  top of the normal delivery; an out-of-area type under SURCHARGE is fine, MISCELLANEOUS
+  or SHIPPING ✗); SALES_TAX 21% on the order. Every value stored positive: the sign
+  comes from the type (DISCOUNT subtracts, the rest add); a minus on the discount ✗.
+  (b) a column per kind: a new kind of charge (a card fee, gift wrap) is a schema change,
+  not a type row; a charge can't sit on one line (the 10% is line 1's alone); two of a
+  kind (two discounts) need more columns; amount or percentage doubles them; the type's
+  rollup to the six top types (and the sign) is lost for reports.

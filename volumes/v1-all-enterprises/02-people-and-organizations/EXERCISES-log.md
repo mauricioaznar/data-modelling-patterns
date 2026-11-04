@@ -610,3 +610,18 @@ Misunderstandings and reinforce attempts, oldest first.
   its own many-to-many table (Fig 2.13), else the 6 Nov e-mail can't point at the router
   effort. D16's mnemonic, sides and trap updated.
 - Score: case and work effort 3 → 4 (the case role types to recall).
+
+### 2026-11-04: question round, pending (written for the phone; wording in `docs/round-2026-11-04.md`; order in TODO)
+- **Q6 · Maintenance · move vs typo; shared mechanism (last 4 on 10-28) · Apply, Analyze,
+  Understand.** Gestoría Prado, Hermanos Vidal SL and Elena Vidal. Key: (a) before 1 Dec:
+  one `contact_mechanism` (postal address subtype) Calle Mayor 12, shared; a
+  `party_contact_mechanism` link per party from March 2024, thru null; a purpose on each
+  party's own link (BILLING on the company's, a personal-mail purpose on Elena's). On
+  1 Dec: a new contact mechanism Avenida Pirineos 7; Elena's Calle Mayor link (and its
+  purpose) ended thru 1 Dec (exclusive); a new link Elena → Pirineos from 1 Dec, thru
+  null, with its purpose. Untouched: the Calle Mayor row, the company's link and its
+  purpose. (b) the address row is shared: changing it moves the company's invoices to
+  Elena's flat, and it erases where Elena's mail went until 1 Dec (the move was true
+  history). A move changes the link, never the address. (c) correct the Pirineos row in
+  place: the typo was never true, so there is no history to keep; the link and its dates
+  were right. Ending and restarting would record a false period at "Pireneos".

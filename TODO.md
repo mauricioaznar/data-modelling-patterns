@@ -108,15 +108,21 @@ trackers as usual, then tick here.
 - [x] Q6 · Ch 3 · reorder guideline, a scoped rule · maintenance (last 4 on 10-27) (Papelería Mar) · 4 → 3: Valencia as a boundary, Sagunto at 25 under 30 not reordered
 - [x] Q7 · Ch 2 · communication events and case · maintenance (last 4 on 10-27) (Taller Ruedas) · 4 → 3: a second work effort on the confirmation call
 
-## Question round 2026-11-04 (asked live)
+## Question round 2026-11-04 (Q1–Q4 live, Q5–Q7 on the phone)
+
+Q5–Q7 are written to paste into WhatsApp, in
+[docs/round-2026-11-04.md](docs/round-2026-11-04.md), with no keys. The keys are in the
+Ch 2, Ch 3 and Ch 4 logs under "2026-11-04: question round, pending": **don't open those
+before grading**. When the answers come back, read each one back, grade, log and update the
+trackers as usual, then tick here.
 
 - [x] Q1 · Ch 4 · order status, terms and item associations · retest: item association (Vinos Altamar, orders 300, 301, 95, 96) · 3 → 4; Claude's "how-many from the sales line" key was an allocation, conceded
 - [x] Q2 · Ch 3 · reorder guideline · retest: the shop as a facility scope, the level as the floor (Ferretería Duna) · 3 → 4; the why for the facility only after discussion
 - [x] Q3 · Ch 2 · case and work effort · retest: one job, one work effort (Informática Pinar, Hostal Mirlo) · 3 → 4; the event to work effort link is its own table (D16)
 - [x] Q4 · Ch 3 · where stock is (facility XOR container) + lot · gap (Lácteos Sierra, lot Y-118) · 2 → 3: the arc cold, product put on the lot
-- [ ] Q5 · Ch 3 · estimated cost (product or feature arc) · gap (level 2)
-- [ ] Q6 · Ch 2 · move vs typo; shared mechanism · maintenance (last 4 on 10-28)
-- [ ] Q7 · Ch 4 · every price change a typed row · maintenance (last 4 on 10-28)
+- [ ] Q5 · Ch 3 · estimated cost (product or feature arc) · gap (level 2) (Mesas Aliso, the oak table and its leaf)
+- [ ] Q6 · Ch 2 · move vs typo; shared mechanism · maintenance (last 4 on 10-28) (Gestoría Prado, Elena Vidal moves)
+- [ ] Q7 · Ch 4 · every price change a typed row · maintenance (last 4 on 10-28) (Juguetería Nogal, order 410)
 
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 

@@ -15,6 +15,8 @@ and any decisions made.
   discussion. Q3 (Informática Pinar): case and work effort 3 → 4, one job one effort for
   both jobs; the event to work effort link is its own many-to-many table. Q4 (Lácteos
   Sierra): where stock is + lot 2 → 3, the arc cold, a product put on the lot.
+- Q5–Q7 written for the phone on the other computer, in `docs/round-2026-11-04.md` (keys
+  in the Ch 2, Ch 3 and Ch 4 logs): Mesas Aliso, Gestoría Prado, Juguetería Nogal.
 - D16 gets the rule of thumb as its mnemonic ("an event creates an effort or reports on
   one; only a new job makes a new effort") and today's slips; export regenerated (76 cards).
 
