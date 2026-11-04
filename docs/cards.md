@@ -448,8 +448,8 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   "shipped" and trusting it: those follow from the association, shipments and invoices, and a
   stored copy can contradict them. And reading a term's value without its type: 10 of what?
   Yours: the association pointed at the sales **order** (or owned by the purchase line), not a
-  row between two lines; and "how many go to this customer?" sought on the link, when the
-  sales line's own quantity says it.
+  row between two lines. The link says which purchase fills which sale, never how many:
+  when one purchase line fills several sales lines, the split isn't stored.
 - **D:** order ← status → item (one or the other); status → status_type (Ch 2, ORDER_STATUS
   group); order ← term → item (one or the other); term → term_type; sales_order_item ←
   association → purchase_order_item. No quantity on the association.

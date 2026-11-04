@@ -767,3 +767,23 @@ Misunderstandings and reinforce attempts, oldest first.
 - The 11-02 targets (line roles for a person who isn't the payer, ENTERED_BY vs the
   placer's contact) met cold.
 - Score: scoped roles 3 → 4 (the why in (c) unsaid; second skipped last part this round).
+
+### 2026-11-04: round Q1, Submodel 3 retest (item association; Vinos Altamar, sales orders 300 and 301, purchase orders 95 and 96)
+- Asked live. Sales order 300 (Restaurante Olivo): line 1 12 Albariño, line 2 6 Rioja.
+  Sales order 301 (Hotel Mirador): line 1 18 Albariño. No stock. Purchase order 95 (Bodega
+  Rías) line 1 30 Albariño, for both; purchase order 96 (Bodegas Haro) line 1 6 Rioja.
+  (a) the association rows, (b) how many of 95's 30 are Mirador's and where it's read,
+  (c) a `purchase_order_id` column on the sales order instead.
+- Answer: (a) 95/1 → 300/1, 95/1 → 301/1, 96/1 → 300/2, no quantity ✓ cold; called
+  "product association rows" (Ch 3's table) and drawn purchase → sales (the book reads
+  sales → purchase, "used to fulfill"): slips, no data changes. (b) the link points, it
+  doesn't allocate; the question can't be answered; a quantity would need guards when
+  either side's quantity changes ✓. (c) can't tell which purchase line fills which sales
+  line, and a sale can't point at two purchases ✓ (order 300 needs 95 and 96; not named).
+- Claude first graded (b) ✗ ("read 18 off Mirador's sales line"); the user's pushback
+  ("you are allocating") was right: that reading assumes 301/1 draws only on 95 and none
+  from stock, which the link (used to fulfill, not fully fulfills) doesn't guarantee. Point
+  17's outcome says the split isn't recorded. The tracker's retest note (the how-many read
+  from the sales line) was Claude's key and contradicted NOTES; the 11-02 and 11-03 "how
+  many" misses were the key's fault, not the user's (11-03's order-level miss stands).
+- Score: association 3 → 4.
