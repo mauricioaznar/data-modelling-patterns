@@ -787,3 +787,18 @@ Misunderstandings and reinforce attempts, oldest first.
   from the sales line) was Claude's key and contradicted NOTES; the 11-02 and 11-03 "how
   many" misses were the key's fault, not the user's (11-03's order-level miss stands).
 - Score: association 3 → 4.
+
+### 2026-11-04: round Q7, maintenance (every price change a typed row; Juguetería Nogal, order 410)
+- Asked live. Line 1: two train sets at €45; line 2: a dolls' house at €120. 10% off the
+  train sets, €12 delivery for the order, €6 extra for Mallorca, IVA 21% on the order.
+  (a) the adjustment rows (Apply), (b) "discount, delivery, surcharge and tax columns on the
+  order" (Evaluate).
+- Answer: (a) DISCOUNT 10% on line 1 ✓ cold; SHIPPING AND HANDLING €12 on the order ✓;
+  SURCHARGE €6 on the order ✓; the tax on the order as a percentage ✓, but written 12 for 21
+  ✗ (a slip) and called "tax rate" for SALES TAX ~; signs as − for the discount, + for the
+  rest ✓, though the model stores both positive and the sign comes from the type (unsaid ~).
+  (b) one column per kind merges two charges of the same kind and loses which is which and
+  where it came from ✓; that a column on the order can't hold the train-set discount on one
+  line, and that a new kind of charge needs a new column, unsaid ✗.
+- Score: every price change a typed row stays 4 ((a) placed the discount on the line
+  cold); next time, the line-level break and the new-kind break in (b).

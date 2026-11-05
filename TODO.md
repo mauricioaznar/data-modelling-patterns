@@ -116,7 +116,7 @@ trackers as usual, then tick here.
 - [x] Q4 · Ch 3 · where stock is (facility XOR container) + lot · gap (Lácteos Sierra, lot Y-118) · 2 → 3: the arc cold, product put on the lot
 - [x] Q5 · Ch 3 · estimated cost (product or feature arc) · gap (level 2) · stays 2: estimates put on supplier_product again, the arc missed
 - [x] Q6 · Ch 2 · move vs typo; shared mechanism · maintenance (last 4 on 10-28) (Gestoría Prado) · stays 4, cold
-- [ ] Q7 · Ch 4 · every price change a typed row · maintenance (last 4 on 10-28)
+- [x] Q7 · Ch 4 · every price change a typed row · maintenance (last 4 on 10-28) (Juguetería Nogal) · stays 4; (b) missed the one-line discount and the new-kind breaks
 
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 
