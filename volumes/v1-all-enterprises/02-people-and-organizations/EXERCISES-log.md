@@ -610,3 +610,17 @@ Misunderstandings and reinforce attempts, oldest first.
   its own many-to-many table (Fig 2.13), else the 6 Nov e-mail can't point at the router
   effort. D16's mnemonic, sides and trap updated.
 - Score: case and work effort 3 → 4 (the case role types to recall).
+
+### 2026-11-04: round Q6, Submodel 2 maintenance (move vs typo; Gestoría Prado, Hermanos Vidal SL and Elena Vidal)
+- Asked live. Since Mar 2024 the company (invoices) and its manager Elena (personal mail)
+  both use Calle Mayor 12, Huesca; on 1 Dec 2026 Elena's personal mail moves to Avenida
+  Pirineos 7; on 4 Dec it's found keyed as "Avenida Pireneos 7". (a) rows before 1 Dec and
+  what 1 Dec adds, ends, leaves (Apply), (b) "just change Calle Mayor 12" (Analyze), (c) the
+  4 Dec fix and why not as on 1 Dec (Understand).
+- Answer: (a) one Calle Mayor mechanism, a link per party from Mar 2024, a purpose on each
+  link (invoicing on the company's, personal mail on Elena's) ✓ cold; 1 Dec ends Elena's
+  link and purpose at thru 1 Dec (exclusive, right), adds a new mechanism, link and purpose
+  from 1 Dec, the company's rows and the shared mechanism untouched ✓ cold. (b) the shared
+  row moves the company too, and the history is lost ✓. (c) fix the text in place: the
+  address never was "Pireneos", same fact, the dates and purpose were right ✓ cold.
+- Score: move vs typo stays 4.

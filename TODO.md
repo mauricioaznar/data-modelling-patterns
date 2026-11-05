@@ -115,7 +115,7 @@ trackers as usual, then tick here.
 - [x] Q3 · Ch 2 · case and work effort · retest: one job, one work effort (Informática Pinar, Hostal Mirlo) · 3 → 4; the event to work effort link is its own table (D16)
 - [x] Q4 · Ch 3 · where stock is (facility XOR container) + lot · gap (Lácteos Sierra, lot Y-118) · 2 → 3: the arc cold, product put on the lot
 - [x] Q5 · Ch 3 · estimated cost (product or feature arc) · gap (level 2) · stays 2: estimates put on supplier_product again, the arc missed
-- [ ] Q6 · Ch 2 · move vs typo; shared mechanism · maintenance (last 4 on 10-28)
+- [x] Q6 · Ch 2 · move vs typo; shared mechanism · maintenance (last 4 on 10-28) (Gestoría Prado) · stays 4, cold
 - [ ] Q7 · Ch 4 · every price change a typed row · maintenance (last 4 on 10-28)
 
 ## Vol 1: A Library of Universal Data Models for All Enterprises
