@@ -888,3 +888,19 @@ Scores: price components 2 → 3; feature prices stay at 2.
   item is "part of" the lot, not an allocation; only `inventory_item` points at `lot`;
   production runs, consumption and shipments reach it through the items (Ch 5, Ch 6).
 - Score: where stock is + lot 2 → 3. Next: the lot holds no product.
+
+### 2026-11-04: round Q5, Submodel 3 gap (estimated cost; oak table, carpentry, fittings, Porto)
+- Asked live on the other computer; the scenario text wasn't saved, so this is rebuilt from
+  the answer: an oak product (wood 120, to 140 from 1 Jan 27), a carpentry feature (90, 60
+  at the Porto org), an extension fittings feature (25), (a) the rows, (b) the estimated
+  total for the Porto build, (c) what one cost column loses.
+- Answer: (a) every estimate put on `supplier_product` ✗ (the 10-19 slip again: the table is
+  `estimated_product_cost`, and a supplier is no part of it); the feature rows pointed at the
+  oak product's row ✗ (the arc: a row is for the product or for the feature, never hangs off
+  another row); no cost component type ✗ (materials, labour, other); the 1 Jan 27 change as
+  thru on the old row plus a new 140 row ✓ (exclusive thru right); the Porto carpentry row
+  scoped by the organization ✓, from dates left blank (not null in the model) ~. (b) sum the
+  pieces, preferring the Porto rows ✓ in spirit; the supplier as the oak's source ✗ again.
+  (c) history ✓, several components ~ ("multiple costs"), "multiple suppliers" ✗; place and
+  organization missed.
+- Score: estimated cost stays 2. Next: the table's name and the arc, no supplier anywhere.
