@@ -306,7 +306,8 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Hook:** the price recipe
 - **Mantra:** Price components are conditional rules: the most specific base wins, and each
   base says its charge: once, every or per use; matching discounts and surcharges stack on it
-  per unit; cost estimates hit a product or a feature, never both.
+  per unit; cost hangs on the thing (a product or a feature), split by type, narrowed by
+  place or org.
 
 <details><summary>Key</summary>
 
@@ -316,7 +317,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   base or suggested price and optional (= any) on a discount or surcharge; recurring is "per" a
   time frequency, usage "per" a unit of measure, two columns) · `quantity_break` and
   `order_value` (ranges, exclusive thru) · `estimated_product_cost` (a dated estimate per cost component type, for a product **or** a
-  feature) · `cost_component_type` (a hierarchy under materials, labour, other) · currency
+  feature, optionally scoped to a geographic boundary or an organization; no supplier on it) · `cost_component_type` (a hierarchy under materials, labour, other) · currency
   and time-frequency units of measure.
 - **W:** a `price` column on the product: one number, so no discounts, regions, quantity breaks
   or history. One `cost` number gives no margin by materials or labour.
@@ -326,7 +327,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   the suggested price never enters.
 - **D:** product and/or feature ← price_component → region / party type / category / quantity
   break / order value / sale type / organization (all optional), → currency; product | feature
-  ← estimated_product_cost → cost_component_type.
+  ← estimated_product_cost → cost_component_type, geographic boundary / organization (optional).
 </details>
 
 ### Card 9 · V1 Ch 3 · Product associations and parts (Figs 3.9–3.10)
