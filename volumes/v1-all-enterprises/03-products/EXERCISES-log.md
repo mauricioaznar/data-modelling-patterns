@@ -889,18 +889,23 @@ Scores: price components 2 → 3; feature prices stay at 2.
   production runs, consumption and shipments reach it through the items (Ch 5, Ch 6).
 - Score: where stock is + lot 2 → 3. Next: the lot holds no product.
 
-### 2026-11-04: round Q5, Submodel 3 gap (estimated cost; oak table, carpentry, fittings, Porto)
-- Asked live on the other computer; the scenario text wasn't saved, so this is rebuilt from
-  the answer: an oak product (wood 120, to 140 from 1 Jan 27), a carpentry feature (90, 60
-  at the Porto org), an extension fittings feature (25), (a) the rows, (b) the estimated
-  total for the Porto build, (c) what one cost column loses.
+### 2026-11-04: round Q5, Submodel 3 gap (estimated cost; Mesas Aliso, oak table + leaf)
+- Asked live. Oak and walnut dining tables, an extension leaf option on either. Oak table:
+  oak wood 120, carpentry 90; the leaf: hinges and runners 40, fitting 25; oak wood 140 from
+  1 Jan 2027; the subsidiary Aliso Portugal (Porto) does carpentry at 60. (a) the rows
+  (Apply), (b) Aliso Portugal's oak table with the leaf in Feb 2027: rows and total (Analyze),
+  (c) "a cost column on the product and one on the feature" (Evaluate).
 - Answer: (a) every estimate put on `supplier_product` ✗ (the 10-19 slip again: the table is
-  `estimated_product_cost`, and a supplier is no part of it); the feature rows pointed at the
-  oak product's row ✗ (the arc: a row is for the product or for the feature, never hangs off
-  another row); no cost component type ✗ (materials, labour, other); the 1 Jan 27 change as
-  thru on the old row plus a new 140 row ✓ (exclusive thru right); the Porto carpentry row
-  scoped by the organization ✓, from dates left blank (not null in the model) ~. (b) sum the
-  pieces, preferring the Porto rows ✓ in spirit; the supplier as the oak's source ✗ again.
-  (c) history ✓, several components ~ ("multiple costs"), "multiple suppliers" ✗; place and
-  organization missed.
-- Score: estimated cost stays 2. Next: the table's name and the arc, no supplier anywhere.
+  `estimated_product_cost`, no supplier on it); carpentry made a feature ✗ (it's a LABOR
+  component of the oak table; the leaf is the feature); the leaf rows hung off the oak
+  product's row ✗ (the arc: they point at the leaf feature itself, so they serve the walnut
+  table too); no cost component type ✗; the hinges row not in the paste ~; the 1 Jan 27
+  change as thru on the old row plus a new 140 row ✓; Aliso Portugal's row scoped by the
+  organization ✓, but on the carpentry "feature" ✗; from dates left blank ~ (not null).
+  (b) oak wood from row #1 ✗ (that row ended 1 Jan 27; Feb takes the 140 row); Porto
+  carpentry over the 90 ✓ (most specific wins); a new Porto leaf row #7 ✗ (the rest is the
+  same: the general leaf rows apply); no total given ✗ (140 + 60 + 40 + 25 = 265).
+  (c) history ✓, the split into components ✓ ("multiple costs"), "multiple suppliers" ✗;
+  the per-organization cost (Porto's 60) missed.
+- Score: estimated cost stays 2. Next: the table's name, carpentry as a component type not
+  a feature, the arc points at the feature itself, the as-of row in a dated set.
