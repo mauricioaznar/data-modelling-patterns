@@ -118,6 +118,13 @@ trackers as usual, then tick here.
 - [x] Q6 · Ch 2 · move vs typo; shared mechanism · maintenance (last 4 on 10-28) (Gestoría Prado) · stays 4, cold
 - [x] Q7 · Ch 4 · every price change a typed row · maintenance (last 4 on 10-28) (Juguetería Nogal) · stays 4; (b) missed the one-line discount and the new-kind breaks
 
+## Comparisons (`comparisons/`, kept apart from the chapters)
+
+- [x] 01 Vendor Price Catalog: source and comparison drafted (2026-11-05)
+- [x] 01 Vendor Price Catalog: overview and `EXERCISES.md` started, Q1 (Understand) asked (2026-11-05)
+- [ ] 01 Vendor Price Catalog: continue the questions, climbing to Analyze and Evaluate
+- [ ] 01 Vendor Price Catalog: settle the open questions in `COMPARISON.md` §5 with the user
+
 ## Vol 1: A Library of Universal Data Models for All Enterprises
 
 Chapter titles are from memory; verify them against the book's table of contents.

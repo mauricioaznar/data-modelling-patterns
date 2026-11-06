@@ -18,14 +18,20 @@ and any decisions made.
 - Card 8's cost line rewritten with the user: "cost hangs on the thing (a product or a
   feature), split by type, narrowed by place or org"; the key gets the scope and "no
   supplier on it". Export regenerated (76 cards).
+- New `comparisons/` folder; 01 Vendor Price Catalog (a real-world model): its source and
+  a full comparison against the repo's Vol 1 (inventory, mapping A–H, structural differences,
+  gaps both ways, open questions), a one-page overview and EXERCISES.md with the first
+  Understand question. Service renamed and example values made generic.
 
 **Decisions**
-- None new.
+- Comparisons of other models live in `comparisons/`, with their own exercises, and never
+  touch the chapters, cards, trackers or the design reference doc (CLAUDE.md, Layout).
 
 **Next**
 - Reinforce estimated cost (level 2): the table's name, carpentry as a component type, the
   arc to the feature itself, the as-of row.
 - Ch 4 Requirements overview, as on 11-03.
+- Vendor Price Catalog comparison exercises (Analyze, Evaluate) in `comparisons/01-vendor-price-catalog/`.
 
 ## 2026-11-04
 
