@@ -909,3 +909,52 @@ Scores: price components 2 → 3; feature prices stay at 2.
   the per-organization cost (Porto's 60) missed.
 - Score: estimated cost stays 2. Next: the table's name, carpentry as a component type not
   a feature, the arc points at the feature itself, the as-of row in a dated set.
+
+### 2026-11-07: question round, pending (written for the phone; wording in `docs/round-2026-11-07.md`; order in TODO)
+- **Q1 · Gap (level 2) · estimated cost, product or feature arc · Apply, Analyze, Evaluate.**
+  Bicicletas Júcar, city bike + e-assist kit, Júcar Norte. Cold retest after the 11-05 Card 8
+  rewrite and D17/D18 (no teaching in the question). Key: (a) all rows in
+  `estimated_product_cost`, none on `supplier_product`: city bike (product) frame 150,
+  MATERIALS (or PURCHASED_PART), from 2026-01-01 thru 2027-03-01; city bike frame 165,
+  same type, from 2027-03-01, thru null; city bike assembly 70, LABOR (or a child type under
+  it), no scope; city bike assembly 55, LABOR, organization = Júcar Norte; the kit (the
+  feature itself, product null) motor and battery 300, MATERIALS; the kit fitting 40, LABOR
+  (INSTALLATION). The kit's rows written once, for both bikes. A geographic scope for
+  Castellón is a weaker but acceptable reading. (b) 10 Apr 2027 at Júcar Norte: frame 165
+  (the 150 row ended 1 Mar), assembly 55 (its own row is more specific than the general
+  70), kit 300 + 40: total 560. (c) `supplier_product` says who can supply the frame (lead
+  time, preference, rating), not what the bike costs us; the estimate belongs to the thing
+  being costed, split by type; a second frame supplier would give two answers; the dated
+  rise, the Júcar Norte scope and the kit (no supplier row) have nowhere to go; margin
+  compares price and cost on the same product.
+- **Q3 · Retest (3) · where stock is + lot, the lot holds no product · Apply, Analyze,
+  Evaluate.** Almazara Olivar, lot L-27. Key: (a) lot: creation 2026-10-03, quantity 600,
+  expiration 2028-10-03, no product. Container P7 (PALLET) at the Martos warehouse. Two
+  NON_SERIALIZED items, product = extra virgin 1 L, GOOD, lot L-27: 450 with container P7
+  (facility null), 150 with facility = the Jaén shop (container null). (b) lot →
+  `inventory_item.lot_id` → `product_id` → product; the building is the item's
+  `facility_id`, or `container_id` → `container.facility_id`. (c) the product stored twice,
+  on the lot and on each item, and the copies can disagree; the lot is the batch (when, how
+  many, expiry), what it holds is read through its items: the arc's own reason (the
+  container already knows its facility).
+- **Q5 · Gap (level 2) · one typed table vs one entity per kind · Apply, Analyze,
+  Evaluate.** Tinta Roble. Key: (a) OBSOLESCENCE from Roble 1 to Roble 2, from 2027-01-01;
+  SUBSTITUTE from the A4 notebook to the A5, quantity 2 (how many "to" replace one "from"),
+  one row, one way only; INCOMPATIBILITY ink and gel pen, one row either way round
+  (queries look both ways); COMPONENT gift box → Roble 2 pen and gift box → A5 notebook,
+  quantity_used 1 each. (b) per kind: each table's ends are named and mean one thing
+  (obsolete, replacement); the type-only columns live only where they apply and can be NOT
+  NULL; the rules are structure (FKs, checks), not data-quality queries; reads plainly.
+  (c) ours: a new kind (a refill, an upsell) is a row, not a table and new queries;
+  "everything linked to this product" is one query; dates and reason defined once. The
+  cost: type-only columns are nullable and checked by queries, and from/to mean something
+  different per type. Choice: typed when kinds come and go, per kind when a few stable kinds
+  each have rules worth enforcing; either with that reason (the overall model keeps 3.9b).
+- **Q7 · Maintenance · inventory item, good vs physical stock, subtypes, status (last 4 on
+  10-28) · Apply, Understand, Evaluate.** Ópticas Sauce. Key: (a) three SERIALIZED items,
+  product Sauce Sun, SS-101 GOOD, SS-102 GOOD, SS-103 SLIGHTLY_DAMAGED, no quantity;
+  NON_SERIALIZED spray 36 GOOD and spray 4 DEFECTIVE; all with facility = the shop. (b) two
+  rows: the status sits on the item, one per row, and 36 sellable and 4 broken sprays are in
+  different states. (c) the product is the model we offer (one catalogue row); stock is
+  physical: a column can't say which pair is scratched, which serials we hold (warranty,
+  theft), a status per unit, where (a second shop, a container) or which lot.

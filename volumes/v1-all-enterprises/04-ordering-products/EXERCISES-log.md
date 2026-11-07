@@ -802,3 +802,29 @@ Misunderstandings and reinforce attempts, oldest first.
   line, and that a new kind of charge needs a new column, unsaid ✗.
 - Score: every price change a typed row stays 4 ((a) placed the discount on the line
   cold); next time, the line-level break and the new-kind break in (b).
+
+### 2026-11-07: question round, pending (written for the phone; wording in `docs/round-2026-11-07.md`; order in TODO)
+- **Q2 · Retest (3) · rules beside facts · Apply, Analyze, Evaluate.** Vivero Encina,
+  sales order 520. Key: (a) `order_role_rule` rows (order kind, hat, required standing
+  role, from, thru): SALES / SALESPERSON / EMPLOYEE, thru null; SALES / SALESPERSON /
+  CONTRACTOR, thru 2027-01-01 (ended, not deleted, so older orders still pass); SALES /
+  BILL_TO / BILL_TO_CUSTOMER; SALES / APPROVER / none. The one-bill-to is not a rule row.
+  Facts in `order_role`: (520, Nuria, SALESPERSON, 50), (520, Marcos, SALESPERSON, 50),
+  (520, Jardines Ribera, BILL_TO). (b) Marcos: on 12 Jan 2027 the only salesperson rule in
+  force needs EMPLOYEE, and he's a contractor, so the data-quality query (a party without a
+  required standing role on the order date) flags him, after the fact: the insert isn't
+  blocked. Dated 15 Dec 2026 it passes: the contractor rule was in force on that order
+  date. (c) no: a rule row says which hat a kind of order allows and which standing role it
+  needs, not how many; several rows for one hat would each carry the count, and they could
+  disagree. Cardinality is its own check query (more than one BILL_TO on an order), with a
+  bad seed row (the 10-23 mistake).
+- **Q6 · Maintenance · the line: product, feature or neither, the snapshot, ordered for
+  (last 4 on 10-30) · Apply, Understand, Evaluate.** Informática Lince, order 530. Key:
+  (a) line 1 Lince 14 (product) ×2 at 1,100; line 2 the 32 GB upgrade (feature) ×2 at 150,
+  ordered for line 1; line 3 Lince 14 ×1 at 1,100; line 4 neither, a description ("logo
+  engraved on the lid") ×1 at 20, ordered for line 3. (b) nothing: each line's unit price
+  is the agreed price, copied when the order was taken; the rise is a new price component
+  for later orders, and rewriting the line would change what Estudio Arce agreed to.
+  (c) one line can't say which two laptops get the upgrade, so the feature line has no line
+  to be ordered for; the engraving has no line of its own or price; a comment can't be
+  counted, priced or queried. Split the laptops by what differs.

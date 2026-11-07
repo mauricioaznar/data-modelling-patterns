@@ -624,3 +624,22 @@ Misunderstandings and reinforce attempts, oldest first.
   row moves the company too, and the history is lost ✓. (c) fix the text in place: the
   address never was "Pireneos", same fact, the dates and purpose were right ✓ cold.
 - Score: move vs typo stays 4.
+
+### 2026-11-07: question round, pending (written for the phone; wording in `docs/round-2026-11-07.md`; order in TODO)
+- **Q4 · Retest (3) · PARTY RELATIONSHIP + TYPE, the direction per type · Apply, Apply,
+  Understand.** Viajes Brisa. Key (directions as in the seed's types): (a) roles: Viajes
+  Brisa INTERNAL_ORGANIZATION; Carla EMPLOYEE; Hotel Duna CUSTOMER from 2025-03-01 and
+  SUPPLIER from 2027-02-01; Agencia Ola AGENT (under DISTRIBUTION_CHANNEL); Pedro CONTACT.
+  Relationships: EMPLOYMENT, Viajes Brisa (INTERNAL_ORGANIZATION) → Carla (EMPLOYEE);
+  CUSTOMER_RELATIONSHIP, Hotel Duna (CUSTOMER) → Viajes Brisa (INTERNAL_ORGANIZATION);
+  DISTRIBUTION_CHANNEL_RELATIONSHIP, Agencia Ola (AGENT) → Viajes Brisa; ORGANIZATION_CONTACT,
+  Pedro (CONTACT) → Agencia Ola (AGENT, an ORGANIZATION_ROLE); all from 2025-03-01, thru null;
+  SUPPLIER_RELATIONSHIP, Hotel Duna (SUPPLIER) → Viajes Brisa, from 2027-02-01. Hotel Duna's
+  supplier side is a second role and a second relationship, not a change to the first.
+  (b) end Pedro's contact relationship thru 2027-06-01 (exclusive), and his CONTACT role if
+  he plays it nowhere else; add Lucía's CONTACT role and a contact relationship Lucía →
+  Agencia Ola from 2027-06-01; Agencia Ola's AGENT role and its channel relationship stay.
+  (c) a data-quality query can check that the from role is of the type's from role type (or
+  below it, through `role_type_ancestor`) and the to role likewise: Carla → Viajes Brisa puts
+  EMPLOYEE where EMPLOYMENT wants INTERNAL_ORGANIZATION, so it's flagged. The type pins what
+  the direction means.

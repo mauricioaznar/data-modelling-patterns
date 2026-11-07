@@ -3,6 +3,27 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-07
+
+**Built**
+- Pulled. The pull conflicted with an unpushed 11-04 commit (Q5–Q7's pending keys); the
+  graded entries from the other computer kept, the pending keys dropped.
+- A question round of seven, all written for WhatsApp in `docs/round-2026-11-07.md` (keys
+  in the Ch 2, Ch 3 and Ch 4 logs). Gaps and retests: estimated cost (2, cold after the
+  Card 8 rewrite), rules beside facts (3), where stock is + lot (3), party relationship
+  direction (3), typed table vs one entity per kind (2). Maintenance: the order line (last
+  4 on 10-30), inventory item (last 4 on 10-28).
+- Ch 2's purpose row gets the 11-04 Gestoría Prado evidence it was missing, so it's no
+  longer the oldest 4.
+
+**Decisions**
+- The phone text's headers name the submodel, not the concept, so a header doesn't give
+  the answer away (the keys and TODO still name the concept).
+
+**Next**
+- Grade the round as the answers come back; suggest distinction cards for its mix-ups.
+- Ch 4 Requirements overview, as on 11-03.
+
 ## 2026-11-05
 
 **Built**

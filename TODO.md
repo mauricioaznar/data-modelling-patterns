@@ -118,6 +118,22 @@ trackers as usual, then tick here.
 - [x] Q6 · Ch 2 · move vs typo; shared mechanism · maintenance (last 4 on 10-28) (Gestoría Prado) · stays 4, cold
 - [x] Q7 · Ch 4 · every price change a typed row · maintenance (last 4 on 10-28) (Juguetería Nogal) · stays 4; (b) missed the one-line discount and the new-kind breaks
 
+## Question round 2026-11-07 (all seven on the phone)
+
+All seven are written to paste into WhatsApp, in
+[docs/round-2026-11-07.md](docs/round-2026-11-07.md), with no keys. The keys are in the
+Ch 2, Ch 3 and Ch 4 logs under "2026-11-07: question round, pending": **don't open those
+before grading**. When the answers come back, read each one back, grade, log and update the
+trackers as usual, then tick here.
+
+- [ ] Q1 · Ch 3 · estimated cost (product or feature arc) · gap (level 2), cold after the Card 8 rewrite and D17/D18 (Bicicletas Júcar, city bike + e-assist kit)
+- [ ] Q2 · Ch 4 · rules beside facts · retest (3): dated rule rows, the after-the-fact check, no cardinality in the rule table (Vivero Encina, sales order 520)
+- [ ] Q3 · Ch 3 · where stock is (facility XOR container) + lot · retest (3): the lot holds no product (Almazara Olivar, lot L-27)
+- [ ] Q4 · Ch 2 · party relationship + type · retest (3): the direction per type, the agent (Viajes Brisa)
+- [ ] Q5 · Ch 3 · one typed table vs one entity per kind · gap (level 2): its cost (Tinta Roble)
+- [ ] Q6 · Ch 4 · the line: product, feature or neither, snapshot, ordered for · maintenance (last 4 on 10-30) (Informática Lince, order 530)
+- [ ] Q7 · Ch 3 · inventory item (serialized vs counted, status) · maintenance (last 4 on 10-28) (Ópticas Sauce)
+
 ## Comparisons (`comparisons/`, kept apart from the chapters)
 
 - [x] 01 Vendor Price Catalog: source and comparison drafted (2026-11-05)
