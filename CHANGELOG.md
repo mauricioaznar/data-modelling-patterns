@@ -3,6 +3,36 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-05
+
+**Built**
+- Pulled; finished the 2026-11-04 round (Q5–Q7, asked live on the other computer).
+- Q5 (Mesas Aliso, oak table + extension leaf): estimated cost stays 2. All estimates put
+  on `supplier_product` again (third time), carpentry made a feature (it's a LABOR row for
+  the table), the leaf rows hung off the product row, no component type, February read off
+  the ended 120 row. The dated change and the Porto org scope were right. Graded first on a
+  rebuilt scenario (the question wasn't saved), then regraded on the real one.
+- Q6 (Gestoría Prado, move vs typo): stays 4, all cold.
+- Q7 (Juguetería Nogal, order 410 adjustments): stays 4; IVA written 12 for 21, and (b)
+  missed the one-line discount and new-kind breaks.
+- Card 8's cost line rewritten with the user: "cost hangs on the thing (a product or a
+  feature), split by type, narrowed by place or org"; the key gets the scope and "no
+  supplier on it". Export regenerated (76 cards).
+- New `comparisons/` folder; 01 Vendor Price Catalog (a real-world model): its source and
+  a full comparison against the repo's Vol 1 (inventory, mapping A–H, structural differences,
+  gaps both ways, open questions), a one-page overview and EXERCISES.md with the first
+  Understand question. Service renamed and example values made generic.
+
+**Decisions**
+- Comparisons of other models live in `comparisons/`, with their own exercises, and never
+  touch the chapters, cards, trackers or the design reference doc (CLAUDE.md, Layout).
+
+**Next**
+- Reinforce estimated cost (level 2): the table's name, carpentry as a component type, the
+  arc to the feature itself, the as-of row.
+- Ch 4 Requirements overview, as on 11-03.
+- Vendor Price Catalog comparison exercises (Analyze, Evaluate) in `comparisons/01-vendor-price-catalog/`.
+
 ## 2026-11-04
 
 **Built**

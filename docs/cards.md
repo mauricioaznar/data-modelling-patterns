@@ -306,7 +306,8 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Hook:** the price recipe
 - **Mantra:** Price components are conditional rules: the most specific base wins, and each
   base says its charge: once, every or per use; matching discounts and surcharges stack on it
-  per unit; cost estimates hit a product or a feature, never both.
+  per unit; cost hangs on the thing (a product or a feature), split by type, narrowed by
+  place or org.
 
 <details><summary>Key</summary>
 
@@ -316,7 +317,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   base or suggested price and optional (= any) on a discount or surcharge; recurring is "per" a
   time frequency, usage "per" a unit of measure, two columns) · `quantity_break` and
   `order_value` (ranges, exclusive thru) · `estimated_product_cost` (a dated estimate per cost component type, for a product **or** a
-  feature) · `cost_component_type` (a hierarchy under materials, labour, other) · currency
+  feature, optionally scoped to a geographic boundary or an organization; no supplier on it) · `cost_component_type` (a hierarchy under materials, labour, other) · currency
   and time-frequency units of measure.
 - **W:** a `price` column on the product: one number, so no discounts, regions, quantity breaks
   or history. One `cost` number gives no margin by materials or labour.
@@ -326,7 +327,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   the suggested price never enters.
 - **D:** product and/or feature ← price_component → region / party type / category / quantity
   break / order value / sale type / organization (all optional), → currency; product | feature
-  ← estimated_product_cost → cost_component_type.
+  ← estimated_product_cost → cost_component_type, geographic boundary / organization (optional).
 </details>
 
 ### Card 9 · V1 Ch 3 · Product associations and parts (Figs 3.9–3.10)
@@ -1934,6 +1935,33 @@ options; one that misses a fact goes to its submodel card instead.
   (2026-11-03); the effort named "booking a Wi-Fi extender", then "a work effort row is
   created" for the install (2026-11-04); the link put on `work_effort` as an FK, which
   leaves the e-mail reporting on a job no place to point (2026-11-04).
+
+### Distinction D17 · Supplier product or estimated cost? (V1 Ch 3)
+- **Cue:** "Maderas Moncayo sells us oak, 5 days' lead time, our preferred source. The oak
+  for a table costs us 120, carpentry 90, 60 at our Porto workshop."
+- **Test:** Is it about who can sell us the thing, or what the thing costs us to make?
+- **Sides:** A `supplier_product` row says a supplier can provide a product: from when, lead
+  time, preference, rating, and no cost column. An `estimated_product_cost` row says what a
+  product or a feature costs us, split by cost component type (materials, labour, other),
+  dated, optionally narrowed to a place or one of our organizations, and no supplier on it.
+- **Mnemonic:** Who sells it is a supplier product; what it costs us is an estimate. They
+  never meet.
+- **Trap:** "cost by supplier" as what an estimate adds (2026-10-19); every estimate for the
+  oak table put on `supplier_product`, the oak "from a supplier" (2026-11-05).
+
+### Distinction D18 · A feature or a cost component? (V1 Ch 3)
+- **Cue:** "The oak table: oak wood 120, carpentry 90. The extension leaf, on either table:
+  hinges and runners 40, fitting 25."
+- **Test:** Can the customer pick it, or is it what making the thing costs us?
+- **Sides:** A feature is an option the customer picks (the leaf); it gets its own estimate
+  rows, pointing at the feature itself, so one leaf estimate serves every table that takes
+  it. Wood, carpentry and fitting are cost component types (materials, labour) on the rows
+  of whatever they're spent on: carpentry on the table is LABOR for the table; carpentry to
+  fit the leaf is LABOR for the leaf. Each row hangs on exactly one: the product or the
+  feature.
+- **Mnemonic:** The customer picks a feature; the workshop spends a component.
+- **Trap:** carpentry made a feature, and the leaf's rows hung off the oak table's row, so
+  the walnut table's leaf had no cost (2026-11-05).
 
 ---
 

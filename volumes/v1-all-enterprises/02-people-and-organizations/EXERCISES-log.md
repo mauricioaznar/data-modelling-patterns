@@ -611,17 +611,16 @@ Misunderstandings and reinforce attempts, oldest first.
   effort. D16's mnemonic, sides and trap updated.
 - Score: case and work effort 3 → 4 (the case role types to recall).
 
-### 2026-11-04: question round, pending (written for the phone; wording in `docs/round-2026-11-04.md`; order in TODO)
-- **Q6 · Maintenance · move vs typo; shared mechanism (last 4 on 10-28) · Apply, Analyze,
-  Understand.** Gestoría Prado, Hermanos Vidal SL and Elena Vidal. Key: (a) before 1 Dec:
-  one `contact_mechanism` (postal address subtype) Calle Mayor 12, shared; a
-  `party_contact_mechanism` link per party from March 2024, thru null; a purpose on each
-  party's own link (BILLING on the company's, a personal-mail purpose on Elena's). On
-  1 Dec: a new contact mechanism Avenida Pirineos 7; Elena's Calle Mayor link (and its
-  purpose) ended thru 1 Dec (exclusive); a new link Elena → Pirineos from 1 Dec, thru
-  null, with its purpose. Untouched: the Calle Mayor row, the company's link and its
-  purpose. (b) the address row is shared: changing it moves the company's invoices to
-  Elena's flat, and it erases where Elena's mail went until 1 Dec (the move was true
-  history). A move changes the link, never the address. (c) correct the Pirineos row in
-  place: the typo was never true, so there is no history to keep; the link and its dates
-  were right. Ending and restarting would record a false period at "Pireneos".
+### 2026-11-04: round Q6, Submodel 2 maintenance (move vs typo; Gestoría Prado, Hermanos Vidal SL and Elena Vidal)
+- Asked live. Since Mar 2024 the company (invoices) and its manager Elena (personal mail)
+  both use Calle Mayor 12, Huesca; on 1 Dec 2026 Elena's personal mail moves to Avenida
+  Pirineos 7; on 4 Dec it's found keyed as "Avenida Pireneos 7". (a) rows before 1 Dec and
+  what 1 Dec adds, ends, leaves (Apply), (b) "just change Calle Mayor 12" (Analyze), (c) the
+  4 Dec fix and why not as on 1 Dec (Understand).
+- Answer: (a) one Calle Mayor mechanism, a link per party from Mar 2024, a purpose on each
+  link (invoicing on the company's, personal mail on Elena's) ✓ cold; 1 Dec ends Elena's
+  link and purpose at thru 1 Dec (exclusive, right), adds a new mechanism, link and purpose
+  from 1 Dec, the company's rows and the shared mechanism untouched ✓ cold. (b) the shared
+  row moves the company too, and the history is lost ✓. (c) fix the text in place: the
+  address never was "Pireneos", same fact, the dates and purpose were right ✓ cold.
+- Score: move vs typo stays 4.

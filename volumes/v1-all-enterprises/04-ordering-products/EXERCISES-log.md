@@ -788,16 +788,17 @@ Misunderstandings and reinforce attempts, oldest first.
   many" misses were the key's fault, not the user's (11-03's order-level miss stands).
 - Score: association 3 → 4.
 
-### 2026-11-04: question round, pending (written for the phone; wording in `docs/round-2026-11-04.md`; order in TODO)
-- **Q7 · Maintenance · every price change a typed row (last 4 on 10-28) · Apply,
-  Evaluate.** Juguetería Nogal, order 410. Key: (a) `order_adjustment` rows typed by
-  `order_adjustment_type`, exactly one of amount or percentage each: DISCOUNT 10% on
-  line 1 (order_item_id, not the order; its base is the line's €90, line 2 stays full
-  price); SHIPPING_AND_HANDLING €12 on the order; SURCHARGE €6 on the order (an extra on
-  top of the normal delivery; an out-of-area type under SURCHARGE is fine, MISCELLANEOUS
-  or SHIPPING ✗); SALES_TAX 21% on the order. Every value stored positive: the sign
-  comes from the type (DISCOUNT subtracts, the rest add); a minus on the discount ✗.
-  (b) a column per kind: a new kind of charge (a card fee, gift wrap) is a schema change,
-  not a type row; a charge can't sit on one line (the 10% is line 1's alone); two of a
-  kind (two discounts) need more columns; amount or percentage doubles them; the type's
-  rollup to the six top types (and the sign) is lost for reports.
+### 2026-11-04: round Q7, maintenance (every price change a typed row; Juguetería Nogal, order 410)
+- Asked live. Line 1: two train sets at €45; line 2: a dolls' house at €120. 10% off the
+  train sets, €12 delivery for the order, €6 extra for Mallorca, IVA 21% on the order.
+  (a) the adjustment rows (Apply), (b) "discount, delivery, surcharge and tax columns on the
+  order" (Evaluate).
+- Answer: (a) DISCOUNT 10% on line 1 ✓ cold; SHIPPING AND HANDLING €12 on the order ✓;
+  SURCHARGE €6 on the order ✓; the tax on the order as a percentage ✓, but written 12 for 21
+  ✗ (a slip) and called "tax rate" for SALES TAX ~; signs as − for the discount, + for the
+  rest ✓, though the model stores both positive and the sign comes from the type (unsaid ~).
+  (b) one column per kind merges two charges of the same kind and loses which is which and
+  where it came from ✓; that a column on the order can't hold the train-set discount on one
+  line, and that a new kind of charge needs a new column, unsaid ✗.
+- Score: every price change a typed row stays 4 ((a) placed the discount on the line
+  cold); next time, the line-level break and the new-kind break in (b).

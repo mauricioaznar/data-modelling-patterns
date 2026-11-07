@@ -168,6 +168,10 @@ the user, tease with nicknames, so the sessions stay fun.
   schema (`v1`, `v2`, `v3`); the loader sets `search_path` so a volume sees its own tables first,
   then earlier volumes. Never hard-code a schema prefix in chapter SQL.
 - New chapters start as a copy of `templates/chapter/`.
+- `comparisons/NN-slug/` (the user's call, 2026-11-05): other real-world models held up
+  against the repo's Silverston, with their own exercises. **Silverston stays pure:** nothing
+  from a comparison goes into chapters, cards, trackers or the design reference doc. Rules in
+  `comparisons/README.md`.
 
 ## SQL conventions
 - PostgreSQL (run through PGlite). Tables are singular snake_case (`party`, `party_role`), and
