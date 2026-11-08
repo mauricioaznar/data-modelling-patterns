@@ -994,16 +994,22 @@ Scores: price components 2 → 3; feature prices stay at 2.
   row holds one status) ✓ cold.
 - Score: inventory item stays 4 (maintenance passed, cold; status and where unprompted).
 
+### 2026-11-08: round Q3, Submodel 3 retest (where stock is + lot; Quesería Valle, lot Q-12)
+- Short, both parts in one go: lot Q-12 made 2 Nov 2026, 200 cheeses, best before 2 Feb
+  2027; 150 on rack R4 in the Ávila warehouse, 50 on the Segovia shop floor. (a) the lot
+  row and the item rows (Apply), (b) "put the product on the lot" (Evaluate).
+- Answer: (a) the lot: its name, quantity 200, creation 2026-11-02, expiry 2027-02-02, no
+  product ✓ cold (both 11-07 misses fixed); item 1 NON_SERIALIZED cheese 150 in container
+  R4, no facility ✓; item 2 NON_SERIALIZED cheese 50 on the Segovia shop floor ✓; but
+  neither item points at lot Q-12 ✗ (the link that ties the stock to its batch, which the
+  recall walks; right on 11-07). (b) two copies of the product that can drift ✓ cold (the
+  11-07 why); "a lot can't say 150 and 50 for two products (cheese and potatoes)" ~ (a lot
+  is one batch of one product; the quantities sit on the items); that the recall walks the
+  items anyway, so the copy saves nothing, not said.
+- Score: where stock is + lot stays 3 (the lot's columns and the why both came back cold,
+  but the items lost their lot). Next: the item → lot link cold, with the recall walk.
+
 ### 2026-11-08: question round, pending (written for the phone, short; wording in `docs/round-2026-11-08.md`; order in TODO)
-- **Q3 · Submodel 3 retest (3) · where stock is + lot: the why cold, the lot's own columns ·
-  Apply, Evaluate.** Quesería Valle. Key: (a) lot Q-12: creation_date 2026-11-02, quantity
-  200, expiration_date 2027-02-02, no product; item 1 NON_SERIALIZED, the cured cheese, 150,
-  container R4 (not the facility: R4 knows it's in Ávila), lot Q-12; item 2 NON_SERIALIZED,
-  50, facility the Segovia shop, lot Q-12; status GOOD unprompted ✓. (b) the product on the
-  lot copies what the items already say, and the two copies can disagree (the lot saying
-  one cheese, its items another); the recall still walks lot → items → container →
-  facility for the buildings, so the copy saves nothing. Full version adds the 10 cracked
-  (a third item, SLIGHTLY_DAMAGED, 10, the 50 becoming 40) and the recall walk.
 - **Q4 · Submodel 4 retest (3) · estimated cost: a component's row on the product, the
   total · Apply, Analyze.** Carpintería Haya. Short key (as sent): (a) on the chair
   (product), all from 2026-01-01: MATERIALS 40, LABOR 30, LABOR 25 with organization = the

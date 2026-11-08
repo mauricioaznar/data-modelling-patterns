@@ -146,7 +146,7 @@ trackers as usual, then tick here.
 
 - [x] Q1 · Ch 2 · party relationship + type · gap (2): the agent cold, the contact's far end (Librería Faro) · stays 2: Norte a distributor and a customer (the agent missed again), the contact's far end fixed but its arrow reversed
 - [x] Q2 · Ch 4 · the line · retest (3): ordered for cold, no column list (Floristería Lis, order 610) · 3 → 4: ordered for cold and unprompted, the why right; the price and the ribbon's quantity slipped
-- [ ] Q3 · Ch 3 · where stock is + lot · retest (3): the lot's own columns, the why cold (Quesería Valle, lot Q-12)
+- [x] Q3 · Ch 3 · where stock is + lot · retest (3): the lot's own columns, the why cold (Quesería Valle, lot Q-12) · stays 3: both 11-07 misses fixed cold, but the items didn't point at the lot
 - [ ] Q4 · Ch 3 · estimated cost · retest (3): a component's row on the product, the total (Carpintería Haya)
 - [ ] Q5 · Ch 3 · one typed table vs one entity per kind · gap (2): its cost (Papelería Cobre)
 - [ ] Q6 · Ch 4 · amount or percentage · maintenance (last 4 on 10-28) (Herbolario Salvia, order 620)

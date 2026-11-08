@@ -17,6 +17,8 @@ and any decisions made.
 - Round Q2 graded (short, both parts in one go): the line 3 → 4. Ordered for came back
   cold with no column list; the bouquet's price and the ribbon's quantity slipped.
 - practice.md: a question's parts are given in one go and graded together (the user's call).
+- Round Q3 graded (short): where stock is + lot stays 3. The lot's columns and the why
+  (two copies drift) came back cold; the items lost their link to the lot.
 - Round 2026-11-07 Q7 graded (short, answered in chat): inventory item stays 4. One row
   per serial with no quantity, the sprays split 36 good / 4 defective because a row holds
   one status, status and facility unprompted.
