@@ -357,7 +357,9 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   dates, no reason, and a new column for every new kind of link.
 - **T:** *(the naive-model trap until practice gives yours)* forgetting direction. Substitution
   needs a row each way; incompatibility is read both ways; a BOM explosion multiplies
-  quantities down the levels and needs a cycle guard.
+  quantities down the levels and needs a cycle guard. Two A5 notebooks standing in for one
+  A4 written A5 → A4, with no quantity (from is the one replaced: A4 → A5, quantity 2)
+  (2026-11-07).
 - **D:** product ← association (from), association (to) → product; association → type; good
   (= product) carries good_kind. Not built: 3.10b's PART, the physical side of a product,
   which would take the assemblies and leave the component link only the packages.
@@ -1968,7 +1970,22 @@ options; one that misses a fact goes to its submodel card instead.
 - **Mnemonic:** The customer picks a feature; the workshop spends a component.
 - **Trap:** carpentry made a feature, and the leaf's rows hung off the oak table's row, so
   the walnut table's leaf had no cost (2026-11-05); the city bike's assembly and frame
-  called features on the Júcar Norte row and the frame rise (2026-11-07).
+  called features on the Júcar Norte row and the frame rise (2026-11-07); the laptop's
+  32 GB upgrade called a feature "because some labour is needed" (2026-11-07).
+
+### Distinction D19 · The hat or the standing role? (V1 Ch 4)
+- **Cue:** "Marcos, a contractor who works for us, sells the order with Nuria, 50/50."
+- **Test:** Is it the part a party plays on this one order, or what the party is to us
+  regardless of any order?
+- **Sides:** The hat is an `order_role_type` (SALESPERSON, BILL_TO) on an `order_role` row:
+  this party, on this order. The standing role is a `party_role` (EMPLOYEE, CONTRACTOR,
+  BILL_TO_CUSTOMER), dated and held apart from any order. An `order_role_rule` row joins the
+  two (for this order kind, this hat needs that standing role, from, thru), and only the
+  check walks from the fact to the party's standing roles.
+- **Mnemonic:** The order says what he did; the party says what he is; the rule says
+  which goes with which.
+- **Trap:** Marcos written on order 520 "as a contractor" (his hat is SALESPERSON), and the
+  rules written as `order_role_type` rows, the hat list (2026-11-07).
 
 ---
 

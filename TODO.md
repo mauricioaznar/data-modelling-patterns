@@ -134,7 +134,7 @@ trackers as usual, then tick here.
 - [x] Q5 · Ch 3 · one typed table vs one entity per kind · gap (level 2): its cost (Tinta Roble) · short version, stays 2: the substitute's arrow reversed, no quantity; shared nullable columns taken for a gain, named ends missed
 - [x] Q6 · Ch 4 · the line: product, feature or neither, snapshot, ordered for · maintenance (last 4 on 10-30) (Informática Lince, order 530) · short, (a) only, 4 → 3: lines right, but "ordered for" was cued by the question and wouldn't have come unaided (owned up)
 - [x] Q7 · Ch 3 · inventory item (serialized vs counted, status) · maintenance (last 4 on 10-28) (Ópticas Sauce) · short, answered 11-08, stays 4: one row per serial, the sprays split by status, status and facility unprompted
-- [ ] Distinctions for the round (practice.md): suggested 11-08, D19 (the hat or the standing role, from Q2) and Trap lines for Card 9 (Q5's reversed arrow) and D18 (Q6's labour); Q2 (b, c) reviewed when it comes back
+- [x] Distinctions for the round (practice.md): written 11-08, D19 (the hat or the standing role, from Q2) and Trap lines for Card 9 (Q5's reversed arrow) and D18 (Q6's labour); Q2 (b, c) reviewed when it comes back
 
 ## Comparisons (`comparisons/`, kept apart from the chapters)
 
