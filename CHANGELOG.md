@@ -33,7 +33,10 @@ and any decisions made.
   "ordered for", and the user said they'd have missed it without that.
 - Round Q2 closed on (a) only (the user's call): rules beside facts stays 3; (b) and (c)
   go to a later round.
-- Q7 sent as a short WhatsApp text (no column list), to be graded when it comes back. `order_role_rule` built in a side session on
+- Q7 sent as a short WhatsApp text (no column list), to be graded when it comes back.
+- Q2 (b, c) sent as a short WhatsApp text for another session; the key notes Claude's
+  spoilers (the after-the-fact check and "no count column" were said in feedback), so they
+  grade the date reasoning and the why. `order_role_rule` built in a side session on
   `claude/order-role-rule-b262b3` (not merged yet).
 
 **Decisions**

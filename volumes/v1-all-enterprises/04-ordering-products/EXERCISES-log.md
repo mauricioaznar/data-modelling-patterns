@@ -826,6 +826,26 @@ Misunderstandings and reinforce attempts, oldest first.
   the fact on the order date; no cardinality in the rule table), the hat vs the standing
   role on a fact row.
 
+### 2026-11-07: Q2 (b, c), pending (sent short for WhatsApp; to be answered in another session)
+- **Q2 (b, c) · rules beside facts · Analyze, Evaluate.** Vivero Encina, sales order 520
+  (12 Jan 2027, Nuria an employee and Marcos a contractor, 50/50; contractors no longer
+  salespeople from 1 Jan 2027; one bill-to per order). Wording as sent: (b) what gets
+  flagged on order 520, by what, and when; the same order dated 15 Dec 2026, flagged? why?
+  (c) "add a max-per-order column to the rule rows" for the one bill-to: right place? why?
+  Key: (b) Marcos: on 12 Jan 2027 the only salesperson rule in force needs EMPLOYEE and he
+  holds only CONTRACTOR, so the data-quality check (a party holding none of the hat's
+  required standing roles on the order date) flags him; Nuria passes; after the fact: both
+  rows and the 50/50 are stored, nothing is blocked. Dated 15 Dec 2026 it passes: the
+  contractor rule (thru 2027-01-01, exclusive) was in force on that order date; the rule is
+  read as of the order's date, not today's. (c) no: a rule row says which hat an order kind
+  allows and which standing role it needs, not how many; with several rows for one hat
+  (SALESPERSON's two) each would carry its own count, and they could disagree; cardinality
+  is its own check query (more than one BILL_TO on an order) with a bad seed row (the 10-23
+  mistake). **Spoilers (Claude's):** the Q2 (a) feedback said the facts are stored and the
+  check flags Marcos afterwards, and the table explanation said "there's no count column";
+  the side session's two checks exist on its branch. So grade (b) on the date reasoning
+  (15 Dec passes, why) and (c) on the why, not on "after the fact" or "no count column".
+
 ### 2026-11-07: round Q6, Submodel 1 maintenance (the line; Informática Lince, order 530)
 - Short version, asked in chat, (a) only (the user tired): two Lince 14 laptops at €1,100,
   both with the 32 GB upgrade (+€150 each), the studio's logo engraved on both lids, a
