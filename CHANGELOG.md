@@ -31,7 +31,9 @@ and any decisions made.
   reversed and its quantity missed, the shared nullable columns taken for a gain.
 - Round Q6 (short, (a) only): the line 4 → 3. The lines were right, but the question listed
   "ordered for", and the user said they'd have missed it without that.
-- Q2 (a) graded in chat; (b) and (c) wait. `order_role_rule` built in a side session on
+- Round Q2 closed on (a) only (the user's call): rules beside facts stays 3; (b) and (c)
+  go to a later round.
+- Q7 sent as a short WhatsApp text (no column list), to be graded when it comes back. `order_role_rule` built in a side session on
   `claude/order-role-rule-b262b3` (not merged yet).
 
 **Decisions**

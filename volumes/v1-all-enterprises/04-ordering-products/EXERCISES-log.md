@@ -803,21 +803,28 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: every price change a typed row stays 4 ((a) placed the discount on the line
   cold); next time, the line-level break and the new-kind break in (b).
 
-### 2026-11-07: question round, pending (written for the phone; wording in `docs/round-2026-11-07.md`; order in TODO)
-- **Q2 · Retest (3) · rules beside facts · Apply, Analyze, Evaluate.** Vivero Encina,
-  sales order 520. Key: (a) `order_role_rule` rows (order kind, hat, required standing
-  role, from, thru): SALES / SALESPERSON / EMPLOYEE, thru null; SALES / SALESPERSON /
-  CONTRACTOR, thru 2027-01-01 (ended, not deleted, so older orders still pass); SALES /
-  BILL_TO / BILL_TO_CUSTOMER; SALES / APPROVER / none. The one-bill-to is not a rule row.
-  Facts in `order_role`: (520, Nuria, SALESPERSON, 50), (520, Marcos, SALESPERSON, 50),
-  (520, Jardines Ribera, BILL_TO). (b) Marcos: on 12 Jan 2027 the only salesperson rule in
-  force needs EMPLOYEE, and he's a contractor, so the data-quality query (a party without a
-  required standing role on the order date) flags him, after the fact: the insert isn't
-  blocked. Dated 15 Dec 2026 it passes: the contractor rule was in force on that order
-  date. (c) no: a rule row says which hat a kind of order allows and which standing role it
-  needs, not how many; several rows for one hat would each carry the count, and they could
-  disagree. Cardinality is its own check query (more than one BILL_TO on an order), with a
-  bad seed row (the 10-23 mistake).
+### 2026-11-07: round Q2, Submodel 1 retest (rules beside facts; Vivero Encina, sales order 520)
+- Asked in chat, cut short and one part at a time after the user found the phone text too
+  long ("contractors only until 31 Dec 2026" in Claude's cut, not "from 1 Jan 2027"; the
+  one-bill-to rule dropped). Closed on (a) only (the user's call): (b) the check and its
+  date and (c) cardinality in the rule table were not asked.
+- Answer: (a) salesperson → employee and salesperson → contractor as two rows ✓ cold, the
+  contractor rule ended with a thru date, not deleted ✓ (31 Dec 2026 for the exclusive 1 Jan
+  2027, Claude's wording, not counted), bill-to → bill-to customer ✓, approver → null ✓
+  (with a "?"); but written as rows of `order_role_type` ~ (the hat list; the rules go in
+  `order_role_rule` beside it, agreed at the overview and only built today), no order kind ~.
+  Facts: Nuria SALESPERSON ✓, Jardines Ribera BILL_TO ✓, Marcos "as a contractor" ✗ as
+  written (the hat is SALESPERSON; CONTRACTOR is his standing role, read by the check), the
+  50/50 left out, volunteered as "the split doesn't happen and a data-quality query flags
+  Marcos" ~ (the query ✓, but the facts are stored as they happened; the rule only flags).
+- Discussion: what `order_role_rule` holds (kind, hat, required standing role or null,
+  dates); the order kind because hats are neutral (BILL_TO needs BILL_TO_CUSTOMER on a
+  sale, INTERNAL_ORGANIZATION on a purchase); the rule points at a role type, the fact at
+  the party, and only the check walks party → party_role. The user had the table built in
+  a side session (`claude/order-role-rule-b262b3`, not merged yet).
+- Score: rules beside facts stays 3. Next: (b) and (c) cold (facts stored, flagged after
+  the fact on the order date; no cardinality in the rule table), the hat vs the standing
+  role on a fact row.
 
 ### 2026-11-07: round Q6, Submodel 1 maintenance (the line; Informática Lince, order 530)
 - Short version, asked in chat, (a) only (the user tired): two Lince 14 laptops at €1,100,

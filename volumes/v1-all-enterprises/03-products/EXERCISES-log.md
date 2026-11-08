@@ -987,3 +987,7 @@ Scores: price components 2 → 3; feature prices stay at 2.
   different states. (c) the product is the model we offer (one catalogue row); stock is
   physical: a column can't say which pair is scratched, which serials we hold (warranty,
   theft), a status per unit, where (a second shop, a container) or which lot.
+  **Sent short instead (2026-11-07, WhatsApp, no column list):** two pairs, SS-101 GOOD and
+  SS-102 scratched (SLIGHTLY_DAMAGED); the sprays 36 GOOD + 4 DEFECTIVE; (a) the rows
+  (Apply), (b) one spray row or two, why (Understand); (c) not asked. Grade "where" and
+  status as unprompted, since the question no longer lists them.
