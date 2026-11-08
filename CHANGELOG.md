@@ -19,6 +19,9 @@ and any decisions made.
 - practice.md: a question's parts are given in one go and graded together (the user's call).
 - Round Q3 graded (short): where stock is + lot stays 3. The lot's columns and the why
   (two copies drift) came back cold; the items lost their link to the lot.
+- Round Q4 graded (short, on WhatsApp): estimated cost 3 → 4. Burgos's labour on the
+  product and the total (77) came back cold; slips noted (labour 40 for 30, a component
+  name column, the scope as a facility).
 - Round 2026-11-07 Q7 graded (short, answered in chat): inventory item stays 4. One row
   per serial with no quantity, the sprays split 36 good / 4 defective because a row holds
   one status, status and facility unprompted.
@@ -39,7 +42,7 @@ and any decisions made.
 
 **Next**
 - Re-import the Anki export (D19, D20 and two Trap lines are new).
-- Round 2026-11-08: Q4–Q7 sent on WhatsApp, to grade when the answers come back; then the
+- Round 2026-11-08: Q5–Q7 out on WhatsApp, to grade when the answers come back; then the
   distinctions for the round, "agent or distributor?" (Q1) among them.
 - Next round: rules beside facts (cardinality as its own check, flag don't block), the
   item → lot link with the recall walk.

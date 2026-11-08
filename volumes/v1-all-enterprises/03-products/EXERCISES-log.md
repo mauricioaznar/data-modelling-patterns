@@ -1009,14 +1009,25 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - Score: where stock is + lot stays 3 (the lot's columns and the why both came back cold,
   but the items lost their lot). Next: the item → lot link cold, with the recall walk.
 
+### 2026-11-08: round Q4, Submodel 4 retest (estimated cost; Carpintería Haya)
+- Short, on WhatsApp, both parts in one go: the Haya chair since 1 Jan 2026, wood 40 (from
+  Maderas Sil), labour 30, the Burgos workshop's labour 25; a cushion option on any chair,
+  fabric 12. (a) the estimate rows (Apply), (b) a cushioned chair made in Burgos: the rows
+  that count and the total (Analyze).
+- Answer: (a) MATERIALS 40 on the chair ✓; LABOR on the chair written 40 ~ (30: a slip);
+  LABOR 25 on the chair (the product, not a feature) scoped to Burgos ✓ cold (the 11-07
+  gap); MATERIALS 12 on the cushion feature ✓; all from 2026-01-01 ✓; Maderas Sil left off
+  ✓ unprompted. A "component" column naming wood, labour, fabric on every row ~ (again, as
+  on 11-07: there's no such column, the type says the kind of cost; a finer child type if
+  wood is costed apart). The scope as "the workshop Burgos facility" ~ (an estimate is
+  scoped to a geographic boundary or one of our organizations, not a facility; the
+  question's "workshop" invited it, so the blame is shared). (b) rows 1, 3 and 4: 40 + 25 +
+  12 = 77 ✓ cold, the 25 most specific over the 30 ✓, the total given ✓ (missed twice
+  before).
+- Score: estimated cost 3 → 4 (both 11-07 gaps fixed cold; the slips noted). Next: none;
+  the name column and the facility scope to watch.
+
 ### 2026-11-08: question round, pending (written for the phone, short; wording in `docs/round-2026-11-08.md`; order in TODO)
-- **Q4 · Submodel 4 retest (3) · estimated cost: a component's row on the product, the
-  total · Apply, Analyze.** Carpintería Haya. Short key (as sent): (a) on the chair
-  (product), all from 2026-01-01: MATERIALS 40, LABOR 30, LABOR 25 with organization = the
-  Burgos workshop (on the product, not a feature); on the cushion (feature): MATERIALS 12;
-  no supplier on any row (Maderas Sil is a `supplier_product` fact). Wood and labour are
-  types, not features. (b) 40, 25 (more specific than 30), 12: total 77. Full version: a
-  wood rise and sewing, and the supplier-row colleague.
 - **Q5 · Submodel 5 gap (2) · one typed table vs one entity per kind: its cost · Apply,
   Evaluate.** Papelería Cobre. Key: (a) SUBSTITUTE, from Cola Cobre 1 L (the one replaced)
   → to Cola Cobre 0.5 L, quantity 2, a from date (any), one row only (one way). (b) per
