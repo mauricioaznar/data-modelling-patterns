@@ -22,6 +22,9 @@ and any decisions made.
 - Round Q4 graded (short, on WhatsApp): estimated cost 3 → 4. Burgos's labour on the
   product and the total (77) came back cold; slips noted (labour 40 for 30, a component
   name column, the scope as a facility).
+- Round Q5 graded (short): typed table vs one per kind stays 2. The substitute row came
+  back right (1 L → 0.5 L, quantity 2); the generic table's own cost missed a third time.
+- D21 written (tree or network?), from the talk on cost types; Anki export at 81 cards.
 - Round 2026-11-07 Q7 graded (short, answered in chat): inventory item stays 4. One row
   per serial with no quantity, the sprays split 36 good / 4 defective because a row holds
   one status, status and facility unprompted.
@@ -42,7 +45,7 @@ and any decisions made.
 
 **Next**
 - Re-import the Anki export (D19, D20 and two Trap lines are new).
-- Round 2026-11-08: Q5–Q7 out on WhatsApp, to grade when the answers come back; then the
+- Round 2026-11-08: Q6–Q7 out on WhatsApp, to grade when the answers come back; then the
   distinctions for the round, "agent or distributor?" (Q1) among them.
 - Next round: rules beside facts (cardinality as its own check, flag don't block), the
   item → lot link with the recall walk.

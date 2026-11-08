@@ -1027,12 +1027,21 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - Score: estimated cost 3 → 4 (both 11-07 gaps fixed cold; the slips noted). Next: none;
   the name column and the facility scope to watch.
 
+### 2026-11-08: round Q5, Submodel 5 gap (one typed table vs one entity per kind; Papelería Cobre)
+- Short, both parts in one go: two 0.5 L bottles of Cola Cobre stand in for one 1 L, one
+  way only. (a) the product association row (Apply), (b) a table per kind
+  (product_substitute with original, substitute, quantity, ...): what each design gives
+  and costs (Evaluate).
+- Answer: (a) SUBSTITUTE from the 1 L → to the 0.5 L, quantity 2 ✓ cold (the 11-07 arrow
+  and quantity both fixed). (b) per kind: readable, "specific readable names" ✓ (the named
+  ends, said loosely); its cost: each new kind a new table, and everything built on the
+  generic type has to learn it ✓; ours: flexible, new kinds as rows ✓; when to pick it
+  (kinds that keep coming) ✓, a good Evaluate call. No shared-columns gain claimed this
+  time ✓. Missed again: what ours costs (from/to mean something different per type;
+  type-only columns like quantity nullable, checked by queries instead of NOT NULL), and
+  the per-kind table's type-only columns being NOT NULL where they apply.
+- Score: one typed table vs one entity per kind stays 2 (gains and the per-kind cost
+  right, but the generic table's own cost, the row's whole gap, missed a third time). Next:
+  ours' cost cold, from/to per type and nullable type-only columns.
+
 ### 2026-11-08: question round, pending (written for the phone, short; wording in `docs/round-2026-11-08.md`; order in TODO)
-- **Q5 · Submodel 5 gap (2) · one typed table vs one entity per kind: its cost · Apply,
-  Evaluate.** Papelería Cobre. Key: (a) SUBSTITUTE, from Cola Cobre 1 L (the one replaced)
-  → to Cola Cobre 0.5 L, quantity 2, a from date (any), one row only (one way). (b) per
-  kind: named ends (original, substitute) where ours has from/to meaning something
-  different per type; type-only columns (quantity) NOT NULL where they apply; readable. Its
-  cost: a new kind is a new table and new code; "everything linked to X" needs a union.
-  Ours: new kinds as rows, one query for every link; its cost: from/to read per type,
-  type-only columns nullable and checked by queries. Shared columns are not a gain of ours.
