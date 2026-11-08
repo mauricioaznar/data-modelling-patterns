@@ -993,3 +993,31 @@ Scores: price components 2 → 3; feature prices stay at 2.
   rows). (b) two rows: the 4 are in another state and there's no other way to say so (a
   row holds one status) ✓ cold.
 - Score: inventory item stays 4 (maintenance passed, cold; status and where unprompted).
+
+### 2026-11-08: question round, pending (written for the phone, short; wording in `docs/round-2026-11-08.md`; order in TODO)
+- **Q3 · Submodel 3 retest (3) · where stock is + lot: the why cold, the lot's own columns ·
+  Apply, Evaluate.** Quesería Valle. Key: (a) lot Q-12: creation_date 2026-11-02, quantity
+  200, expiration_date 2027-02-02, no product; item 1 NON_SERIALIZED, the cured cheese, 150,
+  container R4 (not the facility: R4 knows it's in Ávila), lot Q-12; item 2 NON_SERIALIZED,
+  50, facility the Segovia shop, lot Q-12; status GOOD unprompted ✓. (b) the product on the
+  lot copies what the items already say, and the two copies can disagree (the lot saying
+  one cheese, its items another); the recall still walks lot → items → container →
+  facility for the buildings, so the copy saves nothing. Full version adds the 10 cracked
+  (a third item, SLIGHTLY_DAMAGED, 10, the 50 becoming 40) and the recall walk.
+- **Q4 · Submodel 4 retest (3) · estimated cost: a component's row on the product, the
+  total · Apply, Analyze.** Carpintería Haya. Key: (a) on the chair (product): MATERIALS 40
+  from 2026-01-01 thru 2027-03-01, MATERIALS 45 from 2027-03-01, LABOR 30 from 2026-01-01,
+  LABOR 25 from 2026-01-01 with organization = the Burgos workshop (on the product, not a
+  feature); on the cushion (feature): MATERIALS 12 and LABOR 8 from 2026-01-01; no supplier
+  on any row (Maderas Sil is a `supplier_product` fact). Wood and labour are types, not
+  features. (b) as of 2027-04-10: 45, 25 (more specific than 30), 12, 8: total 90. Full
+  version adds (c) the supplier row: the scope has nowhere to go, the cushion can't be
+  split out, a second supplier gives two answers.
+- **Q5 · Submodel 5 gap (2) · one typed table vs one entity per kind: its cost · Apply,
+  Evaluate.** Papelería Cobre. Key: (a) SUBSTITUTE, from Cola Cobre 1 L (the one replaced)
+  → to Cola Cobre 0.5 L, quantity 2, a from date (any), one row only (one way). (b) per
+  kind: named ends (original, substitute) where ours has from/to meaning something
+  different per type; type-only columns (quantity) NOT NULL where they apply; readable. Its
+  cost: a new kind is a new table and new code; "everything linked to X" needs a union.
+  Ours: new kinds as rows, one query for every link; its cost: from/to read per type,
+  type-only columns nullable and checked by queries. Shared columns are not a gain of ours.

@@ -6,6 +6,11 @@ and any decisions made.
 ## 2026-11-08
 
 **Built**
+- A new round of seven, short versions for WhatsApp in `docs/round-2026-11-08.md` (full
+  versions below them; keys in the Ch 2, Ch 3 and Ch 4 logs). Gaps and retests: party
+  relationship (2), the line's ordered for (3), where stock is + lot (3), estimated cost
+  (3), typed table vs one per kind (2). Maintenance: amount or percentage (last 4 on
+  10-28), communication event + roles (last 4 on 10-30).
 - Round 2026-11-07 Q7 graded (short, answered in chat): inventory item stays 4. One row
   per serial with no quantity, the sprays split 36 good / 4 defective because a row holds
   one status, status and facility unprompted.

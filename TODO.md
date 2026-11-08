@@ -136,6 +136,22 @@ trackers as usual, then tick here.
 - [x] Q7 · Ch 3 · inventory item (serialized vs counted, status) · maintenance (last 4 on 10-28) (Ópticas Sauce) · short, answered 11-08, stays 4: one row per serial, the sprays split by status, status and facility unprompted
 - [x] Distinctions for the round (practice.md): written 11-08, D19 (the hat or the standing role, from Q2) and Trap lines for Card 9 (Q5's reversed arrow) and D18 (Q6's labour); Q2 (b, c) reviewed when it comes back
 
+## Question round 2026-11-08 (all seven on the phone, short)
+
+All seven are written to paste into WhatsApp, short versions first, in
+[docs/round-2026-11-08.md](docs/round-2026-11-08.md), with no keys. The keys are in the
+Ch 2, Ch 3 and Ch 4 logs under "2026-11-08: question round, pending": **don't open those
+before grading**. When the answers come back, read each one back, grade, log and update the
+trackers as usual, then tick here.
+
+- [ ] Q1 · Ch 2 · party relationship + type · gap (2): the agent cold, the contact's far end (Librería Faro)
+- [ ] Q2 · Ch 4 · the line · retest (3): ordered for cold, no column list (Floristería Lis, order 610)
+- [ ] Q3 · Ch 3 · where stock is + lot · retest (3): the lot's own columns, the why cold (Quesería Valle, lot Q-12)
+- [ ] Q4 · Ch 3 · estimated cost · retest (3): a component's row on the product, the total (Carpintería Haya)
+- [ ] Q5 · Ch 3 · one typed table vs one entity per kind · gap (2): its cost (Papelería Cobre)
+- [ ] Q6 · Ch 4 · amount or percentage · maintenance (last 4 on 10-28) (Herbolario Salvia, order 620)
+- [ ] Q7 · Ch 2 · communication event + roles · maintenance (last 4 on 10-30) (Gestoría Llano)
+
 ## Comparisons (`comparisons/`, kept apart from the chapters)
 
 - [x] 01 Vendor Price Catalog: source and comparison drafted (2026-11-05)
