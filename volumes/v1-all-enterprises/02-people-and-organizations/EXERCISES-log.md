@@ -646,4 +646,5 @@ Misunderstandings and reinforce attempts, oldest first.
   (agent or contractor) and the direction rule in Card 1's Trap, not a card of type names.
 - Score: party relationship + type 3 → 2 (the agent missed again; a reappearing gap lowers
   the row). Next: the agent cold (an organization selling for us), the contact's far end,
-  the direction rule; then (b) and (c) of this scenario.
+  the direction rule (CAPS / REC on Card 1). (b) and (c) dropped, not carried over (the
+  user's call, 2026-11-07).
