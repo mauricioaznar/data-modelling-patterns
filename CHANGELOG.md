@@ -3,6 +3,22 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-08
+
+**Built**
+- Round 2026-11-07 Q7 graded (short, answered in chat): inventory item stays 4. One row
+  per serial with no quantity, the sprays split 36 good / 4 defective because a row holds
+  one status, status and facility unprompted. The round is graded except Q2 (b, c).
+
+**Decisions**
+- Distinctions for the round suggested: D19 (the hat or the standing role, from Q2's Marcos)
+  and Trap lines for Card 9 (Q5's reversed substitute arrow) and D18 (Q6's "a feature
+  because labour is needed"). No card for Q3 (missed columns and a why, not a choice) or
+  Q7 (clean); Q1 and Q4 were carded in the round.
+
+**Next**
+- The user's answer on the distinction suggestions; Q2 (b, c) in another session.
+
 ## 2026-11-07
 
 **Built**

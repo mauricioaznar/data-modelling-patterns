@@ -978,16 +978,18 @@ Scores: price components 2 → 3; feature prices stay at 2.
   and missed in (b); the shared columns taken for a gain). Next: the cost cold: from/to
   mean something different per type, type-only columns nullable and checked by queries.
 
-### 2026-11-07: question round, pending (written for the phone; wording in `docs/round-2026-11-07.md`; order in TODO)
-- **Q7 · Maintenance · inventory item, good vs physical stock, subtypes, status (last 4 on
-  10-28) · Apply, Understand, Evaluate.** Ópticas Sauce. Key: (a) three SERIALIZED items,
-  product Sauce Sun, SS-101 GOOD, SS-102 GOOD, SS-103 SLIGHTLY_DAMAGED, no quantity;
-  NON_SERIALIZED spray 36 GOOD and spray 4 DEFECTIVE; all with facility = the shop. (b) two
-  rows: the status sits on the item, one per row, and 36 sellable and 4 broken sprays are in
-  different states. (c) the product is the model we offer (one catalogue row); stock is
-  physical: a column can't say which pair is scratched, which serials we hold (warranty,
-  theft), a status per unit, where (a second shop, a container) or which lot.
-  **Sent short instead (2026-11-07, WhatsApp, no column list):** two pairs, SS-101 GOOD and
-  SS-102 scratched (SLIGHTLY_DAMAGED); the sprays 36 GOOD + 4 DEFECTIVE; (a) the rows
-  (Apply), (b) one spray row or two, why (Understand); (c) not asked. Grade "where" and
-  status as unprompted, since the question no longer lists them.
+### 2026-11-08: round Q7, Submodel 3 maintenance (inventory item; Ópticas Sauce, last 4 on 10-28)
+- Short version, sent on WhatsApp 2026-11-07 with no column list, answered in chat today:
+  two pairs of Sauce Sun (serials), SS-101 fine and SS-102 scratched, sold at a discount;
+  40 lens sprays (counted), 4 with broken nozzles. (a) the inventory item rows (Apply),
+  (b) the sprays: one row or two, and why (Understand). (c), the stock column on the
+  product, was cut.
+- Answer: (a) SS-102 SERIALIZED, no quantity, "damaged but sellable at a discount"
+  (SLIGHTLY_DAMAGED) ✓; SS-101 good, no quantity ✓ (its kind left implied by the first
+  row); the sprays NON_SERIALIZED, 36 good and 4 "damaged, not sellable" (DEFECTIVE) ✓;
+  the product on every row ✓; the status and a facility on every row, unprompted ✓.
+  "The rows are datd" was not decoded and isn't counted (if it means dated: an item
+  carries no date, it is the stock as it stands, and counts change it through variance
+  rows). (b) two rows: the 4 are in another state and there's no other way to say so (a
+  row holds one status) ✓ cold.
+- Score: inventory item stays 4 (maintenance passed, cold; status and where unprompted).
