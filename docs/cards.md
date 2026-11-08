@@ -306,8 +306,8 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Hook:** the price recipe
 - **Mantra:** Price components are conditional rules: the most specific base wins, and each
   base says its charge: once, every or per use; matching discounts and surcharges stack on it
-  per unit; cost hangs on the thing (a product or a feature), split by type, narrowed by
-  place or org.
+  per unit; cost hangs on what the customer picks (a product or a feature), split into the
+  components we spend (materials, labour, other), narrowed by place or org.
 
 <details><summary>Key</summary>
 
@@ -1961,7 +1961,8 @@ options; one that misses a fact goes to its submodel card instead.
   feature.
 - **Mnemonic:** The customer picks a feature; the workshop spends a component.
 - **Trap:** carpentry made a feature, and the leaf's rows hung off the oak table's row, so
-  the walnut table's leaf had no cost (2026-11-05).
+  the walnut table's leaf had no cost (2026-11-05); the city bike's assembly and frame
+  called features on the Júcar Norte row and the frame rise (2026-11-07).
 
 ---
 

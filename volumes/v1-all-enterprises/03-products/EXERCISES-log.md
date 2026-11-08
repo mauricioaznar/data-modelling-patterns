@@ -910,23 +910,34 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - Score: estimated cost stays 2. Next: the table's name, carpentry as a component type not
   a feature, the arc points at the feature itself, the as-of row in a dated set.
 
+### 2026-11-07: round Q1, Submodel 3 gap (estimated cost; Bicicletas Júcar, city bike + e-assist kit)
+- Written for the phone, answered in chat. City and folding bikes, an e-assist kit on
+  either; city bike frame 150 (bought from Cuadros Ebro), assembly 70; the kit's motor and
+  battery 300, fitting 40; frame 165 from 1 Mar 2027; Júcar Norte (Castellón) assembles for
+  55. (a) the rows (Apply), (b) Júcar Norte's city bike with the kit on 10 Apr 2027: rows
+  and total (Analyze), (c) "put the 150 on Cuadros Ebro's supplier row" (Evaluate).
+- Answer: (a) every row in the estimates table, Cuadros Ebro left to `supplier_product` ✓
+  (the 11-04 gap fixed); a type on every row, MATERIALS or LABOR ✓; the kit's rows on the
+  feature itself, written once ✓; the frame rise as thru 1 Mar 27 on the 150 row plus a 165
+  row from 1 Mar 27 ✓; Júcar Norte scoped by organization ✓. But the Júcar Norte row
+  "pointing to the assembly feature" and the rise on "the feature frame" ✗ (components
+  called features, though the first rows pointed at the product); Júcar Norte's from date
+  left unspecified ~ (not null: 1 Jan 2026); a "value" column naming each component ~
+  (there is none: the type says it). (b) 165 as of 10 Apr ✓, 55 most specific over 70 ✓,
+  the kit's 300 + 40 with nothing competing ✓; no total ✗ again (560). (c) the scope has
+  nowhere to go ✓, the kit can't be split out ✓, a supplier row is another fact (who can
+  supply, lead time, quality) with its own dates ✓; a second frame supplier giving two
+  answers and margin missed.
+- Discussion: the motor and battery have no name column; the type carries the kind of cost
+  (PURCHASED_PART under MATERIALS, the frame's too: Cuadros Ebro decides the type, never
+  the row); two finer child types if the motor and battery are costed apart. Card 8's cost
+  line rewritten at the user's request to name the components (option B: "what the customer
+  picks … split into the components we spend"); D18's Trap gains the slip. The guiding
+  question (which arc column the 55 row fills) left unanswered.
+- Score: estimated cost 2 → 3 (not 4: "feature" for a component came back twice). Next:
+  retest cold, a component's row on the product (Júcar Norte's LABOR row); give the total.
+
 ### 2026-11-07: question round, pending (written for the phone; wording in `docs/round-2026-11-07.md`; order in TODO)
-- **Q1 · Gap (level 2) · estimated cost, product or feature arc · Apply, Analyze, Evaluate.**
-  Bicicletas Júcar, city bike + e-assist kit, Júcar Norte. Cold retest after the 11-05 Card 8
-  rewrite and D17/D18 (no teaching in the question). Key: (a) all rows in
-  `estimated_product_cost`, none on `supplier_product`: city bike (product) frame 150,
-  MATERIALS (or PURCHASED_PART), from 2026-01-01 thru 2027-03-01; city bike frame 165,
-  same type, from 2027-03-01, thru null; city bike assembly 70, LABOR (or a child type under
-  it), no scope; city bike assembly 55, LABOR, organization = Júcar Norte; the kit (the
-  feature itself, product null) motor and battery 300, MATERIALS; the kit fitting 40, LABOR
-  (INSTALLATION). The kit's rows written once, for both bikes. A geographic scope for
-  Castellón is a weaker but acceptable reading. (b) 10 Apr 2027 at Júcar Norte: frame 165
-  (the 150 row ended 1 Mar), assembly 55 (its own row is more specific than the general
-  70), kit 300 + 40: total 560. (c) `supplier_product` says who can supply the frame (lead
-  time, preference, rating), not what the bike costs us; the estimate belongs to the thing
-  being costed, split by type; a second frame supplier would give two answers; the dated
-  rise, the Júcar Norte scope and the kit (no supplier row) have nowhere to go; margin
-  compares price and cost on the same product.
 - **Q3 · Retest (3) · where stock is + lot, the lot holds no product · Apply, Analyze,
   Evaluate.** Almazara Olivar, lot L-27. Key: (a) lot: creation 2026-10-03, quantity 600,
   expiration 2028-10-03, no product. Container P7 (PALLET) at the Martos warehouse. Two

@@ -126,7 +126,7 @@ Ch 2, Ch 3 and Ch 4 logs under "2026-11-07: question round, pending": **don't op
 before grading**. When the answers come back, read each one back, grade, log and update the
 trackers as usual, then tick here.
 
-- [ ] Q1 · Ch 3 · estimated cost (product or feature arc) · gap (level 2), cold after the Card 8 rewrite and D17/D18 (Bicicletas Júcar, city bike + e-assist kit)
+- [x] Q1 · Ch 3 · estimated cost (product or feature arc) · gap (level 2), cold after the Card 8 rewrite and D17/D18 (Bicicletas Júcar, city bike + e-assist kit) · 2 → 3: supplier kept off, kit on the feature, as-of row ✓; assembly and frame called features, no total (560); Card 8's cost line now names the components
 - [ ] Q2 · Ch 4 · rules beside facts · retest (3): dated rule rows, the after-the-fact check, no cardinality in the rule table (Vivero Encina, sales order 520)
 - [ ] Q3 · Ch 3 · where stock is (facility XOR container) + lot · retest (3): the lot holds no product (Almazara Olivar, lot L-27)
 - [ ] Q4 · Ch 2 · party relationship + type · retest (3): the direction per type, the agent (Viajes Brisa)

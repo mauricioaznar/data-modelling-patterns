@@ -15,6 +15,10 @@ and any decisions made.
   4 on 10-30), inventory item (last 4 on 10-28).
 - Ch 2's purpose row gets the 11-04 Gestoría Prado evidence it was missing, so it's no
   longer the oldest 4.
+- Round Q1 graded (answered in chat): estimated cost 2 → 3. The supplier stays off and the
+  kit sits on the feature, but assembly and frame were called features and no total was
+  given. Card 8's cost line rewritten at the user's request (option B: "what the customer
+  picks … split into the components we spend"); D18's Trap gains the slip.
 
 **Decisions**
 - The phone text's headers name the submodel, not the concept, so a header doesn't give
