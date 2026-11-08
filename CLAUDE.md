@@ -98,6 +98,9 @@ the user, tease with nicknames, so the sessions stay fun.
 - **Question round of seven** (one per session): 5 gaps or retests, 2 maintenance. **No recalls**
   (the user's call, 2026-11-03): no session-start questions and nothing between rounds; the
   practice is a round of seven or nothing.
+  **Two versions, short for now** (the user's call, 2026-11-07): every round question has a
+  short version (under 15 minutes with the feedback) and a full one; give the short one
+  unless the user asks for the full (details in `docs/practice.md`).
   **Maintenance, not only gaps** (the user's call, 2026-10-29): those 2 retest rows already at 4, the longest untested first, in a fresh scenario, so
   what's understood doesn't decay unnoticed (details in `docs/practice.md`).
 - **After each round, suggest distinction cards** (the user's call, 2026-11-02) for its

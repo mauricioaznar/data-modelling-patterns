@@ -91,6 +91,15 @@ of the chapter's `EXERCISES.md`.
   misses, a reinforce when a gap needs teaching), then 2 maintenance questions. No recalls
   (the user's call, 2026-11-03): no session-start questions and nothing between rounds.
   One question at a time, each naming its Bloom level.
+- **Two versions of each question, short by default for now** (the user's call,
+  2026-11-07): the full version is the usual scenario with three parts (about 30 minutes
+  of writing on the phone). The short one must fit **15 minutes including the feedback**:
+  a scenario cut to the facts its key tests, at most two or three rows to write (fewer
+  hats on orders), and one or two parts, given one at a time. Keep the concept and the
+  Bloom levels the row needs; the short version drops volume, not the test. Write both
+  into the round file when the round is written; give the short one unless the user asks
+  for the full. When a cut changes a convention's cue (e.g. "until 31 Dec" for an
+  exclusive thru date), don't count the result against the user.
 - **Maintenance in question rounds** (the user's call, 2026-10-29): the round's 2
   maintenance questions go to rows already at 4, picked across chapters by the oldest
   evidence date in the comprehension tables, each in a fresh scenario. A slip drops the row
