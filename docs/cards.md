@@ -2001,6 +2001,19 @@ options; one that misses a fact goes to its submodel card instead.
 - **Mnemonic:** The rule row pairs; the check counts.
 - **Trap:** a max-per-order column on the rule rows, endorsed (2026-11-08).
 
+### Distinction D21 · Tree or network? (V1 Ch 3)
+- **Cue:** "Wood rolls up to materials; the Gift sets category sits under both Seasonal and
+  Kitchen."
+- **Test:** Must the parts add up to a total, or is it a view for finding and reporting?
+- **Sides:** A tree (one `parent_type_id` per row, as `cost_component_type`) splits a whole
+  into buckets that don't overlap, so the subtotals add up to the total by construction.
+  A network (a separate rollup table, a row per parent link, as category rollup) lets a
+  thing sit under several parents, which suits overlapping views; nobody adds across them.
+  A second way to split costs is a second tree, never a second parent.
+- **Mnemonic:** Parts that add up get one parent; views that overlap get many.
+- **Trap:** *(the naive-model trap until practice gives yours)* a cost type under two
+  parents, so the rollup counts it twice (the 77 chair's buckets adding to 117).
+
 ---
 
 ## Deck: patterns
