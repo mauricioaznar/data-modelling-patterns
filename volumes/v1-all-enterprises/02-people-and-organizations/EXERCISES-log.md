@@ -649,19 +649,28 @@ Misunderstandings and reinforce attempts, oldest first.
   the direction rule (CAPS / REC on Card 1). (b) and (c) dropped, not carried over (the
   user's call, 2026-11-07).
 
+### 2026-11-08: round Q1, Submodel 1 gap (party relationship + type; Librería Faro)
+- Short, asked in chat one part at a time: since 1 Sep 2026 Distribuciones Norte sells our
+  gift cards in other shops on commission, without buying them; Inés Vidal our contact
+  there. (a) the two relationships, type, ends, dates (Apply); (b) "Norte is just a
+  contractor": what's wrong (Evaluate).
+- Answer: (a) row 1 "Distributor", Customer → Internal Organization, from 2026-09-01: the
+  direction → us and the date ✓; Norte made a CUSTOMER ✗ (it buys nothing from us) and a
+  DISTRIBUTOR ✗ (a distributor buys and resells; on commission without buying is an
+  AGENT); the type should be DISTRIBUTION_CHANNEL_RELATIONSHIP, AGENT → INTERNAL_
+  ORGANIZATION. Row 2 ORGANIZATION_CONTACT ✓, the far end Distribuciones Norte, not us ✓
+  (the 11-07 slip fixed); written Org → Contact ✗ (from is the person: Inés CONTACT →
+  Norte); date ✓. (b) (the agent named in (a)'s feedback, not counted) "a contractor is an
+  employment-like agreement; there's no employment obligation here" ~: the work-for-us
+  sense right, but CONTRACTOR is a person's role and Norte an organization; what the
+  label loses (the distribution channel: who sells our goods, on what commission, its own
+  type) not said.
+- Score: party relationship + type stays 2 (the agent missed a third time, now as a
+  distributor and a customer; the contact's arrow reversed). Next: the agent cold (sells
+  for us without buying = AGENT; buys and resells = DISTRIBUTOR), the contact person →
+  organization. Distinction to suggest at the round's end: agent or distributor.
+
 ### 2026-11-08: question round, pending (written for the phone, short; wording in `docs/round-2026-11-08.md`; order in TODO)
-- **Q1 · Submodel 1 gap (2) · party relationship + type: the agent cold, the contact's far
-  end, the direction rule · Apply, Evaluate.** Librería Faro. Short key (as sent): (a) two
-  relationships, both from 2026-09-01, thru null: DISTRIBUTION_CHANNEL_RELATIONSHIP, from
-  Distribuciones Norte (AGENT, under DISTRIBUTION_CHANNEL: an organization role; not
-  DISTRIBUTOR, since it doesn't buy the cards) → to Librería Faro (INTERNAL_ORGANIZATION);
-  ORGANIZATION_CONTACT, from Inés (CONTACT) → to Distribuciones Norte (the organization she
-  speaks for, not us). CAPS point at us; the contact points at its organization. (b) a
-  contractor is a person's role (someone who works for us under contract); Norte is an
-  organization selling for us on commission, a distribution channel with its own type, so
-  "contractor" files it in the wrong place and loses "who sells our cards" as a question.
-  Full version (in the round file): a supplier too, Inés's move to Editorial Brisa
-  (thru 2027-02-01 on the Norte row, a new contact row to Brisa, her CONTACT role kept).
 - **Q7 · Submodel 3 maintenance (communication event + roles, last 4 on 10-30) · Apply,
   Evaluate.** Gestoría Llano. Short key (as sent): (a) one event: started 2026-11-09
   10:00, medium PHONE (`contact_mechanism_type`), a status (completed); roles Teresa

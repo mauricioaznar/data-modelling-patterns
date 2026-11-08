@@ -144,7 +144,7 @@ Ch 2, Ch 3 and Ch 4 logs under "2026-11-08: question round, pending": **don't op
 before grading**. When the answers come back, read each one back, grade, log and update the
 trackers as usual, then tick here.
 
-- [ ] Q1 · Ch 2 · party relationship + type · gap (2): the agent cold, the contact's far end (Librería Faro)
+- [x] Q1 · Ch 2 · party relationship + type · gap (2): the agent cold, the contact's far end (Librería Faro) · stays 2: Norte a distributor and a customer (the agent missed again), the contact's far end fixed but its arrow reversed
 - [ ] Q2 · Ch 4 · the line · retest (3): ordered for cold, no column list (Floristería Lis, order 610)
 - [ ] Q3 · Ch 3 · where stock is + lot · retest (3): the lot's own columns, the why cold (Quesería Valle, lot Q-12)
 - [ ] Q4 · Ch 3 · estimated cost · retest (3): a component's row on the product, the total (Carpintería Haya)
