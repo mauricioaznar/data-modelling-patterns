@@ -96,7 +96,9 @@ of the chapter's `EXERCISES.md`.
   of writing on the phone). The short one must fit **15 minutes including the feedback**:
   a scenario cut to the facts its key tests, and **two parts, each with a small answer**
   (the user's call, 2026-11-08): two or three rows, e.g. two hats on the order and two on
-  the lines, not the whole set a mnemonic lists. Give the parts one at a time. Keep the concept and the
+  the lines, not the whole set a mnemonic lists. **Give all of a question's parts in one go**
+  (the user's call, 2026-11-08), so feedback on one part can't steer the answers to the
+  next; grade them together once the user says they're done. Keep the concept and the
   Bloom levels the row needs; the short version drops volume, not the test. Write both
   into the round file when the round is written; give the short one unless the user asks
   for the full. Don't list the columns to fill when one of them is what's tested ("which
