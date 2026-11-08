@@ -24,6 +24,11 @@ and any decisions made.
   that a product on the lot is a copy that can disagree with its items.
 - Round Q4 scored on (a) only (the user's call): party relationship + type 3 → 2, the agent
   missed again and the contact aimed at us; D19 and a direction rule for Card 1 proposed.
+- Card 1's mantra gains the seven relationship types as CAPS (→ us: customer, agent,
+  partner, supplier) and REC (rollup, employment, contact, each its own way), at the user's
+  request; D19 dropped (CAPS's A is the agent).
+- Round Q5 (short version): typed table vs one per kind stays 2; the substitute's arrow
+  reversed and its quantity missed, the shared nullable columns taken for a gain.
 - Q2 (a) graded in chat; (b) and (c) wait. `order_role_rule` built in a side session on
   `claude/order-role-rule-b262b3` (not merged yet).
 

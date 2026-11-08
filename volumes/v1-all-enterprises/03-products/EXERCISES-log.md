@@ -959,20 +959,26 @@ Scores: price components 2 → 3; feature prices stay at 2.
   lost its own columns). Next: the why cold (a copy on the lot can disagree with its
   items), the lot's own columns (creation, quantity, expiry).
 
+### 2026-11-07: round Q5, Submodel 4 gap (one typed table vs one entity per kind; Tinta Roble)
+- Short version, asked in chat (the user's new default): Roble 2 replaces Roble 1 from
+  1 Jan 2027; two A5 notebooks stand in for one A4, one way only. (a) the two
+  `product_association` rows (Apply); (b) "a replacement table and a substitute table":
+  what each design gives (Evaluate). The incompatibility, the gift box and the choice were
+  cut.
+- Answer: (a) "successor" Roble 1 → Roble 2 from 2027-01-01 ✓ (OBSOLESCENCE; Card 9 says
+  successor); the substitute as A5 → A4 ~ ("A5 can replace A4" right, the arrow reversed:
+  from is the one replaced, so A4 → A5) and no quantity 2 ✗ (the type-only column the
+  question pointed at). (b) per kind: readable, `quantity` only on the substitute table,
+  none on replacement ✓ unprompted (type-only columns where they apply); ours: new kinds as
+  rows ✓; "reuse quantity and quantity_used" ✗ (each is used by one type only: nullable
+  columns are the typed table's cost, not a gain); named ends (original, substitute) missed,
+  though (a) had just tripped on from/to; one query for everything linked, NOT NULL by
+  structure missed.
+- Score: one typed table vs one entity per kind stays 2 (the from/to cost hit again in (a)
+  and missed in (b); the shared columns taken for a gain). Next: the cost cold: from/to
+  mean something different per type, type-only columns nullable and checked by queries.
+
 ### 2026-11-07: question round, pending (written for the phone; wording in `docs/round-2026-11-07.md`; order in TODO)
-- **Q5 · Gap (level 2) · one typed table vs one entity per kind · Apply, Analyze,
-  Evaluate.** Tinta Roble. Key: (a) OBSOLESCENCE from Roble 1 to Roble 2, from 2027-01-01;
-  SUBSTITUTE from the A4 notebook to the A5, quantity 2 (how many "to" replace one "from"),
-  one row, one way only; INCOMPATIBILITY ink and gel pen, one row either way round
-  (queries look both ways); COMPONENT gift box → Roble 2 pen and gift box → A5 notebook,
-  quantity_used 1 each. (b) per kind: each table's ends are named and mean one thing
-  (obsolete, replacement); the type-only columns live only where they apply and can be NOT
-  NULL; the rules are structure (FKs, checks), not data-quality queries; reads plainly.
-  (c) ours: a new kind (a refill, an upsell) is a row, not a table and new queries;
-  "everything linked to this product" is one query; dates and reason defined once. The
-  cost: type-only columns are nullable and checked by queries, and from/to mean something
-  different per type. Choice: typed when kinds come and go, per kind when a few stable kinds
-  each have rules worth enforcing; either with that reason (the overall model keeps 3.9b).
 - **Q7 · Maintenance · inventory item, good vs physical stock, subtypes, status (last 4 on
   10-28) · Apply, Understand, Evaluate.** Ópticas Sauce. Key: (a) three SERIALIZED items,
   product Sauce Sun, SS-101 GOOD, SS-102 GOOD, SS-103 SLIGHTLY_DAMAGED, no quantity;
