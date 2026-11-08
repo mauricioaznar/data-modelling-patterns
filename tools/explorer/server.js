@@ -187,6 +187,14 @@ const CUSTOM_LABELS = {
     const what = refLabel('product_id') ?? refLabel('product_feature_id') ?? row.item_description;
     return [`${row.order_id} · line ${row.order_item_seq_id}`, what].filter(Boolean).join(' · ');
   },
+  // A rule's FK labels alone hide its order kind and its "anyone": say both,
+  // as "SALES order · SALESPERSON → Employee", plus the end date of an ended rule.
+  order_role_rule: (t, row, depth) => {
+    const fk = t.fks.find((f) => f.column === 'required_role_type_id');
+    const wearer = row.required_role_type_id == null ? 'anyone' : label(fk.ref, row.required_role_type_id, depth + 1);
+    const ended = row.thru_date ? ` · until ${row.thru_date}` : '';
+    return `${row.order_kind} order · ${row.order_role_type_id} → ${wearer}${ended}`;
+  },
 };
 
 function ownText(t, row) {

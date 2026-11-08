@@ -575,6 +575,73 @@ join generic g on g.order_id = s.order_id
               and g.job = s.job
 order by s.order_id, s.order_item_id, s.job;
 
+-- name: 4.5 — The order role rules: which hats each kind of order allows, and the standing role their wearer holds
+-- Our addition (NOTES, points 7 and 9). Rows for one hat with the same dates are alternatives.
+select order_kind, order_role_type_id as hat,
+       coalesce(string_agg(required_role_type_id, ' or ' order by required_role_type_id), 'anyone') as wearer_holds,
+       from_date, thru_date
+from order_role_rule
+group by order_kind, order_role_type_id, from_date, thru_date
+order by order_kind desc, order_role_type_id, from_date;
+
+-- name: 4.5 — Data-quality check: order roles whose hat has no rule for the order's kind in force on the order date (should be empty)
+-- Judged as of the order date, so an ended rule still passes the orders placed before it ended.
+select r.order_role_id, r.order_id, o.order_kind, o.order_date, r.order_role_type_id as hat, n.name as party
+from order_role r
+join "order" o            on o.order_id = r.order_id
+join party_display_name n on n.party_id = r.party_id
+where not exists (
+  select 1
+  from order_role_rule ru
+  where ru.order_kind = o.order_kind
+    and ru.order_role_type_id = r.order_role_type_id
+    and ru.from_date <= o.order_date
+    and (ru.thru_date is null or ru.thru_date > o.order_date)
+)
+order by r.order_id, r.order_role_type_id;
+
+-- name: 4.5 — Data-quality check: parties wearing a hat without any of the standing roles its rules require on the order date (should be empty)
+-- Only the rules in force on the order date count. A rule for anyone (a null
+-- role) needs nothing, and a hat with no rule at all is the check above's.
+-- The order role names a party; the check walks party → party_role → role_type,
+-- and a role type below the required one counts (Ch 2's role_type_ancestor).
+with rule_in_force as (
+  select r.order_role_id, ru.required_role_type_id
+  from order_role r
+  join "order" o          on o.order_id = r.order_id
+  join order_role_rule ru on ru.order_kind = o.order_kind
+                         and ru.order_role_type_id = r.order_role_type_id
+                         and ru.from_date <= o.order_date
+                         and (ru.thru_date is null or ru.thru_date > o.order_date)
+)
+select r.order_role_id, r.order_id, o.order_kind, o.order_date, r.order_role_type_id as hat, n.name as party,
+       string_agg(f.required_role_type_id, ' or ' order by f.required_role_type_id) as needs_one_of,
+       (select string_agg(pr.role_type_id, ', ' order by pr.role_type_id)
+          from party_role pr
+         where pr.party_id = r.party_id
+           and pr.from_date <= o.order_date
+           and (pr.thru_date is null or pr.thru_date > o.order_date)) as holds_that_day
+from order_role r
+join "order" o            on o.order_id = r.order_id
+join party_display_name n on n.party_id = r.party_id
+join rule_in_force f      on f.order_role_id = r.order_role_id
+where not exists (
+    select 1 from rule_in_force a
+    where a.order_role_id = r.order_role_id and a.required_role_type_id is null
+  )
+  and not exists (
+    select 1
+    from rule_in_force req
+    join role_type_ancestor t on t.ancestor_id = req.required_role_type_id
+    join party_role pr        on pr.role_type_id = t.role_type_id
+    where req.order_role_id = r.order_role_id
+      and pr.party_id = r.party_id
+      and pr.from_date <= o.order_date
+      and (pr.thru_date is null or pr.thru_date > o.order_date)
+  )
+group by r.order_role_id, r.order_id, o.order_kind, o.order_date, r.order_role_type_id, n.name
+order by r.order_id, r.order_role_type_id;
+
 -- ============================================================
 -- Fig 4.6 — Order adjustments
 -- ============================================================

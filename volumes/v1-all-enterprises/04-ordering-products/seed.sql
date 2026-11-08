@@ -323,7 +323,7 @@ insert into order_role (order_id, party_id, order_role_type_id, percent_contribu
   (12571, 4, 'TAKEN_BY',    null),
   (12571, 8, 'BILL_TO',     null),
   (12571, 3, 'SALESPERSON', 100),
-  (12571, 1, 'BILL_TO',     null),   -- DATA ERROR: a second bill-to; a column would have held one (caught by a query)
+  (12571, 1, 'BILL_TO',     null),   -- DATA ERROR: a second bill-to; a column would have held one (caught by a query; the rules' check too: Ana is no bill-to customer)
   (12561, 2, 'BILL_TO',     null);   -- DATA ERROR: 12561 already has a bill-to column (Contoso) (caught by a query)
 
 -- Contact mechanisms: 5 Kiri's phone, 6 Ana's e-mail, 8 our website,
@@ -346,6 +346,48 @@ insert into order_item_contact_mechanism (order_item_id, contact_mechanism_id, c
   (25, 11, 'SHIPPING'),
   (25, 5,  'DELIVERY_CONTACT'),   -- the courier calls Kiri
   (26, 11, 'SHIPPING');
+
+-- Order role rules (our addition, NOTES points 7 and 9): which hats each kind
+-- of order allows, and the standing role each one's wearer must hold. Two
+-- rows for one hat mean either role will do; a null role means anyone. A rule
+-- tests the party's own standing role only, never a relationship, so "our
+-- employee" can't be a rule (point 7). TAKEN_BY on a purchase has no row on
+-- an order yet; its rule mirrors 4.4's column check (a SUPPLIER role). No
+-- PURCHASE rule for SALESPERSON: nobody earns a sale on our own purchase.
+insert into order_role_rule (order_role_rule_id, order_kind, order_role_type_id, required_role_type_id, from_date, thru_date) values
+  (1,  'SALES',    'PLACED_BY',   'PLACING_CUSTOMER',      '2000-01-01', null),
+  (2,  'SALES',    'TAKEN_BY',    'INTERNAL_ORGANIZATION', '2000-01-01', null),
+  (3,  'SALES',    'BILL_TO',     'BILL_TO_CUSTOMER',      '2000-01-01', null),
+  (4,  'SALES',    'SALESPERSON', 'EMPLOYEE',              '2000-01-01', null),
+  (5,  'SALES',    'SALESPERSON', 'CONTRACTOR',            '2000-01-01', null),   -- or a contractor
+  (6,  'SALES',    'ENTERED_BY',  null,                    '2000-01-01', null),
+  (7,  'SALES',    'APPROVER',    null,                    '2000-01-01', null),
+  (8,  'SALES',    'REVIEWER',    null,                    '2000-01-01', null),
+  (9,  'PURCHASE', 'PLACED_BY',   'INTERNAL_ORGANIZATION', '2000-01-01', null),   -- Table 4.7: an organization of ours places it
+  (10, 'PURCHASE', 'TAKEN_BY',    'SUPPLIER',              '2000-01-01', null),
+  (11, 'PURCHASE', 'BILL_TO',     'INTERNAL_ORGANIZATION', '2000-01-01', null),
+  (12, 'PURCHASE', 'ENTERED_BY',  null,                    '2000-01-01', null),   -- whoever raised it goes here or under APPROVER
+  (13, 'PURCHASE', 'APPROVER',    null,                    '2000-01-01', null),
+  (14, 'PURCHASE', 'REVIEWER',    null,                    '2000-01-01', '2024-01-01');   -- ended: approvals replaced purchase reviews in 2024
+
+select setval(pg_get_serial_sequence('order_role_rule', 'order_role_rule_id'), (select max(order_role_rule_id) from order_role_rule));
+
+-- 12571's good rows need their wearers' standing roles: Ana places it as a
+-- customer, and the household is set up to be billed (97 and 98, added after
+-- Ch 9's 96).
+insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
+  (97, 1, 'PLACING_CUSTOMER', '2025-07-01', null),   -- Ana, from her first order
+  (98, 8, 'BILL_TO_CUSTOMER', '2025-07-01', null);   -- the García-López household
+
+select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
+
+-- Order roles judged by the rules. Parties: 1 Ana, 2 Ben, 3 Chloe.
+insert into order_role (order_id, party_id, order_role_type_id, percent_contribution) values
+  (12570, 1, 'REVIEWER',    null),   -- May 2023: purchase reviews were still a rule then (rule 14), so it passes
+  (12569, 3, 'REVIEWER',    null),   -- DATA ERROR: June 2025, after purchase reviews ended (caught by a query)
+  (12568, 3, 'SALESPERSON', 60),     -- DATA ERROR: Chloe's copier sale credited again on the purchase that fills it (caught by a query)
+  (12563, 2, 'SALESPERSON', 100),    -- DATA ERROR: Ben credited with selling to himself: neither employee nor contractor (caught by a query)
+  (12565, 3, 'SALESPERSON', 100);    -- DATA ERROR: March 2023, before Chloe joined in September (caught by a query)
 
 -- ============================================================
 -- Fig 4.6 — Order adjustments
