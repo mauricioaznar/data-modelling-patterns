@@ -121,7 +121,8 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Cue:** "Who is this, what are they to us, and how are they tied to each other?"
 - **Hook:** people wearing hats
 - **Mantra:** A party is who; a role is one end it holds (its hat); a relationship is the bond between
-  two ends, and a type names each end; a class says what it is underneath.
+  two ends, and a type names each end; a class says what it is underneath. Seven types: CAPS
+  point at us, REC each its own way.
 
 <details><summary>Key</summary>
 
@@ -135,9 +136,14 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   "everyone we deal with" needs a union.
 - **T:** the relationship joins *roles*, not parties; and the specific tables (employment,
   customer relationship, rollup) vs. the one generic `party_relationship` (your open gap:
-  specific vs generic).
+  specific vs generic). Agencia Ola, selling our trips on commission, made a contractor (an
+  agent: an organization role); Pedro, Agencia Ola's contact, aimed at us (2026-11-07).
 - **D:** party ← party_role → role_type; party_relationship → party_role twice;
-  party_relationship → party_relationship_type → role_type twice.
+  party_relationship → party_relationship_type → role_type twice. The seven types, from →
+  to: **CAPS** → us: Customer, Agent (the distribution channel relationship), Partner,
+  Supplier, each → INTERNAL_ORGANIZATION. **REC**, each its own way: Rollup (unit → its
+  parent), Employment (INTERNAL_ORGANIZATION → employee; there is no EMPLOYER role),
+  Contact (person → the organization they speak for).
 </details>
 
 ### Card 2 · V1 Ch 2 · Contact mechanisms (Figs 2.9–2.10)
