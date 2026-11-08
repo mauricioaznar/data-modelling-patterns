@@ -37,10 +37,7 @@ and any decisions made.
 - Q2 (b, c) sent as a short WhatsApp text for another session; the key notes Claude's
   spoilers (the after-the-fact check and "no count column" were said in feedback), so they
   grade the date reasoning and the why.
-
-**Decisions** (later in the day)
-- Nothing carries over (the user's call): parts cut or left unasked are dropped, not queued;
-  Q2 (b, c) is the last leftover, already sent. Q4's (b) and (c) dropped. `order_role_rule` built in a side session on
+- Q4's (b) and (c) dropped (the user's call), not carried over. `order_role_rule` built in a side session on
   `claude/order-role-rule-b262b3` (not merged yet).
 
 **Decisions**

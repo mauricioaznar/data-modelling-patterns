@@ -98,9 +98,7 @@ of the chapter's `EXERCISES.md`.
   hats on orders), and one or two parts, given one at a time. Keep the concept and the
   Bloom levels the row needs; the short version drops volume, not the test. Write both
   into the round file when the round is written; give the short one unless the user asks
-  for the full. **Nothing carries over** (the user's call, 2026-11-07): a part cut from the
-  short version or left unasked is dropped, not queued for a later round; the row's Next
-  names the concept to retest, in a fresh question. Don't list the columns to fill when one of them is what's tested ("which
+  for the full. Don't list the columns to fill when one of them is what's tested ("which
   line it's ordered for" gave ordered for away, 2026-11-07). When a cut changes a convention's cue (e.g. "until 31 Dec" for an
   exclusive thru date), don't count the result against the user.
 - **Maintenance in question rounds** (the user's call, 2026-10-29): the round's 2
