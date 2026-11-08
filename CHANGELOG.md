@@ -19,8 +19,15 @@ and any decisions made.
   kit sits on the feature, but assembly and frame were called features and no total was
   given. Card 8's cost line rewritten at the user's request (option B: "what the customer
   picks … split into the components we spend"); D18's Trap gains the slip.
+- Round Q3 graded (asked in chat one part at a time): where stock is + lot stays 3. No
+  product on the lot, cold; the lot lost its creation date and quantity, and (c) missed
+  that a product on the lot is a copy that can disagree with its items.
+- Q2 (a) graded in chat; (b) and (c) wait. `order_role_rule` built in a side session on
+  `claude/order-role-rule-b262b3` (not merged yet).
 
 **Decisions**
+- Questions in chat come shorter and one part at a time (the user found Q2's full phone
+  text too long).
 - The phone text's headers name the submodel, not the concept, so a header doesn't give
   the answer away (the keys and TODO still name the concept).
 

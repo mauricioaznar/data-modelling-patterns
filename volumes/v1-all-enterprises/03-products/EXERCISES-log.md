@@ -937,17 +937,29 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - Score: estimated cost 2 → 3 (not 4: "feature" for a component came back twice). Next:
   retest cold, a component's row on the product (Júcar Norte's LABOR row); give the total.
 
+### 2026-11-07: round Q3, Submodel 2 retest (where stock is + lot; Almazara Olivar, lot L-27)
+- Written for the phone, asked in chat one part at a time (the user found the full text too
+  long). Lot L-27 bottled 3 Oct 2026, 600 × 1 L extra virgin, best before 3 Oct 2028; 450 on
+  pallet P7 in the Martos warehouse, 150 on the Jaén shop floor. (a) the lot and item rows
+  (Apply), (b) the recall walk (Analyze), (c) "add product_id to the lot" (Evaluate).
+- Answer: (a) no product on the lot ✓ cold (the 11-04 gap fixed); "the item has the link to
+  the lot, not the other way round" ✓; expiry and the lot's name ✓; the creation date and
+  the quantity 600 missed ✗ (both not null; the lot linked to "the 600 bottles inventory
+  item row", which doesn't exist: 600 is the batch's own size); the 450 NON_SERIALIZED on
+  container P7, the 150 NON_SERIALIZED on the Jaén shop facility, both on L-27 ✓ cold.
+  (b) the product through the items ✓, container → facility ✓; "every lot row has a link to
+  an inventory item" ~ (the arrow backwards, right in (a)); "every inventory item has a link
+  to the facility" ~ (the pallet's 450 reach Martos only through P7: facility or container,
+  never both); "group by lot" ~ (filter by L-27, then group). (c) one lot row per product,
+  the lot's name and creation date repeated ~ (a real cost only if a lot held several
+  products); "products on the lot expire differently" ✗ (one batch, one expiry); found it
+  "tempting"; the core risk missed: the product on the lot and on every item, two copies that
+  can disagree; and the recall still needs the items for the buildings.
+- Score: where stock is + lot stays 3 (applied cold, but the why missed in (c) and the lot
+  lost its own columns). Next: the why cold (a copy on the lot can disagree with its
+  items), the lot's own columns (creation, quantity, expiry).
+
 ### 2026-11-07: question round, pending (written for the phone; wording in `docs/round-2026-11-07.md`; order in TODO)
-- **Q3 · Retest (3) · where stock is + lot, the lot holds no product · Apply, Analyze,
-  Evaluate.** Almazara Olivar, lot L-27. Key: (a) lot: creation 2026-10-03, quantity 600,
-  expiration 2028-10-03, no product. Container P7 (PALLET) at the Martos warehouse. Two
-  NON_SERIALIZED items, product = extra virgin 1 L, GOOD, lot L-27: 450 with container P7
-  (facility null), 150 with facility = the Jaén shop (container null). (b) lot →
-  `inventory_item.lot_id` → `product_id` → product; the building is the item's
-  `facility_id`, or `container_id` → `container.facility_id`. (c) the product stored twice,
-  on the lot and on each item, and the copies can disagree; the lot is the batch (when, how
-  many, expiry), what it holds is read through its items: the arc's own reason (the
-  container already knows its facility).
 - **Q5 · Gap (level 2) · one typed table vs one entity per kind · Apply, Analyze,
   Evaluate.** Tinta Roble. Key: (a) OBSOLESCENCE from Roble 1 to Roble 2, from 2027-01-01;
   SUBSTITUTE from the A4 notebook to the A5, quantity 2 (how many "to" replace one "from"),
