@@ -29,6 +29,8 @@ and any decisions made.
   request; D19 dropped (CAPS's A is the agent).
 - Round Q5 (short version): typed table vs one per kind stays 2; the substitute's arrow
   reversed and its quantity missed, the shared nullable columns taken for a gain.
+- Round Q6 (short, (a) only): the line 4 → 3. The lines were right, but the question listed
+  "ordered for", and the user said they'd have missed it without that.
 - Q2 (a) graded in chat; (b) and (c) wait. `order_role_rule` built in a side session on
   `claude/order-role-rule-b262b3` (not merged yet).
 

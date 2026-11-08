@@ -131,7 +131,7 @@ trackers as usual, then tick here.
 - [x] Q3 · Ch 3 · where stock is (facility XOR container) + lot · retest (3): the lot holds no product (Almazara Olivar, lot L-27) · stays 3: no product on the lot cold, items right; the lot's creation and quantity missed, (c) missed the two copies disagreeing
 - [x] Q4 · Ch 2 · party relationship + type · retest (3): the direction per type, the agent (Viajes Brisa) · scored on (a) only, 3 → 2: employment, customer, supplier ✓; the agent a "contractor" again, Pedro's contact aimed at us
 - [x] Q5 · Ch 3 · one typed table vs one entity per kind · gap (level 2): its cost (Tinta Roble) · short version, stays 2: the substitute's arrow reversed, no quantity; shared nullable columns taken for a gain, named ends missed
-- [ ] Q6 · Ch 4 · the line: product, feature or neither, snapshot, ordered for · maintenance (last 4 on 10-30) (Informática Lince, order 530)
+- [x] Q6 · Ch 4 · the line: product, feature or neither, snapshot, ordered for · maintenance (last 4 on 10-30) (Informática Lince, order 530) · short, (a) only, 4 → 3: lines right, but "ordered for" was cued by the question and wouldn't have come unaided (owned up)
 - [ ] Q7 · Ch 3 · inventory item (serialized vs counted, status) · maintenance (last 4 on 10-28) (Ópticas Sauce)
 
 ## Comparisons (`comparisons/`, kept apart from the chapters)

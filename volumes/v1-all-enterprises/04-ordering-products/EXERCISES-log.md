@@ -818,13 +818,17 @@ Misunderstandings and reinforce attempts, oldest first.
   needs, not how many; several rows for one hat would each carry the count, and they could
   disagree. Cardinality is its own check query (more than one BILL_TO on an order), with a
   bad seed row (the 10-23 mistake).
-- **Q6 · Maintenance · the line: product, feature or neither, the snapshot, ordered for
-  (last 4 on 10-30) · Apply, Understand, Evaluate.** Informática Lince, order 530. Key:
-  (a) line 1 Lince 14 (product) ×2 at 1,100; line 2 the 32 GB upgrade (feature) ×2 at 150,
-  ordered for line 1; line 3 Lince 14 ×1 at 1,100; line 4 neither, a description ("logo
-  engraved on the lid") ×1 at 20, ordered for line 3. (b) nothing: each line's unit price
-  is the agreed price, copied when the order was taken; the rise is a new price component
-  for later orders, and rewriting the line would change what Estudio Arce agreed to.
-  (c) one line can't say which two laptops get the upgrade, so the feature line has no line
-  to be ordered for; the engraving has no line of its own or price; a comment can't be
-  counted, priced or queried. Split the laptops by what differs.
+
+### 2026-11-07: round Q6, Submodel 1 maintenance (the line; Informática Lince, order 530)
+- Short version, asked in chat, (a) only (the user tired): two Lince 14 laptops at €1,100,
+  both with the 32 GB upgrade (+€150 each), the studio's logo engraved on both lids, a
+  one-off job (€20 each). (a) the order lines: product, feature or neither, quantity, unit
+  price, ordered for (Apply). The split was cut (both laptops alike).
+- Answer: line 1 Lince 14 (product) ×2 at 1,100 ✓, "serial numbers, but one row" ✓; line 2
+  the 32 GB upgrade (feature) ×2, ordered for line 1 ✓, its unit price written "32" ~ (a
+  slip for 150); line 3 neither ×2 at 20, ordered for line 1 ✓. The feature justified by
+  "some labour is needed" ~ (labour is a cost component, D18; it's a feature because the
+  customer picks it on the laptop). The user owned up: the question listed "which line it's
+  ordered for", and they would have missed it without that (the wording's hint, Claude's).
+- Score: the line 4 → 3 (everything else cold, but ordered for no longer recalled unaided,
+  by the user's own account). Next: ordered for cold, with no column list in the question.
