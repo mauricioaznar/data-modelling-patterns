@@ -22,7 +22,7 @@ and any decisions made.
   Q7 (clean); Q1 and Q4 were carded in the round.
 
 **Next**
-- Re-import the Anki export. A distinction for Q2 (c) suggested (D20, a rule row or its own
+- Re-import the Anki export. D20 written for Q2 (c) (a rule row or its own
   check); next round: cardinality cold, flag don't block.
 
 ## 2026-11-07

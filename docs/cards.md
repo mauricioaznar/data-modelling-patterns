@@ -1987,6 +1987,20 @@ options; one that misses a fact goes to its submodel card instead.
 - **Trap:** Marcos written on order 520 "as a contractor" (his hat is SALESPERSON), and the
   rules written as `order_role_type` rows, the hat list (2026-11-07).
 
+### Distinction D20 · A rule row or its own check? (V1 Ch 4)
+- **Cue:** "On a sales order, the salesperson must be an employee; and an order has one
+  bill-to, no more."
+- **Test:** Does it say which hat goes with which standing role, or how many of something
+  an order may hold?
+- **Sides:** An `order_role_rule` row pairs an order kind and a hat with the standing role
+  it needs, dated; a hat can have several rows (SALESPERSON → EMPLOYEE, → CONTRACTOR). A
+  count ("one BILL_TO per order") is a fact about the whole order, not about any one
+  pairing: put it on the rows and each row carries its own count, and they can disagree,
+  while the other hats leave the column empty. It becomes its own data-quality query, with
+  a bad seed row that it catches.
+- **Mnemonic:** The rule row pairs; the check counts.
+- **Trap:** a max-per-order column on the rule rows, endorsed (2026-11-08).
+
 ---
 
 ## Deck: patterns
