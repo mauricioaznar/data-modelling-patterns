@@ -8,7 +8,12 @@ and any decisions made.
 **Built**
 - Round 2026-11-07 Q7 graded (short, answered in chat): inventory item stays 4. One row
   per serial with no quantity, the sprays split 36 good / 4 defective because a row holds
-  one status, status and facility unprompted. The round is graded except Q2 (b, c).
+  one status, status and facility unprompted.
+- Round Q2 (b, c) graded (short): rules beside facts stays 3. The order dated 15 Dec passes
+  because the rule is read as of the order's date (cold); the max-per-order column was
+  endorsed, though its costs were seen. The round is fully graded.
+- Distinctions written: D19 (the hat or the standing role), Card 9's and D18's Traps gain
+  the Q5 and Q6 slips; Anki export regenerated.
 
 **Decisions**
 - Distinctions for the round suggested: D19 (the hat or the standing role, from Q2's Marcos)
@@ -17,7 +22,8 @@ and any decisions made.
   Q7 (clean); Q1 and Q4 were carded in the round.
 
 **Next**
-- The user's answer on the distinction suggestions; Q2 (b, c) in another session.
+- Re-import the Anki export. A distinction for Q2 (c) suggested (D20, a rule row or its own
+  check); next round: cardinality cold, flag don't block.
 
 ## 2026-11-07
 
