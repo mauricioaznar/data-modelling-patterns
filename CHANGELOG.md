@@ -25,6 +25,9 @@ and any decisions made.
   and Trap lines for Card 9 (Q5's reversed substitute arrow) and D18 (Q6's "a feature
   because labour is needed"). No card for Q3 (missed columns and a why, not a choice) or
   Q7 (clean); Q1 and Q4 were carded in the round.
+- A short question has two parts, each with a small answer (the user's call): two or three
+  rows, not the whole set a mnemonic lists (practice.md). The new round's Q1, Q2, Q4 and Q7
+  were cut to fit, their keys with them.
 
 **Next**
 - Re-import the Anki export. D20 written for Q2 (c) (a rule row or its own

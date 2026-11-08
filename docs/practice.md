@@ -94,8 +94,9 @@ of the chapter's `EXERCISES.md`.
 - **Two versions of each question, short by default for now** (the user's call,
   2026-11-07): the full version is the usual scenario with three parts (about 30 minutes
   of writing on the phone). The short one must fit **15 minutes including the feedback**:
-  a scenario cut to the facts its key tests, at most two or three rows to write (fewer
-  hats on orders), and one or two parts, given one at a time. Keep the concept and the
+  a scenario cut to the facts its key tests, and **two parts, each with a small answer**
+  (the user's call, 2026-11-08): two or three rows, e.g. two hats on the order and two on
+  the lines, not the whole set a mnemonic lists. Give the parts one at a time. Keep the concept and the
   Bloom levels the row needs; the short version drops volume, not the test. Write both
   into the round file when the round is written; give the short one unless the user asks
   for the full. Don't list the columns to fill when one of them is what's tested ("which

@@ -1005,14 +1005,12 @@ Scores: price components 2 → 3; feature prices stay at 2.
   facility for the buildings, so the copy saves nothing. Full version adds the 10 cracked
   (a third item, SLIGHTLY_DAMAGED, 10, the 50 becoming 40) and the recall walk.
 - **Q4 · Submodel 4 retest (3) · estimated cost: a component's row on the product, the
-  total · Apply, Analyze.** Carpintería Haya. Key: (a) on the chair (product): MATERIALS 40
-  from 2026-01-01 thru 2027-03-01, MATERIALS 45 from 2027-03-01, LABOR 30 from 2026-01-01,
-  LABOR 25 from 2026-01-01 with organization = the Burgos workshop (on the product, not a
-  feature); on the cushion (feature): MATERIALS 12 and LABOR 8 from 2026-01-01; no supplier
-  on any row (Maderas Sil is a `supplier_product` fact). Wood and labour are types, not
-  features. (b) as of 2027-04-10: 45, 25 (more specific than 30), 12, 8: total 90. Full
-  version adds (c) the supplier row: the scope has nowhere to go, the cushion can't be
-  split out, a second supplier gives two answers.
+  total · Apply, Analyze.** Carpintería Haya. Short key (as sent): (a) on the chair
+  (product), all from 2026-01-01: MATERIALS 40, LABOR 30, LABOR 25 with organization = the
+  Burgos workshop (on the product, not a feature); on the cushion (feature): MATERIALS 12;
+  no supplier on any row (Maderas Sil is a `supplier_product` fact). Wood and labour are
+  types, not features. (b) 40, 25 (more specific than 30), 12: total 77. Full version: a
+  wood rise and sewing, and the supplier-row colleague.
 - **Q5 · Submodel 5 gap (2) · one typed table vs one entity per kind: its cost · Apply,
   Evaluate.** Papelería Cobre. Key: (a) SUBSTITUTE, from Cola Cobre 1 L (the one replaced)
   → to Cola Cobre 0.5 L, quantity 2, a from date (any), one row only (one way). (b) per

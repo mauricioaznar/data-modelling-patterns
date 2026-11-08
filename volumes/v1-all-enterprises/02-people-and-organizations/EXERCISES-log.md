@@ -651,26 +651,24 @@ Misunderstandings and reinforce attempts, oldest first.
 
 ### 2026-11-08: question round, pending (written for the phone, short; wording in `docs/round-2026-11-08.md`; order in TODO)
 - **Q1 · Submodel 1 gap (2) · party relationship + type: the agent cold, the contact's far
-  end, the direction rule · Apply.** Librería Faro. Key: roles in `party_role`: Librería
-  Faro INTERNAL_ORGANIZATION, Editorial Brisa SUPPLIER, Distribuciones Norte AGENT (under
-  DISTRIBUTION_CHANNEL, an organization role; not DISTRIBUTOR, since it doesn't buy the
-  cards; not CONTRACTOR, a person's role), Inés CONTACT. Relationships:
-  SUPPLIER_RELATIONSHIP Brisa (SUPPLIER) → Faro (INTERNAL_ORGANIZATION) from 2026-06-01;
-  DISTRIBUTION_CHANNEL_RELATIONSHIP Norte (AGENT) → Faro (INTERNAL_ORGANIZATION) from
-  2026-09-01; ORGANIZATION_CONTACT Inés (CONTACT) → Norte (its AGENT role: the organization
-  she speaks for, not us) from 2026-09-01; all thru null. CAPS point at us; the contact
-  points at its organization. Full version adds (b) Inés's move: thru 2027-02-01 on the
-  Norte contact row, a new contact row Inés → Brisa (its SUPPLIER role) from 2027-02-01,
-  her CONTACT role kept; (c) a contractor loses the channel (an organization selling for
-  us, with its own type and rules).
-- **Q7 · Submodel 3 maintenance (communication event + roles, last 4 on 10-30) · Apply.**
-  Gestoría Llano. Key: two events. Event 1: started 2026-11-09 10:00, medium PHONE
-  (`contact_mechanism_type`), status completed; roles Teresa CALLER, Raúl CALLEE (persons,
-  not their organizations); a purpose row of a fitting type (INQUIRY or
-  CUSTOMER_SERVICE_CALL: any fitting type, the point is a purpose row, and an event can
-  have several). Event 2: 12:00, EMAIL, Raúl SENDER, Teresa RECIPIENT, a purpose row.
-  Context optional on both: the customer relationship Panadería Trigo → Gestoría Llano, or
-  Teresa's contact relationship (CONTACT → Panadería Trigo). Grade the medium, the persons
-  in the roles and the purpose as child rows; a case isn't asked (unprompted ✓ if given).
-  Full version adds (b) the three events on one case, closed by a status on the case;
-  (c) the organization on the calls loses who spoke and which roles fit the medium.
+  end, the direction rule · Apply, Evaluate.** Librería Faro. Short key (as sent): (a) two
+  relationships, both from 2026-09-01, thru null: DISTRIBUTION_CHANNEL_RELATIONSHIP, from
+  Distribuciones Norte (AGENT, under DISTRIBUTION_CHANNEL: an organization role; not
+  DISTRIBUTOR, since it doesn't buy the cards) → to Librería Faro (INTERNAL_ORGANIZATION);
+  ORGANIZATION_CONTACT, from Inés (CONTACT) → to Distribuciones Norte (the organization she
+  speaks for, not us). CAPS point at us; the contact points at its organization. (b) a
+  contractor is a person's role (someone who works for us under contract); Norte is an
+  organization selling for us on commission, a distribution channel with its own type, so
+  "contractor" files it in the wrong place and loses "who sells our cards" as a question.
+  Full version (in the round file): a supplier too, Inés's move to Editorial Brisa
+  (thru 2027-02-01 on the Norte row, a new contact row to Brisa, her CONTACT role kept).
+- **Q7 · Submodel 3 maintenance (communication event + roles, last 4 on 10-30) · Apply,
+  Evaluate.** Gestoría Llano. Short key (as sent): (a) one event: started 2026-11-09
+  10:00, medium PHONE (`contact_mechanism_type`), a status (completed); roles Teresa
+  CALLER, Raúl CALLEE (persons); a purpose row of a fitting type (INQUIRY or
+  CUSTOMER_SERVICE_CALL: any fitting type, the point is a purpose as a child row). Context
+  optional: the customer relationship Panadería Trigo → Gestoría Llano, or Teresa's contact
+  relationship. (b) the organization can't talk: we lose who spoke (Teresa, not anyone at
+  the bakery), whom to call back, and the medium check (CALLER and CALLEE are people's
+  roles on a phone); the bakery is still reachable through the context relationship.
+  Full version: the e-mail and a call back, all three on one case closed by its status.

@@ -864,13 +864,13 @@ Misunderstandings and reinforce attempts, oldest first.
   by the user's own account). Next: ordered for cold, with no column list in the question.
 
 ### 2026-11-08: question round, pending (written for the phone, short; wording in `docs/round-2026-11-08.md`; order in TODO)
-- **Q2 · Submodel 1 retest (3) · the line: ordered for cold, no column list · Apply.**
-  Floristería Lis, order 610. Key: line 1 the rose bouquet (product) ×20 at 25; line 2 the
-  gift card (feature) ×20 at 2, ordered for line 1; line 3 neither product nor feature, a
-  description ("hotel's name on the ribbon") ×20 at 1, ordered for line 1. Ordered for on
-  lines 2 and 3 is what's tested: grade it as unprompted. Full version: 12 cards (line 2
-  ×12, no split needed: ordered for points at the line, not at each bouquet), (b) a
-  one-off isn't in the catalogue, (c) the €27 hides the option and its own price.
+- **Q2 · Submodel 1 retest (3) · the line: ordered for cold, no column list · Apply,
+  Understand.** Floristería Lis, order 610. Short key (as sent): (a) line 1 the rose bouquet
+  (product) ×20 at 25; line 2 neither product nor feature, a description ("hotel's name on
+  the ribbon") ×20 at 1, ordered for line 1 (what's tested: grade it as unprompted).
+  (b) it's not in our catalogue: a one-off made for this order, so there's no product or
+  feature row to point at, only a description. Full version: the gift card feature too,
+  on 12 of the 20, and the €27 colleague.
 - **Q6 · Submodel 2 maintenance (amount or percentage, last 4 on 10-28) · Apply,
   Understand.** Herbolario Salvia, order 620. Key: (a) on line 2 (the tea set): DISCOUNT,
   amount 6, the unit price staying 46 (discounts as adjustments); on the order:
