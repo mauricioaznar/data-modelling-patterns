@@ -14,6 +14,9 @@ and any decisions made.
 - Round 2026-11-08 Q1 graded (short): party relationship + type stays 2. Distribuciones
   Norte, on commission without buying, made a distributor and a customer (an agent); the
   contact's far end fixed (Norte, not us), its arrow reversed.
+- Round Q2 graded (short, both parts in one go): the line 3 → 4. Ordered for came back
+  cold with no column list; the bouquet's price and the ribbon's quantity slipped.
+- practice.md: a question's parts are given in one go and graded together (the user's call).
 - Round 2026-11-07 Q7 graded (short, answered in chat): inventory item stays 4. One row
   per serial with no quantity, the sprays split 36 good / 4 defective because a row holds
   one status, status and facility unprompted.

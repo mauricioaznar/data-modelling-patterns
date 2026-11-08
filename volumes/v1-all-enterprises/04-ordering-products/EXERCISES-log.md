@@ -863,14 +863,20 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: the line 4 → 3 (everything else cold, but ordered for no longer recalled unaided,
   by the user's own account). Next: ordered for cold, with no column list in the question.
 
+### 2026-11-08: round Q2, Submodel 1 retest (the line; Floristería Lis, sales order 610)
+- Short, both parts in one go (the user's new rule): 20 rose bouquets at €25, the hotel's
+  name printed on each bouquet's ribbon, a one-off at €1 each. (a) the order lines (Apply),
+  (b) why the ribbon is neither a product nor a feature (Understand). No column list.
+- Answer: (a) line 1 the bouquet (product) ×20 ✓, its unit price written 20 ~ (25: a slip);
+  line 2 neither product nor feature, the description ✓, ordered for line 1 ✓ cold and
+  unprompted (the 11-07 gap); its quantity 1 at €1 ✗ (€1 each on 20 bouquets: ×20 at 1, or
+  the line charges €1 instead of €20). (b) not in the catalogue, so only a description,
+  and it has to be on the order ✓.
+- Score: the line 3 → 4 (ordered for came back cold with no cue, neither and its why
+  right); the two numbers are slips, but a line has to multiply out (quantity × unit
+  price is what's charged).
+
 ### 2026-11-08: question round, pending (written for the phone, short; wording in `docs/round-2026-11-08.md`; order in TODO)
-- **Q2 · Submodel 1 retest (3) · the line: ordered for cold, no column list · Apply,
-  Understand.** Floristería Lis, order 610. Short key (as sent): (a) line 1 the rose bouquet
-  (product) ×20 at 25; line 2 neither product nor feature, a description ("hotel's name on
-  the ribbon") ×20 at 1, ordered for line 1 (what's tested: grade it as unprompted).
-  (b) it's not in our catalogue: a one-off made for this order, so there's no product or
-  feature row to point at, only a description. Full version: the gift card feature too,
-  on 12 of the 20, and the €27 colleague.
 - **Q6 · Submodel 2 maintenance (amount or percentage, last 4 on 10-28) · Apply,
   Understand.** Herbolario Salvia, order 620. Key: (a) on line 2 (the tea set): DISCOUNT,
   amount 6, the unit price staying 46 (discounts as adjustments); on the order:
