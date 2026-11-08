@@ -625,21 +625,25 @@ Misunderstandings and reinforce attempts, oldest first.
   address never was "Pireneos", same fact, the dates and purpose were right ✓ cold.
 - Score: move vs typo stays 4.
 
-### 2026-11-07: question round, pending (written for the phone; wording in `docs/round-2026-11-07.md`; order in TODO)
-- **Q4 · Retest (3) · PARTY RELATIONSHIP + TYPE, the direction per type · Apply, Apply,
-  Understand.** Viajes Brisa. Key (directions as in the seed's types): (a) roles: Viajes
-  Brisa INTERNAL_ORGANIZATION; Carla EMPLOYEE; Hotel Duna CUSTOMER from 2025-03-01 and
-  SUPPLIER from 2027-02-01; Agencia Ola AGENT (under DISTRIBUTION_CHANNEL); Pedro CONTACT.
-  Relationships: EMPLOYMENT, Viajes Brisa (INTERNAL_ORGANIZATION) → Carla (EMPLOYEE);
-  CUSTOMER_RELATIONSHIP, Hotel Duna (CUSTOMER) → Viajes Brisa (INTERNAL_ORGANIZATION);
-  DISTRIBUTION_CHANNEL_RELATIONSHIP, Agencia Ola (AGENT) → Viajes Brisa; ORGANIZATION_CONTACT,
-  Pedro (CONTACT) → Agencia Ola (AGENT, an ORGANIZATION_ROLE); all from 2025-03-01, thru null;
-  SUPPLIER_RELATIONSHIP, Hotel Duna (SUPPLIER) → Viajes Brisa, from 2027-02-01. Hotel Duna's
-  supplier side is a second role and a second relationship, not a change to the first.
-  (b) end Pedro's contact relationship thru 2027-06-01 (exclusive), and his CONTACT role if
-  he plays it nowhere else; add Lucía's CONTACT role and a contact relationship Lucía →
-  Agencia Ola from 2027-06-01; Agencia Ola's AGENT role and its channel relationship stay.
-  (c) a data-quality query can check that the from role is of the type's from role type (or
-  below it, through `role_type_ancestor`) and the to role likewise: Carla → Viajes Brisa puts
-  EMPLOYEE where EMPLOYMENT wants INTERNAL_ORGANIZATION, so it's flagged. The type pins what
-  the direction means.
+### 2026-11-07: round Q4, Submodel 1 retest (party relationship + type; Viajes Brisa)
+- Written for the phone, asked in chat; scored on (a) only (the user's call: (b) Pedro to
+  Lucía and (c) what the type's role ends let us check were not asked). Since 1 Mar 2025
+  Carla works for us, Hotel Duna buys its staff travel from us, Agencia Ola sells our trips
+  on commission with Pedro Soler as our contact there; from 1 Feb 2027 Hotel Duna also
+  supplies us rooms. (a) the roles and relationships (Apply).
+- Answer: EMPLOYMENT, Viajes Brisa (internal organization) → Carla (employee) ✓ cold;
+  the customer relationship, Hotel Duna (client) → Viajes Brisa ✓; the supplier
+  relationship from 2027-02-01, Hotel Duna (supplier) → Viajes Brisa, a second role and
+  relationship beside the customer one ✓; all from 2025-03-01, thru null ✓; roles in
+  `party_role`, used at both ends ✓. Agencia Ola made a "contractor" on a "contract"
+  relationship ✗ (an AGENT, a distribution channel: an organization role; CONTRACTOR is a
+  person's; the agent missed again, as on 10-23); Pedro's contact relationship aimed at
+  Viajes Brisa ✗ (he speaks for Agencia Ola: Pedro (CONTACT) → Agencia Ola); the roles not
+  listed on their own and two ends unnamed ~. Type names in Spanish-English not counted.
+- Discussion: the seed's direction rule (outside party → us; employment the exception, us →
+  the employee; a contact → the organization they speak for; four of the seven directions
+  are ours by analogy). The user asked for cards for names and directions: proposed D19
+  (agent or contractor) and the direction rule in Card 1's Trap, not a card of type names.
+- Score: party relationship + type 3 → 2 (the agent missed again; a reappearing gap lowers
+  the row). Next: the agent cold (an organization selling for us), the contact's far end,
+  the direction rule; then (b) and (c) of this scenario.

@@ -22,6 +22,8 @@ and any decisions made.
 - Round Q3 graded (asked in chat one part at a time): where stock is + lot stays 3. No
   product on the lot, cold; the lot lost its creation date and quantity, and (c) missed
   that a product on the lot is a copy that can disagree with its items.
+- Round Q4 scored on (a) only (the user's call): party relationship + type 3 → 2, the agent
+  missed again and the contact aimed at us; D19 and a direction rule for Card 1 proposed.
 - Q2 (a) graded in chat; (b) and (c) wait. `order_role_rule` built in a side session on
   `claude/order-role-rule-b262b3` (not merged yet).
 
