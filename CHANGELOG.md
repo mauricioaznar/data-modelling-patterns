@@ -38,8 +38,11 @@ and any decisions made.
   were cut to fit, their keys with them.
 
 **Next**
-- Re-import the Anki export. D20 written for Q2 (c) (a rule row or its own
-  check); next round: cardinality cold, flag don't block.
+- Re-import the Anki export (D19, D20 and two Trap lines are new).
+- Round 2026-11-08: Q4–Q7 sent on WhatsApp, to grade when the answers come back; then the
+  distinctions for the round, "agent or distributor?" (Q1) among them.
+- Next round: rules beside facts (cardinality as its own check, flag don't block), the
+  item → lot link with the recall walk.
 
 ## 2026-11-07
 
