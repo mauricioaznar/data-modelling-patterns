@@ -876,13 +876,18 @@ Misunderstandings and reinforce attempts, oldest first.
   right); the two numbers are slips, but a line has to multiply out (quantity × unit
   price is what's charged).
 
+### 2026-11-08: round Q6, Submodel 2 maintenance (amount or percentage; Herbolario Salvia, order 620)
+- Short, both parts in one go: 3 teas at €8 and a tea set at €46 with €6 off it; on the
+  order a €5 delivery and a 10% member discount. (a) the adjustment rows (Apply), (b) the
+  total, what the 10% is taken from, and why (Understand).
+- Answer: (a) DISCOUNT amount 6 "on the tea line" ✓ (read as the tea set's line; the
+  wording could mean the teas); shipping amount 5 on the order ✓; DISCOUNT percentage 10
+  on the order ✓. (b) the lines before any adjustment, 24 + 46 = 70 ✓ cold, 10% of 70 = 7
+  ✓ (written "70 × .01", a typo), total 62 ✓. The why not given ✗ (each percentage of the
+  value before any adjustment, so the result doesn't depend on the order adjustments are
+  applied in and none is taken on another); it was the weak part on 10-28 too ("we
+  decided").
+- Score: amount or percentage 4 → 3 (the numbers and the base cold, but the why, asked,
+  missing again). Next: the why cold.
+
 ### 2026-11-08: question round, pending (written for the phone, short; wording in `docs/round-2026-11-08.md`; order in TODO)
-- **Q6 · Submodel 2 maintenance (amount or percentage, last 4 on 10-28) · Apply,
-  Understand.** Herbolario Salvia, order 620. Key: (a) on line 2 (the tea set): DISCOUNT,
-  amount 6, the unit price staying 46 (discounts as adjustments); on the order:
-  SHIPPING_AND_HANDLING amount 5; DISCOUNT (or LOYALTY_DISCOUNT) percentage 10. (b) lines
-  before any adjustment 24 + 46 = 70; 10% of 70 = 7; total 70 − 6 − 7 + 5 = 62. Why: every
-  percentage is of the value before any adjustment, so the result doesn't depend on the
-  order the adjustments are applied in, and no adjustment is taken on another (the
-  delivery isn't discounted). Full version adds VAT 10% of 70 = 7 (total 69) and (c) the
-  €40 hides the discount.

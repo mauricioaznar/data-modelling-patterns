@@ -25,6 +25,8 @@ and any decisions made.
 - Round Q5 graded (short): typed table vs one per kind stays 2. The substitute row came
   back right (1 L → 0.5 L, quantity 2); the generic table's own cost missed a third time.
 - D21 written (tree or network?), from the talk on cost types; Anki export at 81 cards.
+- Round Q6 graded (short, maintenance): amount or percentage 4 → 3. The rows, the base (70)
+  and the total (62) cold; the why, asked, not given.
 - Round 2026-11-07 Q7 graded (short, answered in chat): inventory item stays 4. One row
   per serial with no quantity, the sprays split 36 good / 4 defective because a row holds
   one status, status and facility unprompted.
@@ -45,7 +47,7 @@ and any decisions made.
 
 **Next**
 - Re-import the Anki export (D19, D20 and two Trap lines are new).
-- Round 2026-11-08: Q6–Q7 out on WhatsApp, to grade when the answers come back; then the
+- Round 2026-11-08: Q7 out on WhatsApp, to grade when the answers come back; then the
   distinctions for the round, "agent or distributor?" (Q1) among them.
 - Next round: rules beside facts (cardinality as its own check, flag don't block), the
   item → lot link with the recall walk.

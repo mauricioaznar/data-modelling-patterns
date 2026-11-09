@@ -149,7 +149,7 @@ trackers as usual, then tick here.
 - [x] Q3 · Ch 3 · where stock is + lot · retest (3): the lot's own columns, the why cold (Quesería Valle, lot Q-12) · stays 3: both 11-07 misses fixed cold, but the items didn't point at the lot
 - [x] Q4 · Ch 3 · estimated cost · retest (3): a component's row on the product, the total (Carpintería Haya) · 3 → 4: Burgos's labour on the product and the total 77, cold; slips: labour 40 for 30, a name column, the scope as a facility
 - [x] Q5 · Ch 3 · one typed table vs one entity per kind · gap (2): its cost (Papelería Cobre) · stays 2: the row right cold (arrow and quantity), gains and the per-kind cost right; ours' cost missed again
-- [ ] Q6 · Ch 4 · amount or percentage · maintenance (last 4 on 10-28) (Herbolario Salvia, order 620)
+- [x] Q6 · Ch 4 · amount or percentage · maintenance (last 4 on 10-28) (Herbolario Salvia, order 620) · 4 → 3: rows, base 70 and total 62 cold; the why not given
 - [ ] Q7 · Ch 2 · communication event + roles · maintenance (last 4 on 10-30) (Gestoría Llano)
 
 ## Comparisons (`comparisons/`, kept apart from the chapters)
