@@ -889,5 +889,3 @@ Misunderstandings and reinforce attempts, oldest first.
   decided").
 - Score: amount or percentage 4 → 3 (the numbers and the base cold, but the why, asked,
   missing again). Next: the why cold.
-
-### 2026-11-08: question round, pending (written for the phone, short; wording in `docs/round-2026-11-08.md`; order in TODO)

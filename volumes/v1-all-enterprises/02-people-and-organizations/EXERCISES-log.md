@@ -670,14 +670,19 @@ Misunderstandings and reinforce attempts, oldest first.
   for us without buying = AGENT; buys and resells = DISTRIBUTOR), the contact person →
   organization. Distinction to suggest at the round's end: agent or distributor.
 
-### 2026-11-08: question round, pending (written for the phone, short; wording in `docs/round-2026-11-08.md`; order in TODO)
-- **Q7 · Submodel 3 maintenance (communication event + roles, last 4 on 10-30) · Apply,
-  Evaluate.** Gestoría Llano. Short key (as sent): (a) one event: started 2026-11-09
-  10:00, medium PHONE (`contact_mechanism_type`), a status (completed); roles Teresa
-  CALLER, Raúl CALLEE (persons); a purpose row of a fitting type (INQUIRY or
-  CUSTOMER_SERVICE_CALL: any fitting type, the point is a purpose as a child row). Context
-  optional: the customer relationship Panadería Trigo → Gestoría Llano, or Teresa's contact
-  relationship. (b) the organization can't talk: we lose who spoke (Teresa, not anyone at
-  the bakery), whom to call back, and the medium check (CALLER and CALLEE are people's
-  roles on a phone); the bakery is still reachable through the context relationship.
-  Full version: the e-mail and a call back, all three on one case closed by its status.
+### 2026-11-08: round Q7, Submodel 3 maintenance (communication event + roles; Gestoría Llano)
+- Short, both parts in one go: Teresa Gil, owner of our customer Panadería Trigo and our
+  contact there, phones our accountant Raúl on 9 Nov 2026 at 10:00 about a late tax
+  return. (a) the event and everything on it (Apply), (b) "put Panadería Trigo on the
+  call, not Teresa" (Evaluate).
+- Answer (in bits): (a) the event, medium phone, started 2026-11-09 10:00 ✓; a purpose row
+  ("late tax") ✓, its type not named ~; Teresa CALLER and Raúl CALLEE, persons ✓ cold; the
+  event's status not given ~ (not null: completed); no context relationship (optional, fine).
+  A case unprompted ✓, with roles: Gestoría Llano "responsible" (OWNER; a person such as
+  Raúl is the usual owner) and Teresa "interested party" (CUSTOMER or WATCHER) ✓; the event
+  linked to the case "through its own table" ~ (a plain FK on the event: one case, many
+  events). (b) the detail of who spoke is lost ✓, and the bakery is still reached through
+  Teresa's contact relationship ✓; the medium check (CALLER and CALLEE are people on a
+  phone) not said.
+- Score: communication event + roles stays 4 (maintenance passed: medium, persons and
+  purpose cold, the why right). Case and work effort: the case and its roles unprompted.

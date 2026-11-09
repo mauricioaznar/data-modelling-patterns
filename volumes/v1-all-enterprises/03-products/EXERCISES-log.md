@@ -1043,5 +1043,3 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - Score: one typed table vs one entity per kind stays 2 (gains and the per-kind cost
   right, but the generic table's own cost, the row's whole gap, missed a third time). Next:
   ours' cost cold, from/to per type and nullable type-only columns.
-
-### 2026-11-08: question round, pending (written for the phone, short; wording in `docs/round-2026-11-08.md`; order in TODO)
