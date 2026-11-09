@@ -137,7 +137,9 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **T:** the relationship joins *roles*, not parties; and the specific tables (employment,
   customer relationship, rollup) vs. the one generic `party_relationship` (your open gap:
   specific vs generic). Agencia Ola, selling our trips on commission, made a contractor (an
-  agent: an organization role); Pedro, Agencia Ola's contact, aimed at us (2026-11-07).
+  agent: an organization role); Pedro, Agencia Ola's contact, aimed at us (2026-11-07);
+  Distribuciones Norte, selling our gift cards on commission, made a distributor and a
+  customer, and Inés's contact written organization → person (2026-11-08).
 - **D:** party ← party_role → role_type; party_relationship → party_role twice;
   party_relationship → party_relationship_type → role_type twice. The seven types, from →
   to: **CAPS** → us: Customer, Agent (the distribution channel relationship), Partner,
@@ -1927,7 +1929,9 @@ options; one that misses a fact goes to its submodel card instead.
   whole chain. The most specific matching row wins; a facility beats a boundary.
 - **Mnemonic:** A place is a facility, an area a boundary, a part of us an organization.
 - **Trap:** the Valencia shop scoped by the Valencia boundary, so a second shop there would
-  inherit its rule (2026-11-03).
+  inherit its rule (2026-11-03); the Burgos workshop's labour estimate scoped to a facility
+  (an estimate takes only a boundary or one of our organizations: here the workshop as an
+  organization) (2026-11-08).
 
 ### Distinction D16 · A new work effort or the same one? (V1 Ch 2)
 - **Cue:** "5 Nov: from her e-mail we schedule a battery replacement. 12 Nov: she calls, the
@@ -2013,6 +2017,19 @@ options; one that misses a fact goes to its submodel card instead.
 - **Mnemonic:** Parts that add up get one parent; views that overlap get many.
 - **Trap:** *(the naive-model trap until practice gives yours)* a cost type under two
   parents, so the rollup counts it twice (the 77 chair's buckets adding to 117).
+
+### Distinction D22 · Agent or distributor? (V1 Ch 2)
+- **Cue:** "Agencia Ola sells our trips on commission; Distribuciones Norte sells our gift
+  cards without buying them; Mayorista Sur buys our books by the pallet and resells them."
+- **Test:** Does the organization buy our goods before selling them on?
+- **Sides:** Both are DISTRIBUTION_CHANNEL roles, organizations selling for us, on a
+  distribution channel relationship that points at us (CAPS's A). An AGENT sells on our
+  behalf and earns a commission; the goods stay ours until the end customer buys. A
+  DISTRIBUTOR buys from us and resells, so it is also our customer on its purchases.
+  Neither is a CONTRACTOR (a person working for us) nor, for the agent, a customer.
+- **Mnemonic:** The agent sells ours; the distributor sells its own.
+- **Trap:** Agencia Ola a contractor (2026-10-23, 2026-11-07); Distribuciones Norte,
+  on commission without buying, a distributor and a customer (2026-11-08).
 
 ---
 

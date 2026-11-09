@@ -49,8 +49,7 @@ and any decisions made.
 
 **Next**
 - Re-import the Anki export (D19, D20 and two Trap lines are new).
-- The round's distinctions: D22 (agent or distributor?) and Trap lines for D15 and Card 1,
-  waiting for the user's yes.
+- Re-import again: D21, D22 and Trap lines for D15 and Card 1 written after the round
 - Next round: rules beside facts (cardinality as its own check, flag don't block), the
   item → lot link with the recall walk.
 
