@@ -13,6 +13,9 @@ and any decisions made.
   relationship (2), where stock is + lot (3), typed table vs one per kind (2), rules beside
   facts (3), amount or percentage (3). Maintenance: feature + applicability (last 4 on
   10-31), contact mechanisms on the order and the line (last 4 on 11-01).
+- Round 2026-11-10 Q1 graded (short, live): party relationship + type 2 → 3. Viajes Duna
+  an agent cold at last, Carla's contact aimed at Duna; the switch to distributor ended
+  the channel instead of starting a distributor's. Q7 skipped for now.
 
 **Next**
 - Re-import the Anki export (Card 1's key changed, plus the 11-08 Next items).

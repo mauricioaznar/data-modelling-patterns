@@ -687,22 +687,20 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: communication event + roles stays 4 (maintenance passed: medium, persons and
   purpose cold, the why right). Case and work effort: the case and its roles unprompted.
 
-### 2026-11-10: question round, pending (written for the phone, short; wording in `docs/round-2026-11-10.md`; order in TODO)
-- **Q1 · Submodel 1 gap (2) · party relationship + type: the agent cold, the contact's
-  arrow · (a) Apply, (b) Analyze.** Hostal Roca. Key (a): roles in `party_role`: Hostal
-  Roca INTERNAL_ORGANIZATION, Viajes Duna AGENT (under DISTRIBUTION_CHANNEL: sells for us on
-  commission, never buys, so not DISTRIBUTOR, not CUSTOMER, not CONTRACTOR), Carla CONTACT.
-  DISTRIBUTION_CHANNEL_RELATIONSHIP Duna (AGENT) → Roca (INTERNAL_ORGANIZATION) from
-  2026-10-01; ORGANIZATION_CONTACT Carla (CONTACT) → Duna (its AGENT role, the
-  organization she speaks for, not us) from 2026-10-01; thru null on both. (b) Duna's AGENT
-  role thru 2027-01-01 and the channel relationship from it thru 2027-01-01; from
-  2027-01-01 a DISTRIBUTOR role and a new DISTRIBUTION_CHANNEL_RELATIONSHIP Duna
-  (DISTRIBUTOR) → Roca, plus a CUSTOMER role and a CUSTOMER_RELATIONSHIP Duna (CUSTOMER) →
-  Roca (it now buys from us). The relationship points at roles, so a new role means a new
-  row, not an edited one. Carla's contact row re-pointed to the DISTRIBUTOR role (ended,
-  new row): ✓ if given, not required. Grade the agent cold in (a), the contact's arrow, and
-  in (b) distributor + customer with dated ends. Full version adds (b) Carla's move: thru
-  2027-03-01 on her Duna contact row, a new ORGANIZATION_CONTACT Carla → Lavandería Brisa
-  (its SUPPLIER role) from 2027-03-01, her CONTACT role kept; (c) before 1 Jan a customer
-  is wrong (it buys nothing, and the channel's commission and rules are lost); after it,
-  Duna is a customer *and* a distributor, two roles, not one.
+### 2026-11-10: round Q1, Submodel 1 gap (party relationship + type; Hostal Roca)
+- Short, both parts in one go: since 1 Oct 2026 Viajes Duna sends us guests on 10%
+  commission, never buying the rooms; Carla Soto our contact there. (a) the two
+  relationships, types, ends and dates (Apply); (b) from 1 Jan 2027 Duna buys room nights
+  in bulk and resells them: which rows end, which start (Analyze). Asked live, after Card
+  1's key gained the CAPS / REC types with their roles (same session).
+- Answer: (a) distribution channel, AGENT → INTERNAL_ORGANIZATION (us) ✓ cold (the agent,
+  missed three times before); organization contact, CONTACT → Viajes Duna ✓ (the arrow,
+  reversed on 11-08, now right; Duna's role on that end not named ~); both from 2026-10-01
+  ✓. (b) the channel row ended thru 2027-01-01 ✓ (exclusive thru right); a new customer
+  relationship Duna → us from 2027-01-01 ✓. Missed ✗: Duna is still a channel, now a
+  DISTRIBUTOR: a DISTRIBUTOR role and a new distribution channel row from it (D22: a
+  distributor is also our customer, so both rows start). Not said: the AGENT role ended
+  (roles are dated), Carla's contact re-pointed (optional).
+- Score: party relationship + type 2 → 3 (the agent and the contact's arrow cold, the two
+  named gaps; the switch to distributor dropped the channel). Next: agent → distributor
+  keeps the channel, the role rows dated.
