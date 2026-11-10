@@ -1044,19 +1044,21 @@ Scores: price components 2 → 3; feature prices stay at 2.
   right, but the generic table's own cost, the row's whole gap, missed a third time). Next:
   ours' cost cold, from/to per type and nullable type-only columns.
 
+### 2026-11-10: round Q2, Submodel 3 retest (where stock is + lot; Conservas Brava, lot T-08)
+- Short, live, both parts in one go: lot T-08 made 3 Nov 2026, 500 tins, best before 3 Nov
+  2029; 300 in bin B2 in the Vigo warehouse, 200 on the Lugo shop shelves. (a) the lot row
+  and the item rows (Apply), (b) the recall walk from the lot (Analyze).
+- Answer: (a) the lot: name, creation 2026-11-03, expiry 2029-11-03, quantity 500, no
+  product ✓ cold. Item 1 NON_SERIALIZED, 300, container B2 (the container sits in a
+  facility, its own table) ✓; item 2 NON_SERIALIZED, 200, facility the Lugo shop ✓; product
+  on both ✓. But neither row carries lot T-08 ✗ (the same miss as 11-08). (b) lot → the
+  items that link to it → each item's facility, or its container joined to the
+  container's facility ✓ cold; the product filter not needed, since the lot already picks
+  the items ✓ (a sharp aside). The walk was cued by "starting from the lot".
+- Score: where stock is + lot stays 3 (the walk cold and right, but the link left off the
+  rows a second time). Next: write the lot on the item rows cold, without a walk to cue it.
+
 ### 2026-11-10: question round, pending (written for the phone, short; wording in `docs/round-2026-11-10.md`; order in TODO)
-- **Q2 · Submodel 3 retest (3) · where stock is + lot: the item → lot link cold, the
-  recall walk · (a) Apply, (b) Analyze.** Conservas Brava, lot T-08. Key (a): `lot` T-08,
-  creation 2026-11-03, quantity 500, expiration 2029-11-03, no product on it. Items: 1
-  NON_SERIALIZED tuna, 300, lot T-08, container B2 (a bin in the Vigo warehouse), no
-  facility; 2 NON_SERIALIZED tuna, 200, lot T-08, facility the Lugo shop, no container.
-  Status GOOD ✓ if given. Facility XOR container per item. (b) lot T-08 → every
-  `inventory_item` with its lot_id → each item's container → the container's facility
-  (Vigo), or the item's facility directly (Lugo); the product comes from the items, not
-  the lot. Grade the lot_id on both items cold and the walk through the items. Full
-  version adds (a) the dented tins: Lugo split into 180 GOOD and 20 DAMAGED (a row holds
-  one status), both on T-08; (c) the lot on the product: one product has many lots, so it
-  can't hold one; the batch belongs to the stock (the items), and a copy can drift.
 - **Q3 · Submodel 5 gap (2) · one typed table vs one entity per kind: ours' cost cold ·
   (a) Apply, (b) Evaluate.** Ferretería Pino. Key (a): INCOMPATIBILITY D1 ↔ B2 (one row,
   either way: the type has no direction, so from/to carry no meaning here; two rows ✓ if

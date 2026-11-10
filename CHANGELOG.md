@@ -16,6 +16,8 @@ and any decisions made.
 - Round 2026-11-10 Q1 graded (short, live): party relationship + type 2 → 3. Viajes Duna
   an agent cold at last, Carla's contact aimed at Duna; the switch to distributor ended
   the channel instead of starting a distributor's. Q7 skipped for now.
+- Round Q2 graded (short, live): where stock is + lot stays 3. The lot row and the recall
+  walk cold; the item rows left without the lot a second time.
 
 **Next**
 - Re-import the Anki export (Card 1's key changed, plus the 11-08 Next items).
