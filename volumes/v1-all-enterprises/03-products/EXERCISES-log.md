@@ -1078,6 +1078,9 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - Score: one typed table vs one entity per kind 2 → 3 (both costs named, the nullable one
   cold at last; from/to said as naming, not as meaning per type). Next: from/to per type
   as a reading cost (incompatibility has no direction, obsolescence old → new).
+- Discussion: the user pushed back ("I said it: meaningful FK and column names"); held at
+  ~, since that names the per-kind gain, not our cost. Agreed for next time (the user's
+  words): explain what our design costs us, not what the other design gains.
 
 ### 2026-11-10: question round, pending (written for the phone, short; wording in `docs/round-2026-11-10.md`; order in TODO)
 - **Q6 · Submodel 1 maintenance (feature + applicability, last 4 on 10-31) · (a) Apply,
