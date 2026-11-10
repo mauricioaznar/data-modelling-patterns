@@ -909,19 +909,21 @@ Misunderstandings and reinforce attempts, oldest first.
   still on the menu, no flag, and (b) one-sided). Next: pick the check query and say why
   not the column; what a flag does to the facts; both sides of block vs flag.
 
+### 2026-11-10: round Q5, Submodel 2 retest (amount or percentage; Joyería Plata, order 650)
+- Short, live, both parts in one go: a ring at €120 and two chains at €30, 10% off the
+  ring; on the order 5% off for cash and a €10 gift wrap. (a) the adjustment rows (Apply),
+  (b) what the 5% is taken from, and why (Understand).
+- Answer: (a) DISCOUNT percentage 10 on line 1 ✓; DISCOUNT percentage 5 on the order ✓;
+  FEE (or MISCELLANEOUS_CHARGE) amount 10 on the order ✓. All cold. (b) the total before
+  any discount is applied ✓ (said "discount", where the key says any adjustment: the gift
+  wrap stays out of the base too ~). Why: nothing records the order adjustments are
+  applied in, so a base taken after another adjustment would need an extra sequencing
+  column on the types ✓ cold (the why, missed on 10-28 and 11-08, now in the user's own
+  framing: the result doesn't depend on the order of application). Not said: none is
+  taken on another.
+- Score: amount or percentage 3 → 4 (rows and base cold, the why given unprompted).
+
 ### 2026-11-10: question round, pending (written for the phone, short; wording in `docs/round-2026-11-10.md`; order in TODO)
-- **Q5 · Submodel 2 retest (3) · amount or percentage: the why cold · (a) Apply,
-  (b) Understand.** Joyería Plata, order 650. Key (a): DISCOUNT percentage 10 on the
-  ring's line; DISCOUNT percentage 5 on the order (a cash discount: a DISCOUNT subtype or
-  the parent ✓); MISCELLANEOUS_CHARGE (or FEE) amount 10 on the order for the gift wrap.
-  (b) the 5% is taken from the lines before any adjustment: 120 + 2 × 30 = 180, so 9; the
-  ring's 10% is 12; total 180 − 12 − 9 + 10 = 169 (not asked, ✓ if given). Why: every
-  percentage is taken of the value before any adjustment, so the result doesn't depend on
-  the order adjustments are applied in, and none is taken on another (the gift wrap isn't
-  discounted, the ring's 10% doesn't shrink the 5%'s base). Grade the why, the row's
-  whole gap. Full version adds the tax (SALES_TAX percentage 21 on the order, on 180:
-  37.80; total 206.80) and (c) chained percentages: 5% of 168 = 8.40, the total shifts,
-  and swapping the order of application changes it again.
 - **Q7 · Submodel 1 maintenance (contact mechanisms on the order and the line, last 4 on
   11-01) · (a) Apply, (b) Analyze.** Café Norte, order 660. Key (a):
   `order_contact_mechanism`: compras@hotelalba.es ORDER_PLACING, Calle Mayor 5 BILLING
