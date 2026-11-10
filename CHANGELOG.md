@@ -21,6 +21,8 @@ and any decisions made.
 - Round Q3 graded (short, live): one typed table vs one per kind 2 → 3. The nullable
   type-only columns cold at last; from/to named as a readability cost, not as meaning
   something different per type.
+- Round Q4 graded (short, live): rules beside facts stays 3. No count in the rule table
+  cold; then the column back on a menu with no pick, and block vs flag one-sided.
 
 **Next**
 - Re-import the Anki export (Card 1's key changed, plus the 11-08 Next items).

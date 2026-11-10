@@ -890,21 +890,26 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: amount or percentage 4 → 3 (the numbers and the base cold, but the why, asked,
   missing again). Next: the why cold.
 
+### 2026-11-10: round Q4, Submodel 1 retest (rules beside facts; Imprenta Sol, order 640)
+- Short, live, both parts in one go: rule "exactly one bill-to per sales order"; order 640
+  keyed with two, Café Luna and its parent Grupo Luna. (a) where the rule lives and what
+  it does about 640 (Analyze), (b) block the insert: what each way gives and costs
+  (Evaluate).
+- Answer: (a) the rule tables hold the allowed hats (order and item), with no count, so
+  any number of bill-tos fits ✓ cold (the rule table says which, not how many). Then a
+  menu, no pick ✗: a data-quality query ✓, "add the column" ✗ (the 11-08 verdict: several
+  dated rule rows per hat would carry counts that disagree), or app validation; and "a
+  future solution, not something we have" ✗ (4.5's check, more than one row for a job the
+  columns held once, already counts per order and role type). What it does about 640 not
+  said ✗ (flags it after the fact, both rows stay stored). (b) blocking gives clean data
+  from then on ✓; its costs not given ✗ (needs a trigger or app code, can't keep the order
+  while someone sorts out who pays, a changed dated rule would block rows legal on their
+  date); flagging's side not given ✗.
+- Score: rules beside facts stays 3 (no count in the rule table cold, but the column
+  still on the menu, no flag, and (b) one-sided). Next: pick the check query and say why
+  not the column; what a flag does to the facts; both sides of block vs flag.
+
 ### 2026-11-10: question round, pending (written for the phone, short; wording in `docs/round-2026-11-10.md`; order in TODO)
-- **Q4 · Submodel 1 retest (3) · rules beside facts: cardinality cold, flag don't block ·
-  (a) Analyze, (b) Evaluate.** Imprenta Sol, order 640. Key (a): its own data-quality
-  query (orders with more than one BILL_TO row in `order_role`), with a bad seed row it
-  catches; not a column on the rule rows (a hat can have several dated rule rows, each
-  with its own count, and they can disagree; the rule table says which hat and which
-  standing role, not how many). It flags order 640 after the fact; both bill-to rows stay
-  stored. (b) blocking: the bad order never lands, but it needs a trigger or app code (a
-  plain FK can't count), the order can't be kept while someone sorts out who pays, and a
-  dated rule that changes would block rows that were legal on their date. Flagging: the
-  facts stored as keyed, the rule read as of the order's date, but someone has to work the
-  report. Grade a pick with its why (ours flags). Full version adds (c) rule rows: BILL_TO
-  with no standing role thru 2027-01-01, BILL_TO → BILL_TO_CUSTOMER from 2027-01-01 (order
-  kind SALES); on order 640 dated 15 Jan 2027 the cardinality check flags two bill-tos and
-  the role check flags Grupo Luna (no BILL_TO_CUSTOMER role).
 - **Q5 · Submodel 2 retest (3) · amount or percentage: the why cold · (a) Apply,
   (b) Understand.** Joyería Plata, order 650. Key (a): DISCOUNT percentage 10 on the
   ring's line; DISCOUNT percentage 5 on the order (a cash discount: a DISCOUNT subtype or
