@@ -1057,6 +1057,11 @@ Scores: price components 2 → 3; feature prices stay at 2.
   the items ✓ (a sharp aside). The walk was cued by "starting from the lot".
 - Score: where stock is + lot stays 3 (the walk cold and right, but the link left off the
   rows a second time). Next: write the lot on the item rows cold, without a walk to cue it.
+- Discussion: the tables with `inventory_item.lot_id` filled in; the FK sits on the many
+  side (the item), so the recall searches items by lot_id, and the lot knows nothing of its
+  items. The user owned the miss ("I should have included the lot in the item rows").
+  Agreed for the next retest: lot_id on the item rows unprompted, plus today's walk and
+  the why (batch vs stock), makes it a 4.
 
 ### 2026-11-10: question round, pending (written for the phone, short; wording in `docs/round-2026-11-10.md`; order in TODO)
 - **Q3 · Submodel 5 gap (2) · one typed table vs one entity per kind: ours' cost cold ·
