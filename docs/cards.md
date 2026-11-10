@@ -141,11 +141,19 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   Distribuciones Norte, selling our gift cards on commission, made a distributor and a
   customer, and Inés's contact written organization → person (2026-11-08).
 - **D:** party ← party_role → role_type; party_relationship → party_role twice;
-  party_relationship → party_relationship_type → role_type twice. The seven types, from →
-  to: **CAPS** → us: Customer, Agent (the distribution channel relationship), Partner,
-  Supplier, each → INTERNAL_ORGANIZATION. **REC**, each its own way: Rollup (unit → its
-  parent), Employment (INTERNAL_ORGANIZATION → employee; there is no EMPLOYER role),
-  Contact (person → the organization they speak for).
+  party_relationship → party_relationship_type → role_type twice.
+- **CAPS** (the seven types, part 1: each points at us, from role → to role):
+  **C** customer relationship (CUSTOMER → INTERNAL_ORGANIZATION) ·
+  **A** distribution channel relationship (DISTRIBUTION_CHANNEL, i.e. an AGENT or a
+  DISTRIBUTOR → INTERNAL_ORGANIZATION) ·
+  **P** partnership (PARTNER → INTERNAL_ORGANIZATION) ·
+  **S** supplier relationship (SUPPLIER → INTERNAL_ORGANIZATION).
+- **REC** (part 2: each its own way, from role → to role):
+  **R** organization rollup (ORGANIZATION_UNIT → ORGANIZATION_ROLE, the larger
+  organization it sits within) ·
+  **E** employment (INTERNAL_ORGANIZATION → EMPLOYEE; there is no EMPLOYER role) ·
+  **C** organization contact relationship (CONTACT, a person → ORGANIZATION_ROLE, the
+  organization they speak for).
 </details>
 
 ### Card 2 · V1 Ch 2 · Contact mechanisms (Figs 2.9–2.10)
