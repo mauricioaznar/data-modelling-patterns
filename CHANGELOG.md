@@ -18,6 +18,9 @@ and any decisions made.
   the channel instead of starting a distributor's. Q7 skipped for now.
 - Round Q2 graded (short, live): where stock is + lot stays 3. The lot row and the recall
   walk cold; the item rows left without the lot a second time.
+- Round Q3 graded (short, live): one typed table vs one per kind 2 → 3. The nullable
+  type-only columns cold at last; from/to named as a readability cost, not as meaning
+  something different per type.
 
 **Next**
 - Re-import the Anki export (Card 1's key changed, plus the 11-08 Next items).

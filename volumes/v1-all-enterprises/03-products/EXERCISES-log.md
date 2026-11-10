@@ -1063,20 +1063,23 @@ Scores: price components 2 → 3; feature prices stay at 2.
   Agreed for the next retest: lot_id on the item rows unprompted, plus today's walk and
   the why (batch vs stock), makes it a 4.
 
+### 2026-11-10: round Q3, Submodel 5 gap (one typed table vs one entity per kind; Ferretería Pino)
+- Short, live, both parts in one go: drill D1 doesn't work with battery B2; since 1 Nov
+  2026 screw pack S10 supersedes S8. (a) the product association rows (Apply), (b) two
+  things the one table costs us (Evaluate).
+- Answer: (a) "clash" D1 → B2 ~ (the type is INCOMPATIBILITY; own word, concept right; its
+  from/to carry no direction, not said), the missing from date flagged as required ✓
+  (from_date not null); "successor" S8 → S10 from 2026-11-01 ✓ (OBSOLESCENCE, superseded
+  by, arrow and date right). (b) readable columns lost: generic from/to instead of
+  meaningful FK names ~ (close to "from/to mean something different per type", but the
+  cost to a reader or a query, that the type must be known to read the arrow, not said);
+  nullable type-only columns, where a per-kind table holds its own quantity NOT NULL ✓
+  cold (missed three times before).
+- Score: one typed table vs one entity per kind 2 → 3 (both costs named, the nullable one
+  cold at last; from/to said as naming, not as meaning per type). Next: from/to per type
+  as a reading cost (incompatibility has no direction, obsolescence old → new).
+
 ### 2026-11-10: question round, pending (written for the phone, short; wording in `docs/round-2026-11-10.md`; order in TODO)
-- **Q3 · Submodel 5 gap (2) · one typed table vs one entity per kind: ours' cost cold ·
-  (a) Apply, (b) Evaluate.** Ferretería Pino. Key (a): INCOMPATIBILITY D1 ↔ B2 (one row,
-  either way: the type has no direction, so from/to carry no meaning here; two rows ✓ if
-  said why); OBSOLESCENCE from S8 → to S10 (superseded by), from 2026-11-01. (b) the
-  generic table's costs: from/to mean something different per type (one way, both ways,
-  old → new), so a reader or a query must know the type to read the arrow; type-only
-  columns (quantity for SUBSTITUTE, reason, instruction) are nullable for every type, so
-  NOT NULL can't hold and data-quality queries do the checking instead. ✓ for "a
-  type-specific rule needs a query, not a constraint". Gains not asked (flexible, a new
-  kind is a row). Full version adds the substitute (from S12 → to S8, quantity 2), (b) two
-  gains, (c) product_incompatibility (product_a, product_b), product_obsolescence (old,
-  new, from), product_substitute (original, substitute, quantity NOT NULL), and a pick with
-  its why (few stable kinds → per kind; kinds that keep coming → generic).
 - **Q6 · Submodel 1 maintenance (feature + applicability, last 4 on 10-31) · (a) Apply,
   (b) Understand.** Muebles Olmo, Olmo 3 sofa. Key (a): `product_feature_applicability`
   rows: oak legs REQUIRED; grey, blue and green fabric SELECTABLE (one of the same feature
