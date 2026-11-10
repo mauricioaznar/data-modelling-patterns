@@ -3,6 +3,21 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-10
+
+**Built**
+- Card 1's key: CAPS and REC now get their own bullets, each type with its relationship
+  name and its two roles (from → to); the mantra unchanged. Anki export regenerated.
+- A new round of seven, short versions for WhatsApp in `docs/round-2026-11-10.md` (full
+  versions below them; keys in the Ch 2, Ch 3 and Ch 4 logs). Gaps and retests: party
+  relationship (2), where stock is + lot (3), typed table vs one per kind (2), rules beside
+  facts (3), amount or percentage (3). Maintenance: feature + applicability (last 4 on
+  10-31), contact mechanisms on the order and the line (last 4 on 11-01).
+
+**Next**
+- Re-import the Anki export (Card 1's key changed, plus the 11-08 Next items).
+- Grade the round as the answers come back.
+
 ## 2026-11-08
 
 **Built**

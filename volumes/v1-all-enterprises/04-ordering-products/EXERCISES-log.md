@@ -889,3 +889,41 @@ Misunderstandings and reinforce attempts, oldest first.
   decided").
 - Score: amount or percentage 4 → 3 (the numbers and the base cold, but the why, asked,
   missing again). Next: the why cold.
+
+### 2026-11-10: question round, pending (written for the phone, short; wording in `docs/round-2026-11-10.md`; order in TODO)
+- **Q4 · Submodel 1 retest (3) · rules beside facts: cardinality cold, flag don't block ·
+  (a) Analyze, (b) Evaluate.** Imprenta Sol, order 640. Key (a): its own data-quality
+  query (orders with more than one BILL_TO row in `order_role`), with a bad seed row it
+  catches; not a column on the rule rows (a hat can have several dated rule rows, each
+  with its own count, and they can disagree; the rule table says which hat and which
+  standing role, not how many). It flags order 640 after the fact; both bill-to rows stay
+  stored. (b) blocking: the bad order never lands, but it needs a trigger or app code (a
+  plain FK can't count), the order can't be kept while someone sorts out who pays, and a
+  dated rule that changes would block rows that were legal on their date. Flagging: the
+  facts stored as keyed, the rule read as of the order's date, but someone has to work the
+  report. Grade a pick with its why (ours flags). Full version adds (c) rule rows: BILL_TO
+  with no standing role thru 2027-01-01, BILL_TO → BILL_TO_CUSTOMER from 2027-01-01 (order
+  kind SALES); on order 640 dated 15 Jan 2027 the cardinality check flags two bill-tos and
+  the role check flags Grupo Luna (no BILL_TO_CUSTOMER role).
+- **Q5 · Submodel 2 retest (3) · amount or percentage: the why cold · (a) Apply,
+  (b) Understand.** Joyería Plata, order 650. Key (a): DISCOUNT percentage 10 on the
+  ring's line; DISCOUNT percentage 5 on the order (a cash discount: a DISCOUNT subtype or
+  the parent ✓); MISCELLANEOUS_CHARGE (or FEE) amount 10 on the order for the gift wrap.
+  (b) the 5% is taken from the lines before any adjustment: 120 + 2 × 30 = 180, so 9; the
+  ring's 10% is 12; total 180 − 12 − 9 + 10 = 169 (not asked, ✓ if given). Why: every
+  percentage is taken of the value before any adjustment, so the result doesn't depend on
+  the order adjustments are applied in, and none is taken on another (the gift wrap isn't
+  discounted, the ring's 10% doesn't shrink the 5%'s base). Grade the why, the row's
+  whole gap. Full version adds the tax (SALES_TAX percentage 21 on the order, on 180:
+  37.80; total 206.80) and (c) chained percentages: 5% of 168 = 8.40, the total shifts,
+  and swapping the order of application changes it again.
+- **Q7 · Submodel 1 maintenance (contact mechanisms on the order and the line, last 4 on
+  11-01) · (a) Apply, (b) Analyze.** Café Norte, order 660. Key (a):
+  `order_contact_mechanism`: compras@hotelalba.es ORDER_PLACING, Calle Mayor 5 BILLING
+  (our own ORDER_TAKING not given, ✓ if added). `order_item_contact_mechanism`: line 1
+  Calle Sur 2 SHIPPING; line 2 Paseo 8 SHIPPING, 600 111 222 DELIVERY_CONTACT. (b) only
+  line 1's SHIPPING row changes: it now points at Calle Sur 4 (a new contact mechanism,
+  also linked to the hotel's party ✓). Unchanged: line 2, the order's rows, and the old
+  address's own row (other orders and the party may still use it). Full version adds (c)
+  the order records where *this* order goes; a party has many addresses, several with the
+  same purpose, and they change over time, so the order can't be read back from the party.

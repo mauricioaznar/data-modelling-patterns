@@ -1043,3 +1043,39 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - Score: one typed table vs one entity per kind stays 2 (gains and the per-kind cost
   right, but the generic table's own cost, the row's whole gap, missed a third time). Next:
   ours' cost cold, from/to per type and nullable type-only columns.
+
+### 2026-11-10: question round, pending (written for the phone, short; wording in `docs/round-2026-11-10.md`; order in TODO)
+- **Q2 · Submodel 3 retest (3) · where stock is + lot: the item → lot link cold, the
+  recall walk · (a) Apply, (b) Analyze.** Conservas Brava, lot T-08. Key (a): `lot` T-08,
+  creation 2026-11-03, quantity 500, expiration 2029-11-03, no product on it. Items: 1
+  NON_SERIALIZED tuna, 300, lot T-08, container B2 (a bin in the Vigo warehouse), no
+  facility; 2 NON_SERIALIZED tuna, 200, lot T-08, facility the Lugo shop, no container.
+  Status GOOD ✓ if given. Facility XOR container per item. (b) lot T-08 → every
+  `inventory_item` with its lot_id → each item's container → the container's facility
+  (Vigo), or the item's facility directly (Lugo); the product comes from the items, not
+  the lot. Grade the lot_id on both items cold and the walk through the items. Full
+  version adds (a) the dented tins: Lugo split into 180 GOOD and 20 DAMAGED (a row holds
+  one status), both on T-08; (c) the lot on the product: one product has many lots, so it
+  can't hold one; the batch belongs to the stock (the items), and a copy can drift.
+- **Q3 · Submodel 5 gap (2) · one typed table vs one entity per kind: ours' cost cold ·
+  (a) Apply, (b) Evaluate.** Ferretería Pino. Key (a): INCOMPATIBILITY D1 ↔ B2 (one row,
+  either way: the type has no direction, so from/to carry no meaning here; two rows ✓ if
+  said why); OBSOLESCENCE from S8 → to S10 (superseded by), from 2026-11-01. (b) the
+  generic table's costs: from/to mean something different per type (one way, both ways,
+  old → new), so a reader or a query must know the type to read the arrow; type-only
+  columns (quantity for SUBSTITUTE, reason, instruction) are nullable for every type, so
+  NOT NULL can't hold and data-quality queries do the checking instead. ✓ for "a
+  type-specific rule needs a query, not a constraint". Gains not asked (flexible, a new
+  kind is a row). Full version adds the substitute (from S12 → to S8, quantity 2), (b) two
+  gains, (c) product_incompatibility (product_a, product_b), product_obsolescence (old,
+  new, from), product_substitute (original, substitute, quantity NOT NULL), and a pick with
+  its why (few stable kinds → per kind; kinds that keep coming → generic).
+- **Q6 · Submodel 1 maintenance (feature + applicability, last 4 on 10-31) · (a) Apply,
+  (b) Understand.** Muebles Olmo, Olmo 3 sofa. Key (a): `product_feature_applicability`
+  rows: oak legs REQUIRED; grey, blue and green fabric SELECTABLE (one of the same feature
+  type must be picked); cushions STANDARD (included unless left out); dated from today or
+  open. (b) no: the footstool is a product (stocked and sold on its own); a feature only
+  describes a product. A COMPLEMENT association sofa → footstool ✓ if given. Full version
+  adds (c) the green surcharge as a price component on the green feature (feature prices
+  add on top of the base); the green-walnut rule as feature interactions from 2027-03-01
+  (INCOMPATIBILITY green ↔ oak legs, DEPENDENCY green → walnut legs), rules as data.

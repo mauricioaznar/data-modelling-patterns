@@ -686,3 +686,23 @@ Misunderstandings and reinforce attempts, oldest first.
   phone) not said.
 - Score: communication event + roles stays 4 (maintenance passed: medium, persons and
   purpose cold, the why right). Case and work effort: the case and its roles unprompted.
+
+### 2026-11-10: question round, pending (written for the phone, short; wording in `docs/round-2026-11-10.md`; order in TODO)
+- **Q1 · Submodel 1 gap (2) · party relationship + type: the agent cold, the contact's
+  arrow · (a) Apply, (b) Analyze.** Hostal Roca. Key (a): roles in `party_role`: Hostal
+  Roca INTERNAL_ORGANIZATION, Viajes Duna AGENT (under DISTRIBUTION_CHANNEL: sells for us on
+  commission, never buys, so not DISTRIBUTOR, not CUSTOMER, not CONTRACTOR), Carla CONTACT.
+  DISTRIBUTION_CHANNEL_RELATIONSHIP Duna (AGENT) → Roca (INTERNAL_ORGANIZATION) from
+  2026-10-01; ORGANIZATION_CONTACT Carla (CONTACT) → Duna (its AGENT role, the
+  organization she speaks for, not us) from 2026-10-01; thru null on both. (b) Duna's AGENT
+  role thru 2027-01-01 and the channel relationship from it thru 2027-01-01; from
+  2027-01-01 a DISTRIBUTOR role and a new DISTRIBUTION_CHANNEL_RELATIONSHIP Duna
+  (DISTRIBUTOR) → Roca, plus a CUSTOMER role and a CUSTOMER_RELATIONSHIP Duna (CUSTOMER) →
+  Roca (it now buys from us). The relationship points at roles, so a new role means a new
+  row, not an edited one. Carla's contact row re-pointed to the DISTRIBUTOR role (ended,
+  new row): ✓ if given, not required. Grade the agent cold in (a), the contact's arrow, and
+  in (b) distributor + customer with dated ends. Full version adds (b) Carla's move: thru
+  2027-03-01 on her Duna contact row, a new ORGANIZATION_CONTACT Carla → Lavandería Brisa
+  (its SUPPLIER role) from 2027-03-01, her CONTACT role kept; (c) before 1 Jan a customer
+  is wrong (it buys nothing, and the channel's commission and rules are lost); after it,
+  Duna is a customer *and* a distributor, two roles, not one.

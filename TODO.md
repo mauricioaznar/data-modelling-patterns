@@ -153,6 +153,23 @@ trackers as usual, then tick here.
 - [x] Q7 · Ch 2 · communication event + roles · maintenance (last 4 on 10-30) (Gestoría Llano) · stays 4: medium, persons and purpose cold, a case unprompted; the status not given
 - [x] Distinctions for the round (practice.md): written 11-08, D22 (agent or distributor?), D15's Trap (Q4's facility scope), Card 1's Trap (Q1's distributor and reversed contact)
 
+## Question round 2026-11-10 (all seven on the phone, short)
+
+All seven are written to paste into WhatsApp, short versions first, in
+[docs/round-2026-11-10.md](docs/round-2026-11-10.md), with no keys. The keys are in the
+Ch 2, Ch 3 and Ch 4 logs under "2026-11-10: question round, pending": **don't open those
+before grading**. When the answers come back, read each one back, grade, log and update the
+trackers as usual, then tick here.
+
+- [ ] Q1 · Ch 2 · party relationship + type · gap (2): the agent cold, the contact's arrow, agent → distributor + customer (Hostal Roca, Viajes Duna)
+- [ ] Q2 · Ch 3 · where stock is + lot · retest (3): the item → lot link cold, the recall walk (Conservas Brava, lot T-08)
+- [ ] Q3 · Ch 3 · one typed table vs one entity per kind · gap (2): ours' cost cold (Ferretería Pino)
+- [ ] Q4 · Ch 4 · rules beside facts · retest (3): cardinality as its own check, flag don't block (Imprenta Sol, order 640)
+- [ ] Q5 · Ch 4 · amount or percentage · retest (3): the why cold (Joyería Plata, order 650)
+- [ ] Q6 · Ch 3 · feature + applicability · maintenance (last 4 on 10-31) (Muebles Olmo, Olmo 3 sofa; key in the Ch 3 log)
+- [ ] Q7 · Ch 4 · contact mechanisms on the order and the line · maintenance (last 4 on 11-01) (Café Norte, order 660)
+- [ ] Distinctions for the round (practice.md)
+
 ## Comparisons (`comparisons/`, kept apart from the chapters)
 
 - [x] 01 Vendor Price Catalog: source and comparison drafted (2026-11-05)
