@@ -153,6 +153,8 @@ trackers as usual, then tick here.
 - [x] Q7 · Ch 2 · communication event + roles · maintenance (last 4 on 10-30) (Gestoría Llano) · stays 4: medium, persons and purpose cold, a case unprompted; the status not given
 - [x] Distinctions for the round (practice.md): written 11-08, D22 (agent or distributor?), D15's Trap (Q4's facility scope), Card 1's Trap (Q1's distributor and reversed contact)
 
+- [ ] Next round: retest party role + role type (3) inside a relationship question: the dated `party_role` rows written beside the relationship rows, graded together, since each relationship points at them (the user's call, 2026-11-11)
+
 ## Question round 2026-11-11 (all seven on the phone, short)
 
 All seven are written to paste into WhatsApp, short versions first, in
