@@ -725,4 +725,3 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: party relationship + type 3 → 4. Party role + role type stays 3 (the dated role
   rows, cold).
 
-### 2026-11-11: question round, pending (written for the phone, short; wording in `docs/round-2026-11-11.md`; order in TODO)
