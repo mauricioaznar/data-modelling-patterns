@@ -1095,3 +1095,43 @@ Scores: price components 2 → 3; feature prices stay at 2.
   The four types are known; which way the default runs isn't held.
 - Score: feature + applicability 4 → 3. Next: STANDARD vs OPTIONAL cold (default in, can
   be removed vs default out, can be added).
+
+### 2026-11-11: question round, pending (written for the phone, short; wording in `docs/round-2026-11-11.md`; order in TODO)
+- **Q2 · Submodel 3 retest (3) · where stock is + lot: the lot on the item rows cold ·
+  (a) Apply, (b) Analyze.** Miel Sierra, lot H-03. Key (a): `lot` (creation 2026-10-02,
+  quantity 400, expiration 2028-10-02; no product on it); two non-serialized
+  `inventory_item` rows for the rosemary honey, both with lot_id → H-03: 250 on hand in
+  container P4 (the pallet, itself in the Teruel facility), 150 on hand at the Zaragoza
+  shop's facility (or its shelf, if shelves are containers). Grade lot_id on both items
+  unprompted (missed 11-07 to 11-10). (b) the P4 item 250 → 150 on hand; Zaragoza's item
+  150 → 250 (or a new item there, same product and lot); both still point at H-03. The
+  lot row doesn't change: its 400 is what was made, not what's left. Full version adds
+  the 12 cracked jars (split the Zaragoza item, 12 with a defective status, still on H-03)
+  and (c) lot code and best-before on each item: copies that drift, and no single row to
+  start a recall from.
+- **Q4 · Submodel 2 retest (3) · feature + applicability: STANDARD vs OPTIONAL cold ·
+  (a) Apply, (b) Understand.** Bicis Ría, Ría 7. Key (a): `product_feature_applicability`
+  rows: battery REQUIRED; rear rack STANDARD; mudguards OPTIONAL; frame M and L
+  SELECTABLE. (b) the rack yes (STANDARD: in unless left out), the mudguards no (OPTIONAL:
+  out unless asked for): the applicability type says what an order with no word gets.
+  Full version adds (c) the €40 as a price component on the L feature (feature prices add
+  on top of the base); mudguards vs L as an INCOMPATIBILITY interaction from 2027-03-01,
+  scoped to the Ría 7: applicability is product and one feature, a rule between two
+  features is an interaction.
+- **Q6 · Submodel 2 maintenance (feature interaction, last 4 on 10-31) · (a) Apply,
+  (b) Analyze.** Ópticas Brisa. Key (a): `product_feature_interaction` rows: DEPENDENCY
+  blue-light coating → thin lenses, product Brisa (one way); INCOMPATIBILITY tinted ↔
+  blue-light, product Brisa (symmetric, one row read both ways); DEPENDENCY polarized →
+  tinted, no product (holds on every frame). (b) the first two are the Brisa's rules;
+  with no product, the blue-light → thin rule would bind every frame, including ones
+  where blue-light comes with standard lenses. Full version adds (c) the clip-on is a
+  product (sold on its own), not a feature, so feature interactions don't touch it; a
+  product association, if anything.
+- **Q7 · Submodel 4 maintenance (base prices compete, last 4 on 11-01) · (a) Apply,
+  (b) Understand.** Kayaks Delta, K2. Key (a): Rosa 740 (CLUB and Galicia both match,
+  Vigo inside Galicia: the most specific base wins); Ana 800 (Madrid matches neither
+  Galicia row; club alone matches nothing). (b) base prices compete: one base per product
+  is picked, the most specific that matches; they're alternatives, not steps to add.
+  Full version adds the November €30 as a DISCOUNT_COMPONENT and the island €25 as a
+  SURCHARGE_COMPONENT (conditions don't match Vigo): Rosa 740 − 30 = 710; (c) the three
+  bases compete, the discount and surcharge stack on whichever base wins.

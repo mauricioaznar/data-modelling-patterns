@@ -938,3 +938,30 @@ Misunderstandings and reinforce attempts, oldest first.
   `contact_mechanism` row (and on the hotel's party) not said.
 - Score: contact mechanisms on the order and the line 4 → 3. Next: every line's SHIPPING
   row cold; a move replaces the line's link, the old address itself stays.
+
+### 2026-11-11: question round, pending (written for the phone, short; wording in `docs/round-2026-11-11.md`; order in TODO)
+- **Q3 · Submodel 1 retest (3) · rules beside facts: pick the check, not the column; a flag
+  keeps both rows; both sides of block vs flag · (a) Analyze, (b) Evaluate.** Taller
+  Roble, order 670. Key (a): not in the rule tables (`order_role_rule` says which hats an
+  order kind allows and the standing role each needs, not how many); the count is its own
+  data-quality query, 4.5's "more than one of a job the columns held once, per order or
+  per item", which lists 670. Both PLACING_CUSTOMER rows stay stored; the check flags the
+  order for someone to fix. Grade a pick, said cold. (b) against the column: a hat can
+  have several dated rule rows, each would carry its own count and they can disagree, and
+  every other hat leaves it empty (the count is a fact about the order, not a pairing).
+  Blocking gains: bad data never lands. Costs: a trigger or app code; the order can't be
+  saved while someone sorts out who placed it; a rule changed later blocks rows legal on
+  their date. Full version adds (c) the query (group order roles by order and role type,
+  having count > 1, for the jobs held once) and a seed order with two placing rows.
+- **Q5 · Submodel 1 retest (3) · contact mechanisms on the order and the line: every line
+  its SHIPPING row; a move replaces the link · (a) Apply, (b) Analyze.** Papelería Arce,
+  order 680. Key (a): `order_contact_mechanism`: 911 222 333 ORDER_PLACING, Calle Real 1
+  BILLING. `order_item_contact_mechanism`: line 1 Calle Real 1 SHIPPING (the same
+  contact_mechanism row as the billing one, one place, two uses); line 2 Avenida Lago 9
+  SHIPPING and 655 444 333 DELIVERY_CONTACT. Grade line 2's SHIPPING row, the 11-11 miss.
+  (b) line 2's SHIPPING link is repointed (or replaced) to the existing Calle Real 1 row:
+  no new contact mechanism, since the place already exists. Unchanged: Avenida Lago 9's own
+  row (the school may still use it), line 1, the order's rows; Marta's phone stays unless
+  the school says otherwise (✓ either way with a reason). Full version adds our own
+  ORDER_TAKING (the line we answered on) and (c) the party has many addresses that change
+  over time, so the order keeps which one *this* order used.

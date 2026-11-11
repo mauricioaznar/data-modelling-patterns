@@ -153,6 +153,23 @@ trackers as usual, then tick here.
 - [x] Q7 · Ch 2 · communication event + roles · maintenance (last 4 on 10-30) (Gestoría Llano) · stays 4: medium, persons and purpose cold, a case unprompted; the status not given
 - [x] Distinctions for the round (practice.md): written 11-08, D22 (agent or distributor?), D15's Trap (Q4's facility scope), Card 1's Trap (Q1's distributor and reversed contact)
 
+## Question round 2026-11-11 (all seven on the phone, short)
+
+All seven are written to paste into WhatsApp, short versions first, in
+[docs/round-2026-11-11.md](docs/round-2026-11-11.md), with no keys. The keys are in the
+Ch 2, Ch 3 and Ch 4 logs under "2026-11-11: question round, pending": **don't open those
+before grading**. When the answers come back, read each one back, grade, log and update the
+trackers as usual, then tick here.
+
+- [ ] Q1 · Ch 2 · party relationship + type · retest (3): agent → distributor keeps the channel (Bodegas Cerro, Vinos Ruta)
+- [ ] Q2 · Ch 3 · where stock is + lot · retest (3): the lot on the item rows, no walk to cue it (Miel Sierra, lot H-03)
+- [ ] Q3 · Ch 4 · rules beside facts · retest (3): pick the check, not the column; block vs flag both sides (Taller Roble, order 670)
+- [ ] Q4 · Ch 3 · feature + applicability · retest (3): STANDARD vs OPTIONAL cold (Bicis Ría, Ría 7)
+- [ ] Q5 · Ch 4 · contact mechanisms on the order and the line · retest (3): every line its SHIPPING row; a move repoints the link (Papelería Arce, order 680)
+- [ ] Q6 · Ch 3 · feature interaction · maintenance (last 4 on 10-31) (Ópticas Brisa)
+- [ ] Q7 · Ch 3 · base prices compete · maintenance (last 4 on 11-01) (Kayaks Delta, K2)
+- [ ] Distinctions for the round (practice.md)
+
 ## Question round 2026-11-10 (all seven on the phone, short)
 
 All seven are written to paste into WhatsApp, short versions first, in

@@ -16,13 +16,19 @@ and any decisions made.
   (change the link or the address?); Q1 added to D22's Trap, Q4 to D20's. Anki export at
   84 cards.
 
+- A new round of seven, short versions for WhatsApp in `docs/round-2026-11-11.md` (full
+  versions below them; keys in the Ch 2, Ch 3 and Ch 4 logs). Gaps and retests: party
+  relationship (3), where stock is + lot (3), rules beside facts (3), feature +
+  applicability (3), contact mechanisms on the order and the line (3). Maintenance:
+  feature interaction (last 4 on 10-31), base prices compete (last 4 on 11-01).
+
 **Decisions**
 - Q7: line 2's missing SHIPPING row stays a miss; the question gave Paseo 8 as the
   grinder's address, and the phone was only who to call about it.
 
 **Next**
 - Re-import the Anki export (D23, D24, two traps changed).
-- A new round of seven.
+- Grade round 2026-11-11 as the answers come back.
 - Re-import the Anki export.
 
 ## 2026-11-10
