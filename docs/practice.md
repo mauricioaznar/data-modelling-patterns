@@ -104,6 +104,10 @@ of the chapter's `EXERCISES.md`.
   for the full. Don't list the columns to fill when one of them is what's tested ("which
   line it's ordered for" gave ordered for away, 2026-11-07). When a cut changes a convention's cue (e.g. "until 31 Dec" for an
   exclusive thru date), don't count the result against the user.
+- **Show the whole round in chat once it is written** (the user's call, 2026-11-11): the
+  closing message gives all seven short questions, WhatsApp-ready (the text between the lines
+  in the round file, `*bold*` kept), so the user can copy them to the phone and answer
+  offline. Grading still takes one question at a time, as the answers come back.
 - **Maintenance in question rounds** (the user's call, 2026-10-29): the round's 2
   maintenance questions go to rows already at 4, picked across chapters by the oldest
   evidence date in the comprehension tables, each in a fresh scenario. A slip drops the row
