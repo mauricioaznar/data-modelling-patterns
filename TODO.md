@@ -162,7 +162,6 @@ before grading**. When the answers come back, read each one back, grade, log and
 trackers as usual, then tick here.
 
 - [x] Q1 · Ch 2 · party relationship + type · gap (2): the agent cold, the contact's arrow, agent → distributor + customer (Hostal Roca, Viajes Duna) · asked live 11-10, 2 → 3: the agent and the contact's arrow cold; (b) the customer row ✓, the distributor's channel row missed
-- [ ] Q7 skipped for now (the user's call, 11-10), still pending
 - [x] Q2 · Ch 3 · where stock is + lot · retest (3): the item → lot link cold, the recall walk (Conservas Brava, lot T-08) · asked live 11-10, stays 3: the walk cold, the lot left off the item rows again
 - [x] Q3 · Ch 3 · one typed table vs one entity per kind · gap (2): ours' cost cold (Ferretería Pino) · asked live 11-10, 2 → 3: nullable type-only columns cold; from/to said as naming, not meaning per type
 - [x] Q4 · Ch 4 · rules beside facts · retest (3): cardinality as its own check, flag don't block (Imprenta Sol, order 640) · asked live 11-10, stays 3: no count in the rule table cold; the column back on the menu, no pick, (b) one-sided
