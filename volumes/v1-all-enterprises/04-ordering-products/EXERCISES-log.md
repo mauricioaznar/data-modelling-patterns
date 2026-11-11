@@ -923,14 +923,18 @@ Misunderstandings and reinforce attempts, oldest first.
   taken on another.
 - Score: amount or percentage 3 → 4 (rows and base cold, the why given unprompted).
 
-### 2026-11-10: question round, pending (written for the phone, short; wording in `docs/round-2026-11-10.md`; order in TODO)
-- **Q7 · Submodel 1 maintenance (contact mechanisms on the order and the line, last 4 on
-  11-01) · (a) Apply, (b) Analyze.** Café Norte, order 660. Key (a):
-  `order_contact_mechanism`: compras@hotelalba.es ORDER_PLACING, Calle Mayor 5 BILLING
-  (our own ORDER_TAKING not given, ✓ if added). `order_item_contact_mechanism`: line 1
-  Calle Sur 2 SHIPPING; line 2 Paseo 8 SHIPPING, 600 111 222 DELIVERY_CONTACT. (b) only
-  line 1's SHIPPING row changes: it now points at Calle Sur 4 (a new contact mechanism,
-  also linked to the hotel's party ✓). Unchanged: line 2, the order's rows, and the old
-  address's own row (other orders and the party may still use it). Full version adds (c)
-  the order records where *this* order goes; a party has many addresses, several with the
-  same purpose, and they change over time, so the order can't be read back from the party.
+### 2026-11-11: round 2026-11-10 Q7, Submodel 1 maintenance (contact mechanisms on the order and the line; Café Norte, order 660)
+- Short, both parts in one go: order 660 placed from compras@hotelalba.es, billed to Calle
+  Mayor 5; line 1 to Calle Sur 2; line 2 to Paseo 8, call Luis on 600 111 222. (a) where
+  each goes (Apply), (b) line 1 moves to Calle Sur 4: what changes, what doesn't (Analyze).
+- Answer: (a) every mechanism in `contact_mechanism`, linked through the two typed tables
+  ✓; the e-mail ORDER_PLACING and Calle Mayor 5 BILLING on the order ✓; line 1's address
+  SHIPPING ✓ (written "Calle Mayor 2" for Calle Sur 2, a slip); the phone on line 2 as
+  DELIVERY_CONTACT ✓. Line 2's Paseo 8 SHIPPING row missing ✗. (b) a new SHIPPING row on
+  line 1 for the new postal address ✓, the phone and the order's rows unchanged ✓; but
+  "the other rows don't change" keeps line 1's Calle Sur 2 row too ✗: the table has no
+  dates, so line 1 now ships to two addresses. The old row is replaced (or repointed);
+  only the old address's own `contact_mechanism` row stays. The new address as a new
+  `contact_mechanism` row (and on the hotel's party) not said.
+- Score: contact mechanisms on the order and the line 4 → 3. Next: every line's SHIPPING
+  row cold; a move replaces the line's link, the old address itself stays.

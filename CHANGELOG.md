@@ -9,9 +9,12 @@ and any decisions made.
 - Round 2026-11-10 Q6 graded (short, maintenance): feature + applicability 4 → 3. Oak
   legs REQUIRED, the fabrics SELECTABLE and the footstool a product (COMPLEMENT) cold; the
   cushions, in unless left out, typed OPTIONAL for STANDARD (STANDARD missed twice running).
+- Round Q7 graded (short, maintenance): contact mechanisms on the order and the line 4 → 3.
+  The order's rows, line 1 and the phone cold; line 2's shipping row missed, and the move
+  added a row while keeping the old one (two shipping addresses on line 1).
 
 **Next**
-- Q7 of round 2026-11-10, then the round's distinctions.
+- The distinctions for round 2026-11-10.
 - Re-import the Anki export.
 
 ## 2026-11-10
