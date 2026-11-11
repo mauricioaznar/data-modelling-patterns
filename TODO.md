@@ -161,7 +161,7 @@ Ch 2, Ch 3 and Ch 4 logs under "2026-11-11: question round, pending": **don't op
 before grading**. When the answers come back, read each one back, grade, log and update the
 trackers as usual, then tick here.
 
-- [ ] Q1 · Ch 2 · party relationship + type · retest (3): agent → distributor keeps the channel (Bodegas Cerro, Vinos Ruta)
+- [x] Q1 · Ch 2 · party relationship + type · retest (3): agent → distributor keeps the channel (Bodegas Cerro, Vinos Ruta) · answered 11-11, 3 → 4: the distributor's channel row cold; the role rows not written (party role row)
 - [ ] Q2 · Ch 3 · where stock is + lot · retest (3): the lot on the item rows, no walk to cue it (Miel Sierra, lot H-03)
 - [ ] Q3 · Ch 4 · rules beside facts · retest (3): pick the check, not the column; block vs flag both sides (Taller Roble, order 670)
 - [ ] Q4 · Ch 3 · feature + applicability · retest (3): STANDARD vs OPTIONAL cold (Bicis Ría, Ría 7)

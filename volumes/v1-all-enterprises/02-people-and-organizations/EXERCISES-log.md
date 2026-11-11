@@ -705,18 +705,24 @@ Misunderstandings and reinforce attempts, oldest first.
   named gaps; the switch to distributor dropped the channel). Next: agent → distributor
   keeps the channel, the role rows dated.
 
+### 2026-11-11: round 2026-11-11 Q1, Submodel 1 retest (party relationship + type; Bodegas Cerro, Vinos Ruta)
+- Short, both parts in one go: Vinos Ruta sells our wine on 8% commission from
+  2026-03-01, never buying; from 2027-02-01 it buys by the pallet and resells. (a) the
+  role and relationship rows before and after (Apply), (b) "just change the role on the
+  existing rows": what's lost (Analyze).
+- Answer: (a) distribution channel AGENT → INTERNAL_ORGANIZATION from 2026-03-01, thru
+  2027-02-01 ✓; distribution channel DISTRIBUTOR → us from 2027-02-01, open ✓ cold (the
+  row missed on 11-08 and 11-10); customer CUSTOMER → us from 2027-02-01 ✓. The role rows
+  themselves (party_role AGENT thru 2027-02-01, DISTRIBUTOR and CUSTOMER from it) not
+  written ✗, though asked: logged on the party role row, not this one. (b) the agent
+  period is lost, and the from date would have to move to 2027-02-01, so the facts are
+  wrong either way ✓ (saves minutes, loses facts).
+- Aside, not graded (the user's flag): the 8% put on a "distribution channel subtype
+  table". There is no such table: the type is a row in party_relationship_type. The rate is
+  an agreed condition read when each sale happens, so a term on an agreement with Vinos
+  Ruta (Ch 4's agreements), not a column on the relationship (Claude's reading, fairly
+  confident; D1's test).
+- Score: party relationship + type 3 → 4. Party role + role type stays 3 (the dated role
+  rows, cold).
+
 ### 2026-11-11: question round, pending (written for the phone, short; wording in `docs/round-2026-11-11.md`; order in TODO)
-- **Q1 · Submodel 1 retest (3) · party relationship + type: agent → distributor keeps the
-  channel · (a) Apply, (b) Analyze.** Bodegas Cerro, Vinos Ruta. Key (a): before, Vinos
-  Ruta AGENT role from 2026-03-01 thru 2027-02-01 (exclusive), and a distribution channel
-  relationship AGENT → INTERNAL_ORGANIZATION (us) on the same dates. After, from
-  2027-02-01: a DISTRIBUTOR role and a new distribution channel relationship DISTRIBUTOR →
-  us, plus a CUSTOMER role and a customer relationship CUSTOMER → us (it buys from us).
-  Grade the distributor's channel row, the 11-10 miss. (b) overwriting the role rewrites
-  history: the commission period (Mar 2026 to Jan 2027) disappears, an as-of query for
-  2026 says distributor, and anything tied to the agent role (commissions, its
-  relationship) now reads as the distributor's. Full version adds Pablo Gil: CONTACT →
-  Vinos Ruta (an organization contact relationship) thru 2027-02-01, then EMPLOYEE →
-  us (employment) from 2027-02-01; (c) dropping the distributor part loses that it sells
-  for us (the channel) as well as buying from us: a customer relationship alone can't say
-  it resells.

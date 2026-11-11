@@ -21,6 +21,9 @@ and any decisions made.
   relationship (3), where stock is + lot (3), rules beside facts (3), feature +
   applicability (3), contact mechanisms on the order and the line (3). Maintenance:
   feature interaction (last 4 on 10-31), base prices compete (last 4 on 11-01).
+- Round 2026-11-11 Q1 graded (short): party relationship + type 3 → 4. The distributor's
+  channel row cold at last, with the customer one; the dated role rows not written, logged
+  on party role + role type (stays 3).
 
 **Decisions**
 - Q7: line 2's missing SHIPPING row stays a miss; the question gave Paseo 8 as the
