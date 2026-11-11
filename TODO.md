@@ -167,7 +167,7 @@ trackers as usual, then tick here.
 - [x] Q3 · Ch 3 · one typed table vs one entity per kind · gap (2): ours' cost cold (Ferretería Pino) · asked live 11-10, 2 → 3: nullable type-only columns cold; from/to said as naming, not meaning per type
 - [x] Q4 · Ch 4 · rules beside facts · retest (3): cardinality as its own check, flag don't block (Imprenta Sol, order 640) · asked live 11-10, stays 3: no count in the rule table cold; the column back on the menu, no pick, (b) one-sided
 - [x] Q5 · Ch 4 · amount or percentage · retest (3): the why cold (Joyería Plata, order 650) · asked live 11-10, 3 → 4: rows, base and the why cold
-- [ ] Q6 · Ch 3 · feature + applicability · maintenance (last 4 on 10-31) (Muebles Olmo, Olmo 3 sofa; key in the Ch 3 log)
+- [x] Q6 · Ch 3 · feature + applicability · maintenance (last 4 on 10-31) (Muebles Olmo, Olmo 3 sofa) · answered 11-11, 4 → 3: legs, fabrics and the footstool cold; cushions OPTIONAL for STANDARD
 - [ ] Q7 · Ch 4 · contact mechanisms on the order and the line · maintenance (last 4 on 11-01) (Café Norte, order 660)
 - [ ] Distinctions for the round (practice.md)
 

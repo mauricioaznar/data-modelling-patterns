@@ -1082,13 +1082,16 @@ Scores: price components 2 → 3; feature prices stay at 2.
   ~, since that names the per-kind gain, not our cost. Agreed for next time (the user's
   words): explain what our design costs us, not what the other design gains.
 
-### 2026-11-10: question round, pending (written for the phone, short; wording in `docs/round-2026-11-10.md`; order in TODO)
-- **Q6 · Submodel 1 maintenance (feature + applicability, last 4 on 10-31) · (a) Apply,
-  (b) Understand.** Muebles Olmo, Olmo 3 sofa. Key (a): `product_feature_applicability`
-  rows: oak legs REQUIRED; grey, blue and green fabric SELECTABLE (one of the same feature
-  type must be picked); cushions STANDARD (included unless left out); dated from today or
-  open. (b) no: the footstool is a product (stocked and sold on its own); a feature only
-  describes a product. A COMPLEMENT association sofa → footstool ✓ if given. Full version
-  adds (c) the green surcharge as a price component on the green feature (feature prices
-  add on top of the base); the green-walnut rule as feature interactions from 2027-03-01
-  (INCOMPATIBILITY green ↔ oak legs, DEPENDENCY green → walnut legs), rules as data.
+### 2026-11-11: round 2026-11-10 Q6, Submodel 2 maintenance (feature + applicability; Muebles Olmo, Olmo 3 sofa)
+- Short, both parts in one go: oak legs always; grey, blue or green fabric, one must be
+  picked; cushions included unless left out; a €90 footstool also sold on its own.
+  (a) the applicability rows (Apply), (b) is the footstool a feature, and why (Understand).
+- Answer: (a) oak legs REQUIRED ✓; grey, blue, green SELECTABLE ✓ cold; cushions OPTIONAL
+  ✗ (key: STANDARD, in by default and can be left out; OPTIONAL is out unless asked for).
+  No dates (not asked for in the short version, fine). (b) a product, not a feature: sold
+  and stocked on its own ✓ cold; a COMPLEMENT product association sofa → footstool ✓
+  unprompted.
+- STANDARD missed a second time in a row: said as "required" on 10-31, as "optional" now.
+  The four types are known; which way the default runs isn't held.
+- Score: feature + applicability 4 → 3. Next: STANDARD vs OPTIONAL cold (default in, can
+  be removed vs default out, can be added).

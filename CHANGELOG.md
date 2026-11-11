@@ -3,6 +3,17 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-11
+
+**Built**
+- Round 2026-11-10 Q6 graded (short, maintenance): feature + applicability 4 → 3. Oak
+  legs REQUIRED, the fabrics SELECTABLE and the footstool a product (COMPLEMENT) cold; the
+  cushions, in unless left out, typed OPTIONAL for STANDARD (STANDARD missed twice running).
+
+**Next**
+- Q7 of round 2026-11-10, then the round's distinctions.
+- Re-import the Anki export.
+
 ## 2026-11-10
 
 **Built**
