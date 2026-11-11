@@ -12,7 +12,6 @@ and any decisions made.
 - Round Q7 graded (short, maintenance): contact mechanisms on the order and the line 4 → 3.
   The order's rows, line 1 and the phone cold; line 2's shipping row missed, and the move
   added a row while keeping the old one (two shipping addresses on line 1).
-
 - Distinctions for round 2026-11-10: D23 (required, standard or optional?) and D24
   (change the link or the address?); Q1 added to D22's Trap, Q4 to D20's. Anki export at
   84 cards.
