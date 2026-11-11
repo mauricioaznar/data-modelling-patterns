@@ -13,8 +13,17 @@ and any decisions made.
   The order's rows, line 1 and the phone cold; line 2's shipping row missed, and the move
   added a row while keeping the old one (two shipping addresses on line 1).
 
+- Distinctions for round 2026-11-10: D23 (required, standard or optional?) and D24
+  (change the link or the address?); Q1 added to D22's Trap, Q4 to D20's. Anki export at
+  84 cards.
+
+**Decisions**
+- Q7: line 2's missing SHIPPING row stays a miss; the question gave Paseo 8 as the
+  grinder's address, and the phone was only who to call about it.
+
 **Next**
-- The distinctions for round 2026-11-10.
+- Re-import the Anki export (D23, D24, two traps changed).
+- A new round of seven.
 - Re-import the Anki export.
 
 ## 2026-11-10

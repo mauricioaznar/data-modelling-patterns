@@ -168,7 +168,7 @@ trackers as usual, then tick here.
 - [x] Q5 · Ch 4 · amount or percentage · retest (3): the why cold (Joyería Plata, order 650) · asked live 11-10, 3 → 4: rows, base and the why cold
 - [x] Q6 · Ch 3 · feature + applicability · maintenance (last 4 on 10-31) (Muebles Olmo, Olmo 3 sofa) · answered 11-11, 4 → 3: legs, fabrics and the footstool cold; cushions OPTIONAL for STANDARD
 - [x] Q7 · Ch 4 · contact mechanisms on the order and the line · maintenance (last 4 on 11-01) (Café Norte, order 660) · answered 11-11, 4 → 3: order rows, line 1 and the phone cold; line 2's shipping missed, (b) the old link kept
-- [ ] Distinctions for the round (practice.md)
+- [x] Distinctions for the round (practice.md): D23 required/standard/optional, D24 change the link or the address; Q1 and Q4 added to D22's and D20's traps
 
 ## Comparisons (`comparisons/`, kept apart from the chapters)
 

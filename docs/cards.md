@@ -2011,7 +2011,8 @@ options; one that misses a fact goes to its submodel card instead.
   while the other hats leave the column empty. It becomes its own data-quality query, with
   a bad seed row that it catches.
 - **Mnemonic:** The rule row pairs; the check counts.
-- **Trap:** a max-per-order column on the rule rows, endorsed (2026-11-08).
+- **Trap:** a max-per-order column on the rule rows, endorsed (2026-11-08), and back on
+  the menu with no pick (2026-11-10).
 
 ### Distinction D21 · Tree or network? (V1 Ch 3)
 - **Cue:** "Wood rolls up to materials; the Gift sets category sits under both Seasonal and
@@ -2037,7 +2038,31 @@ options; one that misses a fact goes to its submodel card instead.
   Neither is a CONTRACTOR (a person working for us) nor, for the agent, a customer.
 - **Mnemonic:** The agent sells ours; the distributor sells its own.
 - **Trap:** Agencia Ola a contractor (2026-10-23, 2026-11-07); Distribuciones Norte,
-  on commission without buying, a distributor and a customer (2026-11-08).
+  on commission without buying, a distributor and a customer (2026-11-08); Viajes Duna
+  turned distributor made a customer only, its distributor channel row not started
+  (2026-11-10).
+
+### Distinction D23 · Required, standard or optional? (V1 Ch 3)
+- **Cue:** "Oak legs always; cushions come with it unless you ask to leave them out; a
+  cup holder if you ask for one."
+- **Test:** Without a word from the customer, is it in? And can they change that?
+- **Sides:** REQUIRED: always in, can't be taken out. STANDARD: in by default, can be
+  left out. OPTIONAL: out by default, can be added. (SELECTABLE: one of a set must be
+  picked.)
+- **Mnemonic:** Standard is fitted and removable; optional is extra and addable.
+- **Trap:** a STANDARD grinder called "required" (2026-10-31); cushions, in unless left
+  out, typed OPTIONAL (2026-11-11).
+
+### Distinction D24 · Change the link or the address? (V1 Ch 4)
+- **Cue:** "The day before delivery, line 1 moves from Calle Sur 2 to Calle Sur 4."
+- **Test:** Is it what this order line uses, or the place itself?
+- **Sides:** The `order_item_contact_mechanism` row is this line's use of an address, with
+  no dates: a move replaces it (delete it or repoint it), or the line ships to both. The
+  `contact_mechanism` row is the place: the old one stays, since the party and other orders
+  may use it; the new place is a new row, also linked to the party.
+- **Mnemonic:** Move the link, keep the place.
+- **Trap:** the new shipping row added and the old one kept, so line 1 shipped to two
+  kitchens (2026-11-11).
 
 ---
 
