@@ -1572,6 +1572,12 @@ the literal drawing.
    table, so the role types stay neutral (per-hat names would repeat the kind) and their
    scope stays plain `order` (point 5); no parent types. Lines get the twin
    `order_item_role_rule`. This is the point 8 mapping and point 7's rows, made concrete.
+   **Built (2026-11-07):** `order_role_rule` in the 4.3 section beside `order_role`
+   (kind, hat, required standing role or null, from/thru), 14 rules on both kinds and
+   the two checks in 4.5's queries; the line twin waits for point 8. Deviations: the
+   rule for purchase REVIEWER ends on 2024-01-01 (ours, to show an ended rule passing
+   12570); purchase TAKEN_BY → SUPPLIER copies 4.4's column check; Ana and the household
+   gain PLACING_CUSTOMER and BILL_TO_CUSTOMER roles from 2025-07-01, so 12571's rows pass.
 10. **4.6, an order or an item:** no arc is drawn across the two "affecting" lines; read as
     one or the other, never both (a data-quality query). Other readings: an item's adjustment
     also names its order (redundant, but easy to sum), or both are allowed.
