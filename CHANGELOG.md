@@ -38,6 +38,9 @@ and any decisions made.
   line its SHIPPING row, and the move repointed line 2's link, both cold; the placing
   phone's purpose said "contact", not ORDER_PLACING.
 - Ch 4 log: the emptied pending header for round 2026-11-11 dropped.
+- Round Q6 graded (short, maintenance): feature interaction holds 4. Both dependencies
+  one way, the incompatibility both ways, the scope right on all three, cold; the type
+  named "clashing (interoperability)" for INCOMPATIBILITY.
 
 **Decisions**
 - Q7: line 2's missing SHIPPING row stays a miss; the question gave Paseo 8 as the

@@ -1141,15 +1141,22 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - Score: feature + applicability 3 → 4. The 11-10 Q6 grading and D23 were earlier the
   same day, in another session; a later session with no hints, so it counts as cold, and
   the next maintenance check confirms it.
-- **Q6 · Submodel 2 maintenance (feature interaction, last 4 on 10-31) · (a) Apply,
-  (b) Analyze.** Ópticas Brisa. Key (a): `product_feature_interaction` rows: DEPENDENCY
-  blue-light coating → thin lenses, product Brisa (one way); INCOMPATIBILITY tinted ↔
-  blue-light, product Brisa (symmetric, one row read both ways); DEPENDENCY polarized →
-  tinted, no product (holds on every frame). (b) the first two are the Brisa's rules;
-  with no product, the blue-light → thin rule would bind every frame, including ones
-  where blue-light comes with standard lenses. Full version adds (c) the clip-on is a
-  product (sold on its own), not a feature, so feature interactions don't touch it; a
-  product association, if anything.
+
+### 2026-11-11: round 2026-11-11 Q6, Submodel 2 maintenance (feature interaction; Ópticas Brisa, last 4 on 10-31)
+- Short, both parts in one go: on the Brisa frame blue-light coating needs thin lenses,
+  tinted can't take blue-light; on every frame polarized needs tinted. (a) the
+  interaction rows (Apply), (b) why the first two name the frame and the third doesn't,
+  and what goes wrong if the first names no product (Analyze).
+- Answer: (a) DEPENDENCY blue-light → thin, one way, scoped to the Brisa ✓; tinted vs
+  blue-light, direction doesn't matter, scoped to the Brisa ✓, typed "clashing
+  (interoperability)" ~ (INCOMPATIBILITY; "clash" on 10-31 too, and interoperability means
+  the opposite, working together); DEPENDENCY polarized → tinted, one way, no product ✓.
+  All cold. (b) a product on the row confines the rule to that product, no product means
+  every product ✓; with no product the first rule would bind every frame ✓ (the harm, a
+  blue-light order on another frame flagged for lacking thin lenses, left implied).
+- Score: feature interaction holds 4 (a pass; the type's name slipped a second time, a
+  naming slip, not the concept).
+### 2026-11-11: question round, pending (written for the phone, short; wording in `docs/round-2026-11-11.md`; order in TODO)
 - **Q7 · Submodel 4 maintenance (base prices compete, last 4 on 11-01) · (a) Apply,
   (b) Understand.** Kayaks Delta, K2. Key (a): Rosa 740 (CLUB and Galicia both match,
   Vigo inside Galicia: the most specific base wins); Ana 800 (Madrid matches neither
