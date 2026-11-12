@@ -962,6 +962,13 @@ Misunderstandings and reinforce attempts, oldest first.
   that reappears lowers its row. Reinforce through the schema: 4.5's check query in
   `queries.sql` and the seed order it catches (order 12571, two BILL_TO), then a fresh
   question next round.
+- Discussion (after the hint "a hat can have several dated rule rows"): the other hats
+  leave it null or 0, which confuses ✓; old orders would disagree when the number changes
+  ~: that's the dated rule's job (a change is a new rule row, and the check reads the
+  rule as of the order's date). The point missed: one hat has several rule rows at once
+  (one per allowed standing role), so each carries its own max and they can say
+  different things; the count is about the order and the hat, not about a pairing. Not
+  cold, so the score stays 2.
 - **Q5 · Submodel 1 retest (3) · contact mechanisms on the order and the line: every line
   its SHIPPING row; a move replaces the link · (a) Apply, (b) Analyze.** Papelería Arce,
   order 680. Key (a): `order_contact_mechanism`: 911 222 333 ORDER_PLACING, Calle Real 1
