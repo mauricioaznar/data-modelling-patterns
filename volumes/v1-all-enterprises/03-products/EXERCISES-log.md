@@ -1121,6 +1121,12 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - Score: where stock is + lot 3 → 4 (the lot on both items cold, the lot left alone by
   the move). Inventory item 4 → 3: a move updates quantity on hand in place, and the item
   carries no dates (retest).
+- Discussion (asked to keep it short): a variance on the ended item points at a stale row
+  ✓ (the user's words). Where the history lives: not known; the user read "no dates" as
+  losing it. Taught: the item holds only the current quantity; the history is the events
+  that point at it (receipts in, issuances out, variances for counts), and quantity on
+  hand is their balance. A move is an issuance from P4's item and a receipt into
+  Zaragoza's (a transfer shipment, Claude's recall of the shipments chapter, unverified).
 
 ### 2026-11-11: question round, pending (written for the phone, short; wording in `docs/round-2026-11-11.md`; order in TODO)
 - **Q4 · Submodel 2 retest (3) · feature + applicability: STANDARD vs OPTIONAL cold ·
