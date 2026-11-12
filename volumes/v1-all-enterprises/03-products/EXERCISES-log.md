@@ -1096,19 +1096,33 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - Score: feature + applicability 4 → 3. Next: STANDARD vs OPTIONAL cold (default in, can
   be removed vs default out, can be added).
 
+### 2026-11-11: round 2026-11-11 Q2, Submodel 3 retest (where stock is + lot; Miel Sierra, lot H-03)
+- Short, both parts in one go: lot H-03 of rosemary honey made 2026-10-02, 400 jars,
+  best before 2028-10-02; 250 on pallet P4 in the Teruel warehouse, 150 on the Zaragoza
+  shop's shelf. (a) the rows that record the stock (Apply), (b) 100 jars move from P4 to
+  the Zaragoza shelf: which rows change, which don't (Analyze).
+- Answer: (a) the lot: H-03, creation 2026-10-02, expiration 2028-10-02, quantity 400, no
+  product ✓ cold. Item 1 NON_SERIALIZED, 250, honey, container P4 ✓; item 2
+  NON_SERIALIZED, 150, honey, facility the Zaragoza shop ✓; **both on lot H-03 ✓ cold**,
+  the link missed 11-07, 11-08 and 11-10, now with no walk to cue it. P4 said to sit in
+  "the Zaragoza shelf" facility, not the Teruel warehouse: a misreading, not counted. A
+  from date and a null thru date put on both items ("set, but I didn't find it") ✗:
+  `inventory_item` has no effectivity. (b) item 1 ended on the move date, a new P4 item
+  at 150 and a new Zaragoza item at 100 opened from it, all on H-03 ✓ in substance; the
+  lot and item 2 unchanged ✓ (the 400 is the batch, not what's left; the why wasn't
+  asked). But the move versions the stock rows instead of updating them ✗: in the book,
+  P4's item goes 250 → 150 on hand and Zaragoza's 150 → 250 (or a new item there), same
+  rows, same ids.
+- Why the dates don't fit (for the discussion): the inventory item is the current stock
+  record, and other rows point at it (its variances here; Ch 5's shipment receipts and
+  item issuances, whose balance the stored quantity on hand must equal). Ending it and
+  opening a new one on each move leaves those pointing at a closed row and splits one
+  stock into many ids. The history of moves is those events, not versions of the item.
+- Score: where stock is + lot 3 → 4 (the lot on both items cold, the lot left alone by
+  the move). Inventory item 4 → 3: a move updates quantity on hand in place, and the item
+  carries no dates (retest).
+
 ### 2026-11-11: question round, pending (written for the phone, short; wording in `docs/round-2026-11-11.md`; order in TODO)
-- **Q2 · Submodel 3 retest (3) · where stock is + lot: the lot on the item rows cold ·
-  (a) Apply, (b) Analyze.** Miel Sierra, lot H-03. Key (a): `lot` (creation 2026-10-02,
-  quantity 400, expiration 2028-10-02; no product on it); two non-serialized
-  `inventory_item` rows for the rosemary honey, both with lot_id → H-03: 250 on hand in
-  container P4 (the pallet, itself in the Teruel facility), 150 on hand at the Zaragoza
-  shop's facility (or its shelf, if shelves are containers). Grade lot_id on both items
-  unprompted (missed 11-07 to 11-10). (b) the P4 item 250 → 150 on hand; Zaragoza's item
-  150 → 250 (or a new item there, same product and lot); both still point at H-03. The
-  lot row doesn't change: its 400 is what was made, not what's left. Full version adds
-  the 12 cracked jars (split the Zaragoza item, 12 with a defective status, still on H-03)
-  and (c) lot code and best-before on each item: copies that drift, and no single row to
-  start a recall from.
 - **Q4 · Submodel 2 retest (3) · feature + applicability: STANDARD vs OPTIONAL cold ·
   (a) Apply, (b) Understand.** Bicis Ría, Ría 7. Key (a): `product_feature_applicability`
   rows: battery REQUIRED; rear rack STANDARD; mudguards OPTIONAL; frame M and L

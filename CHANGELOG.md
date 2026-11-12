@@ -24,6 +24,9 @@ and any decisions made.
 - Round 2026-11-11 Q1 graded (short): party relationship + type 3 → 4. The distributor's
   channel row cold at last, with the customer one; the dated role rows not written, logged
   on party role + role type (stays 3).
+- Round Q2 graded (short): where stock is + lot 3 → 4. Both honey items on lot H-03 cold
+  at last, and the lot left alone by the move; but from/thru dates put on the items and
+  the move ended one and opened two, logged on inventory item (4 → 3).
 
 **Decisions**
 - Q7: line 2's missing SHIPPING row stays a miss; the question gave Paseo 8 as the
