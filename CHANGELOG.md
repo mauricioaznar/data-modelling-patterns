@@ -48,6 +48,10 @@ and any decisions made.
   Anki export regenerated (84 cards).
 - Distinctions for round 2026-11-11: D25 (date the row or update it?, from Q2's dated
   honey items) and Q3's slip added to D20's Trap. Anki export at 85 cards.
+- Merged the 2026-11-07 `order_role_rule` build (Ch 4 points 7 and 9), found on an unmerged
+  worktree branch: the rule table beside `order_role`, 14 rules, two checks catching four
+  bad rows plus 12571's second bill-to. The database is rebuilt and the check is clean; the
+  old worktree and branch are removed.
 
 **Decisions**
 - Q7: line 2's missing SHIPPING row stays a miss; the question gave Paseo 8 as the
