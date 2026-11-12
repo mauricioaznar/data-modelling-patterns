@@ -34,6 +34,10 @@ and any decisions made.
 - Round Q4 graded (short): feature + applicability 3 → 4. Battery REQUIRED, rack
   STANDARD, mudguards OPTIONAL, frames SELECTABLE, and what an order with no word gets,
   all cold.
+- Round Q5 graded (short): contact mechanisms on the order and the line 3 → 4. Every
+  line its SHIPPING row, and the move repointed line 2's link, both cold; the placing
+  phone's purpose said "contact", not ORDER_PLACING.
+- Ch 4 log: the emptied pending header for round 2026-11-11 dropped.
 
 **Decisions**
 - Q7: line 2's missing SHIPPING row stays a miss; the question gave Paseo 8 as the

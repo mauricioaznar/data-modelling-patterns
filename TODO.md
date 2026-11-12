@@ -167,7 +167,7 @@ trackers as usual, then tick here.
 - [x] Q2 · Ch 3 · where stock is + lot · retest (3): the lot on the item rows, no walk to cue it (Miel Sierra, lot H-03) · answered 11-11, 3 → 4: both items on H-03 cold; dates put on the items and the move versioned them (inventory item 4 → 3)
 - [x] Q3 · Ch 4 · rules beside facts · retest (3): pick the check, not the column; block vs flag both sides (Taller Roble, order 670) · answered 11-11, 3 → 2: the count's check not named and no reason against the column; block's both sides ✓ (reinforce next round)
 - [x] Q4 · Ch 3 · feature + applicability · retest (3): STANDARD vs OPTIONAL cold (Bicis Ría, Ría 7) · answered 11-11, 3 → 4: all four types right, the default read off the type
-- [ ] Q5 · Ch 4 · contact mechanisms on the order and the line · retest (3): every line its SHIPPING row; a move repoints the link (Papelería Arce, order 680)
+- [x] Q5 · Ch 4 · contact mechanisms on the order and the line · retest (3): every line its SHIPPING row; a move repoints the link (Papelería Arce, order 680) · answered 11-11, 3 → 4: line 2's SHIPPING row and the repointed link cold; the placing phone's purpose said "contact"
 - [ ] Q6 · Ch 3 · feature interaction · maintenance (last 4 on 10-31) (Ópticas Brisa)
 - [ ] Q7 · Ch 3 · base prices compete · maintenance (last 4 on 11-01) (Kayaks Delta, K2)
 - [ ] Distinctions for the round (practice.md)

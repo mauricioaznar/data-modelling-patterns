@@ -969,15 +969,22 @@ Misunderstandings and reinforce attempts, oldest first.
   (one per allowed standing role), so each carries its own max and they can say
   different things; the count is about the order and the hat, not about a pairing. Not
   cold, so the score stays 2.
-- **Q5 · Submodel 1 retest (3) · contact mechanisms on the order and the line: every line
-  its SHIPPING row; a move replaces the link · (a) Apply, (b) Analyze.** Papelería Arce,
-  order 680. Key (a): `order_contact_mechanism`: 911 222 333 ORDER_PLACING, Calle Real 1
-  BILLING. `order_item_contact_mechanism`: line 1 Calle Real 1 SHIPPING (the same
-  contact_mechanism row as the billing one, one place, two uses); line 2 Avenida Lago 9
-  SHIPPING and 655 444 333 DELIVERY_CONTACT. Grade line 2's SHIPPING row, the 11-11 miss.
-  (b) line 2's SHIPPING link is repointed (or replaced) to the existing Calle Real 1 row:
-  no new contact mechanism, since the place already exists. Unchanged: Avenida Lago 9's own
-  row (the school may still use it), line 1, the order's rows; Marta's phone stays unless
-  the school says otherwise (✓ either way with a reason). Full version adds our own
-  ORDER_TAKING (the line we answered on) and (c) the party has many addresses that change
-  over time, so the order keeps which one *this* order used.
+
+### 2026-11-11: round 2026-11-11 Q5, Submodel 1 retest (contact mechanisms on the order and the line; Papelería Arce, order 680)
+- Short, both parts in one go: order 680 from Colegio Pinar, placed by phone from 911 222
+  333, billed to Calle Real 1; line 1 to Calle Real 1; line 2 to Avenida Lago 9, ask for
+  Marta on 655 444 333. (a) where each address and phone goes (Apply), (b) line 2 moves to
+  Calle Real 1: what changes, what doesn't (Analyze).
+- Answer: (a) on the order: 911 222 333 and Calle Real 1 BILLING ✓; the phone's purpose
+  written "contact" ~ (ORDER_PLACING, the line it was placed from; right cold on 11-10
+  with an e-mail, so a naming slip). On the lines: Calle Real 1 SHIPPING on line 1 ✓,
+  **Avenida Lago 9 SHIPPING on line 2 ✓ cold** (the 11-10 miss), 655 444 333
+  DELIVERY_CONTACT on line 2 ✓. Tables named "order-role-contact-mechanism" and
+  "order-item-role-contact-mechanism" ~: the links are order → mechanism and line →
+  mechanism, with no role between (the rows themselves say "to the order", "to line 1",
+  so a naming slip). (b) line 2's SHIPPING link updated to Calle Real 1 ✓: **the link
+  repointed, no second row kept** (the 11-10 miss), no new address since Calle Real 1
+  exists ✓. What doesn't change left implied ("this line gets updated"); Avenida Lago 9's
+  own row and Marta's phone not considered ~.
+- Score: contact mechanisms on the order and the line 3 → 4 (both targets cold; the
+  purpose word and the "what doesn't" are thin, held to ORDER_PLACING next time).
