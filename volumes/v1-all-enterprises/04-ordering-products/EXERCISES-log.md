@@ -988,3 +988,6 @@ Misunderstandings and reinforce attempts, oldest first.
   own row and Marta's phone not considered ~.
 - Score: contact mechanisms on the order and the line 3 → 4 (both targets cold; the
   purpose word and the "what doesn't" are thin, held to ORDER_PLACING next time).
+- Discussion: asked what purpose Avenida Lago 9 could keep; on "the address row stays,
+  the link changes" the user confirmed (b) meant the link only, the address row
+  untouched ✓ (D24 held). The "own row not considered" above was implicit, not missed.
