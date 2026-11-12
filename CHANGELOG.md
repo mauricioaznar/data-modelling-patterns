@@ -31,6 +31,9 @@ and any decisions made.
   again, and both sides of blocking; but the count's own check not named (third round)
   and no reason against the column. Its tracker row's lost evidence (an `undefined` left
   by the 11-10 update) restored.
+- Round Q4 graded (short): feature + applicability 3 → 4. Battery REQUIRED, rack
+  STANDARD, mudguards OPTIONAL, frames SELECTABLE, and what an order with no word gets,
+  all cold.
 
 **Decisions**
 - Q7: line 2's missing SHIPPING row stays a miss; the question gave Paseo 8 as the

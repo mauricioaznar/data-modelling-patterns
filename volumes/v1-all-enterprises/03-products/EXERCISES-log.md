@@ -1128,16 +1128,19 @@ Scores: price components 2 → 3; feature prices stay at 2.
   hand is their balance. A move is an issuance from P4's item and a receipt into
   Zaragoza's (a transfer shipment, Claude's recall of the shipments chapter, unverified).
 
-### 2026-11-11: question round, pending (written for the phone, short; wording in `docs/round-2026-11-11.md`; order in TODO)
-- **Q4 · Submodel 2 retest (3) · feature + applicability: STANDARD vs OPTIONAL cold ·
-  (a) Apply, (b) Understand.** Bicis Ría, Ría 7. Key (a): `product_feature_applicability`
-  rows: battery REQUIRED; rear rack STANDARD; mudguards OPTIONAL; frame M and L
-  SELECTABLE. (b) the rack yes (STANDARD: in unless left out), the mudguards no (OPTIONAL:
-  out unless asked for): the applicability type says what an order with no word gets.
-  Full version adds (c) the €40 as a price component on the L feature (feature prices add
-  on top of the base); mudguards vs L as an INCOMPATIBILITY interaction from 2027-03-01,
-  scoped to the Ría 7: applicability is product and one feature, a rule between two
-  features is an interaction.
+### 2026-11-11: round 2026-11-11 Q4, Submodel 2 retest (feature + applicability; Bicis Ría, Ría 7)
+- Short, both parts in one go: battery always fitted; rear rack on unless you ask to take
+  it off; mudguards only if asked; frame M or L, one must be picked. (a) how each applies
+  to the bike (Apply), (b) an order for a Ría 7 in M that says nothing else: rack,
+  mudguards, and which row tells us (Understand).
+- Answer: (a) battery REQUIRED, rear rack STANDARD, mudguards OPTIONAL, frame M and L
+  SELECTABLE ✓ all cold; **STANDARD vs OPTIONAL right way round** (missed 10-31 and in
+  round 2026-11-10 Q6). (b) the rack leaves on the bike, the mudguards don't ✓; the
+  applicability row's type tells us: REQUIRED and STANDARD come without a word on the
+  order, OPTIONAL and SELECTABLE only when the order names them ✓ cold.
+- Score: feature + applicability 3 → 4. The 11-10 Q6 grading and D23 were earlier the
+  same day, in another session; a later session with no hints, so it counts as cold, and
+  the next maintenance check confirms it.
 - **Q6 · Submodel 2 maintenance (feature interaction, last 4 on 10-31) · (a) Apply,
   (b) Analyze.** Ópticas Brisa. Key (a): `product_feature_interaction` rows: DEPENDENCY
   blue-light coating → thin lenses, product Brisa (one way); INCOMPATIBILITY tinted ↔
