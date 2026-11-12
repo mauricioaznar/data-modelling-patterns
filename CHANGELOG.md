@@ -41,6 +41,8 @@ and any decisions made.
 - Round Q6 graded (short, maintenance): feature interaction holds 4. Both dependencies
   one way, the incompatibility both ways, the scope right on all three, cold; the type
   named "clashing (interoperability)" for INCOMPATIBILITY.
+- Round Q7 graded (short, maintenance): base prices compete holds 4. Rosa 740, Ana 800,
+  and "they compete by how specific they are", cold. The round is fully graded.
 
 **Decisions**
 - Q7: line 2's missing SHIPPING row stays a miss; the question gave Paseo 8 as the

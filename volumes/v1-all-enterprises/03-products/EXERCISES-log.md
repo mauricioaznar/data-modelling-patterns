@@ -1156,12 +1156,17 @@ Scores: price components 2 → 3; feature prices stay at 2.
   blue-light order on another frame flagged for lacking thin lenses, left implied).
 - Score: feature interaction holds 4 (a pass; the type's name slipped a second time, a
   naming slip, not the concept).
-### 2026-11-11: question round, pending (written for the phone, short; wording in `docs/round-2026-11-11.md`; order in TODO)
-- **Q7 · Submodel 4 maintenance (base prices compete, last 4 on 11-01) · (a) Apply,
-  (b) Understand.** Kayaks Delta, K2. Key (a): Rosa 740 (CLUB and Galicia both match,
-  Vigo inside Galicia: the most specific base wins); Ana 800 (Madrid matches neither
-  Galicia row; club alone matches nothing). (b) base prices compete: one base per product
-  is picked, the most specific that matches; they're alternatives, not steps to add.
-  Full version adds the November €30 as a DISCOUNT_COMPONENT and the island €25 as a
-  SURCHARGE_COMPONENT (conditions don't match Vigo): Rosa 740 − 30 = 710; (c) the three
-  bases compete, the discount and surcharge stack on whichever base wins.
+
+### 2026-11-11: round 2026-11-11 Q7, Submodel 4 maintenance (base prices compete; Kayaks Delta, K2, last 4 on 11-01)
+- Short, both parts in one go: K2 base prices €800, €760 in Galicia, €740 for CLUB
+  customers in Galicia; Rosa (club, Vigo) and Ana (club, Madrid) order today. (a) each
+  one's base price (Apply), (b) why Rosa's isn't 800 − 40 − 20 or any sum (Understand).
+- Answer: (a) Rosa 740, both conditions match ✓ cold; Ana 800, the base with no
+  conditions ✓ cold, worded "not a single condition matches" ~ (her club status does; the
+  CLUB row also needs Galicia, so the row doesn't). Asked where −40 and −20 came from
+  (the gaps between the three prices; the question's shorthand, fair to ask). (b) "prices
+  that compete with each other depending on how specific they are" ✓, a readable
+  catalogue with no extra step to compute ✓; stacked, every extra matching row would cut
+  the price further ✓ (muddled wording); "we have ruling to determine which one apply a
+  reduction" unclear ~.
+- Score: base prices compete holds 4.
