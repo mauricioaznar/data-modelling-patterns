@@ -46,6 +46,8 @@ and any decisions made.
 - Distinction cards refactored: each of D1–D24 gets an **Answer** bullet, one line per cue
   example, shown on the back after the Test (`scripts/cards.js` renders the nested list).
   Anki export regenerated (84 cards).
+- Distinctions for round 2026-11-11: D25 (date the row or update it?, from Q2's dated
+  honey items) and Q3's slip added to D20's Trap. Anki export at 85 cards.
 
 **Decisions**
 - Q7: line 2's missing SHIPPING row stays a miss; the question gave Paseo 8 as the
@@ -54,10 +56,10 @@ and any decisions made.
   be checked (the user's call).
 
 **Next**
-- Re-import the Anki export (D23, D24, two traps changed, and every distinction's new
-  Answer).
-- Round 2026-11-11's distinctions: D25 (date the row or update it?) and D20's Trap, on the
-  user's yes.
+- Re-import the Anki export (D23, D24, D25, three traps changed, and every distinction's
+  new Answer).
+- Next round: reinforce rules beside facts (2), retest inventory item (3) and party role
+  + role type (3).
 
 ## 2026-11-10
 

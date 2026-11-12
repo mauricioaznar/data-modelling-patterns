@@ -170,7 +170,9 @@ trackers as usual, then tick here.
 - [x] Q5 · Ch 4 · contact mechanisms on the order and the line · retest (3): every line its SHIPPING row; a move repoints the link (Papelería Arce, order 680) · answered 11-11, 3 → 4: line 2's SHIPPING row and the repointed link cold; the placing phone's purpose said "contact"
 - [x] Q6 · Ch 3 · feature interaction · maintenance (last 4 on 10-31) (Ópticas Brisa) · answered 11-11, holds 4: rows, direction and scope cold; INCOMPATIBILITY named "clashing (interoperability)"
 - [x] Q7 · Ch 3 · base prices compete · maintenance (last 4 on 11-01) (Kayaks Delta, K2) · answered 11-11, holds 4: 740 and 800 cold, "they compete by how specific they are"
-- [ ] Distinctions for the round (practice.md)
+- [x] Distinctions for the round (practice.md): written 11-11, D25 (date the row or update it?, from Q2) and D20's Trap (Q3's rule in `order_role_rule`)
+
+- [ ] Next round: reinforce rules beside facts (2) through 4.5's count check and its seed order 12571, then a fresh question; retest inventory item (3): a move updates quantity on hand in place, no dates on the item
 
 ## Question round 2026-11-10 (all seven on the phone, short)
 

@@ -2108,7 +2108,9 @@ options; one that misses a fact goes to its submodel card instead.
   a bad seed row that it catches.
 - **Mnemonic:** The rule row pairs; the check counts.
 - **Trap:** a max-per-order column on the rule rows, endorsed (2026-11-08), and back on
-  the menu with no pick (2026-11-10).
+  the menu with no pick (2026-11-10); "one placing customer" placed in `order_role_rule`,
+  though it holds no count, with no check named and no reason against the column
+  (2026-11-11).
 
 ### Distinction D21 · Tree or network? (V1 Ch 3)
 - **Cue:** "Wood rolls up to materials; the Gift sets category sits under both Seasonal and
@@ -2174,6 +2176,29 @@ options; one that misses a fact goes to its submodel card instead.
 - **Mnemonic:** Move the link, keep the place.
 - **Trap:** the new shipping row added and the old one kept, so line 1 shipped to two
   kitchens (2026-11-11).
+
+### Distinction D25 · Date the row or update it? (V1 Ch 3)
+- **Cue:** "100 jars move from pallet P4 to the Zaragoza shelf; the Calle Mayor shop's
+  reorder level goes from 40 to 60 on 1 Dec; Vinos Ruta stops being our agent and turns
+  distributor on 1 Feb."
+- **Test:** Does it hold for a period, so a question about a past date needs the old
+  version? Or is it a running balance, true only now?
+- **Answer:**
+  - The 100 jars: a balance. P4's item goes 250 → 150 and Zaragoza's 150 → 250, on the
+    same rows; the move itself is an issuance and a receipt (Ch 5).
+  - Calle Mayor's level: dated. Its guideline row ends on 1 Dec and a new one at 60
+    starts that day.
+  - Vinos Ruta: dated. The AGENT role and its channel end on 1 Feb; the DISTRIBUTOR and
+    CUSTOMER roles and their relationships start.
+- **Sides:** Rules, prices, roles and relationships hold for a period: they carry from
+  and thru dates, and a change ends one row and starts the next, so an as-of query still
+  finds the old one. A balance (an inventory item's quantity on hand) holds only now: it
+  is updated in place, and its history is the events that point at it (receipts,
+  issuances, variances), whose balance it must equal. Versioning the balance row would
+  leave those events pointing at a closed row.
+- **Mnemonic:** Rules and ties get dates; balances get events.
+- **Trap:** the honey items given from and thru dates, and the move from P4 ended one
+  item and opened two (2026-11-11).
 
 ---
 
