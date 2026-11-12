@@ -43,15 +43,21 @@ and any decisions made.
   named "clashing (interoperability)" for INCOMPATIBILITY.
 - Round Q7 graded (short, maintenance): base prices compete holds 4. Rosa 740, Ana 800,
   and "they compete by how specific they are", cold. The round is fully graded.
+- Distinction cards refactored: each of D1–D24 gets an **Answer** bullet, one line per cue
+  example, shown on the back after the Test (`scripts/cards.js` renders the nested list).
+  Anki export regenerated (84 cards).
 
 **Decisions**
 - Q7: line 2's missing SHIPPING row stays a miss; the question gave Paseo 8 as the
   grinder's address, and the phone was only who to call about it.
+- Every example on a distinction card's front gets its answer on the back, so a sort can
+  be checked (the user's call).
 
 **Next**
-- Re-import the Anki export (D23, D24, two traps changed).
-- Grade round 2026-11-11 as the answers come back.
-- Re-import the Anki export.
+- Re-import the Anki export (D23, D24, two traps changed, and every distinction's new
+  Answer).
+- Round 2026-11-11's distinctions: D25 (date the row or update it?) and D20's Trap, on the
+  user's yes.
 
 ## 2026-11-10
 

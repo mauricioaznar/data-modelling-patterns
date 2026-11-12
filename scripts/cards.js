@@ -78,6 +78,17 @@ const field = (block, label) => {
     .trim();
 };
 
+// A "- **Label:**" bullet followed by indented "  - item" lines: one HTML line per item.
+const items = (block, label) => {
+  const m = block.match(new RegExp(`- \\*\\*${label}:\\*\\*[ \\t]*\\n((?:[ \\t]+[\\s\\S]*?)?)(?=\\n- \\*\\*|\\n\\n|$)`));
+  if (!m) return '';
+  return m[1]
+    .split(/\n(?=[ \t]+- )/)
+    .map((item) => html(item.replace(/^[ \t]+- /, '').replace(/\s*\n\s*/g, ' ').trim()))
+    .filter(Boolean)
+    .join('<br>');
+};
+
 // The Anki import file for a cards.md source: { text, count }.
 export function buildAnki(src, statusRows = readStatusRows()) {
   const rows = [];
@@ -115,11 +126,14 @@ export function buildAnki(src, statusRows = readStatusRows()) {
   }
 
   // "### Distinction D1 · Term or adjustment? (V1 Ch 4)": a two-way choice; the front asks it,
-  // the back gives the test first (the user's call, 2026-10-31).
+  // the back gives the test first (the user's call, 2026-10-31), then each cue example's
+  // answer, one per line (the user's call, 2026-11-11).
   for (const block of src.split(/\n(?=#{1,3} )/).filter((b) => /^### Distinction /.test(b))) {
     const [, id, name, volume, ch] = block.match(/^### Distinction (D\d+) · (.+?) \(V(\d+) Ch (\d+)\)/);
-    const back = ['Test', 'Sides', 'Mnemonic', 'Trap']
-      .map((label) => `<b>${label}:</b> ${html(field(block, label))}`)
+    const back = ['Test', 'Answer', 'Sides', 'Mnemonic', 'Trap']
+      .map((label) => label === 'Answer'
+        ? `<b>Answer:</b><br>${items(block, label)}`
+        : `<b>${label}:</b> ${html(field(block, label))}`)
       .join('<br><br>');
     rows.push([
       `Distinction ${id} · ${html(name)}<br><br>${html(field(block, 'Cue'))}`,

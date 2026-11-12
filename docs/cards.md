@@ -1776,7 +1776,9 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
 
 Two-way choices where both sides are known and the wrong one gets picked (the user's call,
 2026-10-31). Front: the choice and a cue. Say the **test** out loud, sort the cue's examples,
-then flip. Each card's Trap is a real mistake from practice, with its date. Ids come from the
+then flip. The back gives the test, then an **Answer** with one line per cue example, so
+the sort can be checked (the user's call, 2026-11-11): every example on the front gets its
+line. Each card's Trap is a real mistake from practice, with its date. Ids come from the
 D number, so keep it stable. Add a card when practice shows a new mix-up between two known
 options; one that misses a fact goes to its submodel card instead.
 
@@ -1784,6 +1786,11 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "Net 30; no refunds on the fish; 5% off for loyalty; delivery within 5 days."
 - **Test:** Does it change the order's price, now? Yes: an `order_adjustment`. No (or only
   if something happens later): an `order_term`.
+- **Answer:**
+  - Net 30: a term (PAYMENT_DUE_DAYS, 30) on the order.
+  - No refunds on the fish: a term (NO_EXCHANGE_OR_REFUND) on the fish line.
+  - 5% off for loyalty: an adjustment (DISCOUNT, 5%).
+  - Delivery within 5 days: a term (DELIVERY_WITHIN_DAYS, 5).
 - **Sides:** A term is an agreed condition, one bare value read through its type, or none
   (PAYMENT_DUE_DAYS 30, NO_EXCHANGE_OR_REFUND). An adjustment is money on the order or a line
   (DISCOUNT 5%, SHIPPING_AND_HANDLING). Both are agreed: "agreed" never decides it.
@@ -1796,6 +1803,10 @@ options; one that misses a fact goes to its submodel card instead.
 ### Distinction D2 · Base or surcharge? (V1 Ch 3)
 - **Cue:** "€25 sign-up; +€5 a month in Sierra Alta; seeds on the loaf for €0.50."
 - **Test:** Is it the price of a thing, or an extra because of a circumstance?
+- **Answer:**
+  - €25 sign-up: a base, a ONE_TIME price of its own beside the monthly one.
+  - +€5 a month in Sierra Alta: a surcharge, with the Sierra Alta boundary as its condition.
+  - Seeds on the loaf for €0.50: a base on the seeds feature, added to the loaf's base.
 - **Sides:** A base is what a product or a feature costs; bases for the same thing compete
   and the most specific wins (one per product, plus one per chosen feature). A surcharge adds
   to a base when its conditions match; every match stacks (a discount is the mirror).
@@ -1807,6 +1818,12 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "Pick black or red; a frother can be added; a grinder comes with it; the
   touchscreen needs 16 GB; matte can't go with the touchscreen."
 - **Test:** Product and feature, or feature and feature?
+- **Answer:**
+  - Black or red: applicability, SELECTABLE.
+  - A frother can be added: applicability, OPTIONAL.
+  - A grinder comes with it: applicability, STANDARD.
+  - The touchscreen needs 16 GB: interaction, DEPENDENCY (one way).
+  - Matte can't go with the touchscreen: interaction, INCOMPATIBILITY (both ways).
 - **Sides:** `product_feature_applicability` says which features a product takes, and how:
   STANDARD, OPTIONAL, SELECTABLE. `product_feature_interaction` relates two features:
   DEPENDENCY (one way), INCOMPATIBILITY (both ways), with a product as context or none.
@@ -1818,6 +1835,12 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "Loaves; a baking class; bags of bought-in flour; seeds on top; the wood oven."
 - **Test:** Do we offer it? On its own: a product. Only as an option on a product: a
   feature. Not offered at all: not a product.
+- **Answer:**
+  - Loaves: a product (a good we make).
+  - A baking class: a product (a service).
+  - Bags of bought-in flour: a product (a good we buy in and sell).
+  - Seeds on top: a feature of the loaf.
+  - The wood oven: not a product (an asset we use, Ch 6).
 - **Sides:** A product is what we offer, made or bought in (good or service). A feature is
   a characteristic picked for a product and not sold alone. What we use but never offer is
   an asset or a work effort (Ch 6), not a product.
@@ -1828,6 +1851,11 @@ options; one that misses a fact goes to its submodel card instead.
 ### Distinction D5 · Catalogue feature or description line? (V1 Ch 4)
 - **Cue:** "Walnut at €40 on the Nórdica; a one-off fix of a wobbly leg, agreed by phone at €25."
 - **Test:** Is it in the catalogue?
+- **Answer:**
+  - Walnut at €40: a catalogue feature, a line naming the walnut feature, ordered for the
+    Nórdica's line.
+  - The wobbly-leg fix at €25: a description line, no product and no feature, the agreed
+    price on it.
 - **Sides:** A catalogue feature gets a line naming the `product_feature`, ordered for its
   product's line. A one-off gets a line with no product and no feature: a description and
   the agreed price.
@@ -1837,6 +1865,10 @@ options; one that misses a fact goes to its submodel card instead.
 ### Distinction D6 · Status or item association? (V1 Ch 4)
 - **Cue:** "No honey for line 1 of order 70; next day a purchase of 500 jars, 200 meant for it."
 - **Test:** A state of one line, or a link between a sales line and a purchase line?
+- **Answer:**
+  - No honey for line 1: a status, ORDER_BACKORDERED on line 1.
+  - The purchase of 500 jars, 200 for it: an item association from line 1 to the purchase
+    line, made once the purchase exists (no quantity on the link).
 - **Sides:** The backorder is an `order_status` (ORDER_BACKORDERED) on the waiting line. The
   `order_item_association` links that sales line to the purchase line that fills it, once
   the purchase exists; it carries no quantity.
@@ -1847,6 +1879,11 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "Only the honey line is backordered; net 30; the fish can't be returned; ship
   line 2 to the branch."
 - **Test:** Does it hold for every line?
+- **Answer:**
+  - Only the honey backordered: a status on the honey line.
+  - Net 30: a term on the order.
+  - The fish can't be returned: a term on the fish line.
+  - Line 2 to the branch: a SHIPPING address on line 2.
 - **Sides:** Statuses, terms, adjustments, roles and contact mechanisms can each sit on the
   whole order or on one line, never both. Every line: the order. Some lines: each line.
 - **Mnemonic:** All lines: the order. Some lines: the line.
@@ -1858,6 +1895,11 @@ options; one that misses a fact goes to its submodel card instead.
 ### Distinction D8 · Recurring or utilization? (V1 Ch 3)
 - **Cue:** "€30 a month; €0.10 per GB; €1 per 10 pages; €50 to install."
 - **Test:** Per period of time, per unit of use, or neither?
+- **Answer:**
+  - €30 a month: RECURRING, per time frequency MONTH.
+  - €0.10 per GB: UTILIZATION, per unit GB (quantity empty, so 1).
+  - €1 per 10 pages: UTILIZATION, per unit PAGE, quantity 10.
+  - €50 to install: ONE_TIME.
 - **Sides:** RECURRING: `per_time_frequency_id` (a month, a year). UTILIZATION:
   `per_uom_id` (a GB, an hour, a page) and `quantity` (per how many; empty = 1). ONE_TIME:
   no "per". The kind and its "per" are two columns.
@@ -1869,6 +1911,11 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "An 'invoiced' status dated 10 Nov, the invoice dated 12 Nov; a 'shipped' status
   with no shipment at all."
 - **Test:** Is there a record of the event itself (a shipment, an invoice)?
+- **Answer:**
+  - "Invoiced" on 10 Nov, the invoice on 12 Nov: the invoice wins; re-date the status to
+    12 Nov.
+  - "Shipped" with no shipment: the missing shipment wins; remove the status, or record
+    the true state as a new row.
 - **Sides:** The fact is the event's own record, and it wins. A status row is a dated copy
   kept for a quick history; when the two disagree, fix the copy (re-date or remove it, and
   record the true state as a new row). A data-quality query compares them.
@@ -1879,6 +1926,11 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "Ship to the school's annex; send the confirmation to compras@; call the
   caretaker on 600 111 222."
 - **Test:** Is it a party that acts (receives, pays, uses), or an address, phone or e-mail?
+- **Answer:**
+  - The school's annex: where, the annex's address as SHIPPING on the line (a place of the
+    school, not a party).
+  - The confirmation to compras@: where, the e-mail on the order with a purpose.
+  - The caretaker on 600 111 222: where, the phone as DELIVERY_CONTACT on the line.
 - **Sides:** A party gets a role on the order or a line (`order_role`, `order_item_role`).
   A place or channel is a contact mechanism with a purpose on the order or a line
   (`order_contact_mechanism`, `order_item_contact_mechanism`). A branch or annex is a place
@@ -1890,6 +1942,9 @@ options; one that misses a fact goes to its submodel card instead.
 ### Distinction D11 · Payer or receiver? (V1 Ch 4)
 - **Cue:** "The firm pays; the bookcase goes to Laura's home, and she uses it."
 - **Test:** Who pays, and who gets it and uses it, line by line?
+- **Answer:**
+  - The firm: BILL_TO on the order.
+  - Laura: SHIP_TO and END_USER on the bookcase line (her home, its SHIPPING address).
 - **Sides:** BILL_TO is on the order: who pays. SHIP_TO (who receives) and END_USER (who
   uses it) are on each line, and can be another party, a person included.
 - **Mnemonic:** Paying isn't receiving.
@@ -1900,6 +1955,11 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "Laura phones in the order for her firm; our rep Tomás takes the call and earns
   the commission; a clerk types it in."
 - **Test:** Whose side is the person on, and what did they do?
+- **Answer:**
+  - Laura's firm: PLACED_BY (Laura as its contact).
+  - Us, our organization: TAKEN_BY.
+  - Tomás: SALESPERSON, with his share.
+  - The clerk: ENTERED_BY.
 - **Sides:** The customer's side: PLACED_BY, the organization (its person as contact). Our
   side: TAKEN_BY, our organization, never the rep; SALESPERSON, the rep credited, with a
   share; ENTERED_BY, whoever keyed it in.
@@ -1911,6 +1971,10 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "An exchange partnership's yearly fee; an employee's salary; a partnership's
   signing city."
 - **Test:** One value for the owner's whole life, or a value that changes over time?
+- **Answer:**
+  - The partnership's yearly fee: a dated child (it changes year by year).
+  - The employee's salary: a dated child.
+  - The partnership's signing city: on the subtype (one value for its whole life).
 - **Sides:** A subtype shares its owner's key: one row, so it holds what doesn't change. A
   value that changes gets a dated child table (owner id, value, from, thru; many rows per
   owner). If the subtype has nothing else left, drop it and hang the child off the owner.
@@ -1921,6 +1985,11 @@ options; one that misses a fact goes to its submodel card instead.
 ### Distinction D14 · Party type or party role? (V1 Ch 2)
 - **Cue:** "A Club member; a customer; a minority-owned business; a supplier."
 - **Test:** Is it true of the party alone, or only toward someone else?
+- **Answer:**
+  - A Club member: a party type.
+  - A customer: a role.
+  - A minority-owned business: a party type.
+  - A supplier: a role.
 - **Sides:** A party type is a classification of the party itself, dated
   (`party_classification`: a Club member, MINORITY_OWNED). A role is a part it plays toward
   another party (`party_role`: CUSTOMER, SUPPLIER). Ch 3's price conditions use the type.
@@ -1931,6 +2000,11 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "Reorder rules for the cartridge: the Valencia shop; every shop in Murcia; our
   online division; the whole chain."
 - **Test:** Is the rule for one place, an area, or one of our own organizations?
+- **Answer:**
+  - The Valencia shop: a facility.
+  - Every shop in Murcia: a geographic boundary.
+  - Our online division: an internal organization.
+  - The whole chain: no scope.
 - **Sides:** A `reorder_guideline` is always for one good, with three optional scopes: a
   facility (one shop or warehouse), a geographic boundary (every place in an area) and an
   internal organization (a division of ours, never a customer or supplier). No scope: the
@@ -1945,6 +2019,10 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "5 Nov: from her e-mail we schedule a battery replacement. 12 Nov: she calls, the
   battery's replaced. 20 Nov: she calls, the new battery's charger is faulty."
 - **Test:** Is it new work, or news about work already there?
+- **Answer:**
+  - 5 Nov: a new work effort, the battery replacement, linked to her e-mail.
+  - 12 Nov: the same effort; the call links to it, and the job done is its progress.
+  - 20 Nov: new work, a work effort of its own for the faulty charger, linked to that call.
 - **Sides:** New work gets its own `work_effort`, linked to the event that triggered it. A
   later event about the same job links to the **existing** effort (the event to work effort
   link is many to many); doing or finishing the job is that effort's progress (Ch 6), not
@@ -1960,6 +2038,11 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "Maderas Moncayo sells us oak, 5 days' lead time, our preferred source. The oak
   for a table costs us 120, carpentry 90, 60 at our Porto workshop."
 - **Test:** Is it about who can sell us the thing, or what the thing costs us to make?
+- **Answer:**
+  - Moncayo sells us oak, 5 days, preferred: a supplier product row.
+  - Oak 120 and carpentry 90 for a table: estimates on the table (MATERIALS 120, LABOR 90).
+  - 60 at the Porto workshop: a LABOR estimate narrowed to the workshop as one of our
+    organizations.
 - **Sides:** A `supplier_product` row says a supplier can provide a product: from when, lead
   time, preference, rating, and no cost column. An `estimated_product_cost` row says what a
   product or a feature costs us, split by cost component type (materials, labour, other),
@@ -1973,6 +2056,11 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "The oak table: oak wood 120, carpentry 90. The extension leaf, on either table:
   hinges and runners 40, fitting 25."
 - **Test:** Can the customer pick it, or is it what making the thing costs us?
+- **Answer:**
+  - Oak wood 120: a cost component (MATERIALS) on the table's estimate.
+  - Carpentry 90: a cost component (LABOR) on the table's estimate.
+  - The extension leaf: a feature, with estimates of its own: hinges and runners 40
+    (MATERIALS), fitting 25 (LABOR).
 - **Sides:** A feature is an option the customer picks (the leaf); it gets its own estimate
   rows, pointing at the feature itself, so one leaf estimate serves every table that takes
   it. Wood, carpentry and fitting are cost component types (materials, labour) on the rows
@@ -1989,6 +2077,10 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "Marcos, a contractor who works for us, sells the order with Nuria, 50/50."
 - **Test:** Is it the part a party plays on this one order, or what the party is to us
   regardless of any order?
+- **Answer:**
+  - Marcos sells the order: the hat, SALESPERSON on the order, 50%.
+  - Marcos is a contractor: the standing role, CONTRACTOR, dated, apart from any order.
+  - Nuria: SALESPERSON on the order, 50%.
 - **Sides:** The hat is an `order_role_type` (SALESPERSON, BILL_TO) on an `order_role` row:
   this party, on this order. The standing role is a `party_role` (EMPLOYEE, CONTRACTOR,
   BILL_TO_CUSTOMER), dated and held apart from any order. An `order_role_rule` row joins the
@@ -2004,6 +2096,10 @@ options; one that misses a fact goes to its submodel card instead.
   bill-to, no more."
 - **Test:** Does it say which hat goes with which standing role, or how many of something
   an order may hold?
+- **Answer:**
+  - The salesperson must be an employee: a rule row (sales order, SALESPERSON → EMPLOYEE,
+    dated).
+  - One bill-to, no more: its own check, a data-quality query that counts BILL_TO per order.
 - **Sides:** An `order_role_rule` row pairs an order kind and a hat with the standing role
   it needs, dated; a hat can have several rows (SALESPERSON → EMPLOYEE, → CONTRACTOR). A
   count ("one BILL_TO per order") is a fact about the whole order, not about any one
@@ -2018,6 +2114,9 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "Wood rolls up to materials; the Gift sets category sits under both Seasonal and
   Kitchen."
 - **Test:** Must the parts add up to a total, or is it a view for finding and reporting?
+- **Answer:**
+  - Wood rolls up to materials: a tree (cost component types, one parent each).
+  - Gift sets under Seasonal and Kitchen: a network (category rollup, a row per parent).
 - **Sides:** A tree (one `parent_type_id` per row, as `cost_component_type`) splits a whole
   into buckets that don't overlap, so the subtotals add up to the total by construction.
   A network (a separate rollup table, a row per parent link, as category rollup) lets a
@@ -2031,6 +2130,10 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "Agencia Ola sells our trips on commission; Distribuciones Norte sells our gift
   cards without buying them; Mayorista Sur buys our books by the pallet and resells them."
 - **Test:** Does the organization buy our goods before selling them on?
+- **Answer:**
+  - Agencia Ola, on commission: an agent.
+  - Distribuciones Norte, sells without buying: an agent.
+  - Mayorista Sur, buys and resells: a distributor, and a customer too.
 - **Sides:** Both are DISTRIBUTION_CHANNEL roles, organizations selling for us, on a
   distribution channel relationship that points at us (CAPS's A). An AGENT sells on our
   behalf and earns a commission; the goods stay ours until the end customer buys. A
@@ -2046,6 +2149,10 @@ options; one that misses a fact goes to its submodel card instead.
 - **Cue:** "Oak legs always; cushions come with it unless you ask to leave them out; a
   cup holder if you ask for one."
 - **Test:** Without a word from the customer, is it in? And can they change that?
+- **Answer:**
+  - Oak legs always: REQUIRED.
+  - Cushions unless you leave them out: STANDARD.
+  - A cup holder if you ask: OPTIONAL.
 - **Sides:** REQUIRED: always in, can't be taken out. STANDARD: in by default, can be
   left out. OPTIONAL: out by default, can be added. (SELECTABLE: one of a set must be
   picked.)
@@ -2056,6 +2163,10 @@ options; one that misses a fact goes to its submodel card instead.
 ### Distinction D24 · Change the link or the address? (V1 Ch 4)
 - **Cue:** "The day before delivery, line 1 moves from Calle Sur 2 to Calle Sur 4."
 - **Test:** Is it what this order line uses, or the place itself?
+- **Answer:**
+  - Line 1's SHIPPING link: changed, repointed (or replaced) to Calle Sur 4.
+  - Calle Sur 2's address row: stays, since the party and other orders may use it.
+  - Calle Sur 4: a new address row, also linked to the party.
 - **Sides:** The `order_item_contact_mechanism` row is this line's use of an address, with
   no dates: a move replaces it (delete it or repoint it), or the line ships to both. The
   `contact_mechanism` row is the place: the old one stays, since the party and other orders

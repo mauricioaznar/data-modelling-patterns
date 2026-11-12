@@ -1168,5 +1168,7 @@ Scores: price components 2 → 3; feature prices stay at 2.
   that compete with each other depending on how specific they are" ✓, a readable
   catalogue with no extra step to compute ✓; stacked, every extra matching row would cut
   the price further ✓ (muddled wording); "we have ruling to determine which one apply a
-  reduction" unclear ~.
+  reduction", unclear at first, then explained ✓: stacking would need rules stored
+  somewhere to say which rows reduce, and which to pick when several boundaries match
+  (the order of application nobody stores).
 - Score: base prices compete holds 4.
