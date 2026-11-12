@@ -27,6 +27,10 @@ and any decisions made.
 - Round Q2 graded (short): where stock is + lot 3 → 4. Both honey items on lot H-03 cold
   at last, and the lot left alone by the move; but from/thru dates put on the items and
   the move ended one and opened two, logged on inventory item (4 → 3).
+- Round Q3 graded (short): rules beside facts 3 → 2. No count in the rule table cold
+  again, and both sides of blocking; but the count's own check not named (third round)
+  and no reason against the column. Its tracker row's lost evidence (an `undefined` left
+  by the 11-10 update) restored.
 
 **Decisions**
 - Q7: line 2's missing SHIPPING row stays a miss; the question gave Paseo 8 as the

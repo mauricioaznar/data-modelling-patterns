@@ -939,20 +939,29 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: contact mechanisms on the order and the line 4 → 3. Next: every line's SHIPPING
   row cold; a move replaces the line's link, the old address itself stays.
 
-### 2026-11-11: question round, pending (written for the phone, short; wording in `docs/round-2026-11-11.md`; order in TODO)
-- **Q3 · Submodel 1 retest (3) · rules beside facts: pick the check, not the column; a flag
-  keeps both rows; both sides of block vs flag · (a) Analyze, (b) Evaluate.** Taller
-  Roble, order 670. Key (a): not in the rule tables (`order_role_rule` says which hats an
-  order kind allows and the standing role each needs, not how many); the count is its own
-  data-quality query, 4.5's "more than one of a job the columns held once, per order or
-  per item", which lists 670. Both PLACING_CUSTOMER rows stay stored; the check flags the
-  order for someone to fix. Grade a pick, said cold. (b) against the column: a hat can
-  have several dated rule rows, each would carry its own count and they can disagree, and
-  every other hat leaves it empty (the count is a fact about the order, not a pairing).
-  Blocking gains: bad data never lands. Costs: a trigger or app code; the order can't be
-  saved while someone sorts out who placed it; a rule changed later blocks rows legal on
-  their date. Full version adds (c) the query (group order roles by order and role type,
-  having count > 1, for the jobs held once) and a seed order with two placing rows.
+### 2026-11-11: round 2026-11-11 Q3, Submodel 1 retest (rules beside facts; Taller Roble, order 670)
+- Short, both parts in one go: rule "one placing customer per sales order"; order 670
+  keyed with two, Hotel Pinar and its owner Grupo Pinar. (a) where the rule lives and what
+  happens to 670's rows (Analyze), (b) a max-per-order column on the rule table plus a
+  blocked insert: one reason against the column, one gain and one cost of blocking
+  (Evaluate).
+- Answer: (a) "order_role_rule" ✗ as the rule's home: the user said in the same breath
+  that it holds which hats are allowed, not how many ✓ cold (third round running), so the
+  "one" lives nowhere in their answer; the count's own check, 4.5's "more than one of a
+  job the columns held once", not named ✗ (missed 11-08 and 11-10 too; a menu item on
+  11-10, gone today). Nothing happens to the rows ✓ (both stay stored). The flag on 670
+  not said, not counted: the question asked about the rows, and a flag lists the order,
+  it doesn't touch the rows (the question's wording, Claude's share). (b) no reason
+  against the column ✗: "we'd lose the fact" is a cost of blocking (several dated rule
+  rows per hat would carry counts that disagree; every other hat leaves it empty).
+  Blocking's gain (saved data follows our rules) ✓ and its costs (the order can't be saved
+  until the block is lifted; the fact of what came in is lost) ✓: both sides, the 11-10
+  gap fixed.
+- Score: rules beside facts 3 → 2. The two gaps the retest targeted (the check holds the
+  count, why not the column) both came back missing; only block vs flag improved. A gap
+  that reappears lowers its row. Reinforce through the schema: 4.5's check query in
+  `queries.sql` and the seed order it catches (order 12571, two BILL_TO), then a fresh
+  question next round.
 - **Q5 · Submodel 1 retest (3) · contact mechanisms on the order and the line: every line
   its SHIPPING row; a move replaces the link · (a) Apply, (b) Analyze.** Papelería Arce,
   order 680. Key (a): `order_contact_mechanism`: 911 222 333 ORDER_PLACING, Calle Real 1
