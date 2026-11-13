@@ -1015,3 +1015,22 @@ Misunderstandings and reinforce attempts, oldest first.
   rows (EMPLOYEE, AGENT), each would carry its own max and could disagree, and the count is
   per order and hat, not per hat-and-standing-role pairing; every other hat leaves it empty.
   Warm: the reinforce came first, so 3 at most.
+
+### 2026-11-13: round 2026-11-13 Q1, Submodel 4 first test (the need; Hotel Brezo)
+- Short, both parts in one go. (a) Apply: the two requirement rows. Answer: towels
+  INTERNAL + PRODUCT, by 2026-12-01, budget 1,600 ✓; stage CUSTOMER + WORK, by
+  2027-01-15, at the Laredo facility, "build a stage" ✓; the two tags kept apart cold ✓.
+  "Party: Laredo hotel" on the towels ✗ (a facility, needed at); "party: Congresos Mar" ✗
+  (no party column: a requirement role); quantity 200 dropped (slip).
+- (b) Analyze, first wording ("one column … four values", not saying it replaces the two
+  tags) read as dropping the table, so the user listed the row's columns: Claude's share
+  (about 70%), not counted. Reworded, cold: a new origin or kind means one new value per
+  value on the other side ✓ (said "two columns for each": values meant); "on the proposal
+  they're added as columns" ✗ (ours is two columns, the proposal one). Not named: "every
+  customer need" must list two values, and the two questions stop being independent.
+- The user's question: why roles dated and the requirement not? Taught: date a row when
+  the fact can stop being true while its parent lives on; the requirement's life is its
+  status history, its crew changes (requirement role dated like party role; order role
+  not, fixed at the order).
+- Score: the need 0 → 3. Retest: the facility on every row, the party through a role,
+  the single column's cost.

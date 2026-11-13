@@ -162,7 +162,7 @@ with no keys. The keys are in the Ch 2, Ch 3 and Ch 4 logs under "2026-11-13: qu
 round, pending": **don't open those before grading**. Read each answer back, grade, log and
 update the trackers as usual, then tick here.
 
-- [ ] Q1 · Ch 4 · requirements: the need, two independent tag sets · new (0) (Hotel Brezo, towels and a stage)
+- [x] Q1 · Ch 4 · requirements: the need, two independent tag sets · new (0) (Hotel Brezo, towels and a stage) · answered 11-13, 0 → 3: the two tags cold; the hotel as a party (a facility), the customer as a column (a role); (b) reworded, half the cost
 - [ ] Q2 · Ch 4 · requirements: the commitment · new (0) (Hotel Brezo, POs 95 and 97)
 - [ ] Q3 · Ch 2 · party role + role type · retest (3): the dated role rows beside the relationships (Academia Lumen, Clara Vidal)
 - [ ] Q4 · Ch 3 · inventory item · retest (3): a move updates quantity on hand in place, no dates (Ferretería Duna, screws 4×40)
