@@ -1025,7 +1025,7 @@ Misunderstandings and reinforce attempts, oldest first.
 - (b) Analyze, first wording ("one column … four values", not saying it replaces the two
   tags) read as dropping the table, so the user listed the row's columns: Claude's share
   (about 70%), not counted. Reworded, cold: a new origin or kind means one new value per
-  value on the other side ✓ (said "two columns for each": values meant); "on the proposal
+  value on the other side ✓ (said "two columns for each", and on follow-up meant columns: the proposal pictured as a column per pair ✗; corrected: one column, a value per pair, nothing adds a column); "on the proposal
   they're added as columns" ✗ (ours is two columns, the proposal one). Not named: "every
   customer need" must list two values, and the two questions stop being independent.
 - The user's question: why roles dated and the requirement not? Taught: date a row when
