@@ -73,8 +73,9 @@ the user, tease with nicknames, so the sessions stay fun.
   needs; then feedback on the doc entry drafts; then the refactor of NOTES, SQL, doc and
   cards, still aiming at Silverston's intention; then an ungraded **concepts walk-through**
   per submodel on the finished model and doc (problem, entities, links, about 20 minutes, no
-  scores); the **card review comes last** (explode test, hook), so it tests understood
-  concepts and the final card. Each
+  scores). **No card review in the overview** (the user's call, 2026-11-13): the user reviews
+  the cards at their own pace once the concepts are in, and card fixes come from the question
+  rounds. Each
   agreed point notes the cards it touches; every card is checked against NOTES once the
   refactor is finished (the user's call, 2026-10-16).
 - **Card pass:** every submodel has its card, the chapter has its architecture card, each

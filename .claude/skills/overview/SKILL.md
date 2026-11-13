@@ -1,14 +1,15 @@
 ---
 name: overview
-description: Fixed procedure for a chapter's overview, once all its figures are built and drafted. Discusses the points one at a time (teaching as needed), collects feedback on the doc drafts, refactors, walks through the concepts on the finished model, then reviews the cards last, runs the card pass and hands over to practice.
+description: Fixed procedure for a chapter's overview, once all its figures are built and drafted. Discusses the points one at a time (teaching as needed), collects feedback on the doc drafts, refactors, walks through the concepts on the finished model, runs the card pass (no card review with the user) and hands over to practice.
 argument-hint: vN/NN
 ---
 
-# /overview: points, concepts, doc, refactor, cards
+# /overview: points, doc, refactor, concepts, card pass
 
 Order (the user's call, 2026-10-29): doubts first, then the doc, then the refactor, so the
-concepts are learnt from the finished doc; the cards come last, so the explode test runs on
-understood concepts and on the final card.
+concepts are learnt from the finished doc. No card review with the user (the user's call,
+2026-11-13): they review the cards at their own pace once the concepts are in, and card
+fixes come from what the question rounds expose.
 
 ## 0. Preconditions
 - `npm run check -- vN/NN` shows no ✗, every figure is classified, and every submodel row
@@ -45,10 +46,9 @@ understood concepts and on the final card.
   Discussion (and the doc entry, if it changes what the entry says), and becomes a
   candidate Trap for the card.
 
-## 5. Card review (last)
-- Per submodel card, then the architecture card: the explode test (the user unpacks the
-  mantra into the key without looking) and does the hook stick? When the user rewrites a
-  mantra, check it still unpacks into the key.
+## 5. Card pass (Claude's, no review with the user)
+- No explode test or hook check here (the user's call, 2026-11-13): the user reviews the
+  cards solo, and a rewritten mantra still gets checked against its key whenever it arrives.
 - Every submodel has its card, and the chapter has its architecture card (rewritten if the
   refactor changed "How it flows"). Every pattern new to Core patterns gets a pattern card in
   `docs/cards.md` (P-numbers continue).
