@@ -17,6 +17,10 @@ and any decisions made.
 - Requirements enters the round of seven: four tracker rows at 0 in Ch 4's `EXERCISES.md`
   (the need and its two tag sets, desired features, the commitment, roles and status);
   `Overview` ticked in STATUS.md, which settles card 13; Anki export regenerated.
+- Round 2026-11-13 written (short) in `docs/round-2026-11-13.md`, keys in the Ch 2–4 logs.
+  Q1 graded: the need 0 → 3 (two tags cold; the hotel as a party, not a facility; (b)
+  reworded after Claude's unclear first version). Q2 graded: the commitment 0 → 3
+  (allocation vs promise cold; 100 committed where 80 was left).
 
 **Decisions**
 - No card review in the overview (the user's call): the user reviews cards at their own
@@ -28,6 +32,7 @@ and any decisions made.
 **Next**
 - Re-import the Anki export; move card 13 from Drafts to Settled by hand.
 - Ch 4 overview: Requests and quotes (Figs 4.10–4.11), points 21–22.
+- Round 2026-11-13 Q3–Q7, then its distinctions.
 
 ## 2026-11-11
 
