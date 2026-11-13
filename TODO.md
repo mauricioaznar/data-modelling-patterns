@@ -163,7 +163,7 @@ round, pending": **don't open those before grading**. Read each answer back, gra
 update the trackers as usual, then tick here.
 
 - [x] Q1 · Ch 4 · requirements: the need, two independent tag sets · new (0) (Hotel Brezo, towels and a stage) · answered 11-13, 0 → 3: the two tags cold; the hotel as a party (a facility), the customer as a column (a role); (b) reworded, half the cost
-- [ ] Q2 · Ch 4 · requirements: the commitment · new (0) (Hotel Brezo, POs 95 and 97)
+- [x] Q2 · Ch 4 · requirements: the commitment · new (0) (Hotel Brezo, POs 95 and 97) · answered 11-13, 0 → 3: allocation vs promise cold; 100 for 80 (the cap)
 - [ ] Q3 · Ch 2 · party role + role type · retest (3): the dated role rows beside the relationships (Academia Lumen, Clara Vidal)
 - [ ] Q4 · Ch 3 · inventory item · retest (3): a move updates quantity on hand in place, no dates (Ferretería Duna, screws 4×40)
 - [ ] Q5 · Ch 4 · rules beside facts · reinforce (2) then fresh: the count in the check, why not a column (Taller Roble, order 700)

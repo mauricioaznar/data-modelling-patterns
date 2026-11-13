@@ -1034,3 +1034,12 @@ Misunderstandings and reinforce attempts, oldest first.
   not, fixed at the order).
 - Score: the need 0 → 3. Retest: the facility on every row, the party through a role,
   the single column's cost.
+
+### 2026-11-13: round 2026-11-13 Q2, Submodel 4 first test (the commitment; Hotel Brezo)
+- (a) Apply: two commitment rows ✓, PO 95 120 ✓, PO 97 100 ✗ (80: never more than the
+  need; 220 > 200 is what the check catches); "order 95", not line 1 (~). The user asked
+  how to know the committed amount when it isn't given: taught, it's our decision, capped
+  by what's still uncommitted (200 − 120 = 80); the other 20 stay free.
+- (b) Understand: what the order promised and what it allocates to the need differ, one
+  value can't mean both ✓ cold. Not named: the supplier and price belong to the order.
+- Score: the commitment 0 → 3. Retest: the cap cold, on the line.
