@@ -1172,3 +1172,22 @@ Scores: price components 2 → 3; feature prices stay at 2.
   somewhere to say which rows reduce, and which to pick when several boundaries match
   (the order of application nobody stores).
 - Score: base prices compete holds 4.
+
+### 2026-11-13: question round, pending (wording in `docs/round-2026-11-13.md`; order in TODO)
+- **Q4 key (inventory item; Ferretería Duna, screws 4×40).** (a) Before: one
+  inventory_item, NON_SERIALIZED, the screws, facility Calle Mayor, quantity on hand 80, no
+  dates. After: the same row, same id, 80 → 50 in place; a new item at Alicante, 30 (none
+  there before). (b) Dates make each move end a row and open new ones: one stock splits
+  into many ids, and the rows pointing at it (variances; Ch 5's receipts and issuances)
+  point at a closed one. The history lives in those events; quantity on hand is their
+  balance.
+- **Q6 key (PRODUCT + good/service, maintenance; Jardines Musgo).** (a) Products: the
+  olive tree (good), the workshop (service), the compost (good, bought in; Abonos Sur a
+  supplier_product row). The large pot: a feature of the tree. The van: not a product,
+  an asset we use (Ch 6's fixed asset, recall). Delivery is a charge on the order, not the
+  van. (b) A product is what we offer for sale, not what we own or bought; the van is
+  never sold, so as a product it'd show in the catalogue and in pricing.
+- **Q7 key (feature prices add on top, maintenance; Sillas Nogal).** (a) 120 + 25 = 145.
+  (b) A feature's price components compete only with that feature's (most specific wins:
+  TRADE over any), and the sum of the winners adds on top of the product's base; the base
+  and the feature price answer different parts of the price.

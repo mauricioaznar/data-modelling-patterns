@@ -153,7 +153,23 @@ trackers as usual, then tick here.
 - [x] Q7 · Ch 2 · communication event + roles · maintenance (last 4 on 10-30) (Gestoría Llano) · stays 4: medium, persons and purpose cold, a case unprompted; the status not given
 - [x] Distinctions for the round (practice.md): written 11-08, D22 (agent or distributor?), D15's Trap (Q4's facility scope), Card 1's Trap (Q1's distributor and reversed contact)
 
-- [ ] Next round: retest party role + role type (3) inside a relationship question: the dated `party_role` rows written beside the relationship rows, graded together, since each relationship points at them (the user's call, 2026-11-11)
+- [x] Next round (in round 2026-11-13, Q3): retest party role + role type (3) inside a relationship question: the dated `party_role` rows written beside the relationship rows, graded together, since each relationship points at them (the user's call, 2026-11-11)
+
+## Question round 2026-11-13 (short)
+
+All seven are in [docs/round-2026-11-13.md](docs/round-2026-11-13.md), short versions first,
+with no keys. The keys are in the Ch 2, Ch 3 and Ch 4 logs under "2026-11-13: question
+round, pending": **don't open those before grading**. Read each answer back, grade, log and
+update the trackers as usual, then tick here.
+
+- [ ] Q1 · Ch 4 · requirements: the need, two independent tag sets · new (0) (Hotel Brezo, towels and a stage)
+- [ ] Q2 · Ch 4 · requirements: the commitment · new (0) (Hotel Brezo, POs 95 and 97)
+- [ ] Q3 · Ch 2 · party role + role type · retest (3): the dated role rows beside the relationships (Academia Lumen, Clara Vidal)
+- [ ] Q4 · Ch 3 · inventory item · retest (3): a move updates quantity on hand in place, no dates (Ferretería Duna, screws 4×40)
+- [ ] Q5 · Ch 4 · rules beside facts · reinforce (2) then fresh: the count in the check, why not a column (Taller Roble, order 700)
+- [ ] Q6 · Ch 3 · PRODUCT + good/service · maintenance (last 4 on 11-01) (Jardines Musgo)
+- [ ] Q7 · Ch 3 · feature prices add on top · maintenance (last 4 on 11-01) (Sillas Nogal)
+- [ ] Distinctions for the round (practice.md)
 
 ## Question round 2026-11-11 (all seven on the phone, short)
 
@@ -172,7 +188,7 @@ trackers as usual, then tick here.
 - [x] Q7 · Ch 3 · base prices compete · maintenance (last 4 on 11-01) (Kayaks Delta, K2) · answered 11-11, holds 4: 740 and 800 cold, "they compete by how specific they are"
 - [x] Distinctions for the round (practice.md): written 11-11, D25 (date the row or update it?, from Q2) and D20's Trap (Q3's rule in `order_role_rule`)
 
-- [ ] Next round: reinforce rules beside facts (2) through 4.5's count check and its seed order 12571, then a fresh question; retest inventory item (3): a move updates quantity on hand in place, no dates on the item
+- [x] Next round (in round 2026-11-13, Q4 and Q5): reinforce rules beside facts (2) through 4.5's count check and its seed order 12571, then a fresh question; retest inventory item (3): a move updates quantity on hand in place, no dates on the item
 
 ## Question round 2026-11-10 (all seven on the phone, short)
 

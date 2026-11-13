@@ -725,3 +725,14 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: party relationship + type 3 → 4. Party role + role type stays 3 (the dated role
   rows, cold).
 
+
+### 2026-11-13: question round, pending (wording in `docs/round-2026-11-13.md`; order in TODO)
+- **Q3 key (party role + role type, inside relationships; Academia Lumen, Clara Vidal).**
+  (a) Roles: Lumen INTERNAL_ORGANIZATION from its start (one row, open); Clara EMPLOYEE
+  from 2025-09-01 thru 2027-01-01 (exclusive); Clara SUPPLIER from 2027-01-01, open.
+  Relationships: EMPLOYMENT, from Lumen's INTERNAL_ORGANIZATION role → Clara's EMPLOYEE
+  role, 2025-09-01 thru 2027-01-01; SUPPLIER_RELATIONSHIP, from Clara's SUPPLIER role →
+  Lumen's INTERNAL_ORGANIZATION role, from 2027-01-01. CONTRACTOR for SUPPLIER is ~ (the
+  relationship type wants SUPPLIER). (b) The relationship's from and to are role rows (FKs
+  to party_role), so the roles must exist; and a role stands on its own (a supplier with no
+  open deal, a prospect), so its dates can differ from any one relationship's.

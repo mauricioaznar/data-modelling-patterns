@@ -991,3 +991,27 @@ Misunderstandings and reinforce attempts, oldest first.
 - Discussion: asked what purpose Avenida Lago 9 could keep; on "the address row stays,
   the link changes" the user confirmed (b) meant the link only, the address row
   untouched ✓ (D24 held). The "own row not considered" above was implicit, not missed.
+
+### 2026-11-13: question round, pending (wording in `docs/round-2026-11-13.md`; order in TODO)
+- **Q1 key (requirements, the need; Hotel Brezo).** (a) Towels: INTERNAL, PRODUCT,
+  quantity 200, required by 2026-12-01, budget 1,600, at the Laredo hotel facility, no
+  parent (a product_requirement row, product optional; the size could be desired features).
+  Stage: CUSTOMER (Congresos Mar's), WORK, required by 2027-01-15, at the Laredo hall
+  facility; the customer through a requirement role, not a column. (b) Four values hide two
+  independent questions: "every customer need" or "every work need" must list values; a
+  new value on one axis (e.g. a third origin) doubles the list; the product subtype table
+  can't key off one axis. Two columns, each exclusive, any pair allowed.
+- **Q2 key (requirements, the commitment).** (a) Two order_requirement_commitment rows:
+  PO 95 line 1 → towels, 120; PO 97 line 1 → towels, 80 (the need is 200; 20 of line 1's
+  100 are not committed to it, so never more than the need; committing 100 is what the
+  check catches). (b) The commitment is an allocation: how much of an order line goes to a
+  need. The supplier, price and promise to deliver belong to the order (and its roles),
+  the need exists before any order, one line can serve several needs and one need several
+  lines; both are promises, the facts come with shipments and invoices.
+- **Q5 key (rules beside facts, reinforce then fresh).** (a) The count check groups
+  order_item_role by order item and hat (SHIP_TO) and lists line 2, two parties; the rows
+  stay stored, flagged, nothing deleted. (b) The 2 goes in the check (a SALESPERSON branch,
+  having count(distinct party) > 2 per order), not the rule table: SALESPERSON has two rule
+  rows (EMPLOYEE, AGENT), each would carry its own max and could disagree, and the count is
+  per order and hat, not per hat-and-standing-role pairing; every other hat leaves it empty.
+  Warm: the reinforce came first, so 3 at most.
