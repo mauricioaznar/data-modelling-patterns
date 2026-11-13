@@ -14,13 +14,19 @@ and any decisions made.
 - Concepts walk-through done. Cleared up: the commitment is an allocation (how much of an
   order line goes to a need), not a weaker order; both sides are promises, the facts come with
   shipments and invoices; it exists only once the requirement and the order line both do.
+- Requirements enters the round of seven: four tracker rows at 0 in Ch 4's `EXERCISES.md`
+  (the need and its two tag sets, desired features, the commitment, roles and status);
+  `Overview` ticked in STATUS.md, which settles card 13; Anki export regenerated.
 
 **Decisions**
 - No card review in the overview (the user's call): the user reviews cards at their own
   pace once the concepts are in, and card fixes come from the question rounds. The card pass
   (cards exist, card-vs-NOTES check, export) stays Claude's. `/overview` and CLAUDE.md updated.
+- A submodel enters the round of seven as its overview ends (the user's call): its tracker
+  rows are written, all at 0, the same session (`/overview` §6, CLAUDE.md).
 
 **Next**
+- Re-import the Anki export; move card 13 from Drafts to Settled by hand.
 - Ch 4 overview: Requests and quotes (Figs 4.10–4.11), points 21–22.
 
 ## 2026-11-11

@@ -57,6 +57,12 @@ fixes come from what the question rounds expose.
 - The export waits for §6: it reads the `Overview` tick.
 
 ## 6. Close
+- **Into the round of seven** (the user's call, 2026-11-13): as soon as a submodel's
+  overview ends (its walk-through done, even when the chapter's other submodels are still
+  waiting), write its tracker rows in `EXERCISES.md` (`docs/practice.md` step 0: 3–6 rows,
+  every table in one, all at 0, under a `Submodel N: name (practice started <date>, after its
+  overview)` header) and tick its `Overview` in STATUS.md with the date. The rows are what the
+  round of seven picks from, so without them the submodel never comes up.
 - Tick `Overview` with today's date for every submodel row and the `A` row. This settles the
   chapter's cards (the user's call, 2026-10-18): run `npm run cards:anki`, and the export
   turns them from draft to reviewed and puts them in the Settled subdecks.

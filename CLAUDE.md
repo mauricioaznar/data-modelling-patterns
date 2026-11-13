@@ -75,7 +75,8 @@ the user, tease with nicknames, so the sessions stay fun.
   per submodel on the finished model and doc (problem, entities, links, about 20 minutes, no
   scores). **No card review in the overview** (the user's call, 2026-11-13): the user reviews
   the cards at their own pace once the concepts are in, and card fixes come from the question
-  rounds. Each
+  rounds. **A submodel enters the round of seven as its overview ends** (the user's call,
+  2026-11-13): Claude writes its tracker rows, all at 0, the same session. Each
   agreed point notes the cards it touches; every card is checked against NOTES once the
   refactor is finished (the user's call, 2026-10-16).
 - **Card pass:** every submodel has its card, the chapter has its architecture card, each
