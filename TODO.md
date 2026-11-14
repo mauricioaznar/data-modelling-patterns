@@ -167,7 +167,7 @@ update the trackers as usual, then tick here.
 - [x] Q3 · Ch 2 · party role + role type · retest (3): the dated role rows beside the relationships (Academia Lumen, Clara Vidal) · answered 11-13, stays 3: Clara's rows cold, ours missing, (b) loose; AGENT for SUPPLIER drops party relationship 4 → 3
 - [x] Q4 · Ch 3 · inventory item · retest (3): a move updates quantity on hand in place, no dates (Ferretería Duna, screws 4×40) · answered 11-13, 3 → 4: updated in place, no dates, cold; the history in shipments
 - [x] Q5 · Ch 4 · rules beside facts · reinforce (2) then fresh: the count in the check, why not a column (Taller Roble, order 700) · answered 11-13, stays 2: the check and flag right (warm); why not a column not known, given
-- [ ] Q6 · Ch 3 · PRODUCT + good/service · maintenance (last 4 on 11-01) (Jardines Musgo)
+- [x] Q6 · Ch 3 · PRODUCT + good/service · maintenance (last 4 on 11-01) (Jardines Musgo) · answered 11-13, holds 4: all cold, the pot a feature, the van an asset
 - [ ] Q7 · Ch 3 · feature prices add on top · maintenance (last 4 on 11-01) (Sillas Nogal)
 - [ ] Distinctions for the round (practice.md): include grain (the user's idea, Q5: a value lives at the level it describes; a per-pair max vs a per-hat total), unless a card already covers it
 

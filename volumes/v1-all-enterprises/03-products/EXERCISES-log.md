@@ -1200,3 +1200,11 @@ Scores: price components 2 → 3; feature prices stay at 2.
   and could disagree with the events ✓. Not named: one stock split into many ids, and
   rows pointing at a closed item.
 - Score: inventory item 3 → 4.
+
+### 2026-11-13: round 2026-11-13 Q6, Submodel 1 maintenance (PRODUCT + good/service; Jardines Musgo, last 4 on 11-01)
+- (a) Apply: olive tree good, workshop service, compost good ✓; the large pot a feature,
+  OPTIONAL, a product only if stocked or sold alone ✓ (reasoned); the van an asset ✓;
+  delivery "a work effort" ~ (not asked; a charge on the order, carried by a shipment).
+- (b) Analyze: the van would put an item in the catalogue that doesn't belong there ✓;
+  "a product is what we offer, not what we own" implied, not said.
+- Score: holds 4.
