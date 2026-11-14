@@ -1043,3 +1043,16 @@ Misunderstandings and reinforce attempts, oldest first.
 - (b) Understand: what the order promised and what it allocates to the need differ, one
   value can't mean both ✓ cold. Not named: the supplier and price belong to the order.
 - Score: the commitment 0 → 3. Retest: the cap cold, on the line.
+
+### 2026-11-13: round 2026-11-13 Q5, Submodel 1 reinforce + warm retest (rules beside facts; Taller Roble, order 700)
+- Reinforce text given first (the count lives in the check; the rule table holds hats
+  allowed and standing roles, one row per pair, dated), so warm.
+- (a) Apply: a data-quality query catches line 2, the rows stay, flagged ✓; grouped "by
+  order and order item, one query each" ~ (line 2: by order item and hat, SHIP_TO).
+- (b) Analyze: the 2 goes in the check ✓ (warm); why not a column: "I don't know" ✗,
+  the fourth round without it. Given: SALESPERSON has two rule rows (EMPLOYEE, AGENT), so
+  a max column would sit on both and could say 2 and 3; the count is about the order and
+  the hat, not a hat-and-standing-role pair; every other hat leaves it empty.
+- The user said they might be low and struggling to recall; offered to stop, they chose
+  to carry on.
+- Score: rules beside facts stays 2 (the why still missing; the rest warm).
