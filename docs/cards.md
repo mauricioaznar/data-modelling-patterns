@@ -479,12 +479,14 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 13 · V1 Ch 4 · Requirements (Fig 4.9)
 - **Cue:** "What is needed, by whom, by when, and which order lines commit to filling it?"
 - **Hook:** a shopping list in pencil
-- **Mantra:** A need, split by whose and what, wants features, not products; order lines
-  commit to it in quantities.
+- **Mantra:** A need, tagged whose and what, sits at a facility and wants features, not a
+  product; people hold it through dated roles; order lines commit up to what's left.
 
 <details><summary>Key</summary>
 
-- **S:** `requirement` (the need: description, required-by date, budget, quantity, reason;
+- **S:** `requirement` (the need: description, `requirement_creation_date` (when we record
+  it), `required_by_date` (when it's due), budget, quantity, reason; no from/thru, its life
+  is its statuses;
   `requirement_origin` CUSTOMER or INTERNAL and `requirement_kind` PRODUCT or WORK, two
   independent sets; part of another requirement; needed at a facility) ·
   `product_requirement` (an optional product) + `desired_feature` (a Ch 3 feature, must-have
@@ -494,10 +496,12 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **W:** jumping straight to a draft order loses the need itself (by when, for how much,
   why, who asked). One need often takes several orders, and a need is described before any
   product is chosen.
-- **T:** *(the naive-model trap until practice gives yours)* naming a product on the need too
-  early: "50 reams, 8½ by 11, fine grade" is the need, choosing Johnson's is buying. And one
-  four-way subtype list (customer, internal, product, work), which can't hold a customer's
-  work requirement.
+- **T:** the place and the people as columns on the need (2026-11-13: the Laredo hotel and
+  Congresos Mar as "party"; 11-14: Dr. Sanz and Residencia Olmo left out): the place is
+  `facility_id`, the people requirement role rows (OWNER, REQUESTER). The one-column design
+  pictured as a column per pair: it is one column with a value per pair (CUSTOMER_PRODUCT),
+  so "every customer need" lists values, and a new kind edits every such filter. A line's
+  whole 100 committed where only 80 of the need was left: commit up to what's left.
 - **D:** requirement → requirement (part of); requirement → facility (Ch 2);
   product_requirement (= requirement) → product (Ch 3, optional); product_requirement ←
   desired_feature → product_feature (Ch 3); requirement ← commitment → order_item;
