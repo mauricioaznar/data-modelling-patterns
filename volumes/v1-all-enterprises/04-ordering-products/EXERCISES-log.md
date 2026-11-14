@@ -1091,3 +1091,21 @@ Misunderstandings and reinforce attempts, oldest first.
   or before that date. Rows added, never updated. (b) The shipment is the fact, the status a
   copy of it: trust the shipment and fix the status row's date to 13 Feb (and look for why
   they disagree).
+
+### 2026-11-14: round 2026-11-14 Q2, Submodel 4 retest (the need; Clínica Arén)
+- Short, both parts in one go. (a) Apply: scanner, product, budget 30,000, by 2027-03-01,
+  INTERNAL ✓; hearing checks, CUSTOMER, at the Oviedo home facility ✓. Not written: Dr. Sanz
+  as the scanner's OWNER and Residencia Olmo as the checks' REQUESTER (requirement role rows)
+  ✗, the second round running; the Gijón clinic facility on the scanner ✗. "Service" for the
+  checks ~ (the kind is WORK; good/service is Ch 3's product split). 1 Feb as the creation
+  date ~ (it's when the checks are needed; creation is when we record the need). Quantity 1
+  dropped (yesterday too).
+- (b) Analyze: the filters not written ✗ (asked). The multiplication ✓, but "the number of
+  columns" ✗ again (one column, a value per pair). "Adding a row is easier, no code change"
+  unclear: a new value is a lookup row in both designs; what differs is what breaks.
+  Given: ours `requirement_origin = 'CUSTOMER'`; theirs `requirement_type in
+  ('CUSTOMER_PRODUCT', 'CUSTOMER_WORK')`, so every one-axis query hard-codes the list and
+  silently misses a new kind; the two questions stop being independent.
+- Score: the need 3 → 2 (the role and column gaps reappeared; the tags still cold).
+  Reinforce next round: requirement role rows written for the people named, the facility
+  on every row, one axis's filter on both designs.
