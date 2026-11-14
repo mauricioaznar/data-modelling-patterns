@@ -736,3 +736,15 @@ Misunderstandings and reinforce attempts, oldest first.
   relationship type wants SUPPLIER). (b) The relationship's from and to are role rows (FKs
   to party_role), so the roles must exist; and a role stands on its own (a supplier with no
   open deal, a prospect), so its dates can differ from any one relationship's.
+
+### 2026-11-13: round 2026-11-13 Q3, Submodel 1 retest (party role + role type; Academia Lumen, Clara Vidal)
+- (a) Apply: Clara EMPLOYEE 2025-09-01 thru 2027-01-01 ✓, then a second role from
+  2027-01-01 ✓: the dated role rows written cold (the 11-11 miss). Our school's
+  INTERNAL_ORGANIZATION role row ✗ (asked for). The after rows as AGENT and
+  DISTRIBUTION_CHANNEL (AGENT → us) ✗: she sells her teaching to us, so SUPPLIER and
+  SUPPLIER_RELATIONSHIP (SUPPLIER → us). EMPLOYMENT us → Clara ✓.
+- (b) Understand: "the relationship is what she is to us, the role the nature of what she
+  does" ~. Not named: the relationship's from and to are FKs to role rows, so they must
+  exist; a role stands on its own (a supplier between contracts), so its dates can differ.
+- Score: party role + role type stays 3 (the rows cold, ours missing, (b) loose); party
+  relationship + type 4 → 3 (agent for supplier).
