@@ -168,8 +168,8 @@ update the trackers as usual, then tick here.
 - [x] Q4 · Ch 3 · inventory item · retest (3): a move updates quantity on hand in place, no dates (Ferretería Duna, screws 4×40) · answered 11-13, 3 → 4: updated in place, no dates, cold; the history in shipments
 - [x] Q5 · Ch 4 · rules beside facts · reinforce (2) then fresh: the count in the check, why not a column (Taller Roble, order 700) · answered 11-13, stays 2: the check and flag right (warm); why not a column not known, given
 - [x] Q6 · Ch 3 · PRODUCT + good/service · maintenance (last 4 on 11-01) (Jardines Musgo) · answered 11-13, holds 4: all cold, the pot a feature, the van an asset
-- [ ] Q7 · Ch 3 · feature prices add on top · maintenance (last 4 on 11-01) (Sillas Nogal)
-- [ ] Distinctions for the round (practice.md): include grain (the user's idea, Q5: a value lives at the level it describes; a per-pair max vs a per-hat total), unless a card already covers it
+- [x] Q7 · Ch 3 · feature prices add on top · maintenance (last 4 on 11-01) (Sillas Nogal) · answered 11-13, holds 4: 145 cold; TRADE called a geographic boundary (a party type)
+- [x] Distinctions for the round (practice.md): written 11-13, D26 (which level does the value live at?, the user's grain idea from Q5); Traps for D10 (Q1), D20 (Q5), D22 (Q3). Was: include grain (the user's idea, Q5: a value lives at the level it describes; a per-pair max vs a per-hat total), unless a card already covers it
 
 ## Question round 2026-11-11 (all seven on the phone, short)
 

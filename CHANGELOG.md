@@ -21,6 +21,11 @@ and any decisions made.
   Q1 graded: the need 0 → 3 (two tags cold; the hotel as a party, not a facility; (b)
   reworded after Claude's unclear first version). Q2 graded: the commitment 0 → 3
   (allocation vs promise cold; 100 committed where 80 was left).
+- Round 2026-11-13 finished: Q3 party role stays 3, party relationship 4 → 3 (AGENT for
+  SUPPLIER); Q4 inventory item 3 → 4; Q5 rules beside facts stays 2 (warm; why not a
+  column, taught as grain); Q6 PRODUCT holds 4; Q7 feature prices hold 4 (TRADE called a
+  boundary). Distinctions: D26 (grain, the user's idea), Traps for D10, D20, D22; Anki at
+  86 cards.
 
 **Decisions**
 - No card review in the overview (the user's call): the user reviews cards at their own

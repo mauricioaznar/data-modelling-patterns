@@ -1208,3 +1208,10 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - (b) Analyze: the van would put an item in the catalogue that doesn't belong there ✓;
   "a product is what we offer, not what we own" implied, not said.
 - Score: holds 4.
+
+### 2026-11-13: round 2026-11-13 Q7, Submodel 4 maintenance (feature prices add on top; Sillas Nogal, last 4 on 11-01)
+- (a) Apply: 120 + 25 = 145 ✓ cold. The €25 "more specific since it mentions a geographic
+  boundary" ✗: TRADE is a party type (the 11-01 slip named CLUB "customer").
+- (b) Understand: the leather seat's two prices compete only within the feature, most
+  specific wins, not with the chair's base ✓.
+- Score: feature prices add on top holds 4; the condition kind logged on conditions (3).

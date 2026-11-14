@@ -1937,7 +1937,9 @@ options; one that misses a fact goes to its submodel card instead.
   of its organization, unless the organization's units are tracked as parties.
 - **Mnemonic:** Roles say who; mechanisms say where.
 - **Trap:** the annex made the ship-to party (2026-11-01); an e-mail hung off the role in an
-  invented `order_role_contact` table (2026-11-01).
+  invented `order_role_contact` table (2026-11-01); the Laredo hotel made a requirement's
+  party (a facility, needed at) and the customer a party column (a requirement role)
+  (2026-11-13).
 
 ### Distinction D11 · Payer or receiver? (V1 Ch 4)
 - **Cue:** "The firm pays; the bookcase goes to Laura's home, and she uses it."
@@ -2110,7 +2112,8 @@ options; one that misses a fact goes to its submodel card instead.
 - **Trap:** a max-per-order column on the rule rows, endorsed (2026-11-08), and back on
   the menu with no pick (2026-11-10); "one placing customer" placed in `order_role_rule`,
   though it holds no count, with no check named and no reason against the column
-  (2026-11-11).
+  (2026-11-11); why not a column not known, the salespeople's 2 placed in the check only
+  after the reinforce (2026-11-13).
 
 ### Distinction D21 · Tree or network? (V1 Ch 3)
 - **Cue:** "Wood rolls up to materials; the Gift sets category sits under both Seasonal and
@@ -2145,7 +2148,8 @@ options; one that misses a fact goes to its submodel card instead.
 - **Trap:** Agencia Ola a contractor (2026-10-23, 2026-11-07); Distribuciones Norte,
   on commission without buying, a distributor and a customer (2026-11-08); Viajes Duna
   turned distributor made a customer only, its distributor channel row not started
-  (2026-11-10).
+  (2026-11-10); Clara, a freelancer invoicing us, made an AGENT on a distribution channel,
+  though she sells to us: a SUPPLIER (2026-11-13).
 
 ### Distinction D23 · Required, standard or optional? (V1 Ch 3)
 - **Cue:** "Oak legs always; cushions come with it unless you ask to leave them out; a
@@ -2199,6 +2203,23 @@ options; one that misses a fact goes to its submodel card instead.
 - **Mnemonic:** Rules and ties get dates; balances get events.
 - **Trap:** the honey items given from and thru dates, and the move from P4 ended one
   item and opened two (2026-11-11).
+
+### Distinction D26 · Which level does the value live at? (V1 Ch 4)
+- **Cue:** "At most 2 salespeople on any sales order; at most 1 of them an outside agent;
+  the chair's agreed price on order 700's line 1."
+- **Test:** What does the value vary by? One row of which table stands for exactly that?
+- **Answer:**
+  - At most 2 salespeople: per order kind + hat. Not on the rule rows (one per hat and
+    standing role): the check, or a limit table with one row per kind + hat.
+  - At most 1 agent: per order kind + hat + standing role, so it fits the rule row.
+  - The agreed price: per order line, the line's snapshot, not the product.
+- **Sides:** A table's grain is what one of its rows stands for. A value belongs at the
+  grain it varies by. Put it on a finer grain and the copies can disagree (two SALESPERSON
+  rows saying 2 and 3) or a total slips through (2 employees + 2 agents); put it on a
+  coarser one and it can't vary as it should.
+- **Mnemonic:** A value lives where it varies.
+- **Trap:** a max on each pairing row to cap salespeople in total, so 2 employees and
+  2 agents pass (2026-11-13).
 
 ---
 
