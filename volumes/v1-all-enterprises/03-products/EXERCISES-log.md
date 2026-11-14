@@ -1215,3 +1215,17 @@ Scores: price components 2 → 3; feature prices stay at 2.
 - (b) Understand: the leather seat's two prices compete only within the feature, most
   specific wins, not with the chair's base ✓.
 - Score: feature prices add on top holds 4; the condition kind logged on conditions (3).
+
+### 2026-11-14: question round, pending (wording in `docs/round-2026-11-14.md`; order in TODO)
+- **Q5 key (conditions, containment; Bicis Lezo).** (a) Three price components on the Lezo
+  bike: BASE 500, no condition (empty = any); BASE 470, based on the geographic boundary
+  Gipuzkoa; DISCOUNT 5%, based on the party type SCHOOL (a party type, not a boundary, not
+  a customer). (b) Donostia sits inside Gipuzkoa, so the Gipuzkoa row holds (containment
+  through the boundary hierarchy, the customer's address in Donostia); 500 and 470 compete,
+  the more specific 470 wins; the SCHOOL discount applies on top: 470 × 0.95 = 446.50.
+- **Q6 key (category rollup, maintenance; Vinoteca Lía, last 4 on 11-02).** (a) Rollup:
+  Wine gift packs → Gifts, Wine gift packs → Red wines (two parents, a network). The box:
+  Wine gift packs, primary, from 2026-11-01, open; Christmas from 2026-12-01 thru
+  2027-01-07 (exclusive), not primary. (b) Gifts, Red wines and Wines are ancestors,
+  reached through the rollup; a row there states the same fact twice, and the two drift
+  when the tree changes.

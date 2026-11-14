@@ -1061,3 +1061,33 @@ Misunderstandings and reinforce attempts, oldest first.
   grain the rule table lacks (shown as a hypothetical `order_role_limit` table, one row per
   kind + hat). The user's summary, fixed to "per order kind, not one order": understood,
   not cold, so no score change.
+
+### 2026-11-14: question round, pending (wording in `docs/round-2026-11-14.md`; order in TODO)
+- **Q2 key (the need, retest; Clínica Arén).** (a) Scanner: INTERNAL, PRODUCT, quantity 1,
+  required by 2027-03-01, budget 30,000, at the Gijón clinic facility (a product
+  requirement, product optional); a requirement role OWNER, Dr. Sanz, dated from creation.
+  Hearing checks: CUSTOMER, WORK, from 2027-02-01 (the need's date; "monthly" in the
+  description), at the Oviedo home facility; Residencia Olmo through a requirement role
+  (REQUESTER), not a column; no facility put in as a party. (b) Ours: origin = 'CUSTOMER'.
+  Theirs: type in ('customer product', 'customer work'), a list of values; a new kind or
+  origin multiplies the values and every such filter must be edited; the two questions stop
+  being independent, and the product subtype can't key off one axis.
+- **Q3 key (the commitment, retest; Colegio Faro).** (a) PO 410 line 2 → the wing's need,
+  200; PO 415 line 1 → the wing's need, 100 (the cap: 300 − 200); line 1 of PO 410 (desks)
+  nothing; on the lines, not the orders. (b) Yes: line 1 has 50 left; a second commitment row,
+  PO 415 line 1 → the library need, 50. One line can serve several needs, one need several
+  lines; the line's committed total (150) never above its quantity, each need's never above
+  the need.
+- **Q4 key (rules beside facts, retest cold; Imprenta Vela).** (a) SALES, BILL_TO,
+  BILL_TO_CUSTOMER, from the old date, open; SALES, BILL_TO, DISTRIBUTOR, from 2027-03-01,
+  open. "At most one" lives in the count's data-quality check (order role rows grouped by
+  order and hat, more than one party flagged). (b) The hat now has two rule rows, so a max
+  column sits on both and they can disagree (1 and 2); the count is per order and hat,
+  not per hat-and-standing-role pair (the grain: a value lives at the level it describes);
+  every hat without a limit leaves it empty.
+- **Q7 key (status, maintenance; Librería Onda, last 4 on 11-03).** (a) Order 720:
+  ORDER_APPROVED 2027-02-03. Line 1: ORDER_SHIPPED 2027-02-05. Line 2: ORDER_BACKORDERED
+  2027-02-05, ORDER_SHIPPED 2027-02-12. On 10 Feb line 2 is backordered: the latest row on
+  or before that date. Rows added, never updated. (b) The shipment is the fact, the status a
+  copy of it: trust the shipment and fix the status row's date to 13 Feb (and look for why
+  they disagree).

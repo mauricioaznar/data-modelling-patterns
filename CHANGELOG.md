@@ -3,6 +3,21 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-14
+
+**Built**
+- Round 2026-11-14 written (short) in `docs/round-2026-11-14.md`, keys in the Ch 2–4 logs.
+  Five retests from the 11-13 misses (party relationship + role, the need, the commitment,
+  rules beside facts cold, pricing conditions) and two maintenance (category rollup, last 4
+  on 11-02; order status, last 4 on 11-03).
+
+**Decisions**
+- None.
+
+**Next**
+- Grade round 2026-11-14 as the answers come back, then its distinctions.
+- Ch 4 overview: Requests and quotes (Figs 4.10–4.11), points 21–22.
+
 ## 2026-11-13
 
 **Built**

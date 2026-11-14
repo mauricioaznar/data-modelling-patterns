@@ -155,6 +155,22 @@ trackers as usual, then tick here.
 
 - [x] Next round (in round 2026-11-13, Q3): retest party role + role type (3) inside a relationship question: the dated `party_role` rows written beside the relationship rows, graded together, since each relationship points at them (the user's call, 2026-11-11)
 
+## Question round 2026-11-14 (short)
+
+All seven are in [docs/round-2026-11-14.md](docs/round-2026-11-14.md), short versions first,
+with no keys. The keys are in the Ch 2, Ch 3 and Ch 4 logs under "2026-11-14: question
+round, pending": **don't open those before grading**. Read each answer back, grade, log and
+update the trackers as usual, then tick here.
+
+- [ ] Q1 · Ch 2 · party relationship + type (3), party role (3) · retest: the type by who sells to whom; our own role row; a role outlives a relationship (Cafés Tueste, Granja Alta and Ana)
+- [ ] Q2 · Ch 4 · requirements: the need (3) · retest: the facility on every row, the party through a role, the single column's cost (Clínica Arén)
+- [ ] Q3 · Ch 4 · requirements: the commitment (3) · retest: the cap cold, on the line; one line, two needs (Colegio Faro, POs 410 and 415)
+- [ ] Q4 · Ch 4 · rules beside facts (2) · retest cold: why not a column (two rule rows for one hat) (Imprenta Vela, bill-to)
+- [ ] Q5 · Ch 3 · conditions (3) · retest: party type vs boundary, containment (Bicis Lezo, Donostia in Gipuzkoa)
+- [ ] Q6 · Ch 3 · category rollup · maintenance (last 4 on 11-02) (Vinoteca Lía, gift box)
+- [ ] Q7 · Ch 4 · status · maintenance (last 4 on 11-03) (Librería Onda, order 720)
+- [ ] Distinctions for the round (practice.md)
+
 ## Question round 2026-11-13 (short)
 
 All seven are in [docs/round-2026-11-13.md](docs/round-2026-11-13.md), short versions first,

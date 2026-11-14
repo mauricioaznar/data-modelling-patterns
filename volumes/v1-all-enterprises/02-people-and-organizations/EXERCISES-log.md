@@ -748,3 +748,14 @@ Misunderstandings and reinforce attempts, oldest first.
   exist; a role stands on its own (a supplier between contracts), so its dates can differ.
 - Score: party role + role type stays 3 (the rows cold, ours missing, (b) loose); party
   relationship + type 4 → 3 (agent for supplier).
+
+### 2026-11-14: question round, pending (wording in `docs/round-2026-11-14.md`; order in TODO)
+- **Q1 key (party relationship + type, party role; Cafés Tueste).** (a) Roles: Tueste
+  INTERNAL_ORGANIZATION, open; Granja Alta SUPPLIER from 2026-03-01, open; Ana AGENT from
+  2027-02-01. Relationships: SUPPLIER_RELATIONSHIP, Granja's SUPPLIER role → our
+  INTERNAL_ORGANIZATION role, from 2026-03-01 (she sells to us); DISTRIBUTION_CHANNEL, Ana's
+  AGENT role → ours, from 2027-02-01 (she sells our goods to others). The type is picked by
+  who sells what to whom. (b) The channel gets thru 2027-06-01 (exclusive); Ana's AGENT role
+  stays open. The relationship's from and to are FKs to role rows, and a role stands on its
+  own (an agent between deals), so its dates can differ from any one relationship's; the
+  relationship alone would lose that she's still an agent.
