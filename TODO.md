@@ -162,7 +162,7 @@ with no keys. The keys are in the Ch 2, Ch 3 and Ch 4 logs under "2026-11-14: qu
 round, pending": **don't open those before grading**. Read each answer back, grade, log and
 update the trackers as usual, then tick here.
 
-- [ ] Q1 · Ch 2 · party relationship + type (3), party role (3) · retest: the type by who sells to whom; our own role row; a role outlives a relationship (Cafés Tueste, Granja Alta and Ana)
+- [ ] Q1 · Ch 2 · party relationship + type (3), party role (3) · retest: the type by who sells to whom; our own role row; a role outlives a relationship (Cafés Tueste, Granja Alta and Ana) · answered 11-14, both 3 → 4: the types by who sells to whom and our own role cold; the role outlives the deal; Ana dated 2026-03-01 (slip)
 - [ ] Q2 · Ch 4 · requirements: the need (3) · retest: the facility on every row, the party through a role, the single column's cost (Clínica Arén)
 - [ ] Q3 · Ch 4 · requirements: the commitment (3) · retest: the cap cold, on the line; one line, two needs (Colegio Faro, POs 410 and 415)
 - [ ] Q4 · Ch 4 · rules beside facts (2) · retest cold: why not a column (two rule rows for one hat) (Imprenta Vela, bill-to)

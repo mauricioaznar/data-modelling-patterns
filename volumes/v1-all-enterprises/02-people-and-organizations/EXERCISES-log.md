@@ -759,3 +759,15 @@ Misunderstandings and reinforce attempts, oldest first.
   stays open. The relationship's from and to are FKs to role rows, and a role stands on its
   own (an agent between deals), so its dates can differ from any one relationship's; the
   relationship alone would lose that she's still an agent.
+
+### 2026-11-14: round 2026-11-14 Q1, Submodel 1 retest (party relationship + role; Cafés Tueste)
+- Short, both parts in one go. (a) Apply: our INTERNAL_ORGANIZATION role ✓ (the 11-13
+  miss), Granja Alta SUPPLIER from 2026-03-01 ✓, Ana AGENT ✓; SUPPLIER_RELATIONSHIP
+  SUPPLIER → us ✓, DISTRIBUTION_CHANNEL AGENT → us ✓, both cold (the 11-13 agent-for-supplier
+  slip fixed). Ana's role and channel dated 2026-03-01, not 2027-02-01: a copied date (slip,
+  not counted). Our role dated from the first deal ~ (it runs from our own start).
+- (b) Understand: the channel gets thru 2027-06-01, the AGENT role stays open, untouched ✓;
+  role and relationship are two separate facts, so she stays an agent with no deal ✓ cold.
+  "Still an agent, just not to us" ~ (the role is on our books, so she is ours to sign
+  again). Not asked, not named: the relationship's from and to are FKs to role rows.
+- Score: party relationship + type 3 → 4; party role + role type 3 → 4.
