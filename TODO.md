@@ -165,7 +165,7 @@ update the trackers as usual, then tick here.
 - [x] Q1 · Ch 4 · requirements: the need, two independent tag sets · new (0) (Hotel Brezo, towels and a stage) · answered 11-13, 0 → 3: the two tags cold; the hotel as a party (a facility), the customer as a column (a role); (b) reworded, half the cost
 - [x] Q2 · Ch 4 · requirements: the commitment · new (0) (Hotel Brezo, POs 95 and 97) · answered 11-13, 0 → 3: allocation vs promise cold; 100 for 80 (the cap)
 - [x] Q3 · Ch 2 · party role + role type · retest (3): the dated role rows beside the relationships (Academia Lumen, Clara Vidal) · answered 11-13, stays 3: Clara's rows cold, ours missing, (b) loose; AGENT for SUPPLIER drops party relationship 4 → 3
-- [ ] Q4 · Ch 3 · inventory item · retest (3): a move updates quantity on hand in place, no dates (Ferretería Duna, screws 4×40)
+- [x] Q4 · Ch 3 · inventory item · retest (3): a move updates quantity on hand in place, no dates (Ferretería Duna, screws 4×40) · answered 11-13, 3 → 4: updated in place, no dates, cold; the history in shipments
 - [ ] Q5 · Ch 4 · rules beside facts · reinforce (2) then fresh: the count in the check, why not a column (Taller Roble, order 700)
 - [ ] Q6 · Ch 3 · PRODUCT + good/service · maintenance (last 4 on 11-01) (Jardines Musgo)
 - [ ] Q7 · Ch 3 · feature prices add on top · maintenance (last 4 on 11-01) (Sillas Nogal)

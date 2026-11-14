@@ -1191,3 +1191,12 @@ Scores: price components 2 → 3; feature prices stay at 2.
   (b) A feature's price components compete only with that feature's (most specific wins:
   TRADE over any), and the sum of the winners adds on top of the product's base; the base
   and the feature price answer different parts of the price.
+
+### 2026-11-13: round 2026-11-13 Q4, Submodel 3 retest (inventory item; Ferretería Duna, screws 4×40)
+- (a) Apply: before, one NON_SERIALIZED item, 80, Calle Mayor; after, the same row at 50
+  and a new Alicante row at 30, no dates, no lot invented ✓ cold (the 11-11 versioning fixed).
+- (b) Analyze: the history lives in shipments ✓ (and production runs ~, Ch 6's work efforts,
+  a plausible receipt source); dated stock rows would state the same fact a second time
+  and could disagree with the events ✓. Not named: one stock split into many ids, and
+  rows pointing at a closed item.
+- Score: inventory item 3 → 4.
