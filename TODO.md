@@ -169,7 +169,7 @@ update the trackers as usual, then tick here.
 - [x] Q5 · Ch 4 · rules beside facts · reinforce (2) then fresh: the count in the check, why not a column (Taller Roble, order 700) · answered 11-13, stays 2: the check and flag right (warm); why not a column not known, given
 - [ ] Q6 · Ch 3 · PRODUCT + good/service · maintenance (last 4 on 11-01) (Jardines Musgo)
 - [ ] Q7 · Ch 3 · feature prices add on top · maintenance (last 4 on 11-01) (Sillas Nogal)
-- [ ] Distinctions for the round (practice.md)
+- [ ] Distinctions for the round (practice.md): include grain (the user's idea, Q5: a value lives at the level it describes; a per-pair max vs a per-hat total), unless a card already covers it
 
 ## Question round 2026-11-11 (all seven on the phone, short)
 
