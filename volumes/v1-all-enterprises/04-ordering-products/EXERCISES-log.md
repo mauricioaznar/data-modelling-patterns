@@ -1056,3 +1056,8 @@ Misunderstandings and reinforce attempts, oldest first.
 - The user said they might be low and struggling to recall; offered to stop, they chose
   to carry on.
 - Score: rules beside facts stays 2 (the why still missing; the rest warm).
+- Discussion after grading: the user asked why not a max per pairing row. Taught grain:
+  per-pair maxes allow 2 employees + 2 agents; the total belongs at order kind + hat, a
+  grain the rule table lacks (shown as a hypothetical `order_role_limit` table, one row per
+  kind + hat). The user's summary, fixed to "per order kind, not one order": understood,
+  not cold, so no score change.
