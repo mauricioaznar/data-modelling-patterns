@@ -1109,3 +1109,15 @@ Misunderstandings and reinforce attempts, oldest first.
 - Score: the need 3 → 2 (the role and column gaps reappeared; the tags still cold).
   Reinforce next round: requirement role rows written for the people named, the facility
   on every row, one axis's filter on both designs.
+
+### 2026-11-14: round 2026-11-14 Q3, Submodel 4 retest (the commitment; Colegio Faro)
+- Short, both parts in one go. (a) Apply: PO 410 line 2 → the wing's need, 200 ✓; PO 415
+  line 1 → 100 ✓ cold (the cap: 300 − 200, the 11-13 miss); on the lines ✓; the desks line
+  left out ✓. The need written too: INTERNAL, PRODUCT, quantity 300 ✓ (the dropped quantity
+  fixed), by 2027-09-01, the new wing as its facility ✓.
+- (b) Understand: yes, 50 of line 1's 150 uncommitted ✓; "50 are on stock" ~ (ordered, not
+  yet stock). The row that says so not written: a new commitment, PO 415 line 1 → the
+  library's need, 50, so one line serves two needs. Read "what row says so" as what shows
+  the 50 are free (the existing commitment beside the line): a fair reading, so the
+  ambiguity is about half Claude's.
+- Score: the commitment 3 → 4 (the cap and the line cold, the retest's points).
