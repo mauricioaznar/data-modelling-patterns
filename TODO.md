@@ -165,7 +165,7 @@ update the trackers as usual, then tick here.
 - [x] Q1 · Ch 2 · party relationship + type (3), party role (3) · retest: the type by who sells to whom; our own role row; a role outlives a relationship (Cafés Tueste, Granja Alta and Ana) · answered 11-14, both 3 → 4: the types by who sells to whom and our own role cold; the role outlives the deal; Ana dated 2026-03-01 (slip)
 - [x] Q2 · Ch 4 · requirements: the need (3) · retest: the facility on every row, the party through a role, the single column's cost (Clínica Arén) · answered 11-14, 3 → 2: the tags cold; no requirement roles (Sanz, Olmo), Gijón missing; (b) no filters, "columns" again
 - [x] Q3 · Ch 4 · requirements: the commitment (3) · retest: the cap cold, on the line; one line, two needs (Colegio Faro, POs 410 and 415) · answered 11-14, 3 → 4: 200 and 100 on the lines cold; (b) the 50 free ✓, the library row not written (wording half Claude's)
-- [ ] Q4 · Ch 4 · rules beside facts (2) · retest cold: why not a column (two rule rows for one hat) (Imprenta Vela, bill-to)
+- [x] Q4 · Ch 4 · rules beside facts (2) · retest cold: why not a column (two rule rows for one hat) (Imprenta Vela, bill-to) · answered 11-14, 2 → 3: the check and the why (per pair, not per hat) cold at last; the old row dated from 1 Mar 27
 - [ ] Q5 · Ch 3 · conditions (3) · retest: party type vs boundary, containment (Bicis Lezo, Donostia in Gipuzkoa)
 - [ ] Q6 · Ch 3 · category rollup · maintenance (last 4 on 11-02) (Vinoteca Lía, gift box)
 - [ ] Q7 · Ch 4 · status · maintenance (last 4 on 11-03) (Librería Onda, order 720)

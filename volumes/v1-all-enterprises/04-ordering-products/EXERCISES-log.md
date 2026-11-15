@@ -1121,3 +1121,15 @@ Misunderstandings and reinforce attempts, oldest first.
   the 50 are free (the existing commitment beside the line): a fair reading, so the
   ambiguity is about half Claude's.
 - Score: the commitment 3 → 4 (the cap and the line cold, the retest's points).
+
+### 2026-11-14: round 2026-11-14 Q4, Submodel 1 retest cold (rules beside facts; Imprenta Vela)
+- Short, both parts in one go. (a) Apply: BILL_TO + BILL_TO_CUSTOMER and BILL_TO +
+  DISTRIBUTOR rows ✓, the DISTRIBUTOR from 2027-03-01 ✓; the BILL_TO_CUSTOMER row also dated
+  from 2027-03-01 ✗ (it was in force before: its old from, open, untouched); the order kind
+  SALES not written ~. "At most one" in a data-quality check ✓ cold.
+- (b) Analyze: "each row describes what is allowed for a bill-to, not how many"; with several
+  standing roles per hat, a max column is the max for that pair, not for the bill-to ✓ cold,
+  the fifth round's first (the grain, from 11-13's talk, unprompted). A separate per-hat
+  table with a max is the right grain for a limit kept as data ✓ (11-13's hypothetical
+  `order_role_limit`); ours keeps it in the check. "Could disagree" not said, implied.
+- Score: rules beside facts 2 → 3 (the why and the check cold; the old row's date wrong).
