@@ -1229,3 +1229,13 @@ Scores: price components 2 → 3; feature prices stay at 2.
   2027-01-07 (exclusive), not primary. (b) Gifts, Red wines and Wines are ancestors,
   reached through the rollup; a row there states the same fact twice, and the two drift
   when the tree changes.
+
+### 2026-11-14: round 2026-11-14 Q5, Submodel 4 retest (conditions; Bicis Lezo)
+- Short, both parts in one go. (a) Apply: BASE 500 no condition, BASE 470 geographic
+  boundary Gipuzkoa, DISCOUNT 5% party type SCHOOL, all on the Lezo bike ✓ cold (the 11-13
+  boundary-for-party-type slip fixed). "What kind of thing it points at" called vague: fair,
+  Claude's wording (meant the condition's kind, which the user gave anyway).
+- (b) Analyze: 470 − 5% of 470 = 446.50 ✓; the Gipuzkoa base used for a school in Donostia
+  (containment) ✓, not said aloud; "one base only, discounts and surcharges stack" ✓. Which
+  base wins and why (the more specific) not said.
+- Score: conditions 3 → 4.
