@@ -1239,3 +1239,14 @@ Scores: price components 2 → 3; feature prices stay at 2.
   (containment) ✓, not said aloud; "one base only, discounts and surcharges stack" ✓. Which
   base wins and why (the more specific) not said.
 - Score: conditions 3 → 4.
+
+### 2026-11-14: round 2026-11-14 Q6, Submodel 1 maintenance (category rollup; Vinoteca Lía, last 4 on 11-02)
+- Short, both parts in one go. (a) Apply: rollup Red wines → Wine gift packs and Gifts →
+  Wine gift packs ✓ (two parents); the box in Wine gift packs from 2026-11-01, primary, open
+  ✓; in Christmas from 2026-12-01 thru 2027-01-07 ✓ (exclusive, cold). The Christmas row
+  also says "primary, no thru date", word for word from row 1, beside its own thru: a copy
+  slip, not counted (the second copied row today, after Q1's dates).
+- (b) Understand: Gifts and Wines are parents, a row there would count the box twice ✓.
+  "A product must go on the leaves" ~: it may sit on any category; the point is that the
+  ancestors are reached through the rollup, so a row there says the same thing twice.
+- Score: category rollup holds 4.

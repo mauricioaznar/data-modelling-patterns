@@ -167,7 +167,7 @@ update the trackers as usual, then tick here.
 - [x] Q3 · Ch 4 · requirements: the commitment (3) · retest: the cap cold, on the line; one line, two needs (Colegio Faro, POs 410 and 415) · answered 11-14, 3 → 4: 200 and 100 on the lines cold; (b) the 50 free ✓, the library row not written (wording half Claude's)
 - [x] Q4 · Ch 4 · rules beside facts (2) · retest cold: why not a column (two rule rows for one hat) (Imprenta Vela, bill-to) · answered 11-14, 2 → 3: the check and the why (per pair, not per hat) cold at last; the old row dated from 1 Mar 27
 - [x] Q5 · Ch 3 · conditions (3) · retest: party type vs boundary, containment (Bicis Lezo, Donostia in Gipuzkoa) · answered 11-14, 3 → 4: boundary and party type cold, 446.50, containment applied
-- [ ] Q6 · Ch 3 · category rollup · maintenance (last 4 on 11-02) (Vinoteca Lía, gift box)
+- [x] Q6 · Ch 3 · category rollup · maintenance (last 4 on 11-02) (Vinoteca Lía, gift box) · answered 11-14, holds 4: two parents and the exclusive thru cold; Christmas "primary" copied from row 1 (slip)
 - [ ] Q7 · Ch 4 · status · maintenance (last 4 on 11-03) (Librería Onda, order 720)
 - [ ] Distinctions for the round (practice.md)
 
