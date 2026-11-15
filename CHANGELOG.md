@@ -10,12 +10,19 @@ and any decisions made.
   Five retests from the 11-13 misses (party relationship + role, the need, the commitment,
   rules beside facts cold, pricing conditions) and two maintenance (category rollup, last 4
   on 11-02; order status, last 4 on 11-03).
+- Round 2026-11-14 graded: party relationship + type 3 → 4 and party role 3 → 4 (Q1);
+  the need 3 → 2 (Q2: no requirement roles, a facility missing, the fused column pictured
+  as columns); the commitment 3 → 4 (Q3); rules beside facts 2 → 3 (Q4: the why cold at
+  last, the old rule row redated); conditions 3 → 4 (Q5); category rollup and status hold
+  4 (Q6, Q7). Card 13 rewritten (mantra names the facility, roles and the cap; dates;
+  real Traps); Traps for D10 and D20, no new distinction card.
 
 **Decisions**
 - None.
 
 **Next**
-- Grade round 2026-11-14 as the answers come back, then its distinctions.
+- Re-import the Anki export (card 13, D10, D20 changed).
+- Next round: reinforce the need (2), retest rules beside facts (3).
 - Ch 4 overview: Requests and quotes (Figs 4.10–4.11), points 21–22.
 
 ## 2026-11-13

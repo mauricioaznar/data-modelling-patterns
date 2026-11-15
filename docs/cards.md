@@ -1943,7 +1943,8 @@ options; one that misses a fact goes to its submodel card instead.
 - **Trap:** the annex made the ship-to party (2026-11-01); an e-mail hung off the role in an
   invented `order_role_contact` table (2026-11-01); the Laredo hotel made a requirement's
   party (a facility, needed at) and the customer a party column (a requirement role)
-  (2026-11-13).
+  (2026-11-13); Dr. Sanz and Residencia Olmo left off the needs, no requirement role rows,
+  and the scanner's clinic missing (2026-11-14).
 
 ### Distinction D11 · Payer or receiver? (V1 Ch 4)
 - **Cue:** "The firm pays; the bookcase goes to Laura's home, and she uses it."
@@ -2117,7 +2118,9 @@ options; one that misses a fact goes to its submodel card instead.
   the menu with no pick (2026-11-10); "one placing customer" placed in `order_role_rule`,
   though it holds no count, with no check named and no reason against the column
   (2026-11-11); why not a column not known, the salespeople's 2 placed in the check only
-  after the reinforce (2026-11-13).
+  after the reinforce (2026-11-13); a new standing role for BILL_TO added, and the old
+  BILL_TO_CUSTOMER row redated from the new one's start, as if it were new too: the old row
+  keeps its own from, untouched (2026-11-14).
 
 ### Distinction D21 · Tree or network? (V1 Ch 3)
 - **Cue:** "Wood rolls up to materials; the Gift sets category sits under both Seasonal and

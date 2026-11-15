@@ -1133,3 +1133,13 @@ Misunderstandings and reinforce attempts, oldest first.
   table with a max is the right grain for a limit kept as data ✓ (11-13's hypothetical
   `order_role_limit`); ours keeps it in the check. "Could disagree" not said, implied.
 - Score: rules beside facts 2 → 3 (the why and the check cold; the old row's date wrong).
+
+### 2026-11-14: round 2026-11-14 Q7, Submodel 3 maintenance (status; Librería Onda, last 4 on 11-03)
+- Short, both parts in one go. (a) Apply: ORDER_APPROVED 2027-02-03 on the order,
+  ORDER_SHIPPED 2027-02-05 on line 1, ORDER_BACKORDERED 2027-02-05 then ORDER_SHIPPED
+  2027-02-12 on line 2 ✓ cold. On 10 Feb: backordered, the latest ✓; reasoned through when
+  the row was entered ~ (the as-of reads the status date: the latest on or before 10 Feb);
+  a status dated ahead of the event called wrong, since a status records what happened ✓.
+- (b) Evaluate: the shipment is the fact, the status its copy; fix the copy ✓. Looking for
+  why they disagree not said.
+- Score: status holds 4.

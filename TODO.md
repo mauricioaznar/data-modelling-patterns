@@ -168,8 +168,9 @@ update the trackers as usual, then tick here.
 - [x] Q4 · Ch 4 · rules beside facts (2) · retest cold: why not a column (two rule rows for one hat) (Imprenta Vela, bill-to) · answered 11-14, 2 → 3: the check and the why (per pair, not per hat) cold at last; the old row dated from 1 Mar 27
 - [x] Q5 · Ch 3 · conditions (3) · retest: party type vs boundary, containment (Bicis Lezo, Donostia in Gipuzkoa) · answered 11-14, 3 → 4: boundary and party type cold, 446.50, containment applied
 - [x] Q6 · Ch 3 · category rollup · maintenance (last 4 on 11-02) (Vinoteca Lía, gift box) · answered 11-14, holds 4: two parents and the exclusive thru cold; Christmas "primary" copied from row 1 (slip)
-- [ ] Q7 · Ch 4 · status · maintenance (last 4 on 11-03) (Librería Onda, order 720)
-- [ ] Distinctions for the round (practice.md)
+- [x] Q7 · Ch 4 · status · maintenance (last 4 on 11-03) (Librería Onda, order 720) · answered 11-14, holds 4: the four rows and backordered on 10 Feb cold; the fact wins
+- [x] Distinctions for the round (practice.md): written 11-14, no new card (each mix-up already on one); Traps for D10 (Q2: no requirement roles) and D20 (Q4: the old rule row redated); card 13's Trap (Q2, written mid-round). Copy slips (Q1, Q6) get no card
+- [ ] Next round: reinforce the need (2): requirement role rows for the people named, the facility on every row, one axis's filter on both designs (values, not columns); retest rules beside facts (3): the old rule row keeps its own from
 
 ## Question round 2026-11-13 (short)
 
