@@ -798,3 +798,14 @@ Misunderstandings and reinforce attempts, oldest first.
   "Still an agent, just not to us" ~ (the role is on our books, so she is ours to sign
   again). Not asked, not named: the relationship's from and to are FKs to role rows.
 - Score: party relationship + type 3 → 4; party role + role type 3 → 4.
+
+### 2026-11-16: question round, pending (wording in `docs/round-2026-11-16.md`; order in TODO)
+- **Q7 key (purpose, maintenance; Ferretería Norte, last 4 on 11-04).** (a) Postal address
+  Calle Mar 5 (a contact mechanism); `party_contact_mechanism` Bar Ola → Calle Mar 5 from
+  2026-03-01, open; purposes on that link: BILLING 2026-03-01 thru 2027-06-01, SHIPPING from
+  2027-01-01, open. Calle Sol 9; `party_contact_mechanism` Bar Ola → Calle Sol 9 from
+  2027-06-01; purpose BILLING from 2027-06-01. The Calle Mar link stays open. (b) One link
+  serves several purposes at once, each starting and ending on its own date; a column holds
+  one value and no history, and ending billing would mean ending (or overwriting) the link.
+  Full (c): the typo edits the address row in place (no new rows, every party sharing it
+  fixed at once); the move adds a link and closes a purpose, keeping history.

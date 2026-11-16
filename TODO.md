@@ -155,6 +155,23 @@ trackers as usual, then tick here.
 
 - [x] Next round (in round 2026-11-13, Q3): retest party role + role type (3) inside a relationship question: the dated `party_role` rows written beside the relationship rows, graded together, since each relationship points at them (the user's call, 2026-11-11)
 
+## Question round 2026-11-16 (short)
+
+All seven are in [docs/round-2026-11-16.md](docs/round-2026-11-16.md), short versions first,
+with no keys. The keys are in the Ch 2, Ch 3 and Ch 4 logs under "2026-11-16: question round,
+pending": **don't open those before grading**. Read each answer back, grade, log and
+update the trackers as usual, then tick here.
+
+- [ ] Q1 · Ch 4 · requirements: the need (2) · reinforce: the facility, OWNER vs APPROVER, facility vs address (Clínica Vega)
+- [ ] Q2 · Ch 4 · requirements: roles and status (2) · retest: each row on its own requirement, no rollup (Museo Alba)
+- [ ] Q3 · Ch 4 · rules beside facts (3) · retest: the as-of reading, rules in force on the order date (Bodegas Cerro)
+- [ ] Q4 · Ch 4 · requirements: desired features (3) · retest: must vs nice, the product picked later (Muebles Roble)
+- [ ] Q5 · Ch 3 · price built from components (3) · retest: name the order line's column (Relojes Faro, order 820)
+- [ ] Q6 · Ch 4 · terms · maintenance (last 4 on 11-03) (Café Duna, PO 830)
+- [ ] Q7 · Ch 2 · purpose (dated, within link) · maintenance (last 4 on 11-04) (Ferretería Norte)
+- [ ] Distinctions for the round (practice.md)
+- Scoped roles (3, from 11-15 Q6) waits for the next round (spread: Q3 is on order parties).
+
 ## Question round 2026-11-15 (short)
 
 All seven are in [docs/round-2026-11-15.md](docs/round-2026-11-15.md), short versions first,
@@ -168,8 +185,8 @@ update the trackers as usual, then tick here.
 - [x] Q4 · Ch 4 · requirements: roles and status (0) · first test, roles warm after Q1: OWNER per part, a part's status not its parent's (Colegio Mar) · answered 11-15, 0 → 2: OWNER both ✓, undated; the refit's status on the lighting; the parent question unanswered
 - [x] Q5 · Ch 3 · price built from components (3) · retest: the paid price on the order, not the components or the product (Cafeteras Lume) · answered 11-15, stays 3: the rows and the snapshot's why cold; the place only implied (the 365 given away by Claude's wording)
 - [x] Q6 · Ch 4 · scoped roles · maintenance (last 4 on 11-03) (Viveros Norte, order 750) · answered 11-15, 4 → 3: BILL_TO and TAKEN_BY missing; the line mechanisms ✓ unasked
-- [ ] Q7 · Ch 4 · terms · maintenance (last 4 on 11-03) (Imprenta Duna, PO 760)
-- [ ] Distinctions for the round (practice.md)
+- [x] Q7 · Ch 4 · terms · maintenance (last 4 on 11-03) (Imprenta Duna, PO 760) · not asked: the user started a new round on 11-16; terms moved to round 2026-11-16 Q6, fresh scenario
+- [x] Distinctions for the round (practice.md): D27 and D28, written 11-15
 
 ## Question round 2026-11-14 (short)
 

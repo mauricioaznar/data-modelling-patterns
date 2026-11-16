@@ -1232,3 +1232,51 @@ Misunderstandings and reinforce attempts, oldest first.
   SHIP_TO role on each line ✓, the party on each not named ~ (implied by the addresses);
   unasked, each line's SHIPPING contact mechanism, the hotel's and Carlos's homes ✓. (b)
   lines ship separately; one ship-to on the order loses that ✓. 4 → 3.
+
+### 2026-11-16: question round, pending (wording in `docs/round-2026-11-16.md`; order in TODO)
+- **Q1 key (the need, reinforce; Clínica Vega).** (a) `requirement`: INTERNAL, PRODUCT,
+  "6 examination couches", quantity 6, required by 2027-06-01, budget 4800, reason "the old
+  ones failed inspection", created 2027-02-05, `facility_id` the Sevilla clinic (a Ch 2
+  facility row). A `product_requirement` row (product null). `requirement_role`: Nuria
+  REQUESTER from 2027-02-05; Raúl OWNER from 2027-02-05 ("answers for it"); Elena APPROVER
+  from 2027-02-12 ("signed it off"). (b) An address is how to reach a place, a facility is
+  the place itself: a building we have, with its rooms, its stock, its parties and its own
+  addresses (Ch 2, facility vs postal address). Storing the address loses the link to the
+  clinic (no "every need of the Sevilla clinic"), breaks when the clinic's address changes
+  or is fixed, and confuses where it's needed with where it's delivered (chosen on the
+  order). Full: Raúl's OWNER thru 2027-04-01, Sara OWNER from 2027-04-01; (c) a column holds
+  one owner with no dates: the hand-over overwrites Raúl, and a second approver needs a
+  new column.
+- **Q2 key (requirement roles + status; Museo Alba).** (a) On the room: Inés OWNER from
+  2027-03-01; statuses REQUIREMENT_CREATED 2027-03-01, REQUIREMENT_APPROVED 2027-03-15. On
+  the alarms (`part_of_requirement_id` the room): Pablo OWNER from his start (2027-03-01 or
+  when stated), REQUIREMENT_APPROVED 2027-03-20 (a CREATED row welcome). (b) No: the room's
+  own latest status is still APPROVED. The parts' FULFILLED rows (cases 05-01, alarms 05-10)
+  say nothing of the parent's. Someone records REQUIREMENT_FULFILLED on the room when it's
+  confirmed (10 May or later); the model doesn't roll statuses up, because a parent may need
+  more than its parts (the room's own sign-off) and a status is a recorded fact, not a
+  sum. Full: cases REQUIREMENT_CANCELLED 2027-03-25; (c) parents with no open part (every
+  part's latest status FULFILLED or CANCELLED) whose own latest status isn't.
+- **Q3 key (rules beside facts, retest; Bodegas Cerro).** (a) `order_role_rule`: (SALES,
+  PLACED_BY, CUSTOMER, from 2022-01-01, open); (SALES, PLACED_BY, DISTRIBUTOR, from
+  2027-03-01, open). Nothing closes: a thru on the CUSTOMER row is wrong. (b) The check
+  reads, for each order, the SALES + PLACED_BY rules in force on the order date. 801
+  (2027-02-10): only the CUSTOMER row is in force; Vinos Ruta holds DISTRIBUTOR, so 801 is
+  flagged. 802 (2027-04-05): both rows in force; the DISTRIBUTOR row matches, so 802 passes.
+  Running it "today" changes nothing: the order date picks the rules. Full: the CUSTOMER
+  row thru 2028-01-01; 803 flagged (only DISTRIBUTOR in force on 2028-03-03); (c) editing
+  the row rewrites history: 801-era orders by customers would be judged by the new rule.
+- **Q4 key (desired features; Muebles Roble).** (a) `requirement` CUSTOMER, PRODUCT, quantity
+  15, by 2027-09-01, `facility_id` the Valencia office; `product_requirement` with
+  `product_id` null; `desired_feature`: armrests `optional_ind` false, headrest
+  `optional_ind` true (both Ch 3 `product_feature` rows). (b) `product_requirement.product_id`
+  set to the Ergo 300. The desired features stay: they record what the customer asked for,
+  so the pick can be checked against them (and a later pick, too). Full: Despacho Lago
+  REQUESTER from its date; (c) Ch 3's `product_feature_applicability` for the Ergo 300 and
+  armrests (standard or optional, in force): the must needs a row; none = it fails the need.
+- **Q6 key (terms, maintenance; Café Duna, PO 830).** (a) `order_term` on line 1:
+  DELIVERY_WITHIN_DAYS 5. `order_adjustment` on line 2: DISCOUNT, percentage 3. `order_term`
+  on the order: PAYMENT_DUE_DAYS 60. `order_adjustment` on the order: SHIPPING_AND_HANDLING,
+  amount 12. (b) A term is an agreed condition read through its type, not money: the 60
+  days changes no price; the €12 and the 3% change what the order costs. Full (c): nothing
+  on the order; the delivery date lives on the shipment (Ch 5), compared with the term.

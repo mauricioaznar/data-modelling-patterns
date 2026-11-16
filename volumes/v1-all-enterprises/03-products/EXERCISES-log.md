@@ -1271,3 +1271,15 @@ Scores: price components 2 → 3; feature prices stay at 2.
   lives only implied ("the order"), the line's unit price and the surcharge as an
   adjustment not named ~; a product column can't vary by feature, place or date not said ~.
   Neither old slip (on the component, on the product). Stays 3: name the place next time.
+
+### 2026-11-16: question round, pending (wording in `docs/round-2026-11-16.md`; order in TODO)
+- **Q5 key (price built from components, retest; Relojes Faro).** (a) `price_component`
+  BASE_PRICE 200 for the Classic, from its start, open; DISCOUNT price 20 (an amount) for
+  the Classic, from 2027-12-01 thru 2028-01-01 (exclusive). 10 Dec: 200 − 20 = 180; 10 Jan:
+  200 (the discount out of force). No price column on the product. (b) `order_item.unit_price`
+  on order 820's line 1: 180. In January it still shows 180: the line is the agreed fact, a
+  snapshot; the components are the catalogue's rules and move on without touching it. Full:
+  a feature price component 30 for engraving; 210 with engraving (or the engraving its own
+  line at 30, ordered for line 1, the watch at 180); (c) a component: one dated row, every
+  December order gets it, and quotes show it; an adjustment on each order needs keying 31
+  days of orders and lets one be missed (an adjustment is for what's agreed on one order).
