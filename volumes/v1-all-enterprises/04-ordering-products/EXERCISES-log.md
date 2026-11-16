@@ -1204,7 +1204,7 @@ Misunderstandings and reinforce attempts, oldest first.
 ### 2026-11-15: round 2026-11-15 Q2, Requirements first test (desired features; Fitness Norte)
 - Cold. (a) CUSTOMER + PRODUCT, quantity 10, by 2027-05-01, the Bilbao gym facility ✓
   (the facility at last); a features table hanging off the need, one row per feature ✓
-  (named "requirement-feature", the model's  ~); must vs nice not
-  written ✗ (: incline false, monitor true); the product subtype with no
+  (named "requirement-feature", the model's `desired_feature` ~); must vs nice not
+  written ✗ (`optional_ind`: incline false, monitor true); the product subtype with no
   product not named ~; Gimnasio Atlas's REQUESTER role not written (not asked). (b) the
   features list what any product must satisfy, no product picked ✓. 0 → 3.
