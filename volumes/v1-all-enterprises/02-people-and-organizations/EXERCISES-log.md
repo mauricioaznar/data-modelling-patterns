@@ -760,6 +760,20 @@ Misunderstandings and reinforce attempts, oldest first.
   own (an agent between deals), so its dates can differ from any one relationship's; the
   relationship alone would lose that she's still an agent.
 
+### 2026-11-15: extra Q7, pending (wording in `docs/round-2026-11-14.md`, Extra Q7)
+- **Key (specific vs generic relationships; Escuela de Danza Brisa).** (a) Only the
+  employment needs more: it has an attribute of its own (the rate) that changes, so the
+  relationship stays in `party_relationship` (EMPLOYMENT, Iván's EMPLOYEE role → our
+  INTERNAL_ORGANIZATION role, from 2027-02-01, open), the `employment` subtype shares its key,
+  and the rate is a dated child: 18 from 2027-02-01 thru 2027-06-01 (exclusive), 20 from
+  2027-06-01, open; the latest current. A rate column on the subtype would hold one value
+  and lose the history. The PARTNERSHIP (Teatro Sur) and SUPPLIER_RELATIONSHIP (Calzados
+  Punta) are rows in the shared table only: no attributes of their own. (b) Gain: readable
+  tables and columns or FKs specific to each kind. Cost: the from/thru dates and role FKs
+  repeated per table, a new table for every new kind, and every model that points at a
+  relationship (a communication event, Ch 2) needs an FK per kind; "all of Iván's
+  relationships" becomes a union. The fix for readability is a view per kind.
+
 ### 2026-11-14: round 2026-11-14 Q1, Submodel 1 retest (party relationship + role; Cafés Tueste)
 - Short, both parts in one go. (a) Apply: our INTERNAL_ORGANIZATION role ✓ (the 11-13
   miss), Granja Alta SUPPLIER from 2026-03-01 ✓, Ana AGENT ✓; SUPPLIER_RELATIONSHIP
