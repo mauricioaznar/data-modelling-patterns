@@ -1216,3 +1216,12 @@ Misunderstandings and reinforce attempts, oldest first.
   SALES + SALESPERSON rules in force on the order date (2028-02-15), which is only #2; Ana
   holds EMPLOYEE, not CONTRACTOR, so no in-force rule matches and 770 is flagged. #1 is
   out of force that day. The as-of reading not shown: stays 3.
+
+### 2026-11-15: round 2026-11-15 Q4, Requirements first test (roles and status; Colegio Mar)
+- Roles warm after Q1. (a) Pilar and Jordi both OWNER ✓ (which requirement each is on left
+  implied ~; no from dates ✗). The APPROVED status put on the lighting ✗ (the refit was
+  approved); the creation date read from the requirement's own column ✓ (fair: the column
+  exists; a CREATED status row would start the history). (b) The lighting's status row on
+  1 Mar ✓ ("completed" for REQUIREMENT_FULFILLED ~); the status a copy, the fact in the work
+  effort (Ch 6) ✓ unprompted. Whether the refit is done not answered ✗ (no: its own latest
+  status is APPROVED and the flooring is open; a part's status isn't its parent's). 0 → 2.
