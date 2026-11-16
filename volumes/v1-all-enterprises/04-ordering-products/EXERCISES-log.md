@@ -1191,3 +1191,12 @@ Misunderstandings and reinforce attempts, oldest first.
   (b) A term is an agreed condition, not money: the 5% may never apply, and it changes no
   price now; an adjustment changes what the order costs. Full (c): once late, the penalty
   becomes money on a later document (an invoice or credit, Ch 7), not on the order.
+
+### 2026-11-15: round 2026-11-15 Q1, Requirements reinforce (the need; Hoteles Brisa)
+- Warm (the teach came first). (a) INTERNAL + PRODUCT, quantity, required by, budget and
+  creation date ✓; Marta a REQUESTER role row from 2027-01-10 ✓ (role rows written, the
+  11-14 miss fixed); Luis typed APPROVER ✗ ("answers for it" is OWNER), no from date; the
+  Cádiz hotel facility missing ✗ (third time, right after the teach). (b) Ours filters the
+  kind alone, theirs lists every value with product in it, a new origin multiplies the
+  values and every filter must be edited ✓ (filters described, not written; "one row" for
+  one column ~). Stays 2: retest cold next round (the facility, OWNER vs APPROVER).

@@ -162,7 +162,7 @@ with no keys. The keys are in the Ch 3 and Ch 4 logs under "2026-11-15: question
 pending": **don't open those before grading**. Read each answer back, grade, log and
 update the trackers as usual, then tick here.
 
-- [ ] Q1 · Ch 4 · requirements: the need (2) · reinforce, warm: role rows for the people named, the facility, one axis's filter on both designs (Hoteles Brisa)
+- [x] Q1 · Ch 4 · requirements: the need (2) · reinforce, warm: role rows for the people named, the facility, one axis's filter on both designs (Hoteles Brisa) · answered 11-15, stays 2: role rows and the filter's cost ✓; Luis APPROVER for OWNER, the facility missing again
 - [ ] Q2 · Ch 4 · requirements: desired features (0) · first test: product optional, features must or nice (Fitness Norte)
 - [ ] Q3 · Ch 4 · rules beside facts (3) · retest: the old rule row keeps its own from (Editorial Pino, salesperson)
 - [ ] Q4 · Ch 4 · requirements: roles and status (0) · first test, roles warm after Q1: OWNER per part, a part's status not its parent's (Colegio Mar)
