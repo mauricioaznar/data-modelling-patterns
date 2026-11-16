@@ -3,6 +3,31 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-15
+
+**Built**
+- Extra Q7 (maintenance, short; Escuela de Danza Brisa): specific vs generic holds 4. The
+  rate a dated child off the relationship, called "the subtype" (cleared up: EMPLOYMENT is
+  a type row; a subtype table only for fixed attributes). Key's direction fixed to the seed's.
+- Round 2026-11-15 written (short) in `docs/round-2026-11-15.md`, keys in the Ch 3–4 logs.
+  Q1 graded: the need stays 2 (reinforce; role rows ✓, Luis typed APPROVER for OWNER, the
+  facility missing). Q2: desired features 0 → 3 (must vs nice missed). Q3: rules beside
+  facts stays 3 (dated rows cold; the check read via the expired row, not the rules in force
+  on the order date). Q4: requirement roles + status 0 → 2 (the refit's APPROVED on the
+  lighting, roles undated, the parent question unanswered). Q5–Q7 open.
+- Distinctions D27 (a row, a column or a value?) and D28 (what the product offers or what
+  the customer insists on?); Anki at 88 cards.
+
+**Decisions**
+- Loose modelling terms get a word check in feedback, not counted against the grade (the
+  user's wish).
+
+**Next**
+- Round 2026-11-15: Q5–Q7, then distinctions.
+- Re-import the Anki export (D27, D28).
+- Next round: retest the need (facility, OWNER), requirement roles + status (each on its
+  own requirement), rules beside facts (the as-of reading), desired features (must vs nice).
+
 ## 2026-11-14
 
 **Built**
