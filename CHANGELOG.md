@@ -14,7 +14,9 @@ and any decisions made.
   facility missing). Q2: desired features 0 → 3 (must vs nice missed). Q3: rules beside
   facts stays 3 (dated rows cold; the check read via the expired row, not the rules in force
   on the order date). Q4: requirement roles + status 0 → 2 (the refit's APPROVED on the
-  lighting, roles undated, the parent question unanswered). Q5–Q7 open.
+  lighting, roles undated, the parent question unanswered). Q5: price built from
+  components stays 3 (the place of the agreed price only implied). Q6 (maintenance):
+  scoped roles 4 → 3 (BILL_TO and TAKEN_BY missing). Q7 open.
 - Distinctions D27 (a row, a column or a value?) and D28 (what the product offers or what
   the customer insists on?); Anki at 88 cards.
 
@@ -23,10 +25,11 @@ and any decisions made.
   user's wish).
 
 **Next**
-- Round 2026-11-15: Q5–Q7, then distinctions.
+- Round 2026-11-15: Q7, then distinctions.
 - Re-import the Anki export (D27, D28).
 - Next round: retest the need (facility, OWNER), requirement roles + status (each on its
-  own requirement), rules beside facts (the as-of reading), desired features (must vs nice).
+  own requirement), rules beside facts (the as-of reading), desired features (must vs nice), price
+  components (name the order line), scoped roles (every hat the scenario names).
 
 ## 2026-11-14
 
