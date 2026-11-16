@@ -763,8 +763,8 @@ Misunderstandings and reinforce attempts, oldest first.
 ### 2026-11-15: extra Q7, pending (wording in `docs/round-2026-11-14.md`, Extra Q7)
 - **Key (specific vs generic relationships; Escuela de Danza Brisa).** (a) Only the
   employment needs more: it has an attribute of its own (the rate) that changes, so the
-  relationship stays in `party_relationship` (EMPLOYMENT, Iván's EMPLOYEE role → our
-  INTERNAL_ORGANIZATION role, from 2027-02-01, open), the `employment` subtype shares its key,
+  relationship stays in `party_relationship` (EMPLOYMENT, our INTERNAL_ORGANIZATION role →
+  Iván's EMPLOYEE role, as the seed's type has it, from 2027-02-01, open), the `employment` subtype shares its key,
   and the rate is a dated child: 18 from 2027-02-01 thru 2027-06-01 (exclusive), 20 from
   2027-06-01, open; the latest current. A rate column on the subtype would hold one value
   and lose the history. The PARTNERSHIP (Teatro Sur) and SUPPLIER_RELATIONSHIP (Calzados
@@ -773,6 +773,18 @@ Misunderstandings and reinforce attempts, oldest first.
   repeated per table, a new table for every new kind, and every model that points at a
   relationship (a communication event, Ch 2) needs an FK per kind; "all of Iván's
   relationships" becomes a union. The fix for readability is a view per kind.
+
+### 2026-11-15: extra Q7, Submodel 1 maintenance (specific vs generic; Escuela de Danza Brisa)
+- (a) EMPLOYMENT from our INTERNAL_ORGANIZATION role to Iván's EMPLOYEE role ✓; PARTNERSHIP
+  (Teatro Sur) and SUPPLIER_RELATIONSHIP (Calzados Punta) in the shared table only, their
+  missing dates flagged ✓ cold. Only employment needs more, because the rate is its own and
+  changes ✓. The rate as two dated rows hanging off the relationship by FK, 18 thru
+  2027-06-01 (exclusive), 20 from 2027-06-01 ✓; but the table called the employment
+  *subtype* ~ (a subtype shares the relationship's key, so one row; two dated rows make it
+  a dated child; the 11-02 naming again, the rows right this time). "1feb18" a typo.
+- (b) Gain: readable, single-purpose columns ✓. Cost: every model that hangs off a
+  relationship needs a query or FK per table, and a new kind means updating the union for
+  "all of a party's relationships" ✓ cold. Holds 4.
 
 ### 2026-11-14: round 2026-11-14 Q1, Submodel 1 retest (party relationship + role; Cafés Tueste)
 - Short, both parts in one go. (a) Apply: our INTERNAL_ORGANIZATION role ✓ (the 11-13
