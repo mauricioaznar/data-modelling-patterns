@@ -1198,5 +1198,5 @@ Misunderstandings and reinforce attempts, oldest first.
   11-14 miss fixed); Luis typed APPROVER ✗ ("answers for it" is OWNER), no from date; the
   Cádiz hotel facility missing ✗ (third time, right after the teach). (b) Ours filters the
   kind alone, theirs lists every value with product in it, a new origin multiplies the
-  values and every filter must be edited ✓ (filters described, not written; "one row" for
-  one column ~). Stays 2: retest cold next round (the facility, OWNER vs APPROVER).
+  values and every filter must be edited ✓ (filters described, not written; "one row" meant
+  one value, the user clarified). Stays 2: retest cold next round (the facility, OWNER vs APPROVER).
