@@ -1208,3 +1208,11 @@ Misunderstandings and reinforce attempts, oldest first.
   written ✗ (`optional_ind`: incline false, monitor true); the product subtype with no
   product not named ~; Gimnasio Atlas's REQUESTER role not written (not asked). (b) the
   features list what any product must satisfy, no product picked ✓. 0 → 3.
+
+### 2026-11-15: round 2026-11-15 Q3, retest (rules beside facts; Editorial Pino, salesperson)
+- Cold. (a) EMPLOYEE from 2020-01-01 thru 2028-01-01 (the old row keeps its own from, the
+  exclusive thru) ✓, CONTRACTOR from 2027-07-01 open ✓: the 11-14 miss fixed. SALES not
+  named again ~. (b) a data-quality query ✓; "it reads row #1" ✗: the check reads the
+  SALES + SALESPERSON rules in force on the order date (2028-02-15), which is only #2; Ana
+  holds EMPLOYEE, not CONTRACTOR, so no in-force rule matches and 770 is flagged. #1 is
+  out of force that day. The as-of reading not shown: stays 3.

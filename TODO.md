@@ -164,7 +164,7 @@ update the trackers as usual, then tick here.
 
 - [x] Q1 · Ch 4 · requirements: the need (2) · reinforce, warm: role rows for the people named, the facility, one axis's filter on both designs (Hoteles Brisa) · answered 11-15, stays 2: role rows and the filter's cost ✓; Luis APPROVER for OWNER, the facility missing again
 - [x] Q2 · Ch 4 · requirements: desired features (0) · first test: product optional, features must or nice (Fitness Norte) · answered 11-15, 0 → 3: features off the need and the why cold, the facility ✓; must vs nice missed
-- [ ] Q3 · Ch 4 · rules beside facts (3) · retest: the old rule row keeps its own from (Editorial Pino, salesperson)
+- [x] Q3 · Ch 4 · rules beside facts (3) · retest: the old rule row keeps its own from (Editorial Pino, salesperson) · answered 11-15, stays 3: the dated rows cold; the check read via row #1, not the rules in force on the order date
 - [ ] Q4 · Ch 4 · requirements: roles and status (0) · first test, roles warm after Q1: OWNER per part, a part's status not its parent's (Colegio Mar)
 - [ ] Q5 · Ch 3 · price built from components (3) · retest: the paid price on the order, not the components or the product (Cafeteras Lume)
 - [ ] Q6 · Ch 4 · scoped roles · maintenance (last 4 on 11-03) (Viveros Norte, order 750)
