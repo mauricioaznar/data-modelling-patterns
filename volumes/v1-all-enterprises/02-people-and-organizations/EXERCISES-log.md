@@ -764,8 +764,9 @@ Misunderstandings and reinforce attempts, oldest first.
 - **Key (specific vs generic relationships; Escuela de Danza Brisa).** (a) Only the
   employment needs more: it has an attribute of its own (the rate) that changes, so the
   relationship stays in `party_relationship` (EMPLOYMENT, our INTERNAL_ORGANIZATION role →
-  Iván's EMPLOYEE role, as the seed's type has it, from 2027-02-01, open), the `employment` subtype shares its key,
-  and the rate is a dated child: 18 from 2027-02-01 thru 2027-06-01 (exclusive), 20 from
+  Iván's EMPLOYEE role, as the seed's type has it, from 2027-02-01, open), EMPLOYMENT itself is a type row (the book's subtype has no
+  attributes; a subtype table sharing the key only if a fixed attribute appears), and the
+  rate is a dated child of the relationship: 18 from 2027-02-01 thru 2027-06-01 (exclusive), 20 from
   2027-06-01, open; the latest current. A rate column on the subtype would hold one value
   and lose the history. The PARTNERSHIP (Teatro Sur) and SUPPLIER_RELATIONSHIP (Calzados
   Punta) are rows in the shared table only: no attributes of their own. (b) Gain: readable
