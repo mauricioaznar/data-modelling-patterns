@@ -1143,3 +1143,51 @@ Misunderstandings and reinforce attempts, oldest first.
 - (b) Evaluate: the shipment is the fact, the status its copy; fix the copy ✓. Looking for
   why they disagree not said.
 - Score: status holds 4.
+
+### 2026-11-15: question round, pending (wording in `docs/round-2026-11-15.md`; order in TODO)
+- **Q1 key (the need, reinforce; Hoteles Brisa).** (a) `requirement`: INTERNAL, PRODUCT,
+  "40 mattresses", quantity 40, required by 2027-04-01, budget 12000, created 2027-01-10,
+  needed at the Cádiz hotel (a facility row). A `product_requirement` row (product optional).
+  `requirement_role`: Marta REQUESTER from 2027-01-10; Luis OWNER from 2027-01-10. (b) Ours:
+  `where requirement_kind = 'PRODUCT'`. Theirs: `where requirement_type in
+  ('INTERNAL_PRODUCT', 'CUSTOMER_PRODUCT')`. Cost: every filter on one axis lists values from
+  the other; a new value on one axis (a PARTNER origin, say) multiplies the values and means
+  editing every filter that names them. Two independent facts, two columns. Full (c): roles
+  are dated, typed and open (more than one, an APPROVER, a hand-over), columns hold one each.
+- **Q2 key (desired features; Fitness Norte).** (a) `requirement` CUSTOMER, PRODUCT, quantity
+  10, by 2027-05-01, at the Bilbao gym (facility); Gimnasio Atlas a REQUESTER role (not asked,
+  welcome). `product_requirement` with `product_id` null (no model picked). `desired_feature`:
+  incline (a Ch 3 `product_feature`) `optional_ind` false; heart-rate monitor `optional_ind`
+  true. (b) No product is chosen yet: the customer says what they want, in features, and
+  several products may meet it; the quote or order picks the product later. Ch 3's features,
+  so they can be matched to products. Full (c): `product_feature_applicability` (which
+  products offer the incline and folding, as standard or optional).
+- **Q3 key (rules beside facts, retest; Editorial Pino).** (a) `order_role_rule`: (SALES,
+  SALESPERSON, EMPLOYEE, from 2020-01-01, thru 2028-01-01): the old row keeps its own from
+  and gets a thru; (SALES, SALESPERSON, CONTRACTOR, from 2027-07-01, open). (b) The
+  data-quality query: each order role needs a rule row for its order kind and hat, in force
+  on the order date, whose required role the party holds. On 2028-02-15 only the CONTRACTOR
+  row is in force; Ana holds EMPLOYEE, so 770 is flagged. Full (c): 765 is fine (the EMPLOYEE
+  row still in force on 2027-12-10); undated rules would flag 765 after 1 Jan 2028, judging
+  an old order by today's rule.
+- **Q4 key (requirement roles and status; Colegio Mar). Roles warm after Q1.** (a)
+  `requirement_role`: Pilar OWNER on the refit from 2027-01-10; Jordi OWNER on the lighting
+  (OWNER is set per requirement, a part's may differ; the flooring's owner unstated, so no
+  row, or Pilar if asked). `requirement_status`: refit REQUIREMENT_CREATED 2027-01-10,
+  REQUIREMENT_APPROVED 2027-01-20. (b) Lighting REQUIREMENT_FULFILLED 2027-03-01, a row on the
+  lighting. The refit isn't done: its own latest status is APPROVED, and the flooring is
+  still open; a part's status says nothing of its parent's. Full: Jordi's row thru
+  2027-02-15, Pilar OWNER on the lighting from 2027-02-15; (c) a column holds one value, so
+  the history (when created, approved) is lost.
+- **Q6 key (scoped roles, maintenance; Viveros Norte, order 750).** (a) `order_role`:
+  PLACED_BY Hotel Sol, BILL_TO Hotel Sol, TAKEN_BY us (Viveros Norte), ENTERED_BY Eva,
+  SALESPERSON Tomás (100). `order_item_role`: line 1 SHIP_TO Hotel Sol; line 2 SHIP_TO
+  Carlos Díaz. (b) Each line can go to a different party; one ship-to on the order can't say
+  that line 2 goes to Carlos. Full (c): a data-quality query summing `percent_contribution`
+  per order for SALESPERSON, flagging any order not at 100.
+- **Q7 key (terms, maintenance; Imprenta Duna, PO 760).** (a) `order_term` on line 1:
+  DELIVERY_WITHIN_DAYS 3, NONPERFORMANCE_PENALTY_PCT 5. `order_term` on the order:
+  PAYMENT_DUE_DAYS 30. The €15 an `order_adjustment` SHIPPING_AND_HANDLING 15 on the order.
+  (b) A term is an agreed condition, not money: the 5% may never apply, and it changes no
+  price now; an adjustment changes what the order costs. Full (c): once late, the penalty
+  becomes money on a later document (an invoice or credit, Ch 7), not on the order.

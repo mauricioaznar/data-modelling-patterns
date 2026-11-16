@@ -155,6 +155,22 @@ trackers as usual, then tick here.
 
 - [x] Next round (in round 2026-11-13, Q3): retest party role + role type (3) inside a relationship question: the dated `party_role` rows written beside the relationship rows, graded together, since each relationship points at them (the user's call, 2026-11-11)
 
+## Question round 2026-11-15 (short)
+
+All seven are in [docs/round-2026-11-15.md](docs/round-2026-11-15.md), short versions first,
+with no keys. The keys are in the Ch 3 and Ch 4 logs under "2026-11-15: question round,
+pending": **don't open those before grading**. Read each answer back, grade, log and
+update the trackers as usual, then tick here.
+
+- [ ] Q1 · Ch 4 · requirements: the need (2) · reinforce, warm: role rows for the people named, the facility, one axis's filter on both designs (Hoteles Brisa)
+- [ ] Q2 · Ch 4 · requirements: desired features (0) · first test: product optional, features must or nice (Fitness Norte)
+- [ ] Q3 · Ch 4 · rules beside facts (3) · retest: the old rule row keeps its own from (Editorial Pino, salesperson)
+- [ ] Q4 · Ch 4 · requirements: roles and status (0) · first test, roles warm after Q1: OWNER per part, a part's status not its parent's (Colegio Mar)
+- [ ] Q5 · Ch 3 · price built from components (3) · retest: the paid price on the order, not the components or the product (Cafeteras Lume)
+- [ ] Q6 · Ch 4 · scoped roles · maintenance (last 4 on 11-03) (Viveros Norte, order 750)
+- [ ] Q7 · Ch 4 · terms · maintenance (last 4 on 11-03) (Imprenta Duna, PO 760)
+- [ ] Distinctions for the round (practice.md)
+
 ## Question round 2026-11-14 (short)
 
 All seven are in [docs/round-2026-11-14.md](docs/round-2026-11-14.md), short versions first,

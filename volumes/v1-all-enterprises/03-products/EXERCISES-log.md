@@ -1250,3 +1250,15 @@ Scores: price components 2 → 3; feature prices stay at 2.
   "A product must go on the leaves" ~: it may sit on any category; the point is that the
   ancestors are reached through the rollup, so a row there says the same thing twice.
 - Score: category rollup holds 4.
+
+### 2026-11-15: question round, pending (wording in `docs/round-2026-11-15.md`; order in TODO)
+- **Q5 key (price built from components; Cafeteras Lume, E5).** (a) `price_component`:
+  BASE_PRICE 300 for the E5; BASE_PRICE 40 for the frother feature (a feature price adds on
+  top); SURCHARGE 25 for the Canary Islands boundary. Rosa (Tenerife, in the Canaries) pays
+  300 + 40 + 25 = 365. (b) The agreed price lives on her order: the line's unit price (the
+  frother on the line or its own feature line), the surcharge as the line's or order's
+  adjustment, a snapshot. The components are rules, the order is the receipt. A product
+  column holds one value: it can't vary by feature, place, party type or date, and it
+  repeats the base component. Full: 15 Mar order 280 + 40 + 25 = 345 (the old base thru
+  2027-03-01); (c) the February order's price holds: the snapshot on the order, not the
+  components as of the ship date.
