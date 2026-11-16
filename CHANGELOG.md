@@ -3,6 +3,22 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-16
+
+**Built**
+- Round 2026-11-16 written (short) in `docs/round-2026-11-16.md`, keys in the Ch 2–4 logs:
+  the need (reinforce), requirement roles + status, rules beside facts, desired features,
+  price components; maintenance on terms (the 11-15 Q7, unasked, moved here in a fresh
+  scenario) and purpose. Q1 given, not answered.
+
+**Decisions**
+- The round is saved for the next session; the user switched to studying.
+
+**Next**
+- Round 2026-11-16 from Q1 (the short teach again first).
+- Scoped roles (3) in the round after.
+- Re-import the Anki export (D27, D28).
+
 ## 2026-11-15
 
 **Built**
