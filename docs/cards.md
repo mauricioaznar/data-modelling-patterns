@@ -2228,6 +2228,24 @@ options; one that misses a fact goes to its submodel card instead.
 - **Trap:** a max on each pairing row to cap salespeople in total, so 2 employees and
   2 agents pass (2026-11-13).
 
+### Distinction D27 · A row, a column or a value? (V1 Ch 4)
+- **Cue:** "Every product need: `where requirement_kind = 'PRODUCT'`; their version:
+  `where requirement_type in ('INTERNAL_PRODUCT', 'CUSTOMER_PRODUCT')`."
+- **Test:** Is it one whole record, an attribute every record has, or what one record
+  holds in one attribute?
+- **Answer:**
+  - A row: one requirement (the 40 mattresses), all its columns together.
+  - A column: `requirement_kind`, the attribute every requirement has.
+  - A value: `'PRODUCT'`, what one row holds in that column. Ours tests one value of one
+    column; theirs tests a list of values of one column.
+- **Sides:** A row is one record, one of what the table's grain stands for. A column is
+  an attribute. A value is one cell: one row's answer for one column. A new kind of
+  thing is a new value (no schema change); a new column is a schema change. A lookup
+  table turns a column's allowed values into rows of their own.
+- **Mnemonic:** A row is a thing, a column a question, a value its answer.
+- **Trap:** the single column's four values pictured as four columns (2026-11-14); "we
+  only reference one row" for one value (2026-11-15).
+
 ---
 
 ## Deck: patterns
