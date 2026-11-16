@@ -2246,6 +2246,25 @@ options; one that misses a fact goes to its submodel card instead.
 - **Trap:** the single column's four values pictured as four columns (2026-11-14); "we
   only reference one row" for one value (2026-11-15).
 
+### Distinction D28 · What the product offers or what the customer insists on? (V1 Ch 4)
+- **Cue:** "Gimnasio Atlas must have an incline; a heart-rate monitor would be nice. Our
+  T5 treadmill comes with an incline; on the T7 it's an extra you can add."
+- **Test:** Is it about one product, whoever buys it? Or about one need, whichever
+  product fills it?
+- **Answer:**
+  - The incline as a must: `desired_feature` on Atlas's need, `optional_ind` false.
+  - The monitor as nice: `desired_feature` on the same need, `optional_ind` true.
+  - The T5's incline: `product_feature_applicability`, STANDARD. The T7's: OPTIONAL.
+    Both can meet the must (the T7 once the incline is added on the quote or order).
+- **Sides:** Applicability (Ch 3) is product ↔ feature: what a product offers, the same
+  for every buyer (REQUIRED, STANDARD, OPTIONAL, SELECTABLE). A desired feature (Ch 4) is
+  need ↔ feature: what this customer insists on, before any product is picked, and only
+  two ways (must or nice). The scales don't line up: a must is met by any product that
+  has the feature or lets it be added.
+- **Mnemonic:** The product offers, the need insists.
+- **Trap:** reading `optional_ind` true as the product's OPTIONAL, or pruning the T7
+  because its incline is "only optional".
+
 ---
 
 ## Deck: patterns
