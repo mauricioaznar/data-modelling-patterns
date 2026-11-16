@@ -1200,3 +1200,11 @@ Misunderstandings and reinforce attempts, oldest first.
   kind alone, theirs lists every value with product in it, a new origin multiplies the
   values and every filter must be edited ✓ (filters described, not written; "one row" meant
   one value, the user clarified). Stays 2: retest cold next round (the facility, OWNER vs APPROVER).
+
+### 2026-11-15: round 2026-11-15 Q2, Requirements first test (desired features; Fitness Norte)
+- Cold. (a) CUSTOMER + PRODUCT, quantity 10, by 2027-05-01, the Bilbao gym facility ✓
+  (the facility at last); a features table hanging off the need, one row per feature ✓
+  (named "requirement-feature", the model's  ~); must vs nice not
+  written ✗ (: incline false, monitor true); the product subtype with no
+  product not named ~; Gimnasio Atlas's REQUESTER role not written (not asked). (b) the
+  features list what any product must satisfy, no product picked ✓. 0 → 3.
