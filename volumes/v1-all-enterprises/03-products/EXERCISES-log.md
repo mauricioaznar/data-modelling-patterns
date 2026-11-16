@@ -1262,3 +1262,12 @@ Scores: price components 2 → 3; feature prices stay at 2.
   repeats the base component. Full: 15 Mar order 280 + 40 + 25 = 345 (the old base thru
   2027-03-01); (c) the February order's price holds: the snapshot on the order, not the
   components as of the ship date.
+
+### 2026-11-15: round 2026-11-15 Q5, retest (price built from components; Cafeteras Lume, E5)
+- Cold. (a) BASE_PRICE 300 on the E5, the frother a feature with its own 40, the 25 SURCHARGE
+  conditioned on a geographic boundary, all one-time ✓; the conditions met, so all three add
+  up ✓ (the 365 given away by (b)'s wording, Claude's slip, not graded). (b) the agreed
+  price fixed so a later price change doesn't touch the order ✓ (the snapshot); where it
+  lives only implied ("the order"), the line's unit price and the surcharge as an
+  adjustment not named ~; a product column can't vary by feature, place or date not said ~.
+  Neither old slip (on the component, on the product). Stays 3: name the place next time.
