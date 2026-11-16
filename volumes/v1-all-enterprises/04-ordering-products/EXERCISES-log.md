@@ -1225,3 +1225,10 @@ Misunderstandings and reinforce attempts, oldest first.
   1 Mar ✓ ("completed" for REQUIREMENT_FULFILLED ~); the status a copy, the fact in the work
   effort (Ch 6) ✓ unprompted. Whether the refit is done not answered ✗ (no: its own latest
   status is APPROVED and the flooring is open; a part's status isn't its parent's). 0 → 2.
+
+### 2026-11-15: round 2026-11-15 Q6, maintenance (scoped roles; Viveros Norte, order 750)
+- Cold. (a) PLACED_BY Hotel Sol, ENTERED_BY Eva, SALESPERSON Tomás 100, on the order ✓;
+  BILL_TO Hotel Sol missing ✗ ("pays for it" in the scenario), TAKEN_BY us missing ✗. A
+  SHIP_TO role on each line ✓, the party on each not named ~ (implied by the addresses);
+  unasked, each line's SHIPPING contact mechanism, the hotel's and Carlos's homes ✓. (b)
+  lines ship separately; one ship-to on the order loses that ✓. 4 → 3.

@@ -167,7 +167,7 @@ update the trackers as usual, then tick here.
 - [x] Q3 · Ch 4 · rules beside facts (3) · retest: the old rule row keeps its own from (Editorial Pino, salesperson) · answered 11-15, stays 3: the dated rows cold; the check read via row #1, not the rules in force on the order date
 - [x] Q4 · Ch 4 · requirements: roles and status (0) · first test, roles warm after Q1: OWNER per part, a part's status not its parent's (Colegio Mar) · answered 11-15, 0 → 2: OWNER both ✓, undated; the refit's status on the lighting; the parent question unanswered
 - [x] Q5 · Ch 3 · price built from components (3) · retest: the paid price on the order, not the components or the product (Cafeteras Lume) · answered 11-15, stays 3: the rows and the snapshot's why cold; the place only implied (the 365 given away by Claude's wording)
-- [ ] Q6 · Ch 4 · scoped roles · maintenance (last 4 on 11-03) (Viveros Norte, order 750)
+- [x] Q6 · Ch 4 · scoped roles · maintenance (last 4 on 11-03) (Viveros Norte, order 750) · answered 11-15, 4 → 3: BILL_TO and TAKEN_BY missing; the line mechanisms ✓ unasked
 - [ ] Q7 · Ch 4 · terms · maintenance (last 4 on 11-03) (Imprenta Duna, PO 760)
 - [ ] Distinctions for the round (practice.md)
 
