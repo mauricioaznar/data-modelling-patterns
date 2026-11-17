@@ -1247,6 +1247,17 @@ Misunderstandings and reinforce attempts, oldest first.
   order). Full: Raúl's OWNER thru 2027-04-01, Sara OWNER from 2027-04-01; (c) a column holds
   one owner with no dates: the hand-over overwrites Raúl, and a second approver needs a
   new column.
+- **Q1 graded 2026-11-17 (short, reinforce, right after the teach): the need stays 2.**
+  (a) quantity, date, budget, PRODUCT ✓; the Sevilla clinic as the facility ✓, Nuria
+  REQUESTER, Raúl OWNER, Elena APPROVER with their dates ✓ (the two 11-15 misses fixed, but
+  straight after a teach with a twin example, so with help). INTERNAL missing ✗ (the
+  "whose" column), the creation date and the reason missing ✗; "product: examination
+  couches" unclear (description, the product subtype with no product). Raúl's date left
+  "not specified" (the scenario gave none; mostly Claude's share, not counted: the need's
+  creation date is the natural pick, and from_date is not null). (b) "we lose the place
+  where it's needed" ~: the address also says where; what is lost unsaid (the link to the
+  clinic as a thing: all its needs, its stock and rooms; the address changing or being
+  fixed; where it's needed vs where it's delivered). Retest cold next round.
 - **Q2 key (requirement roles + status; Museo Alba).** (a) On the room: Inés OWNER from
   2027-03-01; statuses REQUIREMENT_CREATED 2027-03-01, REQUIREMENT_APPROVED 2027-03-15. On
   the alarms (`part_of_requirement_id` the room): Pablo OWNER from his start (2027-03-01 or

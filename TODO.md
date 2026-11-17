@@ -164,7 +164,7 @@ with no keys. The keys are in the Ch 2, Ch 3 and Ch 4 logs under "2026-11-16: qu
 pending": **don't open those before grading**. Read each answer back, grade, log and
 update the trackers as usual, then tick here.
 
-- [ ] Q1 · Ch 4 · requirements: the need (2) · reinforce: the facility, OWNER vs APPROVER, facility vs address (Clínica Vega)
+- [x] Q1 · Ch 4 · requirements: the need (2) · reinforce: the facility, OWNER vs APPROVER, facility vs address (Clínica Vega) · stays 2: the taught bits right with help; INTERNAL, creation date, reason, the facility's why missing
 - [ ] Q2 · Ch 4 · requirements: roles and status (2) · retest: each row on its own requirement, no rollup (Museo Alba)
 - [ ] Q3 · Ch 4 · rules beside facts (3) · retest: the as-of reading, rules in force on the order date (Bodegas Cerro)
 - [ ] Q4 · Ch 4 · requirements: desired features (3) · retest: must vs nice, the product picked later (Muebles Roble)
