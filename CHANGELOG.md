@@ -3,6 +3,28 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-17
+
+**Built**
+- Ch 4 overview, Requests and quotes (Figs 4.10–4.11): points 21–22 settled, the doc entry
+  fixed (the arcs and the validity rule are data-quality queries, not checks; three new
+  design choices), a new data-quality query for quotes issued before the request they
+  answer (it catches Table 4.14's two quotes), card 14's key extended, the concepts
+  walk-through done, five tracker rows at 0 (the submodel enters the round of seven).
+
+**Decisions**
+- Point 21 kept: 23498 dated 2002, 38967 a request for proposal. Its soft rule (a need
+  younger than its request) already existed; Claude had called it new.
+- Point 22 changed: the matching soft rule on the next link (quote before request).
+- Cleared up: proposal vs product quote (same shape, who chose the lines; only partly
+  clear), a quote binds the vendor, not the buyer, the commitment isn't the agreement.
+- No acronyms in chat (the user's call).
+
+**Next**
+- Round 2026-11-16 from Q1, as before; Requests and quotes joins the pool after.
+- Ch 4 overview: Agreements (Figs 4.12–4.13), points 23–28.
+- Re-import the Anki export (card 14 settled).
+
 ## 2026-11-16
 
 **Built**

@@ -1000,7 +1000,11 @@ a quote item for furniture may make the buyer pay the actual freight.
   seed. (Ponder 3 of submodel 5.)
 - **Terms and roles once more:** QUOTE TERM reuses TERM TYPE, on the quote or one item; QUOTE
   ROLE has ORDER ROLE's shape, a sixth role type list (point 5).
-- **An accepted quote must still be valid** on the order's date: a check.
+- **An accepted quote must still be valid** on the order's date: a data-quality query.
+- **Overview walk-through (2026-11-17):** the user read a quote as "merely suggesting" what
+  the order agrees to. Corrected: a quote binds the vendor within its validity (a firm
+  offer), and the buyer may take it up, leave it or adjust it; the order line keeps its own
+  price and quantity. A candidate Trap for card 14, beside proposal vs product quote.
 
 ### Fig 4.12 — Agreement definition
 **Transcription** (accepted: ☐; two landscape photos of the figure, then Table 4.16; open
