@@ -166,7 +166,7 @@ update the trackers as usual, then tick here.
 
 - [x] Q1 · Ch 4 · requirements: the need (2) · reinforce: the facility, OWNER vs APPROVER, facility vs address (Clínica Vega) · stays 2: the taught bits right with help; INTERNAL, creation date, reason, the facility's why missing
 - [x] Q2 · Ch 4 · requirements: roles and status (2) · retest: each row on its own requirement, no rollup (Museo Alba) · 2 → 3: rows on the right requirement, the room's row written; roles undated, the why missing
-- [ ] Q3 · Ch 4 · rules beside facts (3) · retest: the as-of reading, rules in force on the order date (Bodegas Cerro)
+- [x] Q3 · Ch 4 · rules beside facts (3) · retest: the as-of reading, rules in force on the order date (Bodegas Cerro) · 3 → 4: rows and 801 cold; the order date named on a probe
 - [ ] Q4 · Ch 4 · requirements: desired features (3) · retest: must vs nice, the product picked later (Muebles Roble)
 - [ ] Q5 · Ch 3 · price built from components (3) · retest: name the order line's column (Relojes Faro, order 820)
 - [x] Q6 · Ch 4 · terms · maintenance (last 4 on 11-03) (Café Duna, PO 830) · 4 → 3: rows cold, the why a unit test (money or not) instead of the effect on the cost

@@ -1286,6 +1286,12 @@ Misunderstandings and reinforce attempts, oldest first.
   Running it "today" changes nothing: the order date picks the rules. Full: the CUSTOMER
   row thru 2028-01-01; 803 flagged (only DISTRIBUTOR in force on 2028-03-03); (c) editing
   the row rewrites history: 801-era orders by customers would be judged by the new rule.
+- **Q3 graded 2026-11-17 (short): rules beside facts 3 → 4.** (a) both rows, SALES +
+  PLACED_BY, CUSTOMER from 2022-01-01 and DISTRIBUTOR from 2027-03-01, neither closed ✓
+  cold. (b) 801 flagged ✓ cold, which only the as-of reading gives; the mechanism first
+  said as "that time frame" ~, then, on a probe (order date or today?), the order date
+  ✓, and the rows per order ✓ (801 the CUSTOMER row only, 802 both). The 11-15 miss (the
+  expired row read) fixed.
 - **Q4 key (desired features; Muebles Roble).** (a) `requirement` CUSTOMER, PRODUCT, quantity
   15, by 2027-09-01, `facility_id` the Valencia office; `product_requirement` with
   `product_id` null; `desired_feature`: armrests `optional_ind` false, headrest
