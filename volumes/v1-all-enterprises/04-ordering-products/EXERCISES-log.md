@@ -1300,6 +1300,14 @@ Misunderstandings and reinforce attempts, oldest first.
   so the pick can be checked against them (and a later pick, too). Full: Despacho Lago
   REQUESTER from its date; (c) Ch 3's `product_feature_applicability` for the Ergo 300 and
   armrests (standard or optional, in force): the must needs a row; none = it fails the need.
+- **Q4 graded 2026-11-17 (short): desired features stays 3.** (a) CUSTOMER, PRODUCT, 15,
+  by 1 Sep ✓; the product subtype with no product yet ✓; armrests optional_ind false,
+  headrest true ✓ cold (the 11-15 miss fixed). "Model" written as a third desired feature,
+  optional ✗: the model is the product (product_id, null for now), not a feature. The
+  Valencia office (facility) missing ✗; the description put on the subtype ~ (it is on
+  requirement). (b) product_id set on the product subtype ✓, the features stay ✓; why: a
+  record of the need as raised ~ (the use unsaid: the pick, and any later pick, is checked
+  against them).
 - **Q6 key (terms, maintenance; Café Duna, PO 830).** (a) `order_term` on line 1:
   DELIVERY_WITHIN_DAYS 5. `order_adjustment` on line 2: DISCOUNT, percentage 3. `order_term`
   on the order: PAYMENT_DUE_DAYS 60. `order_adjustment` on the order: SHIPPING_AND_HANDLING,
