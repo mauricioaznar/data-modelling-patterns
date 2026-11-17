@@ -168,7 +168,7 @@ update the trackers as usual, then tick here.
 - [x] Q2 · Ch 4 · requirements: roles and status (2) · retest: each row on its own requirement, no rollup (Museo Alba) · 2 → 3: rows on the right requirement, the room's row written; roles undated, the why missing
 - [x] Q3 · Ch 4 · rules beside facts (3) · retest: the as-of reading, rules in force on the order date (Bodegas Cerro) · 3 → 4: rows and 801 cold; the order date named on a probe
 - [x] Q4 · Ch 4 · requirements: desired features (3) · retest: must vs nice, the product picked later (Muebles Roble) · stays 3: must vs nice ✓; the model filed as a feature, the facility missing
-- [ ] Q5 · Ch 3 · price built from components (3) · retest: name the order line's column (Relojes Faro, order 820)
+- [x] Q5 · Ch 3 · price built from components (3) · retest: name the order line's column (Relojes Faro, order 820) · 3 → 4: rows and the line's price cold; the snapshot's why half re-read from the rule
 - [x] Q6 · Ch 4 · terms · maintenance (last 4 on 11-03) (Café Duna, PO 830) · 4 → 3: rows cold, the why a unit test (money or not) instead of the effect on the cost
 - [ ] Q7 · Ch 2 · purpose (dated, within link) · maintenance (last 4 on 11-04) (Ferretería Norte)
 - [ ] Distinctions for the round (practice.md)

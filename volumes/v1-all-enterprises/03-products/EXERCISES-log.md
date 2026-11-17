@@ -1283,3 +1283,10 @@ Scores: price components 2 → 3; feature prices stay at 2.
   line at 30, ordered for line 1, the watch at 180); (c) a component: one dated row, every
   December order gets it, and quotes show it; an adjustment on each order needs keying 31
   days of orders and lets one be missed (an adjustment is for what's agreed on one order).
+- **Q5 graded 2026-11-17 (short): price built from components 3 → 4.** (a) BASE 200 for
+  the Classic; DISCOUNT 20 from 2027-12-01 thru 2028-01-01 (exclusive) ✓; 180 in December,
+  200 in January ✓ cold. (b) order_item, "price" (unit_price) ✓ cold, the 11-15 miss
+  fixed; 180 in January, a snapshot agreed on the order date ✓. Then "the rule still
+  applies because the order is dated within the discount" ~: the line shows 180 because
+  it is stored, not because the components are read again (two sources of truth). Watch
+  it in maintenance.
