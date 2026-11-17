@@ -33,7 +33,7 @@ and any decisions made.
 - Term or adjustment: is it in the price now? ("rules about the future" is a hint, not the test).
 
 **Next**
-- Distinction cards for round 2026-11-16's mix-ups (suggested, not yet written).
+- Re-import the Anki export (card 13 mantra; D1, D28 and pricing traps).
 - Next round: Requests and quotes joins the pool; retest the need, roles dated, the model vs a feature.
 - Ch 4 overview: Agreements (Figs 4.12–4.13), points 23–28.
 - Re-import the Anki export (card 14 settled).
