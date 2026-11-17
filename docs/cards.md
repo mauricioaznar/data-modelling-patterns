@@ -524,7 +524,10 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   (to whom, through which contact mechanism, when) · `request_role` · `quote` + `quote_type`
   (issued by, given to, valid from and thru) · `quote_item` (prices a product **or** a work
   effort; may answer a request item; accepted through `order_item.quote_item_id`) ·
-  `quote_term` (on 4.7's `term_type`) · `quote_role`.
+  `quote_term` (on 4.7's `term_type`) · `quote_role`. A proposal and a product quote are
+  built alike: the vendor chose a proposal's lines, the buyer's request named a product
+  quote's. A quote is an offer until an order line accepts it. Two soft rules (queries): a
+  need younger than the request carrying it, a quote older than the request it answers.
 - **W:** requests and quotes kept as e-mails, or as draft orders marked "quoted": no link from
   the question to the needs behind it, no room for competing offers, and an offer mixed up
   with a commitment.

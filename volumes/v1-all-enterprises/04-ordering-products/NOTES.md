@@ -1695,6 +1695,24 @@ the literal drawing.
 21. **4.10, Table 4.12's dates and types:** 23498 read as January 12, 2002; as printed, it
     predates both requirements it carries and gives thirteen months to answer. 38967 read as
     an RFP, as Table 4.12 has it (Table 4.13 says RFQ).
+    **Outcome (2026-11-17): kept**, both readings. 23498 stays January 12, 2002; seeding the
+    print would win only if the seed had to match the book row for row. 38967 stays an RFP:
+    its item names only the need (29 PCs), no product or unit, and the answer is a proposal
+    whose vendor chose the hours; an RFQ would have named the product and unit for every
+    vendor to price. **The soft rule was already built** (Claude missed it in the discussion
+    and called it new): the 4.10 data-quality query for a requirement sent out before it
+    existed (on or before passes, an undated requirement passes), with Northwind's dock door
+    RFP as its bad seed row. The user chose it independently, so it stands. Soft, not a
+    check, because a requirement's creation date is when the need was recorded, and late
+    recording is legal. The rule only applies when the item carries a requirement: a request
+    may carry none (a market scan). Cleared up on the way: requirement (the need, kept
+    inside) vs request (the question sent out because of it); hard rules (check) vs soft
+    rules (query) vs none; vendor = issues the quote, buyer = the party it's given to (both
+    roles, either can be one of our internal organizations); proposal vs product quote are
+    structurally identical (`quote_type` rows), and differ in who chose what goes on the
+    lines: the vendor (proposal) or the buyer, in the request (product quote). Both lines
+    are firm offers. The user got the last one only partly: a candidate gap for practice
+    and for card 14's Trap. Cards touched: card 14 (the soft rule; the proposal Trap).
 22. **4.11, Table 4.14's dates:** 36908 read as issued March 12, 2002 (as printed, a year
     before it's valid). Table 4.15 (shared later) settles which requests the quotes answer:
     36908 answers ACME's RFQ 38948, 35678 the RFP 38967, so the seed now links them so
@@ -1702,6 +1720,15 @@ the literal drawing.
     the quotes that answer them (by a day, by three weeks). Seeded as printed: either the
     request dates or the quote dates are the slip. A check for quotes issued before the
     request they answer would flag both book rows, so there is none yet.
+    **Outcome (2026-11-17): changed** (the user's call): a soft rule, a data-quality query for
+    a quote item answering a request item whose request is dated after the quote's issue
+    date, matching point 21's rule on the chain's first link. The book's two rows stay as
+    printed and are the rows it catches (36908 by a day, 35678 by three weeks); 36908's
+    issue year stays read as 2002. Leaving it out would win only if quotes were routinely
+    entered before the request that prompted them. Cleared up on the way: a quote is an
+    offer, firm for its validity window, not an agreement; it becomes agreed when an order
+    line accepts it ("the acceptance of"). The buyer writes the request, never the vendor.
+    Cards touched: card 14 (the second soft rule; quote = offer, not agreement).
 23. **4.12, Table 4.16's 10002 and Ch 2's customer relationship:** the agreement names ABC
     Corporation as supplier and ACME as customer, and is tied to "the" customer relationship.
     Ch 2's only one for ACME (Table 2.5) is with ABC Subsidiary. Linked to it as printed, so
@@ -2087,6 +2114,9 @@ the literal drawing.
 - **`order_item.quote_item_id`** is added with `alter table` ("the acceptance of"). An order
   line accepting a quote outside its validity is a data-quality query (seed: 12570's paper,
   ordered in 2023, accepting Fantastic's 2025 quote).
+- **A quote answering a request dated after the quote was issued** is a data-quality query
+  (point 22, added at the overview): its bad rows are the book's own, Table 4.14's 35678 and
+  36908 as printed against Table 4.12's request dates.
 - **`quote_term` reuses `term_type`;** exactly one of quote and quote item is a data-quality
   query (the arc; seed: a warranty term on Paperline's quote and its item at once).
 - **`quote_role_type`** (preparer, approver, contact), the sixth role-type lookup (point 5).

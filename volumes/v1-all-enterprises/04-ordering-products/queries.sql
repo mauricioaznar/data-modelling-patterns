@@ -1320,6 +1320,14 @@ join quote_item qi   on qi.quote_item_id = oi.quote_item_id
 join quote qt        on qt.quote_id = qi.quote_id
 where not (o.order_date >= qt.valid_from_date and o.order_date < qt.valid_thru_date);
 
+-- name: 4.11 — Data-quality check: quote items answering a request dated after the quote was issued (should be empty; catches Table 4.14's 35678 and 36908 as printed, NOTES point 22)
+select qt.quote_id, qi.quote_item_seq_id as item, qt.issue_date, q.request_id, q.request_date
+from quote_item qi
+join quote qt        on qt.quote_id = qi.quote_id
+join request_item ri on ri.request_item_id = qi.request_item_id
+join request q       on q.request_id = ri.request_id
+where qt.issue_date < q.request_date;
+
 -- ============================================================
 -- Fig 4.12 — Agreement definition
 -- ============================================================
