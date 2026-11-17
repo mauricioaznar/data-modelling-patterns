@@ -479,8 +479,9 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 13 · V1 Ch 4 · Requirements (Fig 4.9)
 - **Cue:** "What is needed, by whom, by when, and which order lines commit to filling it?"
 - **Hook:** a shopping list in pencil
-- **Mantra:** A need, tagged whose and what, sits at a facility and wants features, not a
-  product; people hold it through dated roles; order lines commit up to what's left.
+- **Mantra:** A need answers the W's: whose, what, where, when born and due, why, how many,
+  and the budget. It wants features, must or nice, not a product; people hold it through
+  dated roles, each on its own need; order lines commit up to what's left.
 
 <details><summary>Key</summary>
 
