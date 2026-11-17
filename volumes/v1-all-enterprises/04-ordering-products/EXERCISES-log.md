@@ -1268,6 +1268,15 @@ Misunderstandings and reinforce attempts, oldest first.
   more than its parts (the room's own sign-off) and a status is a recorded fact, not a
   sum. Full: cases REQUIREMENT_CANCELLED 2027-03-25; (c) parents with no open part (every
   part's latest status FULFILLED or CANCELLED) whose own latest status isn't.
+- **Q2 graded 2026-11-17 (short): requirement roles + status 2 → 3.** (a) Inés OWNER on
+  the room, Pablo OWNER on the alarms ✓; APPROVED 15 Mar on the room, APPROVED 20 Mar on
+  the alarms ✓ cold (the 11-15 miss, the parent's status on a part, fixed); the creation
+  date on the requirement row ✓ (a CREATED status not written, welcome only). Roles undated
+  again ✗ (second time). (b) a new FULFILLED row on the room once both parts are fulfilled
+  ✓ (no rollup assumed, the 11-15 unanswered part); "the room row is linked to" its parts ~
+  (the link is on the part, part_of_requirement_id); why the model doesn't write it
+  unanswered ✗ (a status is a recorded fact, not a sum; a parent may need more than its
+  parts). Retest: dated roles, the why.
 - **Q3 key (rules beside facts, retest; Bodegas Cerro).** (a) `order_role_rule`: (SALES,
   PLACED_BY, CUSTOMER, from 2022-01-01, open); (SALES, PLACED_BY, DISTRIBUTOR, from
   2027-03-01, open). Nothing closes: a thru on the CUSTOMER row is wrong. (b) The check
