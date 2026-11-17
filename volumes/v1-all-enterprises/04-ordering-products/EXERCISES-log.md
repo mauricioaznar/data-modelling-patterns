@@ -1280,3 +1280,12 @@ Misunderstandings and reinforce attempts, oldest first.
   amount 12. (b) A term is an agreed condition read through its type, not money: the 60
   days changes no price; the €12 and the 3% change what the order costs. Full (c): nothing
   on the order; the delivery date lives on the shipment (Ch 5), compared with the term.
+- **Q6 graded 2026-11-17 (short): terms 4 → 3.** (a) all four cold ✓: the 5 days
+  a term on line 1, the 3% a percentage adjustment on line 2, the 60 days a term on the
+  order, the €12 a shipping adjustment (amount) on the order. (b) ✗ in part: "an adjustment
+  can only handle money, a term handles numbers not tied to currency" is a unit test, not
+  the effect test. It puts these four right, but the 3% is no currency either, and a
+  late-delivery 10% penalty (Pastelería Nube, 11-03) is about money yet is a term. The
+  test is whether the row changes what the order costs (adjustment) or states a condition
+  agreed for it (term). The "not money" wording on the tracker row and card 12 invites
+  the unit reading (Claude's share of the blame).
