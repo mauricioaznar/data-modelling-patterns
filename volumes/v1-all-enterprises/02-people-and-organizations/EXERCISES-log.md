@@ -809,3 +809,9 @@ Misunderstandings and reinforce attempts, oldest first.
   one value and no history, and ending billing would mean ending (or overwriting) the link.
   Full (c): the typo edits the address row in place (no new rows, every party sharing it
   fixed at once); the move adds a link and closes a purpose, keeping history.
+- **Q7 graded 2026-11-17 (short, maintenance): purpose stays 4.** (a) both postal
+  addresses, a link per address (Calle Sol 9 from 1 Jun, the date assumed and said), the
+  Calle Mar link open; BILLING on it thru 2027-06-01, SHIPPING from 2027-01-01, BILLING on
+  the Calle Sol link from 2027-06-01 ✓ cold. (b) purposes change while the link lives, one
+  link holds several, a column holds one date for all ✓ cold; closing the link closes its
+  purposes ✓ unprompted.

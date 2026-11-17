@@ -11,6 +11,16 @@ and any decisions made.
   design choices), a new data-quality query for quotes issued before the request they
   answer (it catches Table 4.14's two quotes), card 14's key extended, the concepts
   walk-through done, five tracker rows at 0 (the submodel enters the round of seven).
+- Round 2026-11-16 graded (short), all seven. Q6 terms (maintenance) 4 → 3: the rows cold,
+  the why a unit test (money or not) instead of the effect on the cost. Q1 the need stays 2:
+  the facility and OWNER vs APPROVER right just after the teach; INTERNAL, creation date,
+  reason and the facility's why missing. Q2 requirement roles + status 2 → 3: each row on its
+  own requirement, the room's FULFILLED written; roles undated, why no rollup missing. Q3
+  rules beside facts 3 → 4. Q4 desired features stays 3: must vs nice fixed; the model filed
+  as a feature, the facility missing. Q5 price components 3 → 4 (the snapshot half
+  justified by the rule). Q7 purpose (maintenance) stays 4.
+- Card 13's mantra rewritten around the W's (whose, what, where, when born and due, why, how
+  many, the budget), must or nice, each role on its own need.
 
 **Decisions**
 - Point 21 kept: 23498 dated 2002, 38967 a request for proposal. Its soft rule (a need
@@ -19,9 +29,12 @@ and any decisions made.
 - Cleared up: proposal vs product quote (same shape, who chose the lines; only partly
   clear), a quote binds the vendor, not the buyer, the commitment isn't the agreement.
 - No acronyms in chat (the user's call).
+- A status is a recorded decision, not a sum: the children can prompt it, never write it.
+- Term or adjustment: is it in the price now? ("rules about the future" is a hint, not the test).
 
 **Next**
-- Round 2026-11-16 from Q1, as before; Requests and quotes joins the pool after.
+- Distinction cards for round 2026-11-16's mix-ups (suggested, not yet written).
+- Next round: Requests and quotes joins the pool; retest the need, roles dated, the model vs a feature.
 - Ch 4 overview: Agreements (Figs 4.12–4.13), points 23–28.
 - Re-import the Anki export (card 14 settled).
 
