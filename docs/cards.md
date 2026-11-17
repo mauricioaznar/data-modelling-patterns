@@ -340,7 +340,10 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **T:** *(the naive-model trap until practice gives yours)* looking up "the price" of a
   product: there isn't one. A price is computed per order line: base prices compete (one wins,
   plus one per chosen feature), every matching discount and surcharge adjusts it per unit, and
-  the suggested price never enters.
+  the suggested price never enters. Yours: the order line's agreed price explained as the
+  rule "still applying" on the order date. The line stores what was agreed
+  (`order_item.unit_price`) and nothing reads the components again: delete the rule, or
+  haggle to 175, and the line keeps its own number.
 - **D:** product and/or feature ← price_component → region / party type / category / quantity
   break / order value / sale type / organization (all optional), → currency; product | feature
   ← estimated_product_cost → cost_component_type, geographic boundary / organization (optional).
@@ -1806,7 +1809,8 @@ options; one that misses a fact goes to its submodel card instead.
   adjustment.
 - **Trap:** net 30 as a 30 discount (2026-10-30); 25% off for 1000 units as a term
   (2026-10-31); the 5% loyalty discount filed under "agreed" as a term (2026-10-31); a late-delivery
-  penalty ("pays us 3%") as a surcharge (2026-11-02).
+  penalty ("pays us 3%") as a surcharge (2026-11-02); sorting by unit, money or not, instead
+  of the test: the 3% off is no currency yet an adjustment, a late penalty is money yet a term.
 
 ### Distinction D2 · Base or surcharge? (V1 Ch 3)
 - **Cue:** "€25 sign-up; +€5 a month in Sierra Alta; seeds on the loaf for €0.50."
@@ -2267,7 +2271,9 @@ options; one that misses a fact goes to its submodel card instead.
   has the feature or lets it be added.
 - **Mnemonic:** The product offers, the need insists.
 - **Trap:** reading `optional_ind` true as the product's OPTIONAL, or pruning the T7
-  because its incline is "only optional".
+  because its incline is "only optional". Filing "which model" as a desired feature: the
+  model is the product (`product_requirement.product_id`, empty until picked), a feature a
+  quality any product may have.
 
 ---
 
