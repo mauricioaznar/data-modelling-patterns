@@ -3,6 +3,22 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-18
+
+**Built**
+- Anki export: every card's Draw (D) field now shows one link per line, split at the
+  semicolons and sentence ends (in the converter, so `cards.md` is unchanged).
+- Card 14 (Requests and quotes): the mantra expanded to cover the request types, responding
+  parties and their contact mechanism, the quote's issuer, receiver, validity and terms,
+  the roles, and acceptance by an order line.
+
+**Decisions**
+- Card 14's mantra goes past the 20-word rule on purpose: the user memorises it and rebuilds
+  the concepts from it.
+
+**Next**
+- Re-import `docs/cards-anki.txt` into Anki.
+
 ## 2026-11-17
 
 **Built**

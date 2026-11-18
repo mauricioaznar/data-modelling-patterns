@@ -66,6 +66,14 @@ const html = (md) =>
     .replace(/`([^`]+)`/g, '<code>$1</code>')
     .replace(/\*([^*]+)\*/g, '<i>$1</i>');
 
+// The Draw (D) field: one line per piece, split at "; " and at sentence ends, so the links
+// don't run together (the user's call, 2026-11-18). Other fields pass through unchanged.
+const drawLines = (h) => {
+  if (!h.startsWith('<b>D:</b> ')) return h;
+  const pieces = h.slice('<b>D:</b> '.length).split(/;\s+|(?<=\.)\s+(?=[A-Z])/).filter(Boolean);
+  return '<b>D:</b><br>' + pieces.map((p) => `&emsp;${p.replace(/;$/, '')}`).join('<br>');
+};
+
 // A "- **Label:** text" bullet, possibly wrapped over several lines.
 const field = (block, label) => {
   const m = block.match(new RegExp(`- \\*\\*${label}:\\*\\* ([\\s\\S]*?)(?=\\n- \\*\\*|\\n\\n|$)`));
@@ -106,6 +114,7 @@ export function buildAnki(src, statusRows = readStatusRows()) {
       .trim()
       .split(/\n(?=- )/)
       .map((item) => html(item.replace(/^- /, '').replace(/\s*\n\s*/g, ' ')))
+      .map(drawLines)
       .join('<br><br>');
     const [, volume, ch] = title.match(/V(\d+) Ch (\d+)/);
     const chapter = ch.padStart(2, '0');

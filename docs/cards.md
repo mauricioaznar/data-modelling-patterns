@@ -517,8 +517,11 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 14 · V1 Ch 4 · Requests and quotes (Figs 4.10–4.11)
 - **Cue:** "Whom did we ask for information, proposals or prices, what did they quote, and which quote became an order?"
 - **Hook:** sealed bids on the table
-- **Mantra:** Request items carry needs, no product; quote items price product or work,
-  answer them; order lines accept.
+- **Mantra:** A request asks for information, a proposal or prices, sent to responding parties
+  by a contact mechanism; its items carry needs, never a product. A quote runs issuer to
+  receiver, valid from–thru, with terms on it or one line; its items price a product or work
+  and answer request items. Parties take roles on both. An order line accepts a quote item:
+  until then it's only an offer.
 
 <details><summary>Key</summary>
 
