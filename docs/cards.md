@@ -39,7 +39,8 @@ usual deck. No bullet means OLTP. Search `tag:dm::olap` to drill only the star s
 Each submodel gets a **card** with three layers, from smallest to biggest:
 
 1. **Hook**: two to four words or an image. Just enough to start the mantra.
-2. **Mantra**: one sentence of at most about 20 words. It names the **spine** entities in the
+2. **Mantra**: as long as the submodel needs, no word limit (the user's call, 2026-11-18): a
+   short one can leave concepts out. It names the **spine** entities in the
    order they connect, with one verb per link, and ends with the **twist** (the thing the
    naive model gets wrong).
 3. **Explosion**: what the mantra must unpack into, in one fixed shape (below). This is the

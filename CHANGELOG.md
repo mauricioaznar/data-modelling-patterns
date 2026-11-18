@@ -13,8 +13,9 @@ and any decisions made.
   the roles, and acceptance by an order line.
 
 **Decisions**
-- Card 14's mantra goes past the 20-word rule on purpose: the user memorises it and rebuilds
-  the concepts from it.
+- The 20-word limit on mantras is gone: a mantra is as long as its submodel needs, since a
+  short one can leave concepts out (`docs/cards.md`, the `/figures` skill). The user
+  memorises the mantra and rebuilds the concepts from it.
 
 **Next**
 - Re-import `docs/cards-anki.txt` into Anki.

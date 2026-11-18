@@ -52,7 +52,7 @@ report instead of skipping it silently.
    (assumptions)*. New patterns or examples in Core patterns, its questions in the question
    index, roadmap *In progress*.
 2. Card in `docs/cards.md`, headed `### Card N · VN Ch N · name (Figs …)` with the
-   same `Figs` as STATUS.md: hook, mantra (about 20 words at most), key in S · W · T · D (the
+   same `Figs` as STATUS.md: hook, mantra (no word limit: long enough to cover the submodel), key in S · W · T · D (the
    Trap is the naive-model trap until practice). Keep cards in chapter order. Then
    `npm run cards:anki`: the new card lands in Anki's Drafts, to look up until the overview.
 3. Tick `Doc draft` in STATUS.md with today's date.
