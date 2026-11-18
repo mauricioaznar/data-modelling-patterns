@@ -6,7 +6,7 @@ and any decisions made.
 ## 2026-11-18
 
 **Built**
-- Anki export: every card's Draw (D) field now shows one link per line, split at the
+- Anki export: every card's Draw (D) field now shows one link per line with a blank line between, split at the
   semicolons and sentence ends (in the converter, so `cards.md` is unchanged).
 - Card 14 (Requests and quotes): the mantra expanded to cover the request types, responding
   parties and their contact mechanism, the quote's issuer, receiver, validity and terms,
