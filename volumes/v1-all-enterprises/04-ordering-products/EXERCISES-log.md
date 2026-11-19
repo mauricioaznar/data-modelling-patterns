@@ -1417,3 +1417,9 @@ Misunderstandings and reinforce attempts, oldest first.
   is what we sell, a product; the brakes a feature, not sold on their own ✓. "Part of the
   product we sell" ~: a feature belongs to no single product, many products offer it through
   applicability; why keep the features (any pick is checked against them) unsaid, not asked.
+- **Q4 graded 2026-11-18 (short, cold): terms 3 → 4.** (a) `order_term` on line 1, value 5 ✓;
+  `order_adjustment` DISCOUNT, percentage 2, on the order ✓, both cold. The term type named
+  "late-arrival" ~: a bare value is read through its type, so the type must say what the 5
+  is (a penalty percentage: NONPERFORMANCE_PENALTY_PCT). (b) a term is a condition on what
+  may happen, an adjustment a price change already in force, "the adjustment looks at what
+  it is now" ✓ cold: the effect test, not the unit (the 11-17 miss fixed).
