@@ -1388,3 +1388,13 @@ Misunderstandings and reinforce attempts, oldest first.
   requirement roles (word check). (b) the address changes or is fixed and the need points
   wrong ✓; one address can hold several facilities, so which one is lost ✓, both cold.
   Retest: the quantity, a role holder is a party.
+- **Q2 graded 2026-11-18 (short, cold): scoped roles stays 3.** (a) every hat ✓ cold:
+  TAKEN_BY Imprenta Luz, PLACED_BY Hotel Sur, BILL_TO Grupo Sur (the 11-15 misses fixed);
+  line 1 SHIP_TO Carla, line 2 SHIP_TO Hotel Sur and INSTALLER Hugo. Standing roles named
+  beside each (internal organization, customer, employee) ✓; Grupo Sur as "customer" ~
+  (a bill-to customer). Placer called "not specified, assumed" ~: the scenario said
+  "places". Unasked ✓: SHIPPING mechanisms per line, BILLING on the order. (b) readability
+  the gain ✓; several parties per hat, any fixed number of columns a limit ✓; but generic,
+  not order 840's loss: columns on the order can't say line 1 ships to Carla and line 2 to
+  the hotel, and would make Hugo install the menus too ✗; a new hat needs a new column
+  unsaid. Retest: the line-level loss, cold.
