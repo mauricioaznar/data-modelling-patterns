@@ -1377,3 +1377,14 @@ Misunderstandings and reinforce attempts, oldest first.
   FULFILLED on the refit. Full: REQUIREMENT_APPROVED on the refit 2027-02-10; Pedro's OWNER
   thru 2027-03-01, Ana OWNER on the lights from 2027-03-01; (c) parents with no open part
   (every part's latest status FULFILLED or CANCELLED) whose own latest status isn't.
+- **Q1 graded 2026-11-18 (short, cold, no teach first): the need 2 → 3.** (a) INTERNAL,
+  PRODUCT, the reason, created 2027-03-03, required by 2027-07-01, budget 9000, the Granada
+  bakery as `facility_id` ✓ cold: the 11-17 misses (INTERNAL, creation date, reason) all
+  fixed. Quantity 2 missing ✗ (dropped on 11-13, 11-14 and now). The description put on
+  `product_requirement` ~ (it is on `requirement`; the subtype holds only the product, null
+  here). Unasked, not counted but flagged: the bakery as REQUESTER ✗ (`requirement_role`
+  holds a party; the bakery is a facility, a place; the requester is whoever logged it, us
+  or a person), our organization OWNER ~ (fine when no person is named), "order roles" for
+  requirement roles (word check). (b) the address changes or is fixed and the need points
+  wrong ✓; one address can hold several facilities, so which one is lost ✓, both cold.
+  Retest: the quantity, a role holder is a party.
