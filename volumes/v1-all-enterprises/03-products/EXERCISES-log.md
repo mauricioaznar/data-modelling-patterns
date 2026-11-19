@@ -1290,3 +1290,14 @@ Scores: price components 2 → 3; feature prices stay at 2.
   applies because the order is dated within the discount" ~: the line shows 180 because
   it is stored, not because the components are read again (two sources of truth). Watch
   it in maintenance.
+
+### 2026-11-18: question round, pending (wording in `docs/round-2026-11-18.md`; order in TODO)
+- **Q7 key (reorder guideline, maintenance; Farmacias Olmo, last 4 on 11-04).** (a) Row 1:
+  SPF 50, chain-wide (scoped to our internal organization, or no scope), from 2026-01-01,
+  open, level 30, quantity 100: untouched. Row 2: SPF 50, `facility_id` Cádiz Playa, from
+  2027-06-01, open, level 80, quantity 200. (b) Cádiz Playa at 60 ≤ 80 reorders 200, from
+  row 2 (most specific wins); Sevilla at 35 > 30 doesn't reorder, from row 1. Full: row 1
+  thru 2028-01-01, row 3 chain-wide from 2028-01-01, level 40, quantity 150; on 10 Jan 2028
+  Cádiz Playa still reads row 2 (reorders 200), Sevilla reads row 3, 35 ≤ 40, reorders 150;
+  (c) the rule is about this shop; scoped to the province, any new pharmacy there would
+  fall under it silently.

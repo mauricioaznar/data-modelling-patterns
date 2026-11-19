@@ -1323,3 +1323,57 @@ Misunderstandings and reinforce attempts, oldest first.
   test is whether the row changes what the order costs (adjustment) or states a condition
   agreed for it (term). The "not money" wording on the tracker row and card 12 invites
   the unit reading (Claude's share of the blame).
+
+### 2026-11-18: question round, pending (wording in `docs/round-2026-11-18.md`; order in TODO)
+- **Q1 key (the need, retest cold; Panadería Sol).** (a) `requirement`: INTERNAL, PRODUCT,
+  "2 new ovens", quantity 2, created 2027-03-03, required by 2027-07-01, budget 9000,
+  reason "the old ones use too much power", `facility_id` the Granada bakery (a Ch 2
+  facility). A `product_requirement` row, `product_id` null (no model yet). Role rows not
+  asked (a REQUESTER welcome). (b) An address is how to reach a place; a facility is the
+  place itself. Any two of: the link to the bakery as a thing (every need of the Granada
+  bakery, its stock and rooms); the address can change or be fixed while the bakery stays,
+  and the need would point at the old street; where it's needed vs where it's delivered
+  (chosen on the order). Full: Lucía REQUESTER from 2027-03-03, Andrés APPROVER from
+  2027-03-10 (OWNER not stated: don't invent one); (c) one fused column needs a value per
+  pair, a new origin or kind multiplies them, and "every internal need" becomes a pattern
+  match; the two facts are independent.
+- **Q2 key (scoped roles, retest; Imprenta Luz, order 840).** (a) `order_role`: PLACED_BY
+  Hotel Sur; TAKEN_BY Imprenta Luz (us); BILL_TO Grupo Sur ("pays"). `order_item_role`:
+  line 1 SHIP_TO Carla Vidal (a person; END_USER welcome); line 2 SHIP_TO Hotel Sur,
+  INSTALLER Hugo Paz. (b) A column per hat holds one party: the two lines ship to different
+  parties, so one ship-to on the order can't say which; on the order Hugo would read as
+  installing the menus too; each new hat (INSTALLER) means a new column, and a second party
+  in a hat (two salespeople) needs another. Full: BILLING on the order (Grupo Sur's Madrid
+  address), line 1 DELIVERY_CONTACT Carla's mobile, SHIPPING per line (Carla's or the
+  hotel's address); (c) the employee is his standing role (Ch 2, dated, on our books); the
+  hat is what he does on this one line (Ch 4); the rule beside the facts may require the
+  standing role for the hat.
+- **Q3 key (desired features, retest; Bicis Monte).** (a) `requirement` CUSTOMER, PRODUCT,
+  "10 bikes", quantity 10, required by 2027-05-01, `facility_id` the Jaca clubhouse;
+  `product_requirement.product_id` the Trail 5; `desired_feature`: disc brakes
+  `optional_ind` false, carbon frame `optional_ind` true (both Ch 3 `product_feature`
+  rows). (b) The Trail 5 is the product (what we'd sell, one per need, on the product
+  subtype); a feature is a property any product may offer. The features record what the
+  club asked for, so the Trail 5 (or any later pick) can be checked against them. Full:
+  Club Ciclista Pico REQUESTER from its date; (c) Ch 3's `product_feature_applicability`:
+  rim brakes STANDARD for the Trail 5, no row for disc brakes, so the pick fails the must:
+  pick another product or go back to the club (a data-quality query can flag it).
+- **Q4 key (terms, retest the why; Talleres Brío, PO 850).** (a) `order_term` on line 1:
+  NONPERFORMANCE_PENALTY_PCT 5. `order_adjustment` on the order: DISCOUNT, percentage 2.
+  (b) The test: is it in the price now? The 2% changes what the order costs today; the 5%
+  is a condition agreed for an event that may never happen, so it changes no price on the
+  order (both are percentages, both about money: the unit doesn't decide). Full:
+  `order_term` on line 2 DELIVERY_WITHIN_DAYS 10; `order_adjustment` on the order
+  SHIPPING_AND_HANDLING amount 40; (c) the order stays as agreed; the late delivery is a
+  fact on the shipment or receipt (Ch 5), compared with the term; the 5% becomes money
+  later (a charge or credit on the invoice, Ch 7), not a row on the order.
+- **Q5 key (requirement roles + status, retest dated roles and the why; Colegio Sierra).**
+  (a) On the refit: Marta OWNER from 2027-02-01. On the lights (`part_of_requirement_id` the
+  refit): Pedro OWNER from 2027-02-15. The shelves (part of the refit) named by no one: no
+  role row needed. (b) No: the refit's own latest status is whatever was recorded on it,
+  not FULFILLED; the parts' FULFILLED rows (shelves 04-01, lights 04-20) say nothing of the
+  parent. A status is a recorded decision, not a sum: the parent may need more than its
+  parts (its own sign-off), so the children can prompt it, never write it; someone records
+  FULFILLED on the refit. Full: REQUIREMENT_APPROVED on the refit 2027-02-10; Pedro's OWNER
+  thru 2027-03-01, Ana OWNER on the lights from 2027-03-01; (c) parents with no open part
+  (every part's latest status FULFILLED or CANCELLED) whose own latest status isn't.

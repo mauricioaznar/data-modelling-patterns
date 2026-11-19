@@ -155,6 +155,23 @@ trackers as usual, then tick here.
 
 - [x] Next round (in round 2026-11-13, Q3): retest party role + role type (3) inside a relationship question: the dated `party_role` rows written beside the relationship rows, graded together, since each relationship points at them (the user's call, 2026-11-11)
 
+## Question round 2026-11-18 (short)
+
+All seven are in [docs/round-2026-11-18.md](docs/round-2026-11-18.md), short versions first,
+with no keys. The keys are in the Ch 2, Ch 3 and Ch 4 logs under "2026-11-18: question round,
+pending": **don't open those before grading**. Read each answer back, grade, log and
+update the trackers as usual, then tick here. Requests and quotes (card 14) left out: the
+user is still studying it (the user's call, 2026-11-18).
+
+- [ ] Q1 · Ch 4 · requirements: the need (2) · retest cold: INTERNAL, creation date, reason, the facility and its why (Panadería Sol)
+- [ ] Q2 · Ch 4 · scoped roles (3) · retest: every hat the scenario names, BILL_TO from "pays", TAKEN_BY us, the party on each line role (Imprenta Luz, order 840)
+- [ ] Q3 · Ch 4 · requirements: desired features (3) · retest: the model is the product, not a feature; the facility (Bicis Monte)
+- [ ] Q4 · Ch 4 · terms (3) · retest the why: in the price now? (a money-shaped term, a percentage adjustment) (Talleres Brío, PO 850)
+- [ ] Q5 · Ch 4 · requirements: roles and status (3) · retest: roles dated, why no rollup (Colegio Sierra)
+- [ ] Q6 · Ch 2 · move vs typo; shared mechanism · maintenance (last 4 on 11-04) (Seguros Faro)
+- [ ] Q7 · Ch 3 · reorder guideline · maintenance (last 4 on 11-04) (Farmacias Olmo)
+- [ ] Distinctions for the round (practice.md)
+
 ## Question round 2026-11-16 (short)
 
 Written 11-16, saved for the next session (the user switched to studying): start at Q1 with the short teach again, as it was never answered.

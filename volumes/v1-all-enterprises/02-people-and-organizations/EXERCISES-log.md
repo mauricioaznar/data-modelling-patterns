@@ -815,3 +815,16 @@ Misunderstandings and reinforce attempts, oldest first.
   the Calle Sol link from 2027-06-01 ✓ cold. (b) purposes change while the link lives, one
   link holds several, a column holds one date for all ✓ cold; closing the link closes its
   purposes ✓ unprompted.
+
+### 2026-11-18: question round, pending (wording in `docs/round-2026-11-18.md`; order in TODO)
+- **Q6 key (move vs typo; shared mechanism, maintenance; Seguros Faro, last 4 on 11-04).**
+  (a) One postal address row, Calle Luna 7 (as keyed: "Calle Luna 1"), shared;
+  `party_contact_mechanism` Tomás → it from 2026-01-01, Gil Reformas → it from 2026-01-01.
+  The move: Tomás's link thru 2027-05-01; a new postal address Calle Río 2; Tomás → Calle
+  Río 2 from 2027-05-01. The company's link untouched. (b) The typo edits the one address
+  row in place (no new rows, no dates change; both parties fixed at once, since they share
+  it): it was never true, a wrongly stored fact. The move is a real change in time, so the
+  old link is ended and a new one added, keeping history. Full: purposes on the links,
+  Gil Reformas BILLING, Tomás's post GENERAL (or HOME) on his old link thru 2027-05-01 and on the new link from 2027-05-01;
+  (c) the move ends Tomás's purpose with his link and starts it on the new one; the
+  company's BILLING untouched; the typo touches no purpose.
