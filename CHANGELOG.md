@@ -33,8 +33,11 @@ and any decisions made.
   2026-11-18 is graded cold in both (`docs/practice.md`).
 
 **Next**
-- Requests and quotes: warm exercises started 11-18 (the user's call), card open allowed,
-  so nothing scores above 2; a round tomorrow (11-19), which may include it.
+- 11-19 morning: requests and quotes warm exercises (card open allowed, so 2 at most;
+  start with Warm 1, Hotel Brisa's 40 towels: the request, its item, the tie to the need).
+  11-19 night: a round of seven with the card closed; its requests-and-quotes questions are
+  capped at 3, as the morning warmed them (the same logic as two questions on one row).
+  The user will confirm both tomorrow.
 - Next round: retest the need (the quantity, a role holder is a party); scoped roles'
   next maintenance asks the line-level loss, plainly worded.
 - Requests and quotes joins a round once the user has studied card 14.
