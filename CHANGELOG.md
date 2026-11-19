@@ -33,6 +33,8 @@ and any decisions made.
   2026-11-18 is graded cold in both (`docs/practice.md`).
 
 **Next**
+- Requests and quotes: warm exercises started 11-18 (the user's call), card open allowed,
+  so nothing scores above 2; a round tomorrow (11-19), which may include it.
 - Next round: retest the need (the quantity, a role holder is a party); scoped roles'
   next maintenance asks the line-level loss, plainly worded.
 - Requests and quotes joins a round once the user has studied card 14.
