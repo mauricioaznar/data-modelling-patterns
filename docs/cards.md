@@ -297,13 +297,14 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 7 · V1 Ch 3 · Suppliers and inventory (Figs 3.5–3.6)
 - **Cue:** "Who can supply it, when do we reorder, and where is the physical stock?"
 - **Hook:** the warehouse floor
-- **Mantra:** Suppliers offer products, dated; guidelines say when to reorder a good, and where; items are the
+- **Mantra:** Suppliers offer products, dated; guidelines, dated, say when to reorder a good, and where; items are the
   physical stock in one place; variances explain the count.
 
 <details><summary>Key</summary>
 
 - **S:** `supplier_product` (this organization can supply this product, dated, with lead time,
-  preference, rating) · `reorder_guideline` (for a good: reorder level and quantity, optionally
+  preference, rating) · `reorder_guideline` (for a good, dated: `reorder_level` (reorder at or
+  below it) and `reorder_quantity` (how many to order), optionally
   per facility, geographic boundary and/or internal organization; none = everywhere) ·
   `inventory_item` (physical stock of a good: serialized or not, in a facility **or** a
   container, in a status, optionally from a lot) · `inventory_item_variance` (a count found a
