@@ -20,6 +20,9 @@ and any decisions made.
 - The 20-word limit on mantras is gone: a mantra is as long as its submodel needs, since a
   short one can leave concepts out (`docs/cards.md`, the `/figures` skill). The user
   memorises the mantra and rebuilds the concepts from it.
+- No teaching before a round question (reinforces included) unless the user asks; answers
+  written before any feedback are all cold, so the facility in Q1 and Q3 of round
+  2026-11-18 is graded cold in both (`docs/practice.md`).
 
 **Next**
 - Round 2026-11-18 from Q1.

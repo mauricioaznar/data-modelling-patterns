@@ -88,9 +88,13 @@ of the chapter's `EXERCISES.md`.
   the ponders, so the same rule applies. Keep it closed for the exam and gap checks.
 - **The question round of seven** (one per session, across finished and in-practice
   submodels of all chapters): 5 gaps and retests (rows below 4 and the last session's
-  misses, a reinforce when a gap needs teaching), then 2 maintenance questions. No recalls
+  misses), then 2 maintenance questions. No recalls
   (the user's call, 2026-11-03): no session-start questions and nothing between rounds.
   One question at a time, each naming its Bloom level.
+- **No teaching before a question** (the user's call, 2026-11-18): no short teach, worked
+  twin example or hint ahead of a round question, reinforces included, unless the user asks
+  for one in words. Teaching comes in the feedback, after the answer. A teach before the
+  question makes the answer "with help" and loses the cold test.
 - **Two versions of each question, short by default for now** (the user's call,
   2026-11-07): the full version is the usual scenario with three parts (about 30 minutes
   of writing on the phone). The short one must fit **15 minutes including the feedback**:
@@ -116,7 +120,10 @@ of the chapter's `EXERCISES.md`.
 - **Spread a round's scope** (the user's call, 2026-11-02): prefer questions on different
   rows and topics, but it isn't required. When two questions share a row, the discussion of
   the first means the second can't count as cold, so that row can't reach 4 this round; the
-  user accepts that.
+  user accepts that. Answers written before any feedback (a round answered on the phone)
+  are all cold, so give no feedback on one question while later ones are still unanswered
+  unless the user asks for it (the user's call, 2026-11-18: the facility in Q1 and Q3 of
+  round 2026-11-18 both graded cold).
 - **Distinctions after each round** (the user's call, 2026-11-02): once a round is graded,
   review its mistakes and suggest distinction cards (`docs/cards.md`, *Deck: distinctions*)
   for the mix-ups between two known options. Don't repeat a concept: when a card already
