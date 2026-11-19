@@ -1407,3 +1407,13 @@ Misunderstandings and reinforce attempts, oldest first.
   The user owned up: the line roles didn't come to mind for (b), and the answer would have
   changed. Not a lost point (not asked), but watch it: the next maintenance on this row asks
   for the line-level loss, worded so it's plain.
+- **Q3 graded 2026-11-18 (short, cold): desired features 3 → 4.** (a) CUSTOMER, PRODUCT,
+  quantity 10, required by 2027-05-01, the Jaca clubhouse as the facility ✓ cold (the 11-17
+  facility miss fixed, and the quantity kept this time); `product_requirement.product_id`
+  the Trail 5 ✓ cold (the 11-17 model-as-feature miss fixed); disc brakes optional_ind
+  false, carbon frame true ✓. Description "not mentioned" ~: the column is not null, and
+  "10 bikes" or "Trail 5 bikes" fills it. Unasked: Bicis Monte OWNER ~ (nobody was said to
+  answer for it), the club REQUESTER ✓, both parties (the Q1 flag fixed). (b) the Trail 5
+  is what we sell, a product; the brakes a feature, not sold on their own ✓. "Part of the
+  product we sell" ~: a feature belongs to no single product, many products offer it through
+  applicability; why keep the features (any pick is checked against them) unsaid, not asked.
