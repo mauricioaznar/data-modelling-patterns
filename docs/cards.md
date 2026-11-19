@@ -485,7 +485,8 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Hook:** a shopping list in pencil
 - **Mantra:** A need answers the W's: whose, what, where, when born and due, why, how many,
   and the budget. It wants features, must or nice, not a product; people hold it through
-  dated roles, each on its own need; order lines commit up to what's left.
+  dated roles, and it moves through dated statuses, each on its own need (a parent's status
+  is recorded, never summed from its parts); order lines commit up to what's left.
 
 <details><summary>Key</summary>
 
