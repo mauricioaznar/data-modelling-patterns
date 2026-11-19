@@ -157,6 +157,8 @@ trackers as usual, then tick here.
 
 ## Question round 2026-11-18 (short)
 
+Q1–Q4 answered 11-18; Q5–Q7 saved for the user's next sitting (give Q5 when they're back, no teach first).
+
 All seven are in [docs/round-2026-11-18.md](docs/round-2026-11-18.md), short versions first,
 with no keys. The keys are in the Ch 2, Ch 3 and Ch 4 logs under "2026-11-18: question round,
 pending": **don't open those before grading**. Read each answer back, grade, log and

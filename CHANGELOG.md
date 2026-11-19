@@ -15,6 +15,11 @@ and any decisions made.
   the need, scoped roles, desired features, terms (the why), requirement roles + status;
   maintenance on move vs typo (Ch 2) and the reorder guideline (Ch 3). Requests and quotes
   left out at the user's request, while they study card 14.
+- Round 2026-11-18 Q1–Q4 graded (short, cold). Q1 the need 2 → 3 (all cold; the quantity
+  dropped a third time; the bakery made REQUESTER, unasked). Q2 scoped roles 3 → 4 (every
+  hat cold; (b) regraded after pushback: "on the order" read as the order's hats, Claude's
+  wording). Q3 desired features 3 → 4. Q4 terms 3 → 4 (the effect test cold; the type name
+  must say what the value is, owned by the user).
 
 **Decisions**
 - The 20-word limit on mantras is gone: a mantra is as long as its submodel needs, since a
@@ -25,7 +30,7 @@ and any decisions made.
   2026-11-18 is graded cold in both (`docs/practice.md`).
 
 **Next**
-- Round 2026-11-18 from Q1.
+- Round 2026-11-18 from Q5 (Q5–Q7 left), then distinctions.
 - Requests and quotes joins a round once the user has studied card 14.
 - Re-import `docs/cards-anki.txt` into Anki.
 
