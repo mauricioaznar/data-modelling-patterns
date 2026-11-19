@@ -3,6 +3,32 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-19
+
+**Built**
+- Card 14 warm-ups (ungraded, outside the round of seven): 1, sending a request for quote
+  (request, item, requirement link, responding parties, role); 2, the quote coming back
+  (quote, item, terms). Slips seen: request vs response dates swapped, issuer and receiver
+  reversed, the quote item linked to the requirement instead of the request item, the
+  request type given as the quote type, the exclusive thru date missed. Terms on document
+  or item placed correctly.
+- Mantras: card 14 says "a quote" (the three request types by name) and "dated" (the deck's
+  word for a from–thru window).
+
+**Decisions**
+- "On document or one item" is the house phrase for the header-or-line arc, in the four
+  mantras that use it (adjustments, status and terms, requests and quotes, agreement terms).
+  Said only where the arc is drawn; "one" keeps the rule that a row points at a single item.
+
+**Next**
+- 11-18's plan stands for tonight: a round of seven with the card closed, requests and quotes
+  capped at 3. Its retests: issuer vs receiver, the quote item's link to the request item,
+  the exclusive valid-thru.
+- Warm-ups 3 (an order line accepts a quote item, validity) and 4 (a proposal with work
+  lines; party columns vs roles) were offered this morning, past 11-18's "2 at most": the
+  user decides whether they happen.
+- Re-import `docs/cards-anki.txt` into Anki.
+
 ## 2026-11-18
 
 **Built**
