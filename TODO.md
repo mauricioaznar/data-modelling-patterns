@@ -169,7 +169,7 @@ user is still studying it (the user's call, 2026-11-18).
 - [x] Q2 · Ch 4 · scoped roles (3) · retest: every hat the scenario names, BILL_TO from "pays", TAKEN_BY us, the party on each line role (Imprenta Luz, order 840) · 3 → 4: every hat cold ✓; (b) right for "on the order" as worded (regraded after pushback, Claude's wording)
 - [x] Q3 · Ch 4 · requirements: desired features (3) · retest: the model is the product, not a feature; the facility (Bicis Monte) · 3 → 4: all cold; "part of the product" ~
 - [x] Q4 · Ch 4 · terms (3) · retest the why: in the price now? (a money-shaped term, a percentage adjustment) (Talleres Brío, PO 850) · 3 → 4: rows and the effect test cold; the type name ~
-- [ ] Q5 · Ch 4 · requirements: roles and status (3) · retest: roles dated, why no rollup (Colegio Sierra)
+- [x] Q5 · Ch 4 · requirements: roles and status (3) · retest: roles dated, why no rollup (Colegio Sierra) · 3 → 4: roles dated cold, the why cold; who records the parent's status unsaid ~
 - [ ] Q6 · Ch 2 · move vs typo; shared mechanism · maintenance (last 4 on 11-04) (Seguros Faro)
 - [ ] Q7 · Ch 3 · reorder guideline · maintenance (last 4 on 11-04) (Farmacias Olmo)
 - [ ] Distinctions for the round (practice.md)

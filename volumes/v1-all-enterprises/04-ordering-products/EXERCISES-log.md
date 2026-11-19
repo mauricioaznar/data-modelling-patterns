@@ -1423,3 +1423,12 @@ Misunderstandings and reinforce attempts, oldest first.
   is (a penalty percentage: NONPERFORMANCE_PENALTY_PCT). (b) a term is a condition on what
   may happen, an adjustment a price change already in force, "the adjustment looks at what
   it is now" ✓ cold: the effect test, not the unit (the 11-17 miss fixed).
+- **Q5 graded 2026-11-18 (short, cold): requirement roles + status 3 → 4.** (a) Marta OWNER
+  on the refit from 2027-02-01, Pedro OWNER on the lights from 2027-02-15 ✓ cold: the roles
+  dated, missed on 11-15 and 11-17. No role on the shelves ✓; the parts point at the parent
+  through a column ✓ (the 11-17 "linked to" slip fixed). Unasked ✓: FULFILLED on the shelves
+  (04-01) and the lights (04-20). (b) the refit can't be taken as fulfilled from its
+  children, since it may need more than the parts recorded, and deriving it would skip
+  them ✓ cold (the 11-17 unanswered why). ~: "is it fulfilled?" left at "can't be assumed"
+  (on 21 Apr its own latest status still stands), and the other half unsaid: a status is a
+  recorded decision, so someone records FULFILLED on the refit when it's confirmed.
