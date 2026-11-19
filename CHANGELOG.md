@@ -11,6 +11,10 @@ and any decisions made.
 - Card 14 (Requests and quotes): the mantra expanded to cover the request types, responding
   parties and their contact mechanism, the quote's issuer, receiver, validity and terms,
   the roles, and acceptance by an order line.
+- Round 2026-11-18 written (short) in `docs/round-2026-11-18.md`, keys in the Ch 2–4 logs:
+  the need, scoped roles, desired features, terms (the why), requirement roles + status;
+  maintenance on move vs typo (Ch 2) and the reorder guideline (Ch 3). Requests and quotes
+  left out at the user's request, while they study card 14.
 
 **Decisions**
 - The 20-word limit on mantras is gone: a mantra is as long as its submodel needs, since a
@@ -18,6 +22,8 @@ and any decisions made.
   memorises the mantra and rebuilds the concepts from it.
 
 **Next**
+- Round 2026-11-18 from Q1.
+- Requests and quotes joins a round once the user has studied card 14.
 - Re-import `docs/cards-anki.txt` into Anki.
 
 ## 2026-11-17

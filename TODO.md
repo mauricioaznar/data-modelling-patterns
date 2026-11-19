@@ -188,8 +188,8 @@ update the trackers as usual, then tick here.
 - [x] Q5 · Ch 3 · price built from components (3) · retest: name the order line's column (Relojes Faro, order 820) · 3 → 4: rows and the line's price cold; the snapshot's why half re-read from the rule
 - [x] Q6 · Ch 4 · terms · maintenance (last 4 on 11-03) (Café Duna, PO 830) · 4 → 3: rows cold, the why a unit test (money or not) instead of the effect on the cost
 - [x] Q7 · Ch 2 · purpose (dated, within link) · maintenance (last 4 on 11-04) (Ferretería Norte) · stays 4: all cold
-- [ ] Distinctions for the round (practice.md)
-- Scoped roles (3, from 11-15 Q6) waits for the next round (spread: Q3 is on order parties).
+- [x] Distinctions for the round (practice.md): done 11-17 as Traps (D1, D28, the pricing card)
+- Scoped roles (3, from 11-15 Q6) waits for the next round (spread: Q3 is on order parties) · in round 2026-11-18, Q2
 
 ## Question round 2026-11-15 (short)
 
