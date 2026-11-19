@@ -1404,3 +1404,6 @@ Misunderstandings and reinforce attempts, oldest first.
   readability the gain). The line-level loss was Claude's intent, not the wording: Claude's
   share, not counted. (a) already showed the line scope cold. Next time: "instead of every
   role row, the lines' too".
+  The user owned up: the line roles didn't come to mind for (b), and the answer would have
+  changed. Not a lost point (not asked), but watch it: the next maintenance on this row asks
+  for the line-level loss, worded so it's plain.
