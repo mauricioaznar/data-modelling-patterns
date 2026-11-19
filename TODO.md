@@ -164,7 +164,7 @@ update the trackers as usual, then tick here. Requests and quotes (card 14) left
 user is still studying it (the user's call, 2026-11-18).
 
 - [x] Q1 · Ch 4 · requirements: the need (2) · retest cold: INTERNAL, creation date, reason, the facility and its why (Panadería Sol) · 2 → 3: all cold ✓; quantity dropped again, the bakery made REQUESTER (unasked)
-- [x] Q2 · Ch 4 · scoped roles (3) · retest: every hat the scenario names, BILL_TO from "pays", TAKEN_BY us, the party on each line role (Imprenta Luz, order 840) · stays 3: every hat cold ✓; (b) generic, the line-level loss missed
+- [x] Q2 · Ch 4 · scoped roles (3) · retest: every hat the scenario names, BILL_TO from "pays", TAKEN_BY us, the party on each line role (Imprenta Luz, order 840) · 3 → 4: every hat cold ✓; (b) right for "on the order" as worded (regraded after pushback, Claude's wording)
 - [ ] Q3 · Ch 4 · requirements: desired features (3) · retest: the model is the product, not a feature; the facility (Bicis Monte)
 - [ ] Q4 · Ch 4 · terms (3) · retest the why: in the price now? (a money-shaped term, a percentage adjustment) (Talleres Brío, PO 850)
 - [ ] Q5 · Ch 4 · requirements: roles and status (3) · retest: roles dated, why no rollup (Colegio Sierra)

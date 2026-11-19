@@ -1398,3 +1398,9 @@ Misunderstandings and reinforce attempts, oldest first.
   not order 840's loss: columns on the order can't say line 1 ships to Carla and line 2 to
   the hotel, and would make Hugo install the menus too ✗; a new hat needs a new column
   unsaid. Retest: the line-level loss, cold.
+- **Q2 regraded 2026-11-18 after the user's pushback: 3 → 4.** The question said "one
+  column per hat on the order", which reads as the order's own hats only, with the line
+  roles kept; on that reading the answer is right (one party per column, a fixed limit,
+  readability the gain). The line-level loss was Claude's intent, not the wording: Claude's
+  share, not counted. (a) already showed the line scope cold. Next time: "instead of every
+  role row, the lines' too".
