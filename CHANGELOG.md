@@ -12,6 +12,13 @@ and any decisions made.
   reversed, the quote item linked to the requirement instead of the request item, the
   request type given as the quote type, the exclusive thru date missed. Terms on document
   or item placed correctly.
+- Warm-ups 3 and 4 (the user's call, past 11-18's "2 at most"). 3, the order accepts a quote:
+  the purchase line with `quote_item_id` and the quote's price ✓; the expired quote flagged
+  by its exclusive thru ✓, the as-of test not written out; nothing bought before an order
+  line ✓. 4, a proposal: issuer and receiver right twice running, the exclusive thru stored
+  unprompted, the product | work effort arc ✓; Laura's PREPARER row missing (one party, two
+  hats), the column test given as "required" without "exactly one", and roles read as "set
+  later" instead of "optional, any number".
 - Mantras: card 14 says "a quote" (the three request types by name) and "dated" (the deck's
   word for a from–thru window).
 
@@ -22,11 +29,9 @@ and any decisions made.
 
 **Next**
 - 11-18's plan stands for tonight: a round of seven with the card closed, requests and quotes
-  capped at 3. Its retests: issuer vs receiver, the quote item's link to the request item,
-  the exclusive valid-thru.
-- Warm-ups 3 (an order line accepts a quote item, validity) and 4 (a proposal with work
-  lines; party columns vs roles) were offered this morning, past 11-18's "2 at most": the
-  user decides whether they happen.
+  capped at 3. Its retests: the quote item's link to the request item, a party column vs a
+  role row (exactly one vs optional and many, one party in two hats), the as-of test written
+  out.
 - Re-import `docs/cards-anki.txt` into Anki.
 
 ## 2026-11-18
