@@ -828,3 +828,10 @@ Misunderstandings and reinforce attempts, oldest first.
   Gil Reformas BILLING, Tomás's post GENERAL (or HOME) on his old link thru 2027-05-01 and on the new link from 2027-05-01;
   (c) the move ends Tomás's purpose with his link and starts it on the new one; the
   company's BILLING untouched; the typo touches no purpose.
+- **Q6 graded 2026-11-18 (short, maintenance): move vs typo stays 4.** (a) two contact
+  mechanisms, Calle Luna (shared) and Calle Río 2; Tomás → Calle Luna from 2026-01-01 thru
+  2027-05-01, Gil Reformas → Calle Luna from 2026-01-01, open, Tomás → Calle Río 2 from
+  2027-05-01 ✓ cold. The postal address subtype unnamed ~. (b) the typo edits the address
+  row in place, a wrongly stored fact; the move ends the old link and adds a new mechanism
+  and link ✓ cold. Unsaid ~: since the row is shared, the one edit fixes it for Tomás's old
+  link and the company at once, with no dates touched.
