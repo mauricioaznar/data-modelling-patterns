@@ -424,7 +424,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 11 · V1 Ch 4 · Order adjustments (Fig 4.6)
 - **Cue:** "What changes an order's price besides quantity × unit price, and which tax rate applies where?"
 - **Hook:** a receipt whose stickers FLOUTS the printed price
-- **Mantra:** Every price change is a typed row, on the order or one line, typed by what it
+- **Mantra:** Every price change is a typed row, on document or one item, typed by what it
   pays for; tax rate copied from place, category and date.
 
 <details><summary>Key</summary>
@@ -453,7 +453,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 12 · V1 Ch 4 · Order status, terms and item associations (Figs 4.7–4.8)
 - **Cue:** "Where does an order or a line stand, under which agreed terms, and which purchase will fill a sales line?"
 - **Hook:** a parcel tracker with fine print
-- **Mantra:** Status rows stack in time, terms carry typed numbers, on order or line;
+- **Mantra:** Status rows stack in time, terms carry typed numbers, on document or one item;
   purchase lines fill sales lines.
 
 <details><summary>Key</summary>
@@ -520,9 +520,9 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 14 · V1 Ch 4 · Requests and quotes (Figs 4.10–4.11)
 - **Cue:** "Whom did we ask for information, proposals or prices, what did they quote, and which quote became an order?"
 - **Hook:** sealed bids on the table
-- **Mantra:** A request asks for information, a proposal or prices, sent to responding parties
+- **Mantra:** A request asks for information, a proposal or a quote, sent to responding parties
   by a contact mechanism; its items carry needs, never a product. A quote runs issuer to
-  receiver, valid from–thru, with terms on it or one line; its items price a product or work
+  receiver, dated, with terms on document or one item; its items price a product or work
   and answer request items. Parties take roles on both. An order line accepts a quote item:
   until then it's only an offer.
 
@@ -593,7 +593,7 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Cue:** "Under which terms and at which prices did we agree, and which of them govern this order line?"
 - **Hook:** the contract's price sheet held up against each order line, and a tally counter
   clicking toward the cap
-- **Mantra:** Terms on agreement or item, dated inside it; agreed prices are program price
+- **Mantra:** Terms on document or one item, dated inside it; agreed prices are program price
   components; orders find agreements by rule.
 
 <details><summary>Key</summary>
