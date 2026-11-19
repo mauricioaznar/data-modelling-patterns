@@ -1301,3 +1301,9 @@ Scores: price components 2 → 3; feature prices stay at 2.
   Cádiz Playa still reads row 2 (reorders 200), Sevilla reads row 3, 35 ≤ 40, reorders 150;
   (c) the rule is about this shop; scoped to the province, any new pharmacy there would
   fall under it silently.
+- **Q7 graded 2026-11-18 (short, maintenance): reorder guideline stays 4.** (a) two rows for
+  the SPF 50 good: chain-wide (no scope), level 30, quantity 100, from 2026-01-01, left
+  open; the Cádiz Playa facility, level 80, quantity 200, from 2027-06-01 ✓ cold. (b) Cádiz
+  Playa at 60 reorders 200, reading its facility row (most specific wins: chain, boundary,
+  facility) ✓; Sevilla at 35, above 30, doesn't reorder, reading the chain-wide row ✓, both
+  cold. Word check: "limit" is the reorder level.

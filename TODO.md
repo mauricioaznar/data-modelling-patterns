@@ -157,7 +157,7 @@ trackers as usual, then tick here.
 
 ## Question round 2026-11-18 (short)
 
-Q1–Q4 answered 11-18; Q5–Q7 saved for the user's next sitting (give Q5 when they're back, no teach first).
+All seven answered and graded 11-18.
 
 All seven are in [docs/round-2026-11-18.md](docs/round-2026-11-18.md), short versions first,
 with no keys. The keys are in the Ch 2, Ch 3 and Ch 4 logs under "2026-11-18: question round,
@@ -171,8 +171,8 @@ user is still studying it (the user's call, 2026-11-18).
 - [x] Q4 · Ch 4 · terms (3) · retest the why: in the price now? (a money-shaped term, a percentage adjustment) (Talleres Brío, PO 850) · 3 → 4: rows and the effect test cold; the type name ~
 - [x] Q5 · Ch 4 · requirements: roles and status (3) · retest: roles dated, why no rollup (Colegio Sierra) · 3 → 4: roles dated cold, the why cold; who records the parent's status unsaid ~
 - [x] Q6 · Ch 2 · move vs typo; shared mechanism · maintenance (last 4 on 11-04) (Seguros Faro) · stays 4: all cold; the shared fix reaching both parties unsaid ~
-- [ ] Q7 · Ch 3 · reorder guideline · maintenance (last 4 on 11-04) (Farmacias Olmo)
-- [ ] Distinctions for the round (practice.md)
+- [x] Q7 · Ch 3 · reorder guideline · maintenance (last 4 on 11-04) (Farmacias Olmo) · stays 4: all cold
+- [x] Distinctions for the round (practice.md): Q1's bakery as REQUESTER added to D10's Trap; no new card (the other misses are slips or wording)
 
 ## Question round 2026-11-16 (short)
 

@@ -1957,7 +1957,8 @@ options; one that misses a fact goes to its submodel card instead.
   invented `order_role_contact` table (2026-11-01); the Laredo hotel made a requirement's
   party (a facility, needed at) and the customer a party column (a requirement role)
   (2026-11-13); Dr. Sanz and Residencia Olmo left off the needs, no requirement role rows,
-  and the scanner's clinic missing (2026-11-14).
+  and the scanner's clinic missing (2026-11-14); the Granada bakery made the need's
+  REQUESTER, a facility in a party's slot (2026-11-18).
 
 ### Distinction D11 · Payer or receiver? (V1 Ch 4)
 - **Cue:** "The firm pays; the bookcase goes to Laura's home, and she uses it."

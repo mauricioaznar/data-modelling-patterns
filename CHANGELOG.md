@@ -19,7 +19,10 @@ and any decisions made.
   dropped a third time; the bakery made REQUESTER, unasked). Q2 scoped roles 3 → 4 (every
   hat cold; (b) regraded after pushback: "on the order" read as the order's hats, Claude's
   wording). Q3 desired features 3 → 4. Q4 terms 3 → 4 (the effect test cold; the type name
-  must say what the value is, owned by the user).
+  must say what the value is, owned by the user). Q5 requirement roles + status 3 → 4
+  (roles dated at last, the why cold). Q6 move vs typo and Q7 reorder guideline
+  (maintenance) hold 4. Round closed; D10's Trap gets the bakery as REQUESTER.
+- Card 13's mantra now carries the dated statuses (the user noticed it didn't).
 
 **Decisions**
 - The 20-word limit on mantras is gone: a mantra is as long as its submodel needs, since a
@@ -30,7 +33,8 @@ and any decisions made.
   2026-11-18 is graded cold in both (`docs/practice.md`).
 
 **Next**
-- Round 2026-11-18 from Q5 (Q5–Q7 left), then distinctions.
+- Next round: retest the need (the quantity, a role holder is a party); scoped roles'
+  next maintenance asks the line-level loss, plainly worded.
 - Requests and quotes joins a round once the user has studied card 14.
 - Re-import `docs/cards-anki.txt` into Anki.
 
