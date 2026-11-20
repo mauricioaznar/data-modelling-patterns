@@ -162,7 +162,7 @@ with no keys. The keys are in the Ch 4 log under "2026-11-20: question round, pe
 **don't open it before grading**. Read each answer back, grade, log and update the trackers
 as usual, then tick here. Requests and quotes capped at 3, card 14 closed (the 11-18 plan).
 
-- [ ] Q1 · Ch 4 · requests: typed, items carry needs, who it went to (0) · first test (Hostal Ola)
+- [x] Q1 · Ch 4 · requests: typed, items carry needs, who it went to (0) · first test (Hostal Ola) · 0 → 2 both rows: RFP for prices, the suppliers as items, not responding parties; the tie to the need ✓
 - [ ] Q2 · Ch 4 · quotes: issuer, receiver, validity, the item answers the request item (0) · first test; retest party column vs role row, one party in two hats (Colchones Duna)
 - [ ] Q3 · Ch 4 · acceptance (0) · first test; retest the as-of test written out (PO 870)
 - [ ] Q4 · Ch 4 · requirements: the need (3) · retest: the quantity, the description, a role holder is a party, not the facility (Granja Prado)

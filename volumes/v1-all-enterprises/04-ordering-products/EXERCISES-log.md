@@ -1494,3 +1494,19 @@ Misunderstandings and reinforce attempts, oldest first.
   (the island €5 has none); two charges of one kind need two columns; the type that says
   what each is. Full: FEE, amount 2, on the order; (c) the type decides the sign: a
   DISCOUNT lowers the price, every other type raises it.
+
+### 2026-11-20: round 2026-11-20 Q1, requests first test (Hostal Ola; key above)
+- Mantra recited first, card closed: all of card 14's chain right in words, including
+  "sent to responding parties by a contact mechanism".
+- (a) Request date 03-02 and response due 03-15 ✓; the need tied through
+  `requirement_request` at the item ✓ (the user's own doubt, item or document: the item);
+  no product ✓. ✗ RFP for "ask for their prices" (RFQ); the why given, "the vendor chooses
+  the product", holds for every request type, so it can't pick one: the type is what we
+  ask for (information, an approach and a price, prices for items). ✗ Two request items,
+  one per supplier, each with party, mechanism and date sent: the right three facts on the
+  wrong table; they are `responding_party` rows on the request, and the need is one item.
+  ~ Required-by on the request (it's on the item), the 30 only in the description (the
+  quantity column again), "request-by: us" as a column (an ORIGINATOR role row).
+- (b) A supplier column loses asking many for one request ✓; the quote item answering the
+  request item ✓, but the fan-out is per request, not per item.
+- Rows: request typed + items 0 → 2; who it went to 0 → 2.
