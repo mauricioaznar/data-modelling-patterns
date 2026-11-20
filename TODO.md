@@ -167,7 +167,7 @@ as usual, then tick here. Requests and quotes capped at 3, card 14 closed (the 1
 - [x] Q3 · Ch 4 · acceptance (0) · first test; retest the as-of test written out (PO 870) · 0 → 3: the link and the copied price ✓, the as-of test cold ✓; the dates not filled in
 - [x] Q4 · Ch 4 · requirements: the need (3) · retest: the quantity, the description, a role holder is a party, not the facility (Granja Prado) · stays 3: the quantity ✓ at last, the barn a facility ✓; the description on the subtype again, OWNER cued by (b)
 - [x] Q5 · Ch 4 · sales tax (3) · retest: the rates, the order date, the stored percentage (Librería Cumbre, order 880) · 3 → 2: no boundary on the rates, the novel taxed 7 + 3 (stacked, not the most specific); the order date and the copy ✓
-- [ ] Q6 · Ch 4 · item association · maintenance (last 4 on 11-04) (Deportes Cima, order 890)
+- [x] Q6 · Ch 4 · item association · maintenance (last 4 on 11-04) (Deportes Cima, order 890) · stays 4: rows and no quantity cold; "product association" again
 - [ ] Q7 · Ch 4 · adjustments as typed rows · maintenance (last 4 on 11-04) (Cerámica Alba, order 900)
 - [ ] Distinctions for the round (practice.md)
 

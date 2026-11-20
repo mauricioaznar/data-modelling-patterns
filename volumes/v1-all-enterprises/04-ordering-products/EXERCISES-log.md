@@ -1562,3 +1562,12 @@ Misunderstandings and reinforce attempts, oldest first.
   the user's: the rates are the region's, stated before any order exists, and "but 3% on
   books" marks an exception; Claude could have written "on every product, books excepted".
   The grade stands: the missing boundary and the stacking don't come from the wording.
+
+### 2026-11-20: round 2026-11-20 Q6, item association maintenance (Deportes Cima; key above)
+- (a) PO 360 line 1 fills SO 890 line 1, PO 361 line 1 fills SO 890 line 2 ✓; no quantity,
+  "what fills what, no allocation" ✓ unprompted. Named "order-item-product-association" ~
+  (`order_item_association`; product association is Ch 3's), as on 11-04.
+- (b) An order-to-order link says the orders are tied but not which lines fill which ✓
+  (read as "wouldn't be able to tell"; the answer wrote "would"). The scenario's case, one
+  sale filled by two suppliers, not named.
+- Row stays 4.
