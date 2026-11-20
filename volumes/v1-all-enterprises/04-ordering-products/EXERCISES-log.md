@@ -1510,3 +1510,14 @@ Misunderstandings and reinforce attempts, oldest first.
 - (b) A supplier column loses asking many for one request ✓; the quote item answering the
   request item ✓, but the fan-out is per request, not per item.
 - Rows: request typed + items 0 → 2; who it went to 0 → 2.
+
+### 2026-11-20: round 2026-11-20 Q2, quotes first test (Colchones Duna; key above)
+- (a) Issuer Duna, receiver Hostal Ola, issued and valid from 03-10 ✓. ✗ Valid thru
+  31 Mar for "up to and including 31 Mar" (exclusive: 2027-04-01; the cue was given in
+  words). ✗ No quote type (PRODUCT_QUOTE). ~ Duna labelled "(customer)": it's the vendor;
+  the quote names parties, not their roles. Item: Nube, 30, €180, `request_item_id` → the
+  request item ✓ (warm-up 2's miss, the requirement, fixed).
+- (b) Sara PREPARER and CONTACT, two rows, one party ✓ (warm-up 4's miss fixed). Why:
+  exactly one issuer and receiver, required, known at creation ✓; roles "can be many" ✓,
+  "optional" implied, not said ~.
+- Rows: the quote 0 → 2; the quote item 0 → 3.
