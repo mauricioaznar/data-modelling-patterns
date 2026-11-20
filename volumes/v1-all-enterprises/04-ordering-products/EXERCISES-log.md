@@ -1531,3 +1531,15 @@ Misunderstandings and reinforce attempts, oldest first.
   as-of test written out), a flag not a block, and the query inverts it to list the bad
   rows ✓. Not filled with the case's dates (asked) ~: 03-10 <= 03-20 < 04-01.
 - Row: acceptance 0 → 3.
+
+### 2026-11-20: round 2026-11-20 Q4, the need retest (Granja Prado; key above)
+- (a) INTERNAL, PRODUCT, created 04-05, by 06-01, budget 1200, reason, the Olivar barn as
+  the facility ✓; quantity 3 ✓ (dropped in the three rounds before). ✗ The description on
+  `product_requirement` again (it holds only the optional product; the description is a
+  `requirement` column). Roles: OWNER Inés ✓, but (b) named OWNER, so it's cued (Claude's
+  wording, the user called it); an "Answerer" type beside it ~ (no such type: OWNER is the
+  one who answers for it; REQUESTER would be her second hat, since she logged it); no from
+  date ~ (requirement roles are dated: 2027-04-05).
+- (b) A facility is a place, a role holder is a party; with the barn as owner nobody
+  answers for the need; the barn goes on the need's facility ✓ cold (11-18's miss fixed).
+- Row: the need stays 3; the next retest is the description alone.
