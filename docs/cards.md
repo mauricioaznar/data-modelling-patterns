@@ -28,6 +28,10 @@ split into *Drafts* and *Settled*; patterns stay in *Data Models::Patterns*, dis
   hand, once per kind: Browse, search `"deck:Data Models::Submodels::Drafts" tag:v1::ch03`
   (with the chapter's tag), select all, Change Deck to *Data Models::Submodels::Settled*;
   then the same with *Architecture*.
+- **Work in progress, for extra rehearsal** (the user's call, 2026-11-20): a third subdeck,
+  *Data Models::Submodels::Work in progress*, made in Anki and run by hand. Move a card
+  there when its mantra or Trap changes, and back to *Settled* when it holds. The export
+  never names it: a re-import updates the text and leaves the card where you put it.
 
 **OLAP cards** (the user's call, 2026-10-20). A warehouse card (a star schema: Vol 1's
 warehouse chapters, or the end of a Vol 2 chapter) carries a `- **Kind:** OLAP` bullet under
