@@ -515,7 +515,9 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   `facility_id`, the people requirement role rows (OWNER, REQUESTER). The one-column design
   pictured as a column per pair: it is one column with a value per pair (CUSTOMER_PRODUCT),
   so "every customer need" lists values, and a new kind edits every such filter. A line's
-  whole 100 committed where only 80 of the need was left: commit up to what's left.
+  whole 100 committed where only 80 of the need was left: commit up to what's left. The
+  description put on `product_requirement`: the subtype holds only the optional product;
+  the description is the requirement's, beside its quantity.
 - **D:** requirement → requirement (part of); requirement → facility (Ch 2);
   product_requirement (= requirement) → product (Ch 3, optional); product_requirement ←
   desired_feature → product_feature (Ch 3); requirement ← commitment → order_item;
@@ -548,10 +550,13 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **W:** requests and quotes kept as e-mails, or as draft orders marked "quoted": no link from
   the question to the needs behind it, no room for competing offers, and an offer mixed up
   with a commitment.
-- **T:** *(the naive-model trap until practice gives yours)* reaching the quoted product
-  through request item → requirement → product: the supplier may quote something else
-  (Table 4.15's black pens for a blue need, recycled paper). And accepting a quote after it
-  expired.
+- **T:** a request for proposal for "send us your prices" (a request for quote): the type
+  is what we ask for, not "the vendor picks the product", which holds for every request.
+  One need written as one request item per supplier, each with its party, mechanism and
+  date: those are responding parties on the request, and every supplier gets the same
+  items. A valid thru stored inclusive. Also: reaching the quoted product through request
+  item → requirement → product: the supplier may quote something else (Table 4.15's black
+  pens for a blue need, recycled paper).
 - **D:** request ← request_item ← requirement_request → requirement; request ←
   responding_party → party, → contact_mechanism; request ← request_role → party; quote →
   party ×2 (issued by, given to); quote ← quote_item → product | work_effort (arc);
