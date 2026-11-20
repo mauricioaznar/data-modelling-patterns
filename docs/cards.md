@@ -425,8 +425,8 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Cue:** "What changes an order's price besides quantity × unit price, and which tax rate applies where?"
 - **Hook:** a receipt whose stickers FLOUTS the printed price
 - **Mantra:** Every price change is a typed row, on document or one item, typed by what it
-  pays for. Tax per item: each place charges one rate, its most specific category wins,
-  places add up; the rate copied as of the order date.
+  pays for; tax rate copied from place, category and date.
+  Per place the most specific rate wins; places add up.
 
 <details><summary>Key</summary>
 
