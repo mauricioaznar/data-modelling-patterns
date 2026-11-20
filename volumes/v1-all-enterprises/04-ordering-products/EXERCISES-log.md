@@ -1558,3 +1558,7 @@ Misunderstandings and reinforce attempts, oldest first.
   of different kinds stack, which is what the user carried over.
 - Row: sales tax 3 → 2. Distinction candidate: tax rates within a boundary (most specific
   wins) vs across boundaries (add) vs adjustments (stack).
+- Follow-up: the user asked whether "on everything" could read as the order. Shared, mostly
+  the user's: the rates are the region's, stated before any order exists, and "but 3% on
+  books" marks an exception; Claude could have written "on every product, books excepted".
+  The grade stands: the missing boundary and the stacking don't come from the wording.
