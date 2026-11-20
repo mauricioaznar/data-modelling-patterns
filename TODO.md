@@ -157,6 +157,8 @@ trackers as usual, then tick here.
 
 ## Question round 2026-11-20 (short)
 
+All seven answered and graded 11-20.
+
 All seven are in [docs/round-2026-11-20.md](docs/round-2026-11-20.md), short versions first,
 with no keys. The keys are in the Ch 4 log under "2026-11-20: question round, pending":
 **don't open it before grading**. Read each answer back, grade, log and update the trackers
@@ -168,7 +170,7 @@ as usual, then tick here. Requests and quotes capped at 3, card 14 closed (the 1
 - [x] Q4 · Ch 4 · requirements: the need (3) · retest: the quantity, the description, a role holder is a party, not the facility (Granja Prado) · stays 3: the quantity ✓ at last, the barn a facility ✓; the description on the subtype again, OWNER cued by (b)
 - [x] Q5 · Ch 4 · sales tax (3) · retest: the rates, the order date, the stored percentage (Librería Cumbre, order 880) · 3 → 2: no boundary on the rates, the novel taxed 7 + 3 (stacked, not the most specific); the order date and the copy ✓
 - [x] Q6 · Ch 4 · item association · maintenance (last 4 on 11-04) (Deportes Cima, order 890) · stays 4: rows and no quantity cold; "product association" again
-- [ ] Q7 · Ch 4 · adjustments as typed rows · maintenance (last 4 on 11-04) (Cerámica Alba, order 900)
+- [x] Q7 · Ch 4 · adjustments as typed rows · maintenance (last 4 on 11-04) (Cerámica Alba, order 900) · stays 4: all cold
 - [ ] Distinctions for the round (practice.md)
 
 ## Question round 2026-11-18 (short)

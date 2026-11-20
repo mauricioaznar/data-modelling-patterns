@@ -3,6 +3,31 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-20
+
+**Built**
+- Round 2026-11-20 written (short) in `docs/round-2026-11-20.md`, keys in the Ch 4 log:
+  requests and quotes capped at 3 (card 14 closed), the need, sales tax; maintenance on
+  item association and adjustments (the oldest 4s, 11-04).
+- Graded, all cold: Q1 requests 0 → 2 and responding parties 0 → 2 (RFP for a price
+  request, the suppliers written as request items); Q2 the quote 0 → 2 (thru not
+  exclusive, no type), the quote item 0 → 3 (the request item link and Sara in two hats
+  fixed); Q3 acceptance 0 → 3 (the as-of test written out); Q4 the need stays 3 (the
+  quantity at last, the description on the subtype again); Q5 sales tax 3 → 2 (no
+  boundary, the novel taxed 7 + 3); Q6 item association and Q7 adjustments hold 4.
+- Card 11: one line added to the mantra (per place the most specific rate wins; places add
+  up), the key and Trap updated with Q5's mistakes. Pushed.
+
+**Decisions**
+- Rougher teasing in sessions is welcome (the user's call); mild swearing fine.
+
+**Next**
+- Distinctions for the round: Traps for card 14 (RFP for prices; suppliers as items) and
+  card 13 (the description on the subtype), pending the user's OK.
+- Next round: retest the requests rows, the quote (type, exclusive thru), sales tax, the
+  description on the need.
+- Re-import `docs/cards-anki.txt` into Anki.
+
 ## 2026-11-19
 
 **Built**

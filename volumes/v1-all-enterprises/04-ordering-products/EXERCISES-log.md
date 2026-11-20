@@ -1571,3 +1571,11 @@ Misunderstandings and reinforce attempts, oldest first.
   (read as "wouldn't be able to tell"; the answer wrote "would"). The scenario's case, one
   sale filled by two suppliers, not named.
 - Row stays 4.
+
+### 2026-11-20: round 2026-11-20 Q7, adjustments maintenance (Cerámica Alba; key above)
+- (a) DISCOUNT 10% on line 1, SHIPPING_AND_HANDLING €9 and SURCHARGE €5 on the order ✓ cold.
+- (b) One column mixing several discounts or charges loses which value is which ✓ ("would"
+  for "wouldn't" again); the other kinds (the island surcharge, fees, tax) have no column
+  and get forced into the wrong one ✓. A column on the order can't hold a one-line
+  discount: unsaid, not needed for two.
+- Row stays 4. Round closed.
