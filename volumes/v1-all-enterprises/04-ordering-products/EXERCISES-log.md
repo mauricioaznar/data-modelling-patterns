@@ -1543,3 +1543,18 @@ Misunderstandings and reinforce attempts, oldest first.
 - (b) A facility is a place, a role holder is a party; with the barn as owner nobody
   answers for the need; the barn goes on the need's facility ✓ cold (11-18's miss fixed).
 - Row: the need stays 3; the next retest is the description alone.
+
+### 2026-11-20: round 2026-11-20 Q5, sales tax retest (Librería Cumbre, order 880; key above)
+- (a) 7% thru 2027-07-01, 8% from 2027-07-01, 3% for books, from 2026-01-01 ✓ (exclusive
+  thru ✓). ✗ "No place condition" on all three: `geographic_boundary_id` is required, the
+  rate is Comarca Norte's. ~ "A custom table we built" (the book's SALES TAX LOOKUP; only
+  the dates are ours); "1 jan2" a typo; the 7% row labelled #3 in (b).
+- (b) The order date 28 Jun over the ship date 3 Jul ✓, the copy onto a SALES_TAX
+  adjustment ✓. ✗ Asked to choose between two readings, the user confirmed: the 7% on the
+  whole order and the novel's 3% on its line, so the novel pays 10% ("they stack, they
+  don't get the more specific"). Key: one SALES_TAX row per line, the lamp 7, the novel 3:
+  within one boundary the category rate replaces the general one (the 4.6 tax query picks
+  the category row first); rates of different boundaries add (state + city). Adjustments
+  of different kinds stack, which is what the user carried over.
+- Row: sales tax 3 → 2. Distinction candidate: tax rates within a boundary (most specific
+  wins) vs across boundaries (add) vs adjustments (stack).
