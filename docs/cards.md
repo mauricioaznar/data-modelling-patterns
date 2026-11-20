@@ -425,7 +425,8 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **Cue:** "What changes an order's price besides quantity × unit price, and which tax rate applies where?"
 - **Hook:** a receipt whose stickers FLOUTS the printed price
 - **Mantra:** Every price change is a typed row, on document or one item, typed by what it
-  pays for; tax rate copied from place, category and date.
+  pays for. Tax per item: each place charges one rate, its most specific category wins,
+  places add up; the rate copied as of the order date.
 
 <details><summary>Key</summary>
 
@@ -435,14 +436,20 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   **L**ess = discount, **O**ther = miscellaneous, **U**pcharge = surcharge, an extra on top of
   the normal, **T**ax = sales tax, **S**hipping = shipping and handling, moving the goods; finer
   types under them) ·
-  `sales_tax_lookup` (a rate per geographic boundary, optionally per product category, dated:
-  the rate in force on the order date).
+  `sales_tax_lookup` (a rate per geographic boundary, which is required, optionally per
+  product category, null = every category, dated: the rate in force on the order date).
+  Per item, because what it is (the category) and where it ships (the ship-to) are both on
+  the line; on the order only when every line gets the same rate. Within one boundary the
+  category rate **replaces** the general one; different boundaries (state + city) add.
 - **W:** a column per charge on the order (`discount`, `tax`, `freight`): every new kind of
   charge is a schema change, two discounts don't fit, and a discount on one line has nowhere
   to go.
 - **T:** *(the naive-model trap until practice gives yours)* pointing the tax adjustment at
   the lookup row instead of copying its rate: correcting the row rewrites old orders. And
-  forgetting the sign: a discount stored like a charge adds to the bill.
+  forgetting the sign: a discount stored like a charge adds to the bill. And stacking the
+  general rate on the whole order with the books rate on the novel's line (10% for a 3%
+  book): within one place the rates compete, they don't add. And a rate with "no place
+  condition": the boundary is whose rate it is.
 - **D:** order ← adjustment → item (one or the other); adjustment → adjustment_type (→ its
   parent type); sales_tax_lookup → geographic_boundary (Ch 2), → product_category (Ch 3). No
   line from the lookup to the adjustment: the rate is copied.
