@@ -1432,3 +1432,65 @@ Misunderstandings and reinforce attempts, oldest first.
   them ✓ cold (the 11-17 unanswered why). ~: "is it fulfilled?" left at "can't be assumed"
   (on 21 Apr its own latest status still stands), and the other half unsaid: a status is a
   recorded decision, so someone records FULFILLED on the refit when it's confirmed.
+
+### 2026-11-20: question round, pending (wording in `docs/round-2026-11-20.md`; order in TODO)
+- **Q1 key (requests: typed by what it asks, items carry needs; who it went to; Hostal
+  Ola).** (a) `request`: RFQ (prices), request date 2027-03-02, response required
+  2027-03-15, a description. `request_item`: seq 1, required by 2027-04-01, quantity 30, a
+  description, **no product**. `requirement_request`: that item → the 1 Mar need. (b) Two
+  suppliers on one request, each with its own mechanism (e-mail, web form) and date sent
+  (03-02, 03-03): `responding_party` rows. A column holds one supplier and no how or when;
+  shopping around would mean two requests for one question. Full: the two
+  `responding_party` rows; `request_role` Pablo ORIGINATOR and APPROVER (one party, two
+  rows); (c) the request asks for what the need needs; picking a product is the
+  supplier's answer (the quote item names it).
+- **Q2 key (quote: issuer and receiver, valid dates, the item answers the request item;
+  columns vs roles).** (a) `quote`: PRODUCT_QUOTE, issued by Colchones Duna, given to Hostal
+  Ola, issued 2027-03-10, valid from 2027-03-10, valid thru **2027-04-01** (exclusive).
+  `quote_item`: seq 1, product the Nube, quantity 30, unit price 180, `request_item_id` →
+  Hostal Ola's request item (**not** the need). (b) `quote_role`: Sara PREPARER, Sara
+  CONTACT (one party, two rows). Every quote has exactly one issuer and one receiver, so
+  plain columns; other parties are optional, any number, and one party can wear several
+  hats, so role rows. Full: `quote_term` PAYMENT_DUE_DAYS 30 on the quote,
+  DELIVERY_WITHIN_DAYS 10 on the item; (c) the need and request item say what's wanted;
+  the quote item names the supplier's product, which may differ (the quote's choice).
+- **Q3 key (acceptance; the as-of test written out).** (a) PO 870, `order_kind` PURCHASE.
+  Line 1: product Nube, quantity 30, unit price 180 (its own copy), `quote_item_id` → the
+  Nube quote item. Line 2: pillows, 30, unit price 12, `quote_item_id` null (nothing
+  quoted). (b) `valid_from_date <= order_date and valid_thru_date > order_date`:
+  2027-03-10 <= 2027-03-20 and 2027-04-01 > 2027-03-20 ✓ (a data-quality query, not a
+  block). Full: (b) 1 Apr fails (04-01 > 04-01 is false); (c) the quote binds the vendor,
+  not the buyer: Hostal Ola owes Descanso Real nothing (and its quote had lapsed anyway);
+  Colchones Duna owes the quoted price while the quote is valid.
+- **Q4 key (the need, retest: quantity, description, a role holder is a party; Granja
+  Prado).** (a) `requirement`: INTERNAL, PRODUCT, description "water troughs", **quantity
+  3**, created 2027-04-05, required by 2027-06-01, budget 1200, reason "the old ones leak",
+  `facility_id` the Olivar barn. `product_requirement`, `product_id` null.
+  `requirement_role`: Inés OWNER from 2027-04-05 (REQUESTER welcome, also her). (b) A role
+  holder is a party who answers for the need; the barn is a facility, the place where it's
+  needed, and goes on `facility_id`. Full: Jorge APPROVER from 2027-04-08; statuses
+  (e.g. CREATED 04-05, APPROVED 04-08, FULFILLED 05-15) as dated rows; (c) who answers for
+  a need changes over its long life (a hand-over), while an order's hats are fixed facts
+  of one transaction.
+- **Q5 key (sales tax, retest: the rates, the order date, the stored percentage).** (a)
+  `sales_tax_lookup`: Comarca Norte, no category, 7, from 2026-01-01 thru 2027-07-01;
+  Comarca Norte, no category, 8, from 2027-07-01; Comarca Norte, Books, 3, from 2026-01-01.
+  (b) Two SALES_TAX `order_adjustment` rows, one per line: the novel 3 (the books rate,
+  more specific), the lamp 7: read as of the **order date** 06-28, not the ship date; the
+  percentage copied onto the row. Full: (b) dated 2 Jul, the lamp 8, the novel 3; (c) the
+  copy is a snapshot of what was agreed; a pointer would make the order's tax follow later
+  changes to the rate row (and a fix to a typo in it).
+- **Q6 key (item association, maintenance; last 4 on 11-04).** (a)
+  `order_item_association`: sales 890 line 1 → purchase 360 line 1; sales 890 line 2 →
+  purchase 361 line 1 (on the sales and purchase item subtypes). (b) One sale's lines are
+  filled by different purchases (two suppliers here), and a purchase line can fill lines of
+  several sales: only line to line says which goods fill which. Full: (c) no quantity is
+  drawn, so the 12-of-20 split isn't recorded; add a quantity to the association (our
+  addition), as the requirement commitment has.
+- **Q7 key (adjustments, maintenance; last 4 on 11-04).** (a) `order_adjustment`: DISCOUNT
+  (a subtype welcome), percentage 10, on line 1 (`order_item_id`); SHIPPING_AND_HANDLING,
+  amount 9, on the order; SURCHARGE, amount 5, on the order. (b) Any two: a column on the
+  order can't say a discount is on one line; every new kind of charge needs a new column
+  (the island €5 has none); two charges of one kind need two columns; the type that says
+  what each is. Full: FEE, amount 2, on the order; (c) the type decides the sign: a
+  DISCOUNT lowers the price, every other type raises it.

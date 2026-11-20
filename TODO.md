@@ -155,6 +155,22 @@ trackers as usual, then tick here.
 
 - [x] Next round (in round 2026-11-13, Q3): retest party role + role type (3) inside a relationship question: the dated `party_role` rows written beside the relationship rows, graded together, since each relationship points at them (the user's call, 2026-11-11)
 
+## Question round 2026-11-20 (short)
+
+All seven are in [docs/round-2026-11-20.md](docs/round-2026-11-20.md), short versions first,
+with no keys. The keys are in the Ch 4 log under "2026-11-20: question round, pending":
+**don't open it before grading**. Read each answer back, grade, log and update the trackers
+as usual, then tick here. Requests and quotes capped at 3, card 14 closed (the 11-18 plan).
+
+- [ ] Q1 · Ch 4 · requests: typed, items carry needs, who it went to (0) · first test (Hostal Ola)
+- [ ] Q2 · Ch 4 · quotes: issuer, receiver, validity, the item answers the request item (0) · first test; retest party column vs role row, one party in two hats (Colchones Duna)
+- [ ] Q3 · Ch 4 · acceptance (0) · first test; retest the as-of test written out (PO 870)
+- [ ] Q4 · Ch 4 · requirements: the need (3) · retest: the quantity, the description, a role holder is a party, not the facility (Granja Prado)
+- [ ] Q5 · Ch 4 · sales tax (3) · retest: the rates, the order date, the stored percentage (Librería Cumbre, order 880)
+- [ ] Q6 · Ch 4 · item association · maintenance (last 4 on 11-04) (Deportes Cima, order 890)
+- [ ] Q7 · Ch 4 · adjustments as typed rows · maintenance (last 4 on 11-04) (Cerámica Alba, order 900)
+- [ ] Distinctions for the round (practice.md)
+
 ## Question round 2026-11-18 (short)
 
 All seven answered and graded 11-18.
