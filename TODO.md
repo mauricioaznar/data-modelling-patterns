@@ -164,7 +164,7 @@ as usual, then tick here. Requests and quotes capped at 3, card 14 closed (the 1
 
 - [x] Q1 · Ch 4 · requests: typed, items carry needs, who it went to (0) · first test (Hostal Ola) · 0 → 2 both rows: RFP for prices, the suppliers as items, not responding parties; the tie to the need ✓
 - [x] Q2 · Ch 4 · quotes: issuer, receiver, validity, the item answers the request item (0) · first test; retest party column vs role row, one party in two hats (Colchones Duna) · quote 0 → 2 (thru not exclusive, no type), item 0 → 3; two hats on Sara ✓, the column-vs-role why ✓
-- [ ] Q3 · Ch 4 · acceptance (0) · first test; retest the as-of test written out (PO 870)
+- [x] Q3 · Ch 4 · acceptance (0) · first test; retest the as-of test written out (PO 870) · 0 → 3: the link and the copied price ✓, the as-of test cold ✓; the dates not filled in
 - [ ] Q4 · Ch 4 · requirements: the need (3) · retest: the quantity, the description, a role holder is a party, not the facility (Granja Prado)
 - [ ] Q5 · Ch 4 · sales tax (3) · retest: the rates, the order date, the stored percentage (Librería Cumbre, order 880)
 - [ ] Q6 · Ch 4 · item association · maintenance (last 4 on 11-04) (Deportes Cima, order 890)

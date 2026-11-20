@@ -1521,3 +1521,13 @@ Misunderstandings and reinforce attempts, oldest first.
   exactly one issuer and receiver, required, known at creation ✓; roles "can be many" ✓,
   "optional" implied, not said ~.
 - Rows: the quote 0 → 2; the quote item 0 → 3.
+
+### 2026-11-20: round 2026-11-20 Q3, acceptance first test (PO 870; key above)
+- (a) Line 1: Nube, 30, `quote_item_id` → the quote item ✓; the price "copied from the
+  quote" ✓, its value left as "?" (the €180 was in Q2, not repeated in Q3: shared, mostly
+  the user's, since "accepting the Nube quote" points at it). Line 2: pillows, 30, €12, no
+  link ✓.
+- (b) `valid_from <= order_date and order_date < valid_thru` ✓ cold (the 11-19 retest: the
+  as-of test written out), a flag not a block, and the query inverts it to list the bad
+  rows ✓. Not filled with the case's dates (asked) ~: 03-10 <= 03-20 < 04-01.
+- Row: acceptance 0 → 3.
