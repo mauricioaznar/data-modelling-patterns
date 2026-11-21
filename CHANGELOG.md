@@ -3,6 +3,18 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-21
+
+**Built**
+- Round 2026-11-21 written (short) in `docs/round-2026-11-21.md`, keys in the Ch 2, Ch 3
+  and Ch 4 logs: retests of the request (RFQ vs RFP), responding parties, the quote (type,
+  exclusive thru, we as issuer), sales tax (boundary, most specific, places add) and the
+  need's description; maintenance on communication events (Ch 2) and estimated cost (Ch 3),
+  the oldest 4s (11-08).
+
+**Next**
+- Grade the round as the answers come back; distinctions after it.
+
 ## 2026-11-20
 
 **Built**

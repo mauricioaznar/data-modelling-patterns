@@ -835,3 +835,16 @@ Misunderstandings and reinforce attempts, oldest first.
   row in place, a wrongly stored fact; the move ends the old link and adds a new mechanism
   and link ✓ cold. Unsaid ~: since the row is shared, the one edit fixes it for Tomás's old
   link and the company at once, with no dates touched.
+
+### 2026-11-21: question round, pending (wording in `docs/round-2026-11-21.md`; order in TODO)
+- **Q6 key (communication event + roles, maintenance; Seguros Delta, last 4 on 11-08).**
+  (a) `communication_event`: started 2027-03-03 10:00, ended 10:15, medium PHONE
+  (`contact_mechanism_type_id`), status EVENT_COMPLETED, the relationship (Seguros Delta's
+  customer relationship with Panadería Trigo) optional, a note. `communication_event_role`:
+  Nuria CALLER, Pedro CALLEE (the people, not their companies). `communication_event_purpose`:
+  SALES_FOLLOW_UP. (b) Any two: events of other media need other roles (sender, recipient,
+  cc; organizer, attendees), so more columns per medium; a meeting has any number of
+  attendees; one party may hold two roles; the rule of which roles fit which medium
+  (`valid_contact_mechanism_role`) becomes data, not columns. Full: (c) a second event,
+  EMAIL, 2027-03-03 11:00, SALES_FOLLOW_UP (or a quote purpose), roles Nuria SENDER, Pedro
+  RECIPIENT, Ana CC.

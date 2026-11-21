@@ -1579,3 +1579,53 @@ Misunderstandings and reinforce attempts, oldest first.
   and get forced into the wrong one ✓. A column on the order can't hold a one-line
   discount: unsaid, not needed for two.
 - Row stays 4. Round closed.
+
+### 2026-11-21: question round, pending (wording in `docs/round-2026-11-21.md`; order in TODO)
+- **Q1 key (requests retest: the type by what it asks, the item carries the need; Escuela
+  Brisa).** (a) `request`: RFQ (prices for items we name), request date 2027-02-15,
+  response required 2027-02-26, a description. `request_item`: seq 1, required by
+  2027-03-15, **quantity 40**, a description, no product. `requirement_request`: that item →
+  the 12 Feb need. The three shops are not asked for rows here (they'd be
+  `responding_party`, never items). (b) RFP: we ask for an approach and its price, and the
+  firm decides what goes on the lines. The type is what we ask for: information (RFI), an
+  approach and a price (RFP), prices for items we name (RFQ). "The vendor chooses the
+  product" holds for every type, so it can't decide one (11-20's miss). Full: (c) one
+  request can bundle items for several needs, and one need can go out on several requests:
+  many to many, item by item.
+- **Q2 key (who a request went to, retest: responding parties, not items; Taller Sierra).**
+  (a) `responding_party`: request 15, Frenos Ebro, the pedidos@ebro.es mechanism, date sent
+  2027-05-04; request 15, Recambios Sur, its fax number, 2027-05-06. `request_role`: Lucía
+  ORIGINATOR (a from date not needed: request roles aren't dated). (b) An item is what we
+  ask for, a responding party is whom we ask: per-supplier items repeat the 200 pads (the
+  need counted twice, or split), and each supplier's quote would answer a different item,
+  so the answers can't be compared on one item. Full: Lucía CONTACT, a second row (one
+  party, two hats); (c) a party has many mechanisms; the row records the one actually used
+  for this request, and when (a fact of sending, not a lookup).
+- **Q3 key (the quote retest: the type, the exclusive thru, issuer vs receiver; we're the
+  vendor; Pinturas Vega).** (a) `quote`: **PROPOSAL**, issued by Pinturas Vega, given to
+  Hotel Mar, issue date 2027-06-08, valid from 2027-06-08, valid thru **2027-07-01**
+  (exclusive), a description; the €2,400 belongs on a quote item, not the row. (b) The tins'
+  quote is a PRODUCT_QUOTE: same shape, but the hotel chose what goes on the lines (items
+  from our catalogue), while in a proposal we chose the approach. Issuer and receiver stay
+  the same. Full: (c) `valid_from_date <= 2027-07-01 and valid_thru_date > 2027-07-01`:
+  06-08 <= 07-01 ✓, 07-01 > 07-01 ✗: expired ("up to and including 30 Jun").
+- **Q4 key (sales tax retest: a boundary on every rate, most specific within a place,
+  places add; Tienda Valle, order 910).** (a) `sales_tax_lookup`: Provincia Roca, no
+  category, 6, from 2026-01-01; Provincia Roca, Food, 2, from 2026-01-01; Villa Clara, no
+  category, 1, from 2027-03-01. Every row names its boundary. (b) As of the order date
+  04-10, per line, through SALES_TAX `order_adjustment` rows with the percentage copied: the
+  oil 2 (Roca's food rate replaces its 6) + 1 (Villa Clara) = 3; the pan 6 + 1 = 7. Two
+  rows per line (one per place) or one summed row both pass, if the why is right. Full: (c)
+  a rate is a place's law: without the boundary we can't tell which rates apply to the
+  customer's address, nor that two places add.
+- **Q5 key (the need retest: the description on the requirement; Clínica Norte).** (a)
+  `requirement`: INTERNAL, PRODUCT, **description** "wheelchairs" (on `requirement`),
+  quantity 6, created 2027-02-02, required by 2027-03-01, reason "the old ones are worn
+  out", `facility_id` the Ala Este ward. `product_requirement`: `product_id` null (no model
+  yet). `requirement_role`: Marta OWNER from 2027-02-02 (REQUESTER welcome). (b)
+  `product_requirement.product_id` set to Rueda Lite; the description, quantity and dates
+  stay on `requirement`: the need as it was stated. Full: (a) a part, `part_of` the
+  wheelchairs need: description "bariatric wheelchairs", quantity 2, same subtypes;
+  `requirement_role` Pablo OWNER of the part (a part's owner may differ); (c) every
+  requirement has a description, work needs too; the subtype holds only what is
+  product-specific, the optional product.

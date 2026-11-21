@@ -1307,3 +1307,14 @@ Scores: price components 2 → 3; feature prices stay at 2.
   Playa at 60 reorders 200, reading its facility row (most specific wins: chain, boundary,
   facility) ✓; Sevilla at 35, above 30, doesn't reorder, reading the chain-wide row ✓, both
   cold. Word check: "limit" is the reorder level.
+
+### 2026-11-21: question round, pending (wording in `docs/round-2026-11-21.md`; order in TODO)
+- **Q7 key (estimated cost, maintenance; Velas Luna, last 4 on 11-08).** (a)
+  `estimated_product_cost`, all from 2027-01-01, no name column (the type says what the cost
+  is): Lavanda MATERIALS 2.00; Lavanda LABOR 1.50, no scope; Lavanda LABOR 1.20, scope the
+  organization Velas Luna Sur (not the workshop: the scope is a boundary or one of our
+  organizations, never a facility); the gift box feature MATERIALS 0.80 (on the feature, not
+  the product). (b) 2.00 + 1.20 (Sur's labour, the most specific, replaces the 1.50) + 0.80
+  (the feature adds) = 4.00. Full: (a) Lavanda FREIGHT (or OTHER) 0.30, scope the boundary
+  Canary Islands; (c) the box is a feature any candle can carry: costed once on the
+  feature, it applies to every product sold with it.

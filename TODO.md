@@ -155,6 +155,23 @@ trackers as usual, then tick here.
 
 - [x] Next round (in round 2026-11-13, Q3): retest party role + role type (3) inside a relationship question: the dated `party_role` rows written beside the relationship rows, graded together, since each relationship points at them (the user's call, 2026-11-11)
 
+## Question round 2026-11-21 (short)
+
+All seven are in [docs/round-2026-11-21.md](docs/round-2026-11-21.md), short versions first,
+with no keys. The keys are in the Ch 2, Ch 3 and Ch 4 logs under "2026-11-21: question round,
+pending": **don't open them before grading**. Read each answer back, grade, log and update the
+trackers as usual, then tick here. The gaps follow 11-20's plan; maintenance goes to the
+oldest 4s (11-08).
+
+- [ ] Q1 · Ch 4 · requests: typed by what it asks, items carry needs (2) · retest: RFQ vs RFP, the quantity on the item (Escuela Brisa)
+- [ ] Q2 · Ch 4 · requests: who it went to (2) · retest: responding parties, not items; the mechanism and date sent (Taller Sierra, request 15)
+- [ ] Q3 · Ch 4 · quotes (2) · retest: the type, the exclusive thru; we are the issuer (Pinturas Vega)
+- [ ] Q4 · Ch 4 · sales tax (2) · retest: a boundary on every rate, most specific within a place, places add (Tienda Valle, order 910)
+- [ ] Q5 · Ch 4 · requirements: the need (3) · retest: the description on the requirement, not the subtype (Clínica Norte)
+- [ ] Q6 · Ch 2 · communication event + roles · maintenance (last 4 on 11-08) (Seguros Delta)
+- [ ] Q7 · Ch 3 · estimated cost · maintenance (last 4 on 11-08) (Velas Luna)
+- [ ] Distinctions for the round (practice.md)
+
 ## Question round 2026-11-20 (short)
 
 All seven answered and graded 11-20.
