@@ -1667,3 +1667,14 @@ Misunderstandings and reinforce attempts, oldest first.
   from our catalogue).
 - Follow-up: the user meant (b) as "a different type needs its own row, since one row holds one" ✓. Shared, mostly Claude's: "what changes in that quote's row" invited a row-to-row comparison, and that reasoning was under-credited. Still unnamed: PRODUCT_QUOTE and who chose the lines. The grade stands on the thru date.
 - Row: the quote stays 2.
+
+### 2026-11-21: round 2026-11-21 Q4, sales tax retest (Tienda Valle, order 910; key above)
+- (a) Roca 6 no category, Roca 2 food, Villa Clara 1 no category, each from its date, no
+  thru ✓ cold, every row with its boundary ✓ (11-20's "no place condition" fixed).
+- (b) The customer's place decides ✓; Villa Clara's 1 on both lines ✓; the oil gets Roca's
+  food 2, not 6 + 2 ✓ (applied; the rule, the category rate replaces the general one within
+  a place, unsaid). ✗ The pan gets only the 1: Roca's 6 dropped, so 7 due, 1 charged. The why
+  "rates stack across places" ✓ is half the rule. ~ No SALES_TAX `order_adjustment` rows
+  with the copied percentage (asked: "order 910's tax rows"); the order date unsaid.
+- Row: sales tax stays 2 (close to 3: the boundary and adding across places are cold; the
+  pan's wrong total and the unsaid within-place rule hold it).
