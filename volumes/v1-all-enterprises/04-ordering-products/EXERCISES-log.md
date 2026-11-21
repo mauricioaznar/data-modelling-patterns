@@ -1665,4 +1665,5 @@ Misunderstandings and reinforce attempts, oldest first.
 - (b) A new quote row with its own date ✓ (true, but not what changes). The type not named
   (PRODUCT_QUOTE); "they proposed the approach" doesn't say who chose the lines (the hotel,
   from our catalogue).
+- Follow-up: the user meant (b) as "a different type needs its own row, since one row holds one" ✓. Shared, mostly Claude's: "what changes in that quote's row" invited a row-to-row comparison, and that reasoning was under-credited. Still unnamed: PRODUCT_QUOTE and who chose the lines. The grade stands on the thru date.
 - Row: the quote stays 2.
