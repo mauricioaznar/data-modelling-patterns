@@ -1629,3 +1629,16 @@ Misunderstandings and reinforce attempts, oldest first.
   `requirement_role` Pablo OWNER of the part (a part's owner may differ); (c) every
   requirement has a description, work needs too; the subtype holds only what is
   product-specific, the optional product.
+
+### 2026-11-21: round 2026-11-21 Q1, requests retest (Escuela Brisa; key above)
+- (a) RFQ ✓, request date 02-15 ✓ (called creation time ~). Item: required by 03-15 ✓, the
+  40 only in the description ✗ (the `quantity` column, missed for the fourth round), the
+  answers-due 02-26 on the item ✗ (`response_required_date` is the request's: one deadline
+  for the whole request). `requirement_request` item → the need ✓. Responding parties, one
+  per shop, mechanism unknown ✓ unprompted (11-20's items-per-supplier miss not repeated).
+  No product unsaid (not needed).
+- (b) RFP ✓; "a solution" ✓ is the approach. ✗ half: "we didn't select the products, he
+  did" holds for the RFQ too (the tablets request names no product; the shops pick the
+  model). The type is what we ask for: information, an approach and its price, or prices
+  for items we describe.
+- Row: request typed + items 2 → 3 (both types cold; the why and the quantity to retest).
