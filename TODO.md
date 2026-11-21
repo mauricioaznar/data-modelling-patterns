@@ -164,7 +164,7 @@ trackers as usual, then tick here. The gaps follow 11-20's plan; maintenance goe
 oldest 4s (11-08).
 
 - [x] Q1 · Ch 4 · requests: typed by what it asks, items carry needs (2) · retest: RFQ vs RFP, the quantity on the item (Escuela Brisa) · 2 → 3: both types cold, the item carries the need; no quantity column again, the answers-due date on the item, the why half (who picks the product)
-- [ ] Q2 · Ch 4 · requests: who it went to (2) · retest: responding parties, not items; the mechanism and date sent (Taller Sierra, request 15)
+- [x] Q2 · Ch 4 · requests: who it went to (2) · retest: responding parties, not items; the mechanism and date sent (Taller Sierra, request 15) · 2 → 3, capped (not cold after Q1's talk): both rows ✓, Lucía a role ("sender" for ORIGINATOR); (b) repetition ✓, the comparison unsaid
 - [ ] Q3 · Ch 4 · quotes (2) · retest: the type, the exclusive thru; we are the issuer (Pinturas Vega)
 - [ ] Q4 · Ch 4 · sales tax (2) · retest: a boundary on every rate, most specific within a place, places add (Tienda Valle, order 910)
 - [ ] Q5 · Ch 4 · requirements: the need (3) · retest: the description on the requirement, not the subtype (Clínica Norte)

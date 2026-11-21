@@ -1642,3 +1642,15 @@ Misunderstandings and reinforce attempts, oldest first.
   model). The type is what we ask for: information, an approach and its price, or prices
   for items we describe.
 - Row: request typed + items 2 → 3 (both types cold; the why and the quantity to retest).
+
+### 2026-11-21: round 2026-11-21 Q2, responding parties retest (Taller Sierra; key above)
+- Not cold: Q1's feedback and the user's follow-ups (what joins items to a request, the
+  new-request test table) covered responding parties. Capped at 3 (Claude's table, mostly).
+- (a) Two `responding_party` rows: Frenos Ebro, pedidos@ebro.es, 2027-05-04; Recambios Sur,
+  its fax, 2027-05-06 ✓. Lucía as a `request_role` row ✓, typed "sender" ~ (ORIGINATOR).
+  Unasked, the request row: RFQ ✓, request date 05-04, the answers-due date noted as not
+  given ✓.
+- (b) Per-supplier items repeat the description and quantity ✓. Unsaid: each supplier's
+  quote would answer a different item, so the answers can't be compared on one item; the
+  need tied twice.
+- Row: who it went to 2 → 3 (capped).
