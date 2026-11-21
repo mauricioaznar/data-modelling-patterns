@@ -170,7 +170,7 @@ oldest 4s (11-08).
 - [ ] Q5 · Ch 4 · requirements: the need (3) · retest: the description on the requirement, not the subtype (Clínica Norte)
 - [ ] Q6 · Ch 2 · communication event + roles · maintenance (last 4 on 11-08) (Seguros Delta)
 - [ ] Q7 · Ch 3 · estimated cost · maintenance (last 4 on 11-08) (Velas Luna)
-- [ ] Distinctions for the round (practice.md)
+- [ ] Distinctions for the round (practice.md) · Q4: no card, the rule is on card 11's mantra (the user's call); the pan losing its place's general rate goes to card 11's Trap
 
 ## Question round 2026-11-20 (short)
 
