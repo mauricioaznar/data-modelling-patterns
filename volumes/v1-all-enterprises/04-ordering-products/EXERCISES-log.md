@@ -1654,3 +1654,15 @@ Misunderstandings and reinforce attempts, oldest first.
   quote would answer a different item, so the answers can't be compared on one item; the
   need tied twice.
 - Row: who it went to 2 → 3 (capped).
+
+### 2026-11-21: round 2026-11-21 Q3, the quote retest (Pinturas Vega; key above)
+- (a) PROPOSAL ✓ ("quote for proposal" ~), issuer Pinturas Vega, receiver Hotel Mar ✓ (we
+  the vendor, direction right), issued and valid from 06-08 ✓. ✗ Valid thru 30 Jun for "up
+  to and including 30 Jun": the exclusive thru is 2027-07-01 (11-20's miss again, the words
+  given both times). Unasked, the item: "coat of anti-damp paint" as a product, quantity 2,
+  unit price 2400 ✗ (that totals 4800; the job is one item at 2400, a work effort on the arc,
+  not a product).
+- (b) A new quote row with its own date ✓ (true, but not what changes). The type not named
+  (PRODUCT_QUOTE); "they proposed the approach" doesn't say who chose the lines (the hotel,
+  from our catalogue).
+- Row: the quote stays 2.
