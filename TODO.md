@@ -155,6 +155,23 @@ trackers as usual, then tick here.
 
 - [x] Next round (in round 2026-11-13, Q3): retest party role + role type (3) inside a relationship question: the dated `party_role` rows written beside the relationship rows, graded together, since each relationship points at them (the user's call, 2026-11-11)
 
+## Question round 2026-11-22 (short)
+
+All seven are in [docs/round-2026-11-22.md](docs/round-2026-11-22.md), short versions first,
+with no keys. The keys are in the Ch 2 and Ch 4 logs under "2026-11-22: question round,
+pending": **don't open them before grading**. Read each answer back, grade, log and update the
+trackers as usual, then tick here. The gaps follow 11-21's plan; maintenance goes to the
+oldest 4s (11-08). Responding parties go first, so no earlier talk spoils them.
+
+- [ ] Q1 · Ch 4 · requests: who it went to (3) · cold retest: why per-supplier items break, ORIGINATOR by name (Hotel Pinar, request 22)
+- [ ] Q2 · Ch 4 · requests: typed by what it asks, items carry needs (3) · retest: the type's why, the quantity column, the response date on the request (Gimnasio Roble)
+- [ ] Q3 · Ch 4 · quotes (2) · retest: the exclusive thru, PRODUCT_QUOTE named and why (Muebles Haya)
+- [ ] Q4 · Ch 4 · sales tax (2) · retest: the most specific rate within a place said, the general rate on every line, the adjustment rows (Librería Faro, order 930)
+- [ ] Q5 · Ch 2 · communication event + roles (3) · retest: medium, status, purpose type (Agencia Viento)
+- [ ] Q6 · Ch 2 · case and work effort · maintenance (last 4 on 11-08) (Telecom Ría)
+- [ ] Q7 · Ch 4 · the line: product, feature or neither, ordered for · maintenance (last 4 on 11-08) (Pastelería Miel, order 940)
+- [ ] Distinctions for the round (practice.md)
+
 ## Question round 2026-11-21 (short)
 
 All seven answered and graded 11-21.

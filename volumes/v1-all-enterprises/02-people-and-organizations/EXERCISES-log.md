@@ -860,3 +860,25 @@ Misunderstandings and reinforce attempts, oldest first.
   roles valid per medium are rows ✓ (named the medium here, missed it in (a)).
 - Row: communication event + roles 4 → 3 (maintenance slip; ~65%: the roles, the core, are
   cold; three of the event's own columns are not). Back in the gap pool.
+
+### 2026-11-22: question round, pending (wording in `docs/round-2026-11-22.md`; order in TODO)
+- **Q5 key (communication event retest: the event's own columns; Agencia Viento).** (a)
+  `communication_event`: started 2027-04-09 16:00, ended 16:40, **medium FACE_TO_FACE**
+  (`contact_mechanism_type_id`), **status EVENT_COMPLETED**, the relationship (Agencia
+  Viento's customer relationship with Hotel Brisa) optional, a note.
+  `communication_event_purpose`: **MEETING** (a type row; "plan the summer campaign" its
+  description). (b) The call: medium PHONE, its own start and end on 04-10, its purpose
+  type (not MEETING; a follow-up or thanks), and its roles CALLER and CALLEE where the
+  meeting has ORGANIZER and ATTENDEE. Status (completed) and the relationship can stay the
+  same. Full: (c) meeting: Carla ORGANIZER, Luis ATTENDEE; call: Carla CALLER, Luis CALLEE
+  (the people, not their companies).
+- **Q6 key (case and work effort, maintenance; Telecom Ría; last 4 on 11-08).** (a)
+  `communication_case`: description "internet down at Bar Puerto", start 2027-02-02, a
+  status (open, then closed). `communication_case_role`: Marta OWNER, Bar Puerto (or the
+  person who called) CUSTOMER / interested party. The call and the e-mail are events, each
+  with its `communication_case_id` (an optional FK on the event: "part of"). (b) A
+  `work_effort` for the router replacement, joined to the call through
+  `communication_event_work_effort` (call → effort), not an FK on the work effort (the
+  11-04 miss). One event can lead to several efforts, one effort answer several events.
+  Full: (c) the effort answers events, not a case: several events (call, e-mail) can link
+  to it, and an effort can come from an event that belongs to no case.

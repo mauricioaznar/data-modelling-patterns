@@ -1690,3 +1690,48 @@ Misunderstandings and reinforce attempts, oldest first.
   on the requirement ✓, "to preserve the past facts" ~ (it's the need as stated; the product
   is the later choice of how to meet it).
 - Row: the need 3 → 4. The roles row stays 4 with a watch on its from date.
+
+### 2026-11-22: question round, pending (wording in `docs/round-2026-11-22.md`; order in TODO)
+- **Q1 key (who a request went to, cold retest; Hotel Pinar, request 22).** (a)
+  `responding_party`: request 22, Colchones Duna, the ventas@duna.es mechanism, date sent
+  2027-04-10; request 22, Descanso Norte, its fax number, 2027-04-12. `request_role`: Ana
+  **ORIGINATOR** (by name; not dated). (b) Any two: an item is what we ask for, a responding
+  party is whom we ask; the 30 mattresses counted twice (60 asked, or the need split); each
+  supplier's quote answers a different item, so the quotes can't be compared on one item;
+  adding a third supplier means a new item, not a row; who it went to, how and when have no
+  home on an item. Full: Ana CONTACT, a second row (one party, two hats); (c) any number of
+  parties, each in any number of hats, and one party in two hats: a column holds one.
+- **Q2 key (the request retest: the type's why, the quantity, the response date; Gimnasio
+  Roble).** (a) `request`: RFQ, request date 2027-03-08, **response required 2027-03-19
+  (on the request)**, a description. `request_item`: seq 1, **quantity 12**, required by
+  2027-04-05, a description, no product. The tie to the need (`requirement_request`) welcome,
+  not asked. (b) RFI: we ask for information. The type is what we ask for: information
+  (RFI), an approach and its price (RFP), prices for items we describe (RFQ). Not "who picks
+  the product" (11-20, 11-21). Full: (a) `requirement_request` item → the 3 Mar need; (c) one
+  deadline for the whole request's answers; each item can be needed on a different day.
+- **Q3 key (the quote retest: the exclusive thru, PRODUCT_QUOTE and why; Muebles Haya).**
+  (a) `quote`: **PRODUCT_QUOTE**, issued by Muebles Haya, given to Oficinas Lago, issue date
+  2027-05-05, valid from 2027-05-05, valid thru **2027-06-01** (exclusive, for "up to and
+  including 31 May"), a description; the €180 belongs on a quote item. (b) PRODUCT_QUOTE:
+  the customer chose what goes on the lines (our Haya 120, named in their request); in a
+  PROPOSAL we choose the approach and the lines. Same shape. Full: (a) `quote_item`: Haya 120,
+  quantity 20, unit price 180, `request_item_id` to their item if we hold it; (c)
+  `valid_from_date <= 2027-06-01 and valid_thru_date > 2027-06-01`: 05-05 <= 06-01 ✓,
+  06-01 > 06-01 ✗: expired.
+- **Q4 key (sales tax retest: the rule said, the general rate on every line, the adjustment
+  rows; Librería Faro, order 930).** (a) SALES_TAX `order_adjustment` rows per line, the
+  percentage copied as of the order date 03-15: the novel 1 (Sol, books) + 2 (Brisa) = 3;
+  the lamp 5 (Sol, general) + 2 (Brisa) = 7. Two rows per line (one per place) or one summed
+  row both pass. (b) Within one place the most specific rate replaces the general one: Sol's
+  book rate replaces its 5 for the novel; the lamp has no category rate, so it gets Sol's
+  general 5. Places add: Brisa's 2 on top of either. Full: (c) `sales_tax_lookup`: Provincia
+  Sol, no category, 5, from 2026-01-01; Provincia Sol, Books, 1, from 2026-01-01; Ciudad
+  Brisa, no category, 2, from 2027-01-01.
+- **Q7 key (the line, maintenance; Pastelería Miel, order 940; last 4 on 11-08).** (a)
+  Line 1: the birthday cake product, quantity 3, unit price 25. Line 2: the chocolate glaze
+  feature, quantity 3, unit price 4, **ordered for line 1**. Line 3: no product, no feature,
+  description "Feliz 30", quantity 3, unit price 3, **ordered for line 1**. Prices on the
+  lines (snapshots). (b) Not in the catalogue: no product or feature row to point at, so a
+  description line with its own price. Full: (c) split line 1 into a 1-cake line and a
+  2-cake line; the glaze ×1 ordered for the 1-cake line; "Feliz 30" either ×3 on the two
+  lines or one row per cake line.
