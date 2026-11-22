@@ -11,9 +11,25 @@ and any decisions made.
   exclusive thru, we as issuer), sales tax (boundary, most specific, places add) and the
   need's description; maintenance on communication events (Ch 2) and estimated cost (Ch 3),
   the oldest 4s (11-08).
+- Graded, all live: Q1 requests 2 → 3 (RFQ and RFP cold; no quantity column, the
+  answers-due date on the item); Q2 responding parties 2 → 3, capped (not cold after Q1's
+  talk); Q3 the quote stays 2 (thru inclusive again, PRODUCT_QUOTE unnamed); Q4 sales tax
+  stays 2 (boundaries and places adding ✓, the pan lost Roca's 6%); Q5 the need 3 → 4 (the
+  description on the requirement); Q6 communication event 4 → 3 (no medium, status or
+  purpose type); Q7 estimated cost holds 4 (the sum 3 for 4.00, no from dates).
+- Card 14's mantra: the request's deadline and its deadlined items.
+- Talked through after the round: what joins items to a request (the new-request test),
+  how cost component types roll up, costing a product through its COMPONENT associations.
+
+**Decisions**
+- Sales tax needs no distinction card: card 11's mantra holds the rule (the user's call).
 
 **Next**
-- Grade the round as the answers come back; distinctions after it.
+- Distinctions for the round, when the user asks (TODO): card 11's Trap gets the pan's
+  dropped general rate.
+- Next round: retest the quote (exclusive thru, the type's why), sales tax (the general rate
+  on every line), the communication event's medium and status, the request's quantity column.
+- Re-import `docs/cards-anki.txt` into Anki.
 
 ## 2026-11-20
 
