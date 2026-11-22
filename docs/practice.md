@@ -95,15 +95,15 @@ of the chapter's `EXERCISES.md`.
   twin example or hint ahead of a round question, reinforces included, unless the user asks
   for one in words. Teaching comes in the feedback, after the answer. A teach before the
   question makes the answer "with help" and loses the cold test.
-- **Grade the shape, not the type's name** (the user's call, 2026-11-22): a typed row passes
-  when the answer gives its shape (a role row on the request, a purpose row pointing at a
-  type, an adjustment row typed as tax), whatever the type value is called. Lookup values
-  (purpose types, role type names, adjustment type codes) can be read off the list on a
-  real project. **Except when the type is the concept being tested:** where telling the
-  values apart is the lesson (RFI vs RFQ vs RFP, PROPOSAL vs PRODUCT_QUOTE, CUSTOMER vs
-  INTERNAL requirement), the name and its meaning are graded. A shape error still fails:
-  free text where a type row belongs, or one thing written as another (the medium as the
-  role). Judge per submodel, not by heart.
+- **Do type names count? Ask, type by type** (the user's call, 2026-11-22): a type's
+  names are graded when telling its values apart is the lesson: the request types (RFI, RFQ,
+  RFP), the quote types (PROPOSAL vs PRODUCT_QUOTE), CUSTOMER vs INTERNAL requirements, the
+  adjustment types. A name that means something else is then a real mistake. Where the values
+  are only a lookup list, the shape is graded and the name is not: so far only the
+  communication event purpose types (a purpose row pointing at a type passes, whatever it's
+  called). **For any other type, ask the user before grading the name**, and add the answer
+  here. A shape error always fails: free text where a type row belongs, or one thing written
+  as another (the medium as the role).
 - **Two versions of each question, short by default for now** (the user's call,
   2026-11-07): the full version is the usual scenario with three parts (about 30 minutes
   of writing on the phone). The short one must fit **15 minutes including the feedback**:
