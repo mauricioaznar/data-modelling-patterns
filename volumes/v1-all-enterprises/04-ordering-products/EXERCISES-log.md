@@ -1678,3 +1678,15 @@ Misunderstandings and reinforce attempts, oldest first.
   with the copied percentage (asked: "order 910's tax rows"); the order date unsaid.
 - Row: sales tax stays 2 (close to 3: the boundary and adding across places are cold; the
   pan's wrong total and the unsaid within-place rule hold it).
+
+### 2026-11-21: round 2026-11-21 Q5, the need retest (Clínica Norte; key above)
+- (a) `requirement`: INTERNAL, PRODUCT, **description "wheelchairs" on the requirement** ✓
+  cold (11-18 and 11-20's miss fixed), quantity 6, created 02-02 ("requested date" ~),
+  required by 03-01, reason, the Ala Este ward as facility, no budget ✓. The product subtype
+  with no product yet ✓; "desired products: not yet specified" ~ (desired features; none
+  given, fine). Roles: OWNER Marta ✓, "keyer" Marta ~ (REQUESTER); no from date on either ~
+  (requirement roles are dated: 2027-02-02; also left off on 11-20).
+- (b) The product set on `product_requirement` from the catalogue ✓; the description stays
+  on the requirement ✓, "to preserve the past facts" ~ (it's the need as stated; the product
+  is the later choice of how to meet it).
+- Row: the need 3 → 4. The roles row stays 4 with a watch on its from date.
