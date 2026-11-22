@@ -97,7 +97,7 @@ of the chapter's `EXERCISES.md`.
   question makes the answer "with help" and loses the cold test.
 - **Do type names count? Ask, type by type** (the user's call, 2026-11-22): a type's
   names are graded when telling its values apart is the lesson: the request types (RFI, RFQ,
-  RFP), the quote types (PROPOSAL vs PRODUCT_QUOTE), CUSTOMER vs INTERNAL requirements, the
+  RFP), the quote types (PROPOSAL vs PRODUCT_QUOTE), CUSTOMER vs INTERNAL requirements, the request role types (ORIGINATOR, CONTACT…), the
   adjustment types. A name that means something else is then a real mistake. Where the values
   are only a lookup list, the shape is graded and the name is not: so far only the
   communication event purpose types (a purpose row pointing at a type passes, whatever it's

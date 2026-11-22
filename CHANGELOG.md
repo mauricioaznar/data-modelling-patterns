@@ -17,7 +17,7 @@ and any decisions made.
   the general rate kept, the rule said; "tax rate" for SALES_TAX).
 
 **Decisions**
-- Type names: ask, type by type (the user's call, `docs/practice.md`). They count for the request, quote, requirement and adjustment types; the communication event purpose types are a lookup list (shape only). The SALES_TAX watch kept; ORIGINATOR kept pending the user's call on role names. Q5 stays 3 ((b) missed which rows differ).
+- Type names: ask, type by type (the user's call, `docs/practice.md`). They count for the request, quote, requirement and adjustment types; the communication event purpose types are a lookup list (shape only). The SALES_TAX watch kept; ORIGINATOR kept: request role names count too (the user's call). Q5 stays 3 ((b) missed which rows differ).
 - No hints on anything a later round question tests, even when the user asks; held answers
   and feedback come after the round (the user's call). Q2 (b)'s swap and the user's
   quantity question wait for then (the quantity one is answered by Q2 itself).
@@ -25,7 +25,7 @@ and any decisions made.
 **Next**
 - Finish the round: Q3, Q6, Q7. Then the held feedback: RFQ vs RFP (Q2 b), the
   "quote"/"proposal" words for request types.
-- Distinctions for the round: REQUESTER (requirement) vs ORIGINATOR (request), if the user says role names count.
+- Distinctions for the round: REQUESTER (requirement) vs ORIGINATOR (request).
 
 ## 2026-11-21
 
