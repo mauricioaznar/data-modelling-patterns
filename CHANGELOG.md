@@ -3,6 +3,29 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-22
+
+**Built**
+- Round 2026-11-22 written (short) in `docs/round-2026-11-22.md`, keys in the Ch 2 and Ch 4
+  logs: retests of responding parties (first, so no talk spoils it), the request's type and
+  quantity, the quote (exclusive thru, PRODUCT_QUOTE), sales tax, the communication event's
+  own columns; maintenance on case and work effort (Ch 2) and the order line (Ch 4), the
+  oldest 4s (11-08).
+- Graded so far, all cold: Q1 responding parties 3 → 4 ("requester" for ORIGINATOR, a
+  watch); Q2 request typed stays 3 (the quantity and the response date fixed; the type
+  unwritten, RFQ and RFP described in reverse); Q4 sales tax 2 → 4 (four adjustment rows,
+  the general rate kept, the rule said; "tax rate" for SALES_TAX).
+
+**Decisions**
+- No hints on anything a later round question tests, even when the user asks; held answers
+  and feedback come after the round (the user's call). Q2 (b)'s swap and the user's
+  quantity question wait for then (the quantity one is answered by Q2 itself).
+
+**Next**
+- Finish the round: Q3, Q5, Q6, Q7. Then the held feedback: RFQ vs RFP (Q2 b), the
+  "quote"/"proposal" words for request types.
+- Distinctions for the round: REQUESTER (requirement) vs ORIGINATOR (request).
+
 ## 2026-11-21
 
 **Built**
