@@ -17,6 +17,7 @@ and any decisions made.
   the general rate kept, the rule said; "tax rate" for SALES_TAX).
 
 **Decisions**
+- Grade the shape, not the type's name, unless the type values are the concept tested (RFI/RFQ/RFP, quote types); written in `docs/practice.md` (the user's call). The ORIGINATOR and SALES_TAX watches dropped; Q5 stays 3 under it ((b) missed which rows differ).
 - No hints on anything a later round question tests, even when the user asks; held answers
   and feedback come after the round (the user's call). Q2 (b)'s swap and the user's
   quantity question wait for then (the quantity one is answered by Q2 itself).
@@ -24,7 +25,7 @@ and any decisions made.
 **Next**
 - Finish the round: Q3, Q6, Q7. Then the held feedback: RFQ vs RFP (Q2 b), the
   "quote"/"proposal" words for request types.
-- Distinctions for the round: REQUESTER (requirement) vs ORIGINATOR (request).
+- Distinctions for the round (no naming-only cards under the 11-22 rule).
 
 ## 2026-11-21
 
