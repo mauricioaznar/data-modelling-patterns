@@ -1749,3 +1749,19 @@ Misunderstandings and reinforce attempts, oldest first.
   the need gets counted per supplier).
 - Row: who a request went to 3 → 4 (the structure cold twice running; ~60%: the role type's
   name is wrong for the second time), with a watch on ORIGINATOR.
+
+### 2026-11-22: round 2026-11-22 Q2, requests retest (Gimnasio Roble; key above)
+- Cold for the quantity: the user asked about it after Q1 and chose to wait (no answer given).
+- (a) Request date 03-08 ✓, answers due 03-19 **on the request** ✓ (11-21's miss fixed).
+  Item: **quantity 12** ✓ (the column at last, cold), needed by 04-05 ✓, a description ✓
+  (repeats the 12, harmless). `requirement_request` item → the 3 Mar need ✓, responding
+  parties ✓ unasked. The request's type not written ~ (RFQ: prices for items we describe).
+- (b) RFI ✓, "we are not asking for a price, only which models" ✓: the type is what we ask
+  for. Then RFQ and RFP described in reverse ✗: "quote: they choose the approach, we describe
+  the problem" is the RFP; "proposal: we describe the approach" is neither (in an RFQ we
+  describe the items, they price them). Also "quote" and "proposal" for request types
+  (the request types are RFI, RFQ, RFP; PROPOSAL is a quote type). Feedback on this held
+  until after the round: Q3 tests the quote types (the user's call, no hints on later
+  questions).
+- Row: request typed + items stays 3 (~55%: the quantity and the response date cold ✓, the
+  type unwritten in (a), RFQ and RFP swapped in (b)).
