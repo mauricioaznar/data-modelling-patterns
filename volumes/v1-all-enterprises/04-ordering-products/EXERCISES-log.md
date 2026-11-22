@@ -1765,3 +1765,16 @@ Misunderstandings and reinforce attempts, oldest first.
   questions).
 - Row: request typed + items stays 3 (~55%: the quantity and the response date cold ✓, the
   type unwritten in (a), RFQ and RFP swapped in (b)).
+
+### 2026-11-22: round 2026-11-22 Q4, sales tax retest (Librería Faro, order 930; key above)
+- Cold: Q3 not yet asked, Q1 and Q2's feedback touched no tax.
+- (a) The rate looked up by date, place and category and copied onto the order ✓. Four
+  `order_adjustment` rows, percentages, each on its line ✓ (written for the first time):
+  the lamp 5 + 2 = 7 ✓ (the general rate kept: 11-21's dropped 6 fixed), the novel 1 + 2 = 3
+  ✓ (Sol's book rate replaces its 5; Brisa's 2 added). Typed "tax rate" ~ (the adjustment
+  type is SALES_TAX).
+- (b) "Same boundary, the most specific wins, if it applies" ✓ cold: the rule said, not only
+  applied. The lamp's side (no book rate, so Sol's general 5) implied by "if they apply", not
+  spelled out ~.
+- Row: sales tax 2 → 4 (~60%: every target of the retest cold in one go; two levels at once
+  because the answer both says and applies the rule). The adjustment type's name a watch.
