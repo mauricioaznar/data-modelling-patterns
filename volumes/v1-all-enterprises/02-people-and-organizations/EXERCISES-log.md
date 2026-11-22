@@ -848,3 +848,15 @@ Misunderstandings and reinforce attempts, oldest first.
   (`valid_contact_mechanism_role`) becomes data, not columns. Full: (c) a second event,
   EMAIL, 2027-03-03 11:00, SALES_FOLLOW_UP (or a quote purpose), roles Nuria SENDER, Pedro
   RECIPIENT, Ana CC.
+
+### 2026-11-21: round 2026-11-21 Q6, communication event maintenance (Seguros Delta; key above)
+- (a) Started 10:00, ended 10:15 ✓; the customer relationship Panadería Trigo → Seguros
+  Delta as context ✓. Roles: Nuria CALLER, Pedro CALLEE, the people, not their companies ✓.
+  Purpose row ✓, written as free text "follow up on the quote" ~ (the type is
+  SALES_FOLLOW_UP; free text goes in its description). ✗ No medium on the event: PHONE,
+  `contact_mechanism_type_id`, the event's "occurs via". ~ No status (EVENT_COMPLETED); the
+  status and the purpose type were also left off on 11-08.
+- (b) Many callees, any number of participants ✓; other media need other roles, and the
+  roles valid per medium are rows ✓ (named the medium here, missed it in (a)).
+- Row: communication event + roles 4 → 3 (maintenance slip; ~65%: the roles, the core, are
+  cold; three of the event's own columns are not). Back in the gap pool.
