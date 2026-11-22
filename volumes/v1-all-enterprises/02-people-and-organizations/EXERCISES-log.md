@@ -882,3 +882,16 @@ Misunderstandings and reinforce attempts, oldest first.
   11-04 miss). One event can lead to several efforts, one effort answer several events.
   Full: (c) the effort answers events, not a case: several events (call, e-mail) can link
   to it, and an effort can come from an event that belongs to no case.
+
+### 2026-11-22: round 2026-11-22 Q5, communication event retest (Agencia Viento; key above)
+- Cold: no talk on events this round.
+- (a) Started 04-09 16:00, ended 16:40 ✓; **medium "in person"** ✓ (FACE_TO_FACE, 11-21's miss
+  fixed); **status complete** ✓ (EVENT_COMPLETED, first time given). Purpose "planning" ~:
+  a bare label, not clearly a type row (MEETING in our seed; PLANNING would pass as a type
+  the business adds, if named as one). Unasked: roles typed "in person meeting" for both ✗
+  (that's the medium; the roles are ORGANIZER and ATTENDEE), not graded.
+- (b) The medium ✓, a separate event ✓; the purpose and the roles (CALLER, CALLEE for
+  ORGANIZER, ATTENDEE) differ too, unsaid ~. The user raised grouping both events in a case:
+  feedback held, Q6 tests the case.
+- Row: communication event + roles stays 3 (~55%: medium and status cold ✓; the purpose type
+  missed for the third round, the roles confused with the medium, (b) half).
