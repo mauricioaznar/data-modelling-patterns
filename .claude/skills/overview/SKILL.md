@@ -45,6 +45,10 @@ fixes come from what the question rounds expose.
   is practice's job. A misunderstanding found here goes into NOTES, under the figure's
   Discussion (and the doc entry, if it changes what the entry says), and becomes a
   candidate Trap for the card.
+- **Type names** (the user's call, 2026-11-22): at the end of each submodel's walk-through,
+  list its type tables and ask the user which ones have names that count in grading (the values
+  are the lesson) and which are lookup lists (shape only). Record the answers in
+  `docs/practice.md`, under "Do type names count?".
 
 ## 5. Card pass (Claude's, no review with the user)
 - No explode test or hook check here (the user's call, 2026-11-13): the user reviews the
