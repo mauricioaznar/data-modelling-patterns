@@ -163,7 +163,7 @@ pending": **don't open them before grading**. Read each answer back, grade, log 
 trackers as usual, then tick here. The gaps follow 11-21's plan; maintenance goes to the
 oldest 4s (11-08). Responding parties go first, so no earlier talk spoils them.
 
-- [ ] Q1 · Ch 4 · requests: who it went to (3) · cold retest: why per-supplier items break, ORIGINATOR by name (Hotel Pinar, request 22)
+- [x] Q1 · Ch 4 · requests: who it went to (3) · cold retest: why per-supplier items break, ORIGINATOR by name (Hotel Pinar, request 22) · 3 → 4: both rows and (b) cold; "requester" for ORIGINATOR (a watch)
 - [ ] Q2 · Ch 4 · requests: typed by what it asks, items carry needs (3) · retest: the type's why, the quantity column, the response date on the request (Gimnasio Roble)
 - [ ] Q3 · Ch 4 · quotes (2) · retest: the exclusive thru, PRODUCT_QUOTE named and why (Muebles Haya)
 - [ ] Q4 · Ch 4 · sales tax (2) · retest: the most specific rate within a place said, the general rate on every line, the adjustment rows (Librería Faro, order 930)

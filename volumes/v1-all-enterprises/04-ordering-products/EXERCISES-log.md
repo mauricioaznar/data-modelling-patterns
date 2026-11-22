@@ -1735,3 +1735,17 @@ Misunderstandings and reinforce attempts, oldest first.
   description line with its own price. Full: (c) split line 1 into a 1-cake line and a
   2-cake line; the glaze ×1 ordered for the 1-cake line; "Feliz 30" either ×3 on the two
   lines or one row per cake line.
+
+### 2026-11-22: round 2026-11-22 Q1, responding parties cold retest (Hotel Pinar, request 22; key above)
+- Cold: first question of the round, no talk before it.
+- (a) Two `responding_party` rows, each with the party, the mechanism and the date sent ✓
+  (Duna's date written 20 Apr for 10 Apr: a slip). Ana a `request_role` row ✓, typed
+  "requester" ✗ (ORIGINATOR; "sender" on 11-21; REQUESTER is a requirement role type, so a
+  mix-up between the two role sets). Unasked and right: the request typed RFQ with its date
+  and description, a request item with quantity 30 and no product, `requirement_request`
+  item → the need.
+- (b) The 30 repeated per supplier ✓; each quote links to a different item, not one shared
+  item ✓; the consequence put as "clumsy" ~ (the answers can't be compared on one item, and
+  the need gets counted per supplier).
+- Row: who a request went to 3 → 4 (the structure cold twice running; ~60%: the role type's
+  name is wrong for the second time), with a watch on ORIGINATOR.
