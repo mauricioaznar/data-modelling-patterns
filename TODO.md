@@ -157,6 +157,8 @@ trackers as usual, then tick here.
 
 ## Question round 2026-11-21 (short)
 
+All seven answered and graded 11-21.
+
 All seven are in [docs/round-2026-11-21.md](docs/round-2026-11-21.md), short versions first,
 with no keys. The keys are in the Ch 2, Ch 3 and Ch 4 logs under "2026-11-21: question round,
 pending": **don't open them before grading**. Read each answer back, grade, log and update the
@@ -169,7 +171,7 @@ oldest 4s (11-08).
 - [x] Q4 · Ch 4 · sales tax (2) · retest: a boundary on every rate, most specific within a place, places add (Tienda Valle, order 910) · stays 2: boundaries ✓, places add ✓, the oil 2 + 1 ✓; the pan's 6 dropped, the within-place rule unsaid, no adjustment rows
 - [x] Q5 · Ch 4 · requirements: the need (3) · retest: the description on the requirement, not the subtype (Clínica Norte) · 3 → 4: the description on the requirement cold, every value placed; roles: "keyer" for REQUESTER, no from date (a watch on the roles row)
 - [x] Q6 · Ch 2 · communication event + roles · maintenance (last 4 on 11-08) (Seguros Delta) · 4 → 3: roles and (b) ✓ cold; the medium left off, no status, the purpose as free text
-- [ ] Q7 · Ch 3 · estimated cost · maintenance (last 4 on 11-08) (Velas Luna)
+- [x] Q7 · Ch 3 · estimated cost · maintenance (last 4 on 11-08) (Velas Luna) · stays 4: rows, arc and organization scope ✓ cold; slips: the sum 3 for 4.00, no from dates, "price" for cost
 - [ ] Distinctions for the round (practice.md) · Q4: no card, the rule is on card 11's mantra (the user's call); the pan losing its place's general rate goes to card 11's Trap
 
 ## Question round 2026-11-20 (short)

@@ -1318,3 +1318,14 @@ Scores: price components 2 → 3; feature prices stay at 2.
   (the feature adds) = 4.00. Full: (a) Lavanda FREIGHT (or OTHER) 0.30, scope the boundary
   Canary Islands; (c) the box is a feature any candle can carry: costed once on the
   feature, it applies to every product sold with it.
+
+### 2026-11-21: round 2026-11-21 Q7, estimated cost maintenance (Velas Luna; key above)
+- Mantra recited first, unprompted: cost on what the customer picks (product or feature),
+  split by component type, narrowed by place or organization ✓.
+- (a) Lavanda MATERIALS 2, LABOR 1.5, LABOR 1.2 scoped to Velas Luna Sur (the organization,
+  not the workshop: 11-08's facility slip fixed) ✓; the gift box MATERIALS 0.8 on the
+  feature ✓; no name column ✓. ~ No from dates (2027-01-01 given; `from_date` is required).
+  ~ "price" for the cost column: a cost is what it takes us, a price is what we charge.
+- (b) Sur's 1.20 replaces the 1.50, the feature adds ✓; the sum written 3 ✗ (0.80 + 1.20 +
+  2.00 = 4.00), arithmetic, not the model.
+- Row stays 4 (the concept cold; slips on the dates and the sum). Round closed.
