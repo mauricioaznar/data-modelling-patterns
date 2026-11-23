@@ -1152,7 +1152,7 @@ insert into agreement_role (agreement_id, party_id, agreement_role_type_id) valu
 -- January 1, 2003.
 insert into agreement_term (agreement_term_id, term_type_id, agreement_id, agreement_item_id, term_value, from_date, thru_date) values
   (1, 'NO_COMPETE_AFTER_END_DAYS', 23884,  null, 60,    '2002-03-01', null),           -- Table 4.18 gives no dates: the agreement's start
-  (2, 'QUANTITY_NOT_TO_EXCEED',    null,   9,    1000,  '2002-01-01', '2003-01-01'),   -- Table 4.18, as printed: a day past 10002's end (caught by a query; point 31)
+  (2, 'QUANTITY_NOT_TO_EXCEED',    null,   9,    1000,  '2002-01-01', '2002-12-31'),   -- Table 4.18's Dec 31 read as a slip: ends with 10002 (NOTES, point 31)
   (3, 'DOLLARS_NOT_TO_EXCEED',     null,   9,    10000, '2002-01-01', '2002-07-01'),
   (4, 'EXCLUSIVE_SUPPLIER',        null,   10,   null,  '2002-01-01', '2002-12-31'),
   (5, 'PAYMENT_DUE_DAYS',          70001,  null, 30,    '2025-01-01', null),

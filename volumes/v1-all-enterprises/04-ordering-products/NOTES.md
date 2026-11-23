@@ -1830,16 +1830,33 @@ the literal drawing.
     question (what was agreed, and how it reaches an order), card 15's Anki id stays stable,
     and submodel 6's five ponders were taken. Merge them if you'd rather practise agreements
     as one, about 3 hours instead of 6.
+    **Outcome (2026-11-23): kept, two submodels** (the user's call). "Who is bound, to what
+    structure" and "what price and limits reach this order line" are different questions,
+    with likely different mistakes; a round question may still span both. Merging would win
+    if practice showed the two can't be tested apart. **Cards:** none.
 30. **4.14, the term subtypes as TERM TYPE's top rows:** legal, financial, incentive,
     threshold and other head `term_type`, now a hierarchy, and 4.7's and 4.11's term types
     are filed under them (our filing). Other readings: the subtypes belong to agreement
     terms only (a kind column on `agreement_term`), or TERM TYPE stays flat and the kind is a
     second lookup.
+    **Outcome (2026-11-23): kept, the kinds are TERM TYPE's top rows** (the user's call). The
+    kind is a fact about the type (a quantity cap is a threshold), so it lives once on the
+    shared list and every term table (order, quote, agreement, invoice) gets it through its
+    type. Rejected: a kind column on `agreement_term` (a row's kind can disagree with its
+    type, and order and quote terms get none; against point 15's one lookup per kind), and a
+    second lookup of kinds (A with an extra table). Concept cleared up: four term tables, one
+    shared TERM TYPE list; a term row picks a type and its kind comes with it. **Cards:** none.
 31. **4.14, Table 4.18's dates:** 23884's term has none though FROM DATE is drawn mandatory
     (seeded with the agreement's start; 23884 itself is ours, Table 4.16 doesn't have it).
     10002's quantity cap runs to December 31, a day past the agreement and the diskettes
     term, both ending December 30. Seeded as printed, so the check flags the book's row:
     either the cap or the agreement's end date is the slip.
+    **Outcome (2026-11-23): changed, the cap is the slip** (the user's call). The quantity cap
+    ends with its agreement (thru 2002-12-31, exclusive): one date changed, two of the three
+    printed dates agree, and "a term lives inside its agreement" holds without exceptions.
+    Rejected: the agreement as the slip (two printed dates rewritten for a calendar-year
+    guess), and the book's row left flagged (as point 23's C). 23884's undated term keeps the
+    agreement's start (agreed). **Cards:** none.
 32. **4.14 and 4.16, AGREEMENT's THRU DATE drawn mandatory,** where 4.12 drew it optional.
     Kept optional: an employment agreement like William's has no end. If Silverston means
     every agreement to end, 86749 needs a made-up date.
