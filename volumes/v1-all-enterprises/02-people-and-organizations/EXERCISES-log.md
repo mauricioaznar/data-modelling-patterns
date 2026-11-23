@@ -895,3 +895,21 @@ Misunderstandings and reinforce attempts, oldest first.
   feedback held, Q6 tests the case.
 - Row: communication event + roles stays 3 (~55%: medium and status cold ✓; the purpose type
   missed for the third round, the roles confused with the medium, (b) half).
+
+### 2026-11-22: round 2026-11-22 Q6, case and work effort maintenance (Telecom Ría; key above)
+- Not fully cold: the user raised grouping events in a case in Q5 (b); the feedback was held,
+  so nothing was taught. Graded as cold.
+- (a) The case: description, start 02-02 ✓; no status ~ (open, then closed once fixed). Roles:
+  Marta OWNER ✓, Bar Puerto the interested party ("to whom the problem belongs") ✓. The call
+  and the e-mail joined through a "communication-case-event" table ✗: an event is part of at
+  most one case, so it's an optional FK on the event (`communication_case_id`); a junction
+  lets one event sit in two cases. "All events get linked to the case" ✓.
+  `communication_event_work_effort` linking the replacement to the call ✓ (the 11-04 FK on
+  the work effort not repeated); the work effort itself not written as a row ~.
+- (b) The replacement is a work effort joined to the call ✓. The why half: "many work efforts
+  per event" is one-to-many and an FK on the effort would do; the junction is there because
+  it's many to many: one effort can also answer several events (the call and the e-mail).
+  "Work effort carries the link" ~ (the junction row carries it).
+- Row: case and work effort 4 → 3 (maintenance slip; ~55%: the case, its roles and the
+  effort through the junction cold; the event-to-case cardinality and the junction's why
+  wrong). Back in the gap pool.
