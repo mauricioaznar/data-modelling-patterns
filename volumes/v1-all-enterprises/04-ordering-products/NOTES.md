@@ -1458,8 +1458,10 @@ What it adds or settles:
   formalizes, AGREEMENT TERMs on it or one item, and Ch 3's PRICE COMPONENTs on its pricing
   programs.
 - **Agreement → order, with no line:** an agreement governs an order line when it is in
-  force on the order's date, the customer plays a role in it, and an item's applicability
-  matches the line (product, organization, place). Derived, never stored (4.16).
+  force on the order's date, the other side (the customer on a sale, the supplier on a
+  purchase) plays a role in it, and an item's applicability matches the line (product,
+  organization, place). Derived (4.16); the program that priced the line is stored beside
+  it as history, and a check flags the two disagreeing (points 37 and 41).
 - **From Ch 2:** PARTY, PARTY RELATIONSHIP, CONTACT MECHANISM and its purpose types,
   GEOGRAPHIC BOUNDARY (tax, applicability, regional prices), WORK EFFORT (quote items).
   **From Ch 3:** PRODUCT, PRODUCT FEATURE, PRICE COMPONENT.
@@ -1929,14 +1931,23 @@ the literal drawing.
     order contact-mechanism tables (4.5), not 4.3's and 4.4's columns, nor SALES and PURCHASE
     ORDER. That answers point 8: 4.5 is the overall model. Do 4.3's and 4.4's columns become
     comparison only (as Ch 2 kept 2.2a), or stay as the faster, checkable version?
+    **Outcome (2026-11-23): settled by points 6 and 8.** The columns are gone, a view gives
+    their shape back (point 8, option C), and the subtypes stay as key-only tables (point 6)
+    though 4.17 doesn't draw them. **Cards:** none (the architecture card keeps the generic
+    version already).
 39. **4.17, ORDER REQUIREMENT COMMITMENT to ORDER:** 4.9 draws it to ORDER ITEM, which our
     build keeps (a need is filled line by line, with a quantity). Read as the overall
     figure's simplification.
+    **Outcome (2026-11-23): kept on the line** (the user's call): the detailed figure defines
+    it; on the order, the quantity loses its meaning and "which line fills the need" is lost.
+    **Cards:** none.
 40. **4.17, what's left out:** contact mechanisms themselves, party roles, item roles and
     associations, the request, quote and requirement roles, responding parties, desired
     features, work efforts, addenda, applicabilities and every lookup. Read as abbreviation,
     as for Fig 3.11. ORDER ITEM ROLE is the one that may be meant: 4.17 draws roles on the
     order only.
+    **Outcome (2026-11-23): abbreviation, everything kept** (the user's call), ORDER ITEM ROLE
+    included: one bill and many destinations is why ship-to sits on the line. **Cards:** none.
 41. **4.16, a retroactive end (chat, 2026-10-20):** ending an agreement back in time takes
     the lines placed after the new end out from under it, while their prices stay. Read as
     intended: the order keeps what was agreed (price, adjustments, terms) and which agreement

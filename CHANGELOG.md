@@ -23,10 +23,23 @@ and any decisions made.
   attribute-less-subtype convention.
 - Orders refactored now rather than with Agreements (the user's call).
 
+- Orders' overview ticked; its three type lists count (order roles, item roles, contact
+  mechanism purposes).
+- Agreements and agreement terms and pricing, points 23–41 settled. Built: relationship 28
+  for 10002 (point 23); 10002's cap ends with its agreement (31); Ch 3's price queries and
+  Ch 4's "agreed vs list" read list prices only (35); the agreement link covers purchase
+  lines, with purchase agreement 70004 (37); `order_item.priced_under_agreement_item_id` and
+  its check (41). Card 16's key updated.
+- Phone doc "Ch 4 Agreements walk-through" (https://claude.ai/artifact/VRppfYKghVrmofqBgzQc9F):
+  both walk-throughs, a worked example per card, the architecture diagram, the type-names
+  question.
+
 **Next**
-- Orders: the type-names question, then tick its Overview.
-- Agreements (Figs 4.12–4.13) overview, points 23–28; then agreement terms and pricing.
-- Re-import `docs/cards-anki.txt` into Anki (card 10).
+- The user reads the doc: "didn't click" answers and type names; then tick Overview for
+  Agreements, terms and pricing, and the architecture row; tracker rows at 0; card pass.
+- Re-import `docs/cards-anki.txt` into Anki (cards 10 and 16).
+- Optional: real price components for 70001's paper and copier programs (the workaround
+  point 35 retired).
 
 ## 2026-11-22
 
