@@ -207,7 +207,7 @@ as usual, then tick here. Requests and quotes capped at 3, card 14 closed (the 1
 - [x] Q5 · Ch 4 · sales tax (3) · retest: the rates, the order date, the stored percentage (Librería Cumbre, order 880) · 3 → 2: no boundary on the rates, the novel taxed 7 + 3 (stacked, not the most specific); the order date and the copy ✓
 - [x] Q6 · Ch 4 · item association · maintenance (last 4 on 11-04) (Deportes Cima, order 890) · stays 4: rows and no quantity cold; "product association" again
 - [x] Q7 · Ch 4 · adjustments as typed rows · maintenance (last 4 on 11-04) (Cerámica Alba, order 900) · stays 4: all cold
-- [x] Distinctions for the round (practice.md) · D29 REQUESTER or ORIGINATOR, D30 request type or quote type; Card 4's mantra for Q6
+- [ ] Distinctions for the round (practice.md)
 
 ## Question round 2026-11-18 (short)
 
