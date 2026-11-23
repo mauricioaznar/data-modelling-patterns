@@ -1798,3 +1798,12 @@ Misunderstandings and reinforce attempts, oldest first.
   quote type invented, issuer and receiver doubled as roles).
 - After grading, Q2 (b)'s held feedback given (Q3 done): the request types vs the quote
   types.
+
+### 2026-11-22: round 2026-11-22 Q7, the line maintenance (Pastelería Miel, order 940; key above)
+- (a) Line 1 the cakes, 3 at 25 ✓; line 2 the glaze feature, 3 at 4, ordered for line 1 ✓;
+  line 3 a description line "Feliz 30", 3 at 3, ordered for line 1 ✓; all cold, no column
+  list given ("linked to" for ordered for ~, the right column). Unasked: the order kind sales
+  ✓, Café Nube as placer and us as taker ✓ (PLACED_BY, TAKEN_BY).
+- (b) Not in the catalogue, a one-off ✓ (no product or feature row to point at); "if it
+  happens often, add it to the catalogue" ✓, unprompted.
+- Row: the line holds 4.
