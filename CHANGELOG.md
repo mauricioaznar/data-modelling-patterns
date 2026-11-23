@@ -17,6 +17,7 @@ and any decisions made.
   the general rate kept, the rule said; "tax rate" for SALES_TAX).
 
 **Decisions**
+- Card 4's mantra rewritten (the user's call): "it belongs to one case and shares its work efforts" carries the FK vs junction that Q6 missed; past vs future dropped (it sticks).
 - Type names: ask, type by type (the user's call, `docs/practice.md`). They count for the request, quote, requirement and adjustment types; the communication event purpose types are a lookup list (shape only). The SALES_TAX watch kept; ORIGINATOR kept: request role names count too (the user's call). Q5 stays 3 ((b) missed which rows differ).
 - No hints on anything a later round question tests, even when the user asks; held answers
   and feedback come after the round (the user's call). Q2 (b)'s swap and the user's

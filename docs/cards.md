@@ -222,8 +222,8 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 4 · V1 Ch 2 · Communication events and case (Figs 2.7, 2.12–2.13)
 - **Cue:** "Who talked to whom, how, about what, and what happened next?"
 - **Hook:** the meeting minutes
-- **Mantra:** An event happens via a medium, with many parties in roles, for purposes; a case groups past
-  events, a work effort is the work they trigger.
+- **Mantra:** An event goes via a medium, with parties in roles, for purposes; it belongs to one case and
+  shares its work efforts.
 
 <details><summary>Key</summary>
 
