@@ -1529,6 +1529,15 @@ the literal drawing.
    about the supplier's offer (Ch 3's SUPPLIER PRODUCT), not about one line. Left for the
    refactor: after point 8 takes the ship-to columns away, `purchase_order_item` has no
    column of its own.
+   **Decided (2026-11-23): all three empty subtypes kept** (the user's call). After point 8,
+   `sales_order`, `purchase_order` and `purchase_order_item` hold only their keys; they stay
+   as drawn, a recorded exception to our convention that an attribute-less subtype becomes
+   a discriminator value. They are where a kind's own columns land when they turn up (Ch 7's
+   bill-to account already does, on both order subtypes), and `purchase_order_item` is the
+   FK target that keeps Fig 4.8's "to" end a purchase line. Cost: a second insert per order
+   and per purchase line, and the kind-vs-subtype checks (4.3's and 4.4's queries) stay.
+   The alternative, dropping the two order subtypes and moving Ch 7's column to `order`,
+   wins if no kind-specific column ever appears; Ch 7's overview may revisit it.
 7. **4.4, whose buyer roles:** PLACING BUYER, BILL TO PURCHASER and SHIP TO BUYER are grouped
    under a new BUYER type, the mirror of CUSTOMER. Nothing drawn says they must be roles of
    our own organizations (or their employees), so nothing checks it. Should something? Table
@@ -1562,6 +1571,17 @@ the literal drawing.
    APPROVER → none), as Ch 2's medium-to-participant table does, and one data-quality query:
    the party holds a current role of that type (or below it) on the order date, plus a bad
    seed row it catches.
+   **Confirmed (2026-11-23): no comparison columns, a view instead** (the user's pick, C).
+   The six columns go from both subtypes; `sales_order_parties` and `purchase_order_parties`
+   turn the `order_role` rows back into the 4.3 and 4.4 shape for reading (one party per
+   hat, `max() filter`; duplicate hats are the data-quality query's job). Rejected: keeping
+   the columns as a comparison (two truths that drift), and the hybrid, placed-by and
+   taken-by as columns on `order` (asked by the user): it wins only when the hats are fixed
+   and one each, since `not null` then enforces a placer; here the salesperson, approver and
+   reviewer keep `order_role` anyway, so parties would live in two places, and a plain FK
+   still can't tie the role type to the order's kind. Concept cleared up: the order
+   supertype with its subtypes (direction, 4.2) and roles as rows (parties, 4.5) are two
+   separate generalisations; point 8 touches only the second.
 9. **4.5, direction-neutral role types:** our new ORDER ROLE TYPE rows (PLACED_BY, TAKEN_BY,
    BILL_TO) serve both directions, and the order's kind says which side is ours. Silverston
    may mean one type per hat (placing customer, supplier, bill-to purchaser…), which keeps
