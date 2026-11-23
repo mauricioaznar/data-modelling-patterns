@@ -41,6 +41,8 @@ and any decisions made.
   line stores the program that priced it.
 
 **Next**
+- A round of seven later today; go slowly on the agreement side (the user's call): few
+  questions from submodels 6 and 7 at first, while the user memorises cards 15 and 16.
 - Type names for agreements and terms still unanswered: ask before grading them
   (`docs/practice.md`'s default).
 - Re-import `docs/cards-anki.txt` into Anki (cards 10, 15, 16 and the architecture) and move
