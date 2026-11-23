@@ -1778,3 +1778,23 @@ Misunderstandings and reinforce attempts, oldest first.
   spelled out ~.
 - Row: sales tax 2 → 4 (~60%: every target of the retest cold in one go; two levels at once
   because the answer both says and applies the rule). The adjustment type's name a watch.
+
+### 2026-11-22: round 2026-11-22 Q3, the quote retest (Muebles Haya; key above)
+- Cold: Q2 (b)'s feedback was held for this question. The user opened with card 15's mantra
+  from memory (issuer to receiver, dated, terms on document or one line, items price a
+  product, answer a request, order lines accept; an offer until then) ✓.
+- (a) Issuer us, receiver Oficinas Lago ✓, valid from 05-05 ✓, **valid thru 2027-06-01** ✓
+  (exclusive, cold: the first time in three rounds); issue date written 5 May 2026 for 2027
+  (a slip). Unasked: the item, 20 at 180 ✓, linked to "the need line (request)" ~ (the
+  request item, not the need); quote roles "owner us, receiver Oficinas Lago" ✗ (issuer and
+  receiver are the quote's columns; roles are the other hats, PREPARER, CONTACT), the
+  column-vs-role split right on 11-20.
+- (b) Product quote ✓: "they know the approach, a specific model and prices" ✓ (who chose
+  the lines); proposal: we fit the solution to the problem ✓. ✗ "quote for information": no
+  such quote type (RFI is a request type, answered with information, not an offer); the
+  request types and the quote types merged, as in Q2 (b). Type names count here (the
+  11-22 rule).
+- Row: the quote 2 → 3 (~60%: the exclusive thru and PRODUCT_QUOTE's why cold ✓; a third
+  quote type invented, issuer and receiver doubled as roles).
+- After grading, Q2 (b)'s held feedback given (Q3 done): the request types vs the quote
+  types.

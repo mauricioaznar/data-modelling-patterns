@@ -165,7 +165,7 @@ oldest 4s (11-08). Responding parties go first, so no earlier talk spoils them.
 
 - [x] Q1 · Ch 4 · requests: who it went to (3) · cold retest: why per-supplier items break, ORIGINATOR by name (Hotel Pinar, request 22) · 3 → 4: both rows and (b) cold; "requester" for ORIGINATOR (a watch)
 - [x] Q2 · Ch 4 · requests: typed by what it asks, items carry needs (3) · retest: the type's why, the quantity column, the response date on the request (Gimnasio Roble) · stays 3: quantity and response date ✓ cold; type unwritten, RFQ and RFP swapped (feedback after the round)
-- [ ] Q3 · Ch 4 · quotes (2) · retest: the exclusive thru, PRODUCT_QUOTE named and why (Muebles Haya)
+- [x] Q3 · Ch 4 · quotes (2) · retest: the exclusive thru, PRODUCT_QUOTE named and why (Muebles Haya) · 2 → 3: the exclusive thru ✓ cold at last, PRODUCT_QUOTE and why ✓; a "quote for information" invented, issuer and receiver doubled as roles
 - [x] Q4 · Ch 4 · sales tax (2) · retest: the most specific rate within a place said, the general rate on every line, the adjustment rows (Librería Faro, order 930) · 2 → 4: four adjustment rows, 7 and 3, the rule said, all cold; "tax rate" for SALES_TAX
 - [x] Q5 · Ch 2 · communication event + roles (3) · retest: medium, status, purpose type (Agencia Viento) · stays 3: medium and status ✓ cold; purpose "planning" not a named type, roles written as the medium (unasked), (b) half
 - [ ] Q6 · Ch 2 · case and work effort · maintenance (last 4 on 11-08) (Telecom Ría)
