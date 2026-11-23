@@ -1086,7 +1086,8 @@ and new role types are rows, so the model stays flexible.
   typed role. The relationship is optional, because a three-way partnership is no binary
   relationship; the roles always say who signed what. (Ponder 1 of submodel 6.)
 - **Two paths, so a rule:** when an agreement names a relationship, both its ends should play
-  a role in the agreement. Table 4.16's own 10002 breaks it against Ch 2's data (point 23).
+  a role in the agreement. Table 4.16's own 10002 broke it against Ch 2's data, until point 23 gave it a
+  relationship with ABC Corporation.
 - **Subtypes and a type at once:** the subtype boxes are the kinds the model hangs lines on
   (product agreements matter for pricing and orders), the type rows an open list. With no
   attributes, both become rows of one hierarchy. (Ponder 2 of submodel 6.)
@@ -1768,24 +1769,61 @@ the literal drawing.
     row. Either the parent signs for its subsidiary (and the rule should accept a parent
     through the org rollup), or Silverston means a relationship with ABC Corporation, which
     Ch 2 doesn't seed.
+    **Outcome (2026-11-23): changed, B** (the user's call: the simplest check, no tree). Read
+    as a relationship with ABC Corporation: seed a customer relationship ACME → ABC
+    Corporation (its two party roles, from 2002-01-01 or earlier) and link 10002 to it, so
+    the strict check (the relationship's two parties both play roles in the agreement)
+    passes the book's row. Rejected: A, a parent through Ch 2's organization rollup (heavier
+    check, and "close enough up the tree" weakens it for every agreement); C, the book's row
+    left flagged (a "should be empty" check that never is, for no mistake). A would win if
+    parents routinely signed for their subsidiaries. **Cards:** none (card 15's key names the
+    rule, not the row).
 24. **4.12, AGREEMENT's subtypes as type rows:** PRODUCT over SALES and PURCHASE, EMPLOYMENT,
     and OTHER over Table 4.16's partnership (and our distribution agreement), all rows of
     `agreement_type`. If a later figure hangs a line on SALES AGREEMENT alone, it needs a
     subtype table, as SALES ORDER got.
+    **Outcome (2026-11-23): kept, type rows** (the user's call: no relationship lands on them).
+    Unlike point 6's order subtypes, none carries a line, an FK target or a later column, and
+    the hierarchy has two levels (PRODUCT over SALES and PURCHASE), which as tables would be
+    three empty ones with chained kind checks. A subtype gets a table the day a line or a
+    column lands on it, as SALES ORDER did. **Cards:** none.
 25. **4.12, when a relationship-tied agreement may start:** read as while the relationship
     is current (a check). Whether it must also end before the relationship does isn't
     checked.
+    **Outcome (2026-11-23): kept, start only** (the user's call: agreements can outlive the
+    relationship, as wind-down terms, warranties and payment schedules do). Rejected: a hard
+    check on the end (flags the legitimate wind-down), and a review query (point 22's move).
+    The user's second reason holds only in part: the order rules check the party's standing
+    role (PLACING_CUSTOMER, SUPPLIER…) on the order date, not the party relationship, so an
+    order under a lingering agreement is flagged only if the role was ended too. The review
+    query would win if forgotten agreements start to show. **Cards:** none.
 26. **4.13, applicability with nothing of a kind:** read as "no limit of that kind": an item
     with no product rows applies to every product. The other reading (none = applies to
     nothing) makes every clause list its products. An organization applicability matches
     the order's placing or bill-to party; a geographic one the ship-to address, at any depth
     of boundaries.
+    **Outcome (2026-11-23): kept, none = no limit of that kind** (the user's call). An item lists
+    only the limits it has, as a contract reads ("pens delivered in Missouri" names no
+    customers). Rejected: none = applies to nothing, where a program for everyone needs a row
+    per customer and a new customer is silently left out. The cost kept: a clause someone
+    forgot to limit applies more widely, silently. **Cards:** none.
 27. **4.13, the addendum's arc and dates:** exactly one of agreement and item (a check), and
     effective while its agreement is (a check). Its dates are drawn optional, so an addendum
     with no effective date is allowed and counts as never in force in our queries.
+    **Outcome (2026-11-23): kept, no effective date = not yet in force** (the user's call): a
+    draft, written but not agreed to take effect, as drawn. Rejected: a mandatory effective
+    date (stricter than the book, leaves drafts nowhere), and "effective from its creation"
+    (a date the data never stated; a draft would take effect silently). **Cards:** none.
 28. **4.13, an item inside an item:** read as inside the same agreement (a check). A
     sub-agreement is an item, not an AGREEMENT of its own, so it can't have its own parties
     or dates; the book may mean a lighter thing than our word suggests.
+    **Outcome (2026-11-23): kept, an item inside the same agreement** (the user's call). The
+    recursion is drawn on AGREEMENT ITEM, with no AGREEMENT-to-AGREEMENT line, so a
+    sub-agreement is a named block of clauses that lives and dies with its agreement and binds
+    its parties. Rejected: nesting across agreements (contracts joined through their clauses,
+    and the check that catches item 12 lost); a sub-agreement as its own AGREEMENT with a
+    "part of" line, which would win the day one needs a party or dates of its own. **Cards:**
+    none.
 29. **4.14–4.16 as a submodel of their own:** Silverston puts terms, pricing and the link to
     orders under the same heading as agreement definition and items. We made them submodel 7
     (agreement terms and pricing) rather than growing submodel 6: they answer a different
@@ -2191,7 +2229,8 @@ the literal drawing.
   surrogate key; agreement + party + type twice is a data-quality query (seed: XYZ entered
   twice as a partner).
 - **The relationship's ends must play roles in the agreement:** a data-quality query. It
-  catches our 70002 (Chloe's employment, Northwind left out) and the book's 10002 (point 23).
+  catches our 70002 (Chloe's employment, Northwind left out). The book's 10002 passes since
+  point 23: it formalizes relationship 28, ACME as ABC Corporation's customer (ours).
 - **An agreement may start only while its relationship is current:** a data-quality query
   (seed: our 70003, Sellers Assistance's distribution deal, begun after its relationship
   ended in 2002; point 25).

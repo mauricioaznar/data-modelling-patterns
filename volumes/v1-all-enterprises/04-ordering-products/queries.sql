@@ -1262,7 +1262,7 @@ left join party_display_name n    on n.party_id = r.party_id
 group by a.agreement_id, a.agreement_type_id, a.description
 order by a.agreement_id;
 
--- name: 4.12 — Data-quality check: agreements whose party relationship has an end that plays no role in the agreement (should be empty; 10002 is the book's own row, NOTES point 23)
+-- name: 4.12 — Data-quality check: agreements whose party relationship has an end that plays no role in the agreement (should be empty)
 select a.agreement_id, a.description, e.end_name as relationship_end, n.name as party_without_a_role
 from agreement a
 join party_relationship pr on pr.party_relationship_id = a.party_relationship_id
