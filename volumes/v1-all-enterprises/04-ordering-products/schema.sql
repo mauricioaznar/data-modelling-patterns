@@ -729,14 +729,25 @@ alter table price_component
 -- the order's placing or bill-to party plays a role in it, and each kind of
 -- limit the item has matches the line (the party, the product, the ship-to
 -- address at any depth of boundaries); none of a kind = no limit (NOTES,
--- point 26). Sales lines with a product only (point 37).
+-- point 26). Lines with a product, both directions (point 37): the party
+-- who must play a role in the agreement is the other side, the customer on
+-- a sale (placer or bill-to) and the supplier on a purchase (the taker);
+-- organization applicability always matches the buying side (placer or
+-- bill-to), which on a purchase is us. Feature lines are priced under their
+-- product's line, so they aren't matched.
 create view order_item_agreement_item as
 with line as (
   select oi.order_item_id, o.order_date, oi.product_id, soi.ship_to_contact_mechanism_id,
-         array_remove(array[so.placed_by_party_id, so.bill_to_party_id], null) as customer_parties
+         case o.order_kind
+           when 'SALES'    then array_remove(array[p.placed_by_party_id, p.bill_to_party_id], null)
+           when 'PURCHASE' then array_remove(array[p.taken_by_party_id], null)
+         end as other_side_parties,
+         array_remove(array[p.placed_by_party_id, p.bill_to_party_id], null) as customer_parties
   from order_item oi
   join "order" o                   on o.order_id = oi.order_id
-  join sales_order_parties so      on so.order_id = oi.order_id
+  join (select * from sales_order_parties
+        union all
+        select * from purchase_order_parties) p on p.order_id = oi.order_id
   left join order_item_ship_to soi on soi.order_item_id = oi.order_item_id
   where oi.product_id is not null
 )
@@ -745,7 +756,7 @@ from line l
 join agreement a      on a.from_date <= l.order_date and (a.thru_date is null or a.thru_date > l.order_date)
 join agreement_item i on i.agreement_id = a.agreement_id
 where exists (select 1 from agreement_role r
-              where r.agreement_id = a.agreement_id and r.party_id = any (l.customer_parties))
+              where r.agreement_id = a.agreement_id and r.party_id = any (l.other_side_parties))
   and (not exists (select 1 from agreement_organization_applicability x where x.agreement_item_id = i.agreement_item_id)
        or exists (select 1 from agreement_organization_applicability x
                   where x.agreement_item_id = i.agreement_item_id and x.party_id = any (l.customer_parties)))

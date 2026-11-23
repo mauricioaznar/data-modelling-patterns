@@ -1907,10 +1907,24 @@ the literal drawing.
     the US split by the Mississippi (Illinois east, Missouri west), so ACME's St. Louis
     addresses get 7.50. Table 4.19 gives no dates, currency or pricer: the agreement's
     dates, USD and ABC Corporation.
+    **Outcome (2026-11-23): kept, the Mississippi split** (the user's call): a region is a
+    geographic boundary, which price components already point at, and the split is the
+    simplest that puts the book's customer on one side. The gaps are filled from the
+    agreement. Rejected: sales territories drawn by us (more invented structure, the same
+    pricing). **Cards:** none.
 37. **4.16, a view, sales lines only:** the figure draws nothing new, so the link is a view
     (4.13's applicability for every item type). Purchase lines aren't matched: there the
     agreement's parties meet the order's supplier (the taker), not its placer. Feature lines
     aren't matched either. Is either worth building?
+    **Outcome (2026-11-23): changed, purchase lines too** (the user's call: one structure for
+    both directions). Built: `order_item_agreement_item` reads both parties views; the party
+    who must play a role in the agreement is the other side (placer or bill-to on a sale,
+    the taker on a purchase), and organization applicability matches the buying side (us on
+    a purchase). Seed: purchase agreement 70004 (ours), Northwind buying bond paper from
+    Fantastic Supplies in 2025, a pricing program with no price components; 12564's paper
+    line falls under it. Feature lines stay out: a feature is priced under its product's
+    line, and an agreement on pens governs the pen line, not the colour. **Cards:** card 16's
+    key (the view covers both directions).
 38. **4.17, the generic order parties:** the overall model draws ORDER ROLE and the two
     order contact-mechanism tables (4.5), not 4.3's and 4.4's columns, nor SALES and PURCHASE
     ORDER. That answers point 8: 4.5 is the overall model. Do 4.3's and 4.4's columns become

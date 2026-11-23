@@ -1245,3 +1245,25 @@ insert into order_item_role (order_item_id, party_id, order_item_role_type_id) v
 
 insert into order_item_contact_mechanism (order_item_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values
   (31, 34, 'SHIPPING'), (32, 32, 'SHIPPING'), (33, 32, 'SHIPPING'), (34, 34, 'SHIPPING');
+
+-- A purchase agreement, so 4.16's link shows both directions (NOTES, point
+-- 37; ours): Northwind buys bond paper from Fantastic Supplies (18) under
+-- 70004 in 2025. Purchase line 16 (12564's paper, January 2025) falls under
+-- it: Fantastic is the order's taker. 12570's paper (2023) is outside its
+-- dates. No price components: the program names the paper, not a price.
+insert into agreement (agreement_id, agreement_type_id, party_relationship_id, agreement_date, from_date, thru_date, description, text) values
+  (70004, 'PURCHASE_AGREEMENT', null, '2024-12-01', '2025-01-01', '2026-01-01', 'Bond paper from Fantastic Supplies for 2025', null);
+
+insert into agreement_role (agreement_id, party_id, agreement_role_type_id) values
+  (70004, 18, 'SUPPLIER'),
+  (70004, 4,  'CUSTOMER');
+
+insert into agreement_item (agreement_item_id, agreement_id, agreement_item_seq_id, agreement_item_type_id, agreement_text, agreement_image, part_of_agreement_item_id) values
+  (14, 70004, 1, 'PRICING_PROGRAM', 'Bond paper, delivered to our warehouses', null, null);
+
+select setval(pg_get_serial_sequence('agreement_item', 'agreement_item_id'), (select max(agreement_item_id) from agreement_item));
+
+insert into agreement_pricing_program (agreement_item_id) values (14);
+
+insert into agreement_product_applicability (agreement_item_id, product_id) values
+  (14, 1);
