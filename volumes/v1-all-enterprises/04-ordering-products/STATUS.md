@@ -16,9 +16,9 @@ Architecture figure: 4.17
 | 3 | Order status, terms and item associations | 4.7–4.8 | 2026-10-18 | 2026-10-29 | | |
 | 4 | Requirements | 4.9 | 2026-10-18 | 2026-11-13 | | |
 | 5 | Requests and quotes | 4.10–4.11 | 2026-10-18 | 2026-11-17 | | |
-| 6 | Agreements | 4.12–4.13 | 2026-10-18 | | | |
-| 7 | Agreement terms and pricing | 4.14–4.16 | 2026-10-18 | | | |
-| A | Architecture | 4.17 | 2026-10-18 | | – | – |
+| 6 | Agreements | 4.12–4.13 | 2026-10-18 | 2026-11-23 | | |
+| 7 | Agreement terms and pricing | 4.14–4.16 | 2026-10-18 | 2026-11-23 | | |
+| A | Architecture | 4.17 | 2026-10-18 | 2026-11-23 | – | – |
 
 `Figs` must match the card's heading, e.g. `(Figs 4.1–4.3)`; the `A` row's matches the
 architecture card's `(Fig N.M)`.

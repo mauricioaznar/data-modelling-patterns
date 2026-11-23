@@ -586,13 +586,15 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 - **S:** `agreement` + `agreement_type` (a hierarchy: PRODUCT over SALES and PURCHASE,
   EMPLOYMENT, OTHER over partnership; signed on a date, in force from and thru) ·
-  `agreement.party_relationship_id` (optional: the relationship it formalizes) ·
+  `agreement.party_relationship_id` (optional: the relationship it formalizes; starts while
+  it's current, may outlive it) ·
   `agreement_role` + `agreement_role_type` (any number of parties in typed roles) ·
   `agreement_item` + `agreement_item_type` (section, pricing program, exhibit,
-  sub-agreement; numbered; part of another item) · `agreement_organization_applicability`,
+  sub-agreement; numbered; part of another item in the same agreement; a sub-agreement is an
+  item, with no parties or dates of its own) · `agreement_organization_applicability`,
   `agreement_product_applicability`, `agreement_geographical_applicability` (what a clause
   is limited to; none of a kind = no limit) · `addendum` (on the agreement **or** one item;
-  created and effective dates).
+  created and effective dates; no effective date = a draft, not yet in force).
 - **W:** contracts as files in a folder, or contract columns on the customer: one contract
   per customer, two parties at most, no clause-level scope, and changes typed over what was
   signed.
@@ -1609,7 +1611,7 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
 - **Hook:** a conveyor belt (need, ask, offer) feeding the orders drawer; the contracts drawer
   beside it, tied by a rulebook, not a string
 - **Mantra:** Need, ask, offer, order: item to item. Orders and agreements, both header and
-  items, meet by rule, never by key.
+  items, meet by rule; the line keeps only which program priced it.
 
 <details><summary>Key</summary>
 
@@ -1621,8 +1623,9 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
   the commitment says how much of it an order fills. Around the order, each on the order or
   one item: roles, contact mechanisms by purpose, statuses, terms, adjustments. Around the
   agreement: roles, the relationship it formalizes, terms, and prices on its pricing
-  programs. An agreement governs an order line by rule (its dates, its parties, its items'
-  applicability), with no key.
+  programs. An agreement governs an order line by rule (its dates, the other side in its
+  roles, its items' applicability), with no key; the line stores the program that priced it,
+  as history, and a check flags the two disagreeing.
 - **T:** *(the naive-model trap until practice gives yours)* twin sales and purchase models
   (4.1), a column per order party, and an `agreement_id` on the order.
 - **D:** requirement (part of) ← requirement_request → request_item → request; quote_item →
@@ -1631,8 +1634,10 @@ from earlier chapters marked. Five minutes, not three: a chapter is bigger than 
   status, term, adjustment, contact mechanism (by **contact_mechanism_purpose_type**);
   order_requirement_commitment → order_item, requirement; agreement ← agreement_role →
   **party**, → **party_relationship**; agreement ← agreement_item (nested) ← agreement_term,
-  ← **price_component**; order_item ⇢ agreement_item (derived). Bold = from Ch 2 and Ch 3.
-  Kept: 4.2's one ORDER over 4.1's twins, 4.5's generic parties over 4.3's columns.
+  ← **price_component**; order_item ⇢ agreement_item (derived); order_item →
+  agreement_pricing_program (priced under, stored). Bold = from Ch 2 and Ch 3. Kept: 4.2's
+  one ORDER over 4.1's twins, 4.5's generic parties over 4.3's columns (their shape back as
+  views).
 </details>
 
 ### Architecture · V1 Ch 5 · Shipments (Fig 5.8)

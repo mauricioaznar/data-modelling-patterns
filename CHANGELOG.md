@@ -34,10 +34,17 @@ and any decisions made.
   both walk-throughs, a worked example per card, the architecture diagram, the type-names
   question.
 
+- Ch 4's overview finished: Overview ticked for Agreements, Agreement terms and pricing and
+  the architecture (the user's call, after the phone doc); tracker rows at 0 for submodels 6
+  and 7 (4 and 3 rows); card pass: card 15's key gained the relationship's dates, the
+  sub-agreement and the draft addendum; the architecture card's mantra and key now say the
+  line stores the program that priced it.
+
 **Next**
-- The user reads the doc: "didn't click" answers and type names; then tick Overview for
-  Agreements, terms and pricing, and the architecture row; tracker rows at 0; card pass.
-- Re-import `docs/cards-anki.txt` into Anki (cards 10 and 16).
+- Type names for agreements and terms still unanswered: ask before grading them
+  (`docs/practice.md`'s default).
+- Re-import `docs/cards-anki.txt` into Anki (cards 10, 15, 16 and the architecture) and move
+  Ch 4's cards from Drafts to Settled.
 - Optional: real price components for 70001's paper and copier programs (the workaround
   point 35 retired).
 
