@@ -768,3 +768,12 @@ where exists (select 1 from agreement_role r
                   join postal_address_boundary pb      on pb.contact_mechanism_id = l.ship_to_contact_mechanism_id
                   join geographic_boundary_ancestor ga on ga.geographic_boundary_id = pb.geographic_boundary_id
                   where x.agreement_item_id = i.agreement_item_id and ga.ancestor_id = x.geographic_boundary_id));
+
+-- The program that set the line's price, stored (NOTES, point 41; ours). The
+-- view above says which items govern a line under today's data; this column
+-- says which one priced it on the order date, a snapshot like unit_price.
+-- Two facts, not one twice: a data-quality query flags a line whose stored
+-- program the view no longer matches (an agreement ended back in time, or a
+-- line keyed under the wrong program). Null = priced off the list.
+alter table order_item
+  add column priced_under_agreement_item_id integer references agreement_pricing_program;   -- ours: "priced under"

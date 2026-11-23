@@ -1515,7 +1515,7 @@ where exists (select 1 from agreement_product_applicability x where x.agreement_
 -- Fig 4.16 — Relationship of agreement to order
 -- ============================================================
 
--- name: 4.16 — The agreement items governing each sales order line (the view), with what they bring: terms in force, and prices
+-- name: 4.16 — The agreement items governing each order line (the view), with what they bring: terms in force, and prices
 select o.order_id, oi.order_item_seq_id as line, o.order_date, pr.name as product, ship.display_name as ship_to,
        v.agreement_id || '/' || i.agreement_item_seq_id || ' ' || i.agreement_text as agreement_item,
        i.agreement_item_type_id as type,
@@ -1696,3 +1696,16 @@ select agreement_id, agreement_item_seq_id as item, term, term_value as cap,
 from run
 where running > term_value
 order by agreement_id, item, term, order_date;
+
+-- name: 4.16 — Data-quality check: lines priced under a program that no longer governs them (should be empty)
+-- The stored program (a snapshot, point 41) against the view (today's data).
+-- A row here is an agreement ended or redated back in time, or a line keyed
+-- under the wrong program.
+select oi.order_id, oi.order_item_seq_id as line, o.order_kind, o.order_date,
+       i.agreement_id, i.agreement_item_seq_id as item, i.agreement_text as priced_under
+from order_item oi
+join "order" o        on o.order_id = oi.order_id
+join agreement_item i on i.agreement_item_id = oi.priced_under_agreement_item_id
+where not exists (select 1 from order_item_agreement_item v
+                  where v.order_item_id = oi.order_item_id and v.agreement_item_id = oi.priced_under_agreement_item_id)
+order by o.order_date, oi.order_id;

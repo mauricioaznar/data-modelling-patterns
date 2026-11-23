@@ -1267,3 +1267,8 @@ insert into agreement_pricing_program (agreement_item_id) values (14);
 
 insert into agreement_product_applicability (agreement_item_id, product_id) values
   (14, 1);
+
+-- Which program priced each line (point 41): 10002's paper program (item 9)
+-- for ACME's 2002 paper. 12573's diskettes (33) were priced off the list.
+update order_item set priced_under_agreement_item_id = 9 where order_item_id in (31, 32, 34);
+update order_item set priced_under_agreement_item_id = 14 where order_item_id = 24;   -- DATA ERROR: 12570's 2023 paper priced under 70004, which begins in 2025 (caught by a query)

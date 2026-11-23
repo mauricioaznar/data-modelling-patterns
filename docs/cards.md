@@ -622,7 +622,9 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   inside the agreement's) · `term_type` (a hierarchy: LEGAL, FINANCIAL, INCENTIVE, THRESHOLD,
   OTHER at the top; shared with order and quote terms) · `agreement_pricing_program` (a
   subtype table of `agreement_item`) · `price_component.agreement_item_id` (null = a list
-  price) · the view `order_item_agreement_item` (which items govern a line, sales or purchase).
+  price) · the view `order_item_agreement_item` (which items govern a line, sales or purchase)
+  · `order_item.priced_under_agreement_item_id` (the program that priced the line that day, a
+  snapshot beside the view).
 - **W:** conditions buried in the contract's text, or a column per kind (`max_quantity`,
   `exclusive_flag`); agreed prices in a `contract_price` table that repeats every pricing
   condition; an `agreement_id` typed on the order.
@@ -634,8 +636,9 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   quantity break), its product inside the program's applicability; order_item ⇢
   agreement_item, derived: the agreement in force on the order date, the other side in an
   agreement_role (the customer on a sale, the supplier on a purchase), the item's applicability matching (organization, product, ship-to
-  boundary). Checks: dates inside the agreement's; the charged price against the agreement
-  price; a running total past a threshold.
+  boundary); order_item → agreement_pricing_program (priced under, stored). Checks: dates
+  inside the agreement's; the charged price against the agreement price; a running total
+  past a threshold; a stored program the view no longer matches.
 </details>
 
 ---

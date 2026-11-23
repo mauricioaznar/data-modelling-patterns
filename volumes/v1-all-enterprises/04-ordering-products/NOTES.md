@@ -1942,6 +1942,15 @@ the literal drawing.
     intended: the order keeps what was agreed (price, adjustments, terms) and which agreement
     governed it is derived, so the mismatch shows up. Keep the view only, or also store the
     item that set the price on the line (one nullable column), with the view as its check?
+    **Outcome (2026-11-23): changed, the pricing program stored on the line** (the user's
+    call). Two different facts, not one twice (unlike point 8): which program priced the line
+    on the order date (history, a snapshot like the unit price) and which items govern it
+    under today's data (the view). Built: `order_item.priced_under_agreement_item_id` → 
+    `agreement_pricing_program` (ours; null = priced off the list); 10002's paper lines (31,
+    32, 34) carry item 9; a data-quality query flags a line whose stored program the view no
+    longer matches (seed: 12570's 2023 paper priced under 70004, which begins in 2025). The
+    view-only version would win if "which deal set this price" were never asked. **Cards:**
+    card 16's key (S, D).
 42. **4.6, Table 4.8 (shared 2026-10-26), an amount per unit:** order 12560 has four
     adjustments: on line 3 (the diskettes, 6 at 7.00) a discount of 1.00, which the text
     calls "off each unit"; on the whole order a 10% discount, a 10.00 surcharge for delivery
