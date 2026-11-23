@@ -1860,22 +1860,49 @@ the literal drawing.
 32. **4.14 and 4.16, AGREEMENT's THRU DATE drawn mandatory,** where 4.12 drew it optional.
     Kept optional: an employment agreement like William's has no end. If Silverston means
     every agreement to end, 86749 needs a made-up date.
+    **Outcome (2026-11-23): kept, optional** (the user's call). 4.12 defines AGREEMENT; the
+    later figures redraw it as context, the likelier slip. A null thru is "still in force",
+    the repo-wide rule; a mandatory one would need invented far-future dates (86749, 70002)
+    special-cased everywhere. **Cards:** none.
 33. **4.14 and 4.15, a cap and a discount at the same 1,000 reams:** the cap read as
     cumulative over its dates, across every line the item governs (the text: the item holds
     only for the first 1,000 reams), so 12574's 300 reams past it are flagged. But Table
     4.19's 2% discount starts at 1,000 reams on one line, which only an order using the whole
     year's cap could earn. Is the cap per order, or the break meant for something else?
+    **Outcome (2026-11-23): kept, the cap cumulative and the break per line** (the user's
+    call). Each follows its own definition (the text's "first 1,000 reams"; Ch 3's quantity
+    break on one line's quantity); the near-unreachable 2% is a quirk of the sample numbers.
+    Rejected: a cap per order (breaks "the first 1,000 reams", and small orders escape it),
+    and a cumulative break (a volume rebate in pricing that Ch 3 doesn't have; TERM TYPE's
+    year-end rebate is where that lives). **Cards:** none.
 34. **4.15, AGREEMENT PRICING PROGRAM as a subtype table:** now that it has a line of its
     own, as Ch 3's unit-of-measure subtypes did, with the item type kept as discriminator
     and a check that both agree. PARTY TYPE's "based on" line isn't drawn: read as
     abbreviation and kept, though an agreement price rarely needs it (the agreement names
     its parties).
+    **Outcome (2026-11-23): kept** (the user's call). The subtype table, with only its key, is
+    the FK target that keeps PRICE COMPONENT's "priced using" on a pricing program, point 6's
+    reason; point 24's agreement subtypes stayed rows because nothing points at them. PARTY
+    TYPE stays available on program components, unused; a check forbidding it would be a rule
+    the book never states. **Cards:** none.
 35. **4.15, Ch 3's queries and agreement prices:** a list price is now a component with no
     program, but Ch 3's price list, price-a-line and overlap check predate the column and
     read every component as a list price. Our agreement prices stay out of their way only
     by carrying a region or old dates, which is why 70001's paper and copier programs have
     no components. At the overview: should Ch 3's queries say "no program", and is that a
     refactor in Ch 3 or a note?
+    **Outcome (2026-11-23): changed, Ch 3's queries fixed in place** (the user's call). Every
+    Ch 3 query that reads prices (price list, price-a-line, services, list vs suggested,
+    paper over time, margin, the starter kit) now says `agreement_item_id is null`, and the
+    overlap check compares like with like (`is not distinct from` on the program); Ch 4's
+    "agreed vs list" too. Ch 3's file names a Ch 4 column, which is fine: the rebuild loads
+    every chapter before any query runs, and no repo rule forbids it (Claude had overstated
+    one). The only output change: 12573's diskettes no longer read the paper program's bad
+    6.50 row as a list price. Concept cleared up: a price component belongs to at most one
+    program, set when it is created; an agreement never adopts a list price, it gets its own
+    components (an agreed base, or a discount stacked on the list). Follow-up, not done: the
+    workaround is no longer needed, so 70001's paper and copier programs could get real
+    components. **Cards:** none.
 36. **4.15, Table 4.19's regions:** Eastern and Western regions are new boundaries, read as
     the US split by the Mississippi (Illinois east, Missouri west), so ACME's St. Louis
     addresses get 7.50. Table 4.19 gives no dates, currency or pricer: the agreement's

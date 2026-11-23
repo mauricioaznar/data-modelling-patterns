@@ -487,6 +487,10 @@ having count(*) > 1;
 -- ============================================================
 -- Fig 3.7 — Standard product pricing
 -- ============================================================
+-- List prices only: Ch 4 (Fig 4.15) adds agreement_item_id, the pricing
+-- program an agreement price belongs to. A list price has none, so every
+-- query below that reads prices says so (Ch 4 NOTES, point 35). The column
+-- exists once Ch 4 is loaded; the rebuild loads every chapter first.
 
 -- name: 3.7 — Price list today: every current price component, with what it is based on
 select pc.price_component_id as id, t.description as component, pc.charge_kind,
@@ -511,7 +515,8 @@ left join product_category cat   on cat.product_category_id = pc.product_categor
 left join quantity_break qb      on qb.quantity_break_id = pc.quantity_break_id
 left join order_value ov         on ov.order_value_id = pc.order_value_id
 left join sale_type st           on st.sale_type_id = pc.sale_type_id
-where pc.from_date <= current_date
+where pc.agreement_item_id is null   -- list prices only (Ch 4's pricing programs)
+  and pc.from_date <= current_date
   and (pc.thru_date is null or pc.thru_date > current_date)
 order by pc.product_id nulls last, pc.price_component_id;
 
@@ -561,6 +566,7 @@ applicable as (        -- every condition is either null (any) or met
   from params p cross join ctx x
   join price_component pc
     on pc.price_component_type_id <> 'MSRP'
+   and pc.agreement_item_id is null   -- list prices only (Ch 4's pricing programs)
    and pc.from_date <= x.on_date and (pc.thru_date is null or pc.thru_date > x.on_date)
    and (pc.charge_kind = p.charge_kind
         or (pc.charge_kind is null and pc.price_component_type_id <> 'BASE_PRICE'))
@@ -629,6 +635,7 @@ from price_component pc
 join product pr         on pr.product_id = pc.product_id
 left join unit_of_measure u on u.uom_id = coalesce(pc.per_time_frequency_id, pc.per_uom_id)
 where pr.product_kind = 'SERVICE'
+  and pc.agreement_item_id is null
   and pc.from_date <= current_date
   and (pc.thru_date is null or pc.thru_date > current_date)
 order by pr.name, pc.charge_kind;
@@ -646,6 +653,7 @@ join price_component b
  and b.currency_uom_id = m.currency_uom_id
  and num_nonnulls(b.geographic_boundary_id, b.party_type_id, b.product_category_id,
                   b.quantity_break_id, b.order_value_id, b.sale_type_id) = 0   -- the unconditional list price
+ and b.agreement_item_id is null
  and b.from_date <= current_date and (b.thru_date is null or b.thru_date > current_date)
 where m.price_component_type_id = 'MSRP'
   and m.from_date <= current_date and (m.thru_date is null or m.thru_date > current_date);
@@ -656,6 +664,7 @@ from price_component
 where product_id = 1
   and price_component_type_id = 'BASE_PRICE'
   and geographic_boundary_id is null
+  and agreement_item_id is null
 order by from_date;
 
 -- name: 3.7 — Data-quality check: amount vs percent for each component type (should be empty)
@@ -714,6 +723,7 @@ join price_component b
  and b.quantity_break_id      is not distinct from a.quantity_break_id
  and b.order_value_id         is not distinct from a.order_value_id
  and b.sale_type_id           is not distinct from a.sale_type_id
+ and b.agreement_item_id      is not distinct from a.agreement_item_id   -- a program's price never clashes with the list's
  and a.from_date < coalesce(b.thru_date, 'infinity')
  and b.from_date < coalesce(a.thru_date, 'infinity')
 left join product pr on pr.product_id = a.product_id;
@@ -778,6 +788,7 @@ list_price as (        -- unconditional current base prices in USD
     and currency_uom_id = 'USD'
     and num_nonnulls(geographic_boundary_id, party_type_id, product_category_id,
                      quantity_break_id, order_value_id, sale_type_id) = 0
+    and agreement_item_id is null
     and from_date <= current_date and (thru_date is null or thru_date > current_date)
 )
 select coalesce(pr.name, 'feature: ' || pf.description) as costed, p.price, c.cost,
@@ -877,6 +888,7 @@ left join lateral (
     and pc.currency_uom_id = 'USD'
     and num_nonnulls(pc.geographic_boundary_id, pc.party_type_id, pc.product_category_id,
                      pc.quantity_break_id, pc.order_value_id, pc.sale_type_id) = 0
+    and pc.agreement_item_id is null
     and pc.from_date <= current_date and (pc.thru_date is null or pc.thru_date > current_date)
   order by pc.from_date desc
   limit 1

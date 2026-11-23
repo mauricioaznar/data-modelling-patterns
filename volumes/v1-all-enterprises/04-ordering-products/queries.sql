@@ -66,6 +66,7 @@ left join lateral (
     and pc.product_feature_id is null
     and pc.geographic_boundary_id is null and pc.party_type_id is null and pc.product_category_id is null
     and pc.quantity_break_id is null and pc.order_value_id is null and pc.sale_type_id is null
+    and pc.agreement_item_id is null   -- a list price belongs to no pricing program (4.15)
     and pc.from_date <= o.order_date and (pc.thru_date is null or pc.thru_date > o.order_date)
   having count(*) > 0
 ) lp on true
