@@ -199,6 +199,12 @@ insert into billing_account_role (billing_account_id, party_id, billing_account_
   (1459, 61, 'PRIMARY_PAYER',   '2001-07-01', null),   -- DATA ERROR: a second primary payer while Jane still is (caught by a query)
   (1459, 61, 'SECONDARY_PAYER', '2001-06-16', null);   -- DATA ERROR: Joe's secondary role keyed in twice (caught by a query)
 
+-- Ch 4's orders billed to an account: ACME's office-supplies account on Ch 5's
+-- order 200 and 400. 400 already names ACME as its BILL_TO party.
+update sales_order set bill_to_billing_account_id = 1295 where order_id = 200;
+delete from order_role where order_id = 200 and order_role_type_id = 'BILL_TO';   -- the account replaces the bill-to party
+update sales_order set bill_to_billing_account_id = 1295 where order_id = 400;   -- DATA ERROR: an account and a bill-to party on one order (caught by a query)
+
 -- Invoices on account, ours. Billed to the account, so no party.
 insert into invoice (invoice_id, invoice_kind, invoice_date, message, description, billing_account_id, billed_from_party_id,
                      addressed_to_contact_mechanism_id, sent_from_contact_mechanism_id) values

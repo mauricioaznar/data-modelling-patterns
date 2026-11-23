@@ -50,5 +50,5 @@ architecture card's `(Fig N.M)`.
 | 6 | Financial accounts | ✓ | Card 34 | 3 |
 | A | Architecture | – | Architecture | – |
 
-Last check: 0 ✗ · 1 !
+Last check: 0 ✗ · 0 !
 <!-- check:end -->
