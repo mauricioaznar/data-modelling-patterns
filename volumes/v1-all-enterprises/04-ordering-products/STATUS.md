@@ -11,7 +11,7 @@ Architecture figure: 4.17
 ## Submodels
 | # | Submodel | Figs | Doc draft | Overview | Practice | Doc done |
 |---|---|---|---|---|---|---|
-| 1 | Orders, items and order parties | 4.1–4.5 | 2026-10-18 | | | |
+| 1 | Orders, items and order parties | 4.1–4.5 | 2026-10-18 | 2026-11-23 | | |
 | 2 | Order adjustments | 4.6 | 2026-10-18 | 2026-10-26 | | |
 | 3 | Order status, terms and item associations | 4.7–4.8 | 2026-10-18 | 2026-10-29 | | |
 | 4 | Requirements | 4.9 | 2026-10-18 | 2026-11-13 | | |
