@@ -170,7 +170,7 @@ oldest 4s (11-08). Responding parties go first, so no earlier talk spoils them.
 - [x] Q5 · Ch 2 · communication event + roles (3) · retest: medium, status, purpose type (Agencia Viento) · stays 3: medium and status ✓ cold; purpose "planning" not a named type, roles written as the medium (unasked), (b) half
 - [x] Q6 · Ch 2 · case and work effort · maintenance (last 4 on 11-08) (Telecom Ría) · 4 → 3: case, roles and the event-effort junction ✓ cold; events joined to the case by a junction (an FK on the event), the junction's why one-to-many only
 - [x] Q7 · Ch 4 · the line: product, feature or neither, ordered for · maintenance (last 4 on 11-08) (Pastelería Miel, order 940) · holds 4: all three lines and ordered for cold; (b) ✓
-- [ ] Distinctions for the round (practice.md)
+- [x] Distinctions for the round (practice.md) · D29 REQUESTER or ORIGINATOR, D30 request type or quote type; Card 4's mantra for Q6
 
 ## Question round 2026-11-21 (short)
 
@@ -207,7 +207,7 @@ as usual, then tick here. Requests and quotes capped at 3, card 14 closed (the 1
 - [x] Q5 · Ch 4 · sales tax (3) · retest: the rates, the order date, the stored percentage (Librería Cumbre, order 880) · 3 → 2: no boundary on the rates, the novel taxed 7 + 3 (stacked, not the most specific); the order date and the copy ✓
 - [x] Q6 · Ch 4 · item association · maintenance (last 4 on 11-04) (Deportes Cima, order 890) · stays 4: rows and no quantity cold; "product association" again
 - [x] Q7 · Ch 4 · adjustments as typed rows · maintenance (last 4 on 11-04) (Cerámica Alba, order 900) · stays 4: all cold
-- [ ] Distinctions for the round (practice.md)
+- [x] Distinctions for the round (practice.md) · D29 REQUESTER or ORIGINATOR, D30 request type or quote type; Card 4's mantra for Q6
 
 ## Question round 2026-11-18 (short)
 

@@ -2299,6 +2299,40 @@ options; one that misses a fact goes to its submodel card instead.
   model is the product (`product_requirement.product_id`, empty until picked), a feature a
   quality any product may have.
 
+### Distinction D29 · REQUESTER or ORIGINATOR? (V1 Ch 4)
+- **Cue:** "Dr León logs that the ward needs 6 wheelchairs. Ana, our buyer, sends three
+  shops a request for their prices."
+- **Test:** Which document is the role on? The need (a requirement, before anyone is
+  asked), or the request we send out to suppliers?
+- **Answer:**
+  - Dr León: REQUESTER (or OWNER) on the requirement, a `requirement_role` row.
+  - Ana: ORIGINATOR on the request, a `request_role` row.
+- **Sides:** A requirement role says who raised or answers for a need (REQUESTER, OWNER),
+  dated. A request role says who sent the request out or handles it (ORIGINATOR,
+  CONTACT). Two documents, two role sets; one person may hold both.
+- **Mnemonic:** The need has a requester, the request has an originator.
+- **Trap:** Ana as "requester" on the request (2026-11-22), "sender" the round before
+  (2026-11-21).
+
+### Distinction D30 · Request type or quote type? (V1 Ch 4)
+- **Cue:** "RFI, RFQ, RFP, PROPOSAL, PRODUCT_QUOTE: which side is each, and what answers
+  what?"
+- **Test:** Is it what we *ask* for (a request type, three of them), or the *offer* that
+  comes back (a quote type, two of them)? An offer needs a price, so information gets no
+  quote.
+- **Answer:**
+  - RFI: a request type; we ask for information. Answered with information, no quote.
+  - RFQ: a request type; we ask prices for items we describe. Answered by a PRODUCT_QUOTE.
+  - RFP: a request type; we ask for an approach and its price. Answered by a PROPOSAL.
+  - PROPOSAL: a quote type; the vendor chose what goes on the lines.
+  - PRODUCT_QUOTE: a quote type; the customer chose the lines, the vendor prices them.
+- **Sides:** The request type is what we ask for. The quote type is who chose the lines:
+  the vendor (PROPOSAL) or the customer (PRODUCT_QUOTE). Same shapes on both sides.
+- **Mnemonic:** Three ways to ask, two ways to offer; information gets no price.
+- **Trap:** RFQ described as "they choose the approach" and RFP as "we describe the
+  approach" (2026-11-22, Q2); a "quote for information" as a third quote type (2026-11-22,
+  Q3); "the vendor picks the product" as what decides the request type (2026-11-20, 11-21).
+
 ---
 
 ## Deck: patterns

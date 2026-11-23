@@ -26,11 +26,11 @@ and any decisions made.
 **Next**
 - Round closed. The held feedback (RFQ vs RFP, Q2 b; the
   "quote"/"proposal" words for request types) given after Q3.
-- Distinctions for the round: REQUESTER (requirement) vs ORIGINATOR (request); the three request types vs the two quote types.
+- Distinctions written: D29 (REQUESTER or ORIGINATOR), D30 (request type or quote type).
 - Next round: retest the request types the right way round, the quote (two types only, issuer and
   receiver as columns), the communication event (the medium apart from the roles, which rows
   differ), case and work effort (FK vs junction); maintenance on the oldest 4s.
-- Re-import `docs/cards-anki.txt` into Anki (Card 4's mantra).
+- Re-import `docs/cards-anki.txt` into Anki (Card 4's mantra, D29, D30).
 
 ## 2026-11-21
 
