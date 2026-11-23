@@ -1538,6 +1538,7 @@ the literal drawing.
    and per purchase line, and the kind-vs-subtype checks (4.3's and 4.4's queries) stay.
    The alternative, dropping the two order subtypes and moving Ch 7's column to `order`,
    wins if no kind-specific column ever appears; Ch 7's overview may revisit it.
+   **Built (2026-11-23):** the three tables hold only their keys (build notes, Figs 4.3–4.4).
 7. **4.4, whose buyer roles:** PLACING BUYER, BILL TO PURCHASER and SHIP TO BUYER are grouped
    under a new BUYER type, the mirror of CUSTOMER. Nothing drawn says they must be roles of
    our own organizations (or their employees), so nothing checks it. Should something? Table
@@ -1582,6 +1583,10 @@ the literal drawing.
    still can't tie the role type to the order's kind. Concept cleared up: the order
    supertype with its subtypes (direction, 4.2) and roles as rows (parties, 4.5) are two
    separate generalisations; point 8 touches only the second.
+   **Built (2026-11-23):** every order in Chs 4–8 moved to the rows; the columns, their
+   copied checks and the "one job in both models" check are gone; the two views and
+   `order_item_ship_to` read the rows (build notes, Figs 4.3–4.5). Card 10 and the doc entry
+   updated to match.
 9. **4.5, direction-neutral role types:** our new ORDER ROLE TYPE rows (PLACED_BY, TAKEN_BY,
    BILL_TO) serve both directions, and the order's kind says which side is ours. Silverston
    may mean one type per hat (placing customer, supplier, bill-to purchaser…), which keeps
@@ -1602,6 +1607,9 @@ the literal drawing.
    rule for purchase REVIEWER ends on 2024-01-01 (ours, to show an ended rule passing
    12570); purchase TAKEN_BY → SUPPLIER copies 4.4's column check; Ana and the household
    gain PLACING_CUSTOMER and BILL_TO_CUSTOMER roles from 2025-07-01, so 12571's rows pass.
+   **Built (2026-11-23):** the line twin `order_item_role_rule` (5 rules) and its two checks;
+   Ana gains SHIP_TO_CUSTOMER from 2025-07-01. Purchases now name Northwind as placer and
+   Chloe as ENTERED_BY on 12564, so rule 9 holds (build notes, Fig 4.4).
 10. **4.6, an order or an item:** no arc is drawn across the two "affecting" lines; read as
     one or the other, never both (a data-quality query). Other readings: an item's adjustment
     also names its order (redundant, but easy to sum), or both are allowed.
@@ -1909,33 +1917,36 @@ the literal drawing.
   isn't seeded; A2395 is (Fig 4.4), because Tables 4.9 and 4.11 build on it.
 
 ### Fig 4.3
-- **SALES ORDER becomes a subtype table** (`sales_order`, sharing `order_id`), now that it has
-  relationships of its own, as GOOD did in Ch 3's Fig 3.3. `order_kind` stays the
-  discriminator; a data-quality query checks the two agree (seed: order 12567, a sales order
-  with no `sales_order` row).
-- **Party lines → `<line>_party_role_id` columns referencing `party_role`:**
-  `placed_by_party_role_id`, `taken_by_party_role_id`, `bill_to_party_role_id` on
-  `sales_order`, and `ship_to_party_role_id` on `sales_order_item`. A plain FK can't say which
-  role type, so a data-quality query walks Ch 2's `role_type_ancestor` (a role type below the
-  expected one counts; seed: order 12566 billed to Contoso's SHIP_TO role), and another checks
-  the role was current on the order date (seed: Ben's order of 2023-03-15, made while he was
-  still a prospect).
+- **Refactored 2026-11-23 to the generic rows** (points 6, 8 and 9, the overview). First built
+  as six `<line>_party_role_id` and `<line>_contact_mechanism_id` columns on `sales_order`
+  (FKs to `party_role` and `contact_mechanism`) and a ship-to pair on `sales_order_item`,
+  with two copied checks per side (wrong role type, role not current). Now every line of the
+  figure is a 4.5 row: placed by, taken by and bill to are `order_role` rows (PLACED_BY,
+  TAKEN_BY, BILL_TO); placed using, taken via and billed to are `order_contact_mechanism`
+  rows (ORDER_PLACING, ORDER_TAKING, BILLING); the ship-to pair is an `order_item_role`
+  (SHIP_TO) and an `order_item_contact_mechanism` (SHIPPING). The two column checks became
+  `order_role_rule`'s check (seed: Ben placing 12565 of 2023-03-15, while still a prospect).
+  The old bad row "billed to Contoso's SHIP_TO role" can't happen any more (a row names a
+  party, and the rule asks whether that party holds BILL_TO_CUSTOMER), so 12566 is clean.
+- **SALES ORDER stays a subtype table** (`sales_order`, sharing `order_id`) with only its key
+  (point 6, the user's call); `order_kind` stays the discriminator, and a data-quality query
+  checks the two agree (seed: order 12567, a sales order with no `sales_order` row).
+- **`sales_order_parties`, a view** (point 8, option C), gives the figure's column shape back
+  for reading: placer, taker, bill-to and the three mechanisms per sales order, one per hat
+  (`max() filter`). It stores nothing. The reports read it; the checks read the rows.
 - **PLACING_CUSTOMER is a new `role_type` row** under Ch 2's CUSTOMER, beside bill-to, ship-to
-  and end-user. ACME, Contoso and Ben get placing roles.
-- **Contact mechanism lines → `<line>_contact_mechanism_id` columns** referencing
-  `contact_mechanism`, of any kind. Whether the party has that mechanism on file is a review
-  query, not a check: shipping to an address the customer doesn't own (collecting at our
-  warehouse, a one-off site) is allowed.
-- **The ship-to columns are added to `sales_order_item`** with `alter table`, as Ch 3 added
-  columns to `product`. Feature items leave them empty; the queries take the parent item's.
-- **No bill-to stored as a default:** a null bill-to falls back to the placing customer in the
+  and end-user. ACME, Contoso, Ben and (from 2025-07-01) Ana get placing roles.
+- **A mechanism the party doesn't have on file is allowed:** a review query, not a check
+  (collecting at our warehouse, a one-off site).
+- **No bill-to stored as a default:** a missing BILL_TO row falls back to the placer in the
   queries (point 3), so one fact isn't stored twice.
 - **`order_role` has a surrogate key;** the identifier (order + party + type, point 4) is a
   data-quality query (seed: the purchase order's approval entered twice). So is "the shares of
   one type on one order add up to at most 100" (seed: 100% + 25% for order 12562). A check keeps
   each share between 0 and 100.
-- **`order_role_type` is a lookup of its own** (point 5): SALESPERSON, ENTERED_BY, APPROVER,
-  REVIEWER, our examples.
+- **`order_role_type` is a lookup of its own** (point 5, waiting for the shared `role_type`):
+  PLACED_BY, TAKEN_BY, BILL_TO, SALESPERSON, ENTERED_BY, APPROVER, REVIEWER. All the hats,
+  item hats and purposes are seeded in 4.3's section now, since every order uses them.
 - **12560's parties are Table 4.5's:** ACME places it from 234 Stretch Street and is billed
   there, ABC Subsidiary takes it at 100 Main Street, and its lines ship to 2300 Drident
   Avenue (1, 2) and 234 Stretch Street (3). ACME gets bill-to and ship-to roles, and the
@@ -1947,26 +1958,28 @@ the literal drawing.
   `party_display_name`, which also lets the explorer label contact mechanism ids.
 
 ### Fig 4.4
-- **PURCHASE ORDER and PURCHASE ORDER ITEM become subtype tables** (`purchase_order`,
-  `purchase_order_item`), now that they have relationships, as SALES ORDER did in 4.3.
-  `order_kind` stays the discriminator, and two data-quality queries check it both ways
-  (seed: sales order 12567 keyed on the purchase form, with a `purchase_order` row and a
-  `purchase_order_item` row).
-- **The same column names as `sales_order`,** so a reader sees the mirror. A question that
-  spans both directions (Contoso's orders) is a union of two near-identical selects: the cost
-  Fig 4.5 removes.
+- **Refactored 2026-11-23 like 4.3:** the six columns and the ship-to pair became rows, and
+  the copied checks went. `purchase_order` and `purchase_order_item` keep only their keys
+  (point 6): the first is where Ch 7's bill-to account lands, the second the FK target that
+  keeps Fig 4.8's "used to fulfill" end a purchase line. `order_kind` stays the
+  discriminator, checked both ways (seed: sales order 12567 keyed on the purchase form, with a
+  `purchase_order` row and a `purchase_order_item` row).
+- **`purchase_order_parties`, the twin view.** A question that spans both directions
+  (Contoso's orders) now reads one table, `order_role`, with the order's kind beside each
+  hat: the cost of the twin columns is gone.
+- **Our organization places and pays** (rules 9 and 11, point 7): the person who raised a
+  purchase is ENTERED_BY. So 12564 is placed by Northwind and entered by Chloe; 12570 keeps
+  Chloe as the placer, a bad row the rules' check catches (a person, not one of our
+  organizations). 12569's freight is taken by Contoso, whose SUPPLIER role makes it clean
+  now (its bad row was the wrong role row, which can't happen with rows).
 - **Four `role_type` rows:** BUYER, a grouping (no `applies_to_kind`, never assigned, like
   Ch 2's PERSON_ROLE), with PLACING_BUYER, BILL_TO_PURCHASER and SHIP_TO_BUYER under it, open
-  to either kind of party. SUPPLIER is Ch 2's (organizations only). Northwind gets the three
-  buyer roles, and Chloe a placing-buyer role from 2023-09-01, when she joined.
-- **The party checks are 4.3's, copied** onto the purchase lines: wrong role type (seed: 12569
-  taken by Contoso's BILL_TO_CUSTOMER role, not its SUPPLIER role) and role not current on the
-  order date (seed: 12570, dated 2023-05-10, placed by Chloe's buyer role).
+  to either kind of party. SUPPLIER is Ch 2's (organizations only). Only SHIP_TO_BUYER is
+  still required by a rule (the purchase line's ship-to); the other two stay as standing
+  roles, unused by the rules.
 - **A ship-to address the buyer doesn't have on file is allowed,** and a query labels it (seed:
-  12568's drop-shipped copier). Whether buyer roles must belong to our own organizations is
-  not drawn and not checked (point 7).
-- **`item_description` stays on `order_item`** (point 6), so `purchase_order_item` holds only
-  the ship-to pair.
+  12568's drop-shipped copier: our ship-to hat, Contoso's address).
+- **`item_description` stays on `order_item`** (point 6).
 - **Fantastic Supplies gets an order-desk e-mail** (contact mechanism 31), where our purchase
   orders are taken.
 - **A2395 is Table 4.7's purchase order,** stored as `order_id` 2395 (our keys are numbers).
@@ -1976,26 +1989,30 @@ the literal drawing.
   neither a cleaning service nor a cleaning kit, so each line's description says what it is.
 
 ### Fig 4.5
-- **Four new tables, each with a surrogate key:** `order_item_role`, `order_item_role_type`,
-  `order_contact_mechanism`, `order_item_contact_mechanism`. ORDER ROLE and ORDER ROLE TYPE
-  are 4.3's tables. Each identifier (three parents) is a data-quality query (seed: the
-  family's billing address entered twice on 12571).
-- **Built beside 4.3 and 4.4** (point 8). Order 12571 has its `sales_order` row with every
-  column empty, and its `sales_order_item` rows, so the earlier subtype checks still hold. A
-  data-quality query stops one order naming the same job both ways (seed: a BILL_TO order role
-  for Ben on 12561, which already has a bill-to column), and the "who pays" query reads
-  whichever model holds the answer.
-- **`order_role_type` gains PLACED_BY, TAKEN_BY and BILL_TO,** direction-neutral (point 9).
-  **`order_item_role_type`** is a lookup of its own (SHIP_TO, END_USER, INSTALLER): the third
-  role-type table, after Ch 2's `role_type` and 4.3's, and more weight for TODO's ROLE TYPE
-  refactor (point 5).
+- **The only version now** (point 8, settled 2026-10-22, built 2026-11-23). Four tables, each
+  with a surrogate key: `order_item_role`, `order_item_role_type`, `order_contact_mechanism`,
+  `order_item_contact_mechanism`. ORDER ROLE and ORDER ROLE TYPE are 4.3's tables. Each
+  identifier (three parents) is a data-quality query (seed: the family's billing address
+  entered twice on 12571).
+- **The hats are direction-neutral** (point 9): PLACED_BY, TAKEN_BY, BILL_TO on the order,
+  SHIP_TO, END_USER, INSTALLER on the line. **`order_item_role_type`** is a lookup of its
+  own, waiting for point 5's shared `role_type`.
+- **`order_item_role_rule`, the line twin of `order_role_rule`** (point 9): SHIP_TO needs
+  SHIP_TO_CUSTOMER on a sale and SHIP_TO_BUYER on a purchase, an INSTALLER an EMPLOYEE or
+  CONTRACTOR role, an END_USER anyone. The same two checks (seed: the household as a second
+  ship-to on 12571's pens, with no ship-to role). Ana gets SHIP_TO_CUSTOMER from 2025-07-01
+  (party role 99) for 12571's good rows.
+- **`order_item_ship_to`, a view:** the ship-to party and address per line, both directions.
+  A feature line falls back to the line it's ordered for in the queries (Ch 4's sales tax,
+  Ch 5's shipment check).
 - **`contact_mechanism_purpose_type` is Ch 2's table,** not a copy. It gains ORDER_PLACING,
   ORDER_TAKING and DELIVERY_CONTACT; BILLING and SHIPPING are reused.
 - **"One per order" is a data-quality query:** one placer, taker and bill-to per order, one
   placing, taking and billing mechanism, and one ship-to party and address per item (seed:
   12571 billed to the family and to Ana).
-- **No fallback to the parent item** for a feature's ship-to here: 12571 has no feature items.
-  The rule from 4.3 (a feature ships with its item) would carry over unchanged.
+- **Later chapters' orders** (Ch 5's 100–400, Ch 6's 23500, Ch 7's 10001–10003, Ch 8's
+  2400) were moved to the rows in the same refactor. Ch 7's bill-to account keeps its
+  columns on the order subtypes; its arc with the BILL_TO row is a data-quality query there.
 
 ### Fig 4.6
 - **The six subtypes become the top level of `order_adjustment_type`** (DISCOUNT, SURCHARGE,

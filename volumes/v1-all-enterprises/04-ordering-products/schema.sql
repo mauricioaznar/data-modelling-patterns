@@ -60,40 +60,30 @@ create table sales_order_item (
 -- ============================================================
 -- Fig 4.3 — Sales order parties and contact mechanisms
 -- ============================================================
--- SALES ORDER now has relationships of its own, so it gets a subtype table
--- sharing order_id (as GOOD did in Ch 3, Fig 3.3). order_kind stays the
--- discriminator; a data-quality query checks the two agree.
+-- Fig 4.3 draws the sales order's parties and mechanisms as six lines on
+-- SALES ORDER, and its ship-to pair on SALES ORDER ITEM. We built them as
+-- columns first; the overview moved them all to 4.5's generic rows (NOTES,
+-- point 8): placed by, taken by and bill to are ORDER ROLE rows (PLACED_BY,
+-- TAKEN_BY, BILL_TO), placed using, taken via and billed to are ORDER CONTACT
+-- MECHANISM rows (ORDER_PLACING, ORDER_TAKING, BILLING), and the ship-to pair
+-- is an ORDER ITEM ROLE (SHIP_TO) and an ORDER ITEM CONTACT MECHANISM
+-- (SHIPPING). The column shape survives as a view (4.5), for reading only.
 --
--- The party lines point at PARTY ROLE (Ch 2, Fig 2.4), not at PARTY: the
--- order names "Contoso as bill-to customer", a dated role row. The role's
--- type (PLACING_CUSTOMER, INTERNAL_ORGANIZATION, BILL_TO_CUSTOMER or one below
--- it) and its dates are data-quality queries.
---
--- The contact mechanism lines point at CONTACT MECHANISM, of any kind: an
--- order comes in by phone, e-mail or the website, and a bill can go by e-mail.
--- Every line is optional (NOTES, point 3); with no bill-to, the queries bill
--- the placing customer.
+-- SALES ORDER keeps its subtype table, now with only its key (point 6, the
+-- user's call): it is where a sales order's own columns land (Ch 7 adds one).
+-- order_kind stays the discriminator; a data-quality query checks the two
+-- agree. Every party is optional (point 3); with no bill-to, the queries bill
+-- the placer.
 
 create table sales_order (
-  order_id                          integer primary key references "order",
-  placed_by_party_role_id           integer references party_role,          -- PLACING CUSTOMER: "placed by"
-  taken_by_party_role_id            integer references party_role,          -- INTERNAL ORGANIZATION: "taken by"
-  bill_to_party_role_id             integer references party_role,          -- BILL TO CUSTOMER: "with a requested bill to"
-  placed_using_contact_mechanism_id integer references contact_mechanism,   -- "placed using"
-  taken_via_contact_mechanism_id    integer references contact_mechanism,   -- "taken via"
-  bill_to_contact_mechanism_id      integer references contact_mechanism    -- "designated to be billed to"
+  order_id integer primary key references "order"
 );
 
--- Ship-to sits on the item: one bill, many destinations. A feature item
--- ships with the item it's ordered for (the queries fall back to it).
-alter table sales_order_item
-  add column ship_to_party_role_id        integer references party_role,          -- SHIP TO CUSTOMER: "designated to be shipped to"
-  add column ship_to_contact_mechanism_id integer references contact_mechanism;   -- "designated to be shipped to"
-
--- ORDER ROLE: any other party on an order (a salesperson, whoever keyed it
--- in, an approver). It hangs on ORDER, so purchase orders have them too. It
--- names a PARTY and a type, not a PARTY ROLE: being this order's salesperson
--- is a role within the order only.
+-- ORDER ROLE: every party on an order, each a row with a hat (placer, taker,
+-- bill-to, salesperson, whoever keyed it in, an approver). It hangs on ORDER,
+-- so purchase orders have them too. It names a PARTY and a type, not a PARTY
+-- ROLE: being this order's salesperson is a role within the order only.
+-- Whether the party may wear the hat is ORDER ROLE RULE's job, below.
 --
 -- ORDER ROLE TYPE is a lookup of its own for now. Ch 2's role_type could
 -- become a ROLE TYPE supertype with party and order role subtypes (TODO,
@@ -155,42 +145,35 @@ left join electronic_address e        on e.contact_mechanism_id = cm.contact_mec
 -- ============================================================
 -- Fig 4.4 — Purchase order parties and contact mechanisms
 -- ============================================================
--- Fig 4.3 turned over: PURCHASE ORDER gets a subtype table with the same six
--- lines, and PURCHASE ORDER ITEM one with the ship-to pair. The same column
--- names as sales_order, so the mirror shows. The roles expected are the
--- buyer's side (PLACING_BUYER, SUPPLIER, BILL_TO_PURCHASER, SHIP_TO_BUYER),
--- checked by data-quality queries copied from 4.3's: the cost of the twins.
+-- Fig 4.3 turned over: the same six lines on PURCHASE ORDER and the ship-to
+-- pair on PURCHASE ORDER ITEM, built as rows in 4.5's tables like the sales
+-- side (NOTES, point 8). The buyer's side (our organization places and pays,
+-- a SUPPLIER takes, a SHIP_TO_BUYER receives) is checked by the rules in
+-- 4.3 and 4.5, not by copied column checks.
 --
--- PURCHASE ORDER ITEM is drawn with its own ITEM DESCRIPTION; read as
--- order_item's (NOTES, point 6), so this table holds only the ship-to pair.
+-- Both subtype tables keep only their keys (point 6). PURCHASE ORDER ITEM is
+-- drawn with its own ITEM DESCRIPTION, read as order_item's (point 6), and is
+-- the FK target that keeps Fig 4.8's "used to fulfill" end a purchase line.
 
 create table purchase_order (
-  order_id                          integer primary key references "order",
-  placed_by_party_role_id           integer references party_role,          -- PLACING BUYER: "placed by"
-  taken_by_party_role_id            integer references party_role,          -- SUPPLIER: "taken by"
-  bill_to_party_role_id             integer references party_role,          -- BILL TO PURCHASER: "with a requested bill to"
-  placed_using_contact_mechanism_id integer references contact_mechanism,   -- "placed using"
-  taken_via_contact_mechanism_id    integer references contact_mechanism,   -- "taken via"
-  bill_to_contact_mechanism_id      integer references contact_mechanism    -- "designated to be billed to"
+  order_id integer primary key references "order"
 );
 
 create table purchase_order_item (
-  order_item_id                integer primary key references order_item,
-  ship_to_party_role_id        integer references party_role,          -- SHIP TO BUYER: "designated to be shipped to"
-  ship_to_contact_mechanism_id integer references contact_mechanism    -- "designated to be shipped to"
+  order_item_id integer primary key references order_item
 );
 
 -- ============================================================
 -- Fig 4.5 — Generic order roles and contact mechanisms
 -- ============================================================
--- The book's flexible alternate to 4.3 and 4.4: every party and contact
--- mechanism on an order or an item is a row with a type, in both directions.
--- ORDER ROLE and ORDER ROLE TYPE are 4.3's tables; the rest is new. Both
--- versions stay loaded, as Ch 2 kept Figs 2.5 and 2.6a (NOTES, point 8).
+-- The book's flexible alternate to 4.3 and 4.4, and the one we keep (NOTES,
+-- point 8): every party and contact mechanism on an order or an item is a
+-- row with a type, in both directions. ORDER ROLE and ORDER ROLE TYPE are
+-- 4.3's tables; the rest is new.
 --
 -- What the columns gave for free becomes data-quality queries: one placer,
--- taker and bill-to per order, the identifiers (a bar on all three lines of
--- each table), and no order naming the same job both ways.
+-- taker and bill-to per order, one ship-to per item, and the identifiers (a
+-- bar on all three lines of each table).
 
 create table order_item_role_type (
   order_item_role_type_id text primary key,
@@ -219,6 +202,64 @@ create table order_item_contact_mechanism (
   contact_mechanism_id              integer not null references contact_mechanism,               -- "assigned to"
   contact_mechanism_purpose_type_id text    not null references contact_mechanism_purpose_type   -- "used for"
 );
+
+-- ORDER ITEM ROLE RULE: order_role_rule's twin for lines (our addition,
+-- NOTES, point 9). The line's kind is its order's; the same two checks.
+create table order_item_role_rule (
+  order_item_role_rule_id integer generated by default as identity primary key,
+  order_kind              text not null check (order_kind in ('SALES', 'PURCHASE')),
+  order_item_role_type_id text not null references order_item_role_type,   -- the hat
+  required_role_type_id   text references role_type,                       -- the standing role its wearer must hold; null = anyone
+  from_date               date not null,
+  thru_date               date,
+  check (thru_date is null or thru_date > from_date)
+);
+
+-- The column shape of 4.3 and 4.4, given back for reading (NOTES, point 8,
+-- option C). Views store nothing: the rows above are the only truth. One
+-- party or mechanism per hat; a second of the same hat is hidden by max()
+-- and caught by 4.5's data-quality query.
+create view sales_order_parties as
+select o.order_id,
+       max(r.party_id) filter (where r.order_role_type_id = 'PLACED_BY') as placed_by_party_id,
+       max(r.party_id) filter (where r.order_role_type_id = 'TAKEN_BY')  as taken_by_party_id,
+       max(r.party_id) filter (where r.order_role_type_id = 'BILL_TO')   as bill_to_party_id,
+       (select max(c.contact_mechanism_id) from order_contact_mechanism c
+         where c.order_id = o.order_id and c.contact_mechanism_purpose_type_id = 'ORDER_PLACING') as placed_using_contact_mechanism_id,
+       (select max(c.contact_mechanism_id) from order_contact_mechanism c
+         where c.order_id = o.order_id and c.contact_mechanism_purpose_type_id = 'ORDER_TAKING')  as taken_via_contact_mechanism_id,
+       (select max(c.contact_mechanism_id) from order_contact_mechanism c
+         where c.order_id = o.order_id and c.contact_mechanism_purpose_type_id = 'BILLING')       as bill_to_contact_mechanism_id
+from "order" o
+left join order_role r on r.order_id = o.order_id
+where o.order_kind = 'SALES'
+group by o.order_id;
+
+create view purchase_order_parties as
+select o.order_id,
+       max(r.party_id) filter (where r.order_role_type_id = 'PLACED_BY') as placed_by_party_id,
+       max(r.party_id) filter (where r.order_role_type_id = 'TAKEN_BY')  as taken_by_party_id,
+       max(r.party_id) filter (where r.order_role_type_id = 'BILL_TO')   as bill_to_party_id,
+       (select max(c.contact_mechanism_id) from order_contact_mechanism c
+         where c.order_id = o.order_id and c.contact_mechanism_purpose_type_id = 'ORDER_PLACING') as placed_using_contact_mechanism_id,
+       (select max(c.contact_mechanism_id) from order_contact_mechanism c
+         where c.order_id = o.order_id and c.contact_mechanism_purpose_type_id = 'ORDER_TAKING')  as taken_via_contact_mechanism_id,
+       (select max(c.contact_mechanism_id) from order_contact_mechanism c
+         where c.order_id = o.order_id and c.contact_mechanism_purpose_type_id = 'BILLING')       as bill_to_contact_mechanism_id
+from "order" o
+left join order_role r on r.order_id = o.order_id
+where o.order_kind = 'PURCHASE'
+group by o.order_id;
+
+-- The ship-to pair per line, both directions. A feature line ships with the
+-- line it's ordered for: the queries fall back to it.
+create view order_item_ship_to as
+select oi.order_item_id,
+       (select max(r.party_id) from order_item_role r
+         where r.order_item_id = oi.order_item_id and r.order_item_role_type_id = 'SHIP_TO')                     as ship_to_party_id,
+       (select max(c.contact_mechanism_id) from order_item_contact_mechanism c
+         where c.order_item_id = oi.order_item_id and c.contact_mechanism_purpose_type_id = 'SHIPPING')         as ship_to_contact_mechanism_id
+from order_item oi;
 
 -- ============================================================
 -- Fig 4.6 — Order adjustments
@@ -692,13 +733,11 @@ alter table price_component
 create view order_item_agreement_item as
 with line as (
   select oi.order_item_id, o.order_date, oi.product_id, soi.ship_to_contact_mechanism_id,
-         array_remove(array[pl.party_id, bt.party_id], null) as customer_parties
+         array_remove(array[so.placed_by_party_id, so.bill_to_party_id], null) as customer_parties
   from order_item oi
-  join "order" o                 on o.order_id = oi.order_id
-  join sales_order so            on so.order_id = oi.order_id
-  left join sales_order_item soi on soi.order_item_id = oi.order_item_id
-  left join party_role pl        on pl.party_role_id = so.placed_by_party_role_id
-  left join party_role bt        on bt.party_role_id = so.bill_to_party_role_id
+  join "order" o                   on o.order_id = oi.order_id
+  join sales_order_parties so      on so.order_id = oi.order_id
+  left join order_item_ship_to soi on soi.order_item_id = oi.order_item_id
   where oi.product_id is not null
 )
 select l.order_item_id, i.agreement_item_id, i.agreement_id

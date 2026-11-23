@@ -522,13 +522,17 @@ select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max
 
 insert into "order" (order_id, order_kind, order_date, entry_date) values
   (2400, 'PURCHASE', '2002-06-05', '2002-06-05');
-insert into purchase_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id,
-                            placed_using_contact_mechanism_id, taken_via_contact_mechanism_id, bill_to_contact_mechanism_id) values
-  (2400, 88, 37, 70, 33, 31, 33);
+insert into purchase_order (order_id) values (2400);
+-- Ch 4's generic rows: 12 ABC Corporation places it and pays, 18 Fantastic takes it.
+insert into order_role (order_id, party_id, order_role_type_id, percent_contribution) values
+  (2400, 12, 'PLACED_BY', null), (2400, 18, 'TAKEN_BY', null), (2400, 12, 'BILL_TO', null);
+insert into order_contact_mechanism (order_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values
+  (2400, 33, 'ORDER_PLACING'), (2400, 31, 'ORDER_TAKING'), (2400, 33, 'BILLING');
 insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, quantity, unit_price, item_description, budget_item_id) values
   (24001, 2400, 1, null, 6, 1300.00, 'Office desks', 385763);
-insert into purchase_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
-  (24001, 89, 33);
+insert into purchase_order_item (order_item_id) values (24001);
+insert into order_item_role (order_item_id, party_id, order_item_role_type_id) values (24001, 12, 'SHIP_TO');
+insert into order_item_contact_mechanism (order_item_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values (24001, 33, 'SHIPPING');
 select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max(order_item_id) from order_item));
 
 -- Ch 4's 2025 paper order, allocated to June 2002's office supplies.

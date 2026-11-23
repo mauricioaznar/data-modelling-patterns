@@ -402,26 +402,29 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
   `"order"` (the header: order date, entry date; `order_kind` SALES or PURCHASE) ·
   `order_item` (one line, numbered within its order: quantity and the unit price agreed that
   day; for a product **or** a feature, the feature's line "ordered for" the product's line) ·
-  `sales_order` (placed by, taken by, bill-to: party roles; placed using, taken via, billed
-  to: contact mechanisms) and `sales_order_item` (the customer's PO number, the ship-to role
-  and address) · `purchase_order` and `purchase_order_item`, the mirror (placing buyer,
-  supplier, bill-to purchaser, ship-to buyer) · `order_role` + `order_role_type` (anyone else
-  on the order: a salesperson with a percent share, an approver) · the generic alternate
-  (4.5): `order_item_role`, `order_contact_mechanism`, `order_item_contact_mechanism` (a party
-  or a mechanism plus a type or purpose, on the order or one line).
+  `sales_order`, `purchase_order`, `sales_order_item` (the customer's PO number) and
+  `purchase_order_item`: the subtypes, kept even with only their keys, where a kind's own
+  columns land and what Fig 4.8 points at · every party a row in `order_role` or
+  `order_item_role` (a party plus a hat), every mechanism a row in `order_contact_mechanism`
+  or `order_item_contact_mechanism` (a mechanism plus a purpose: ORDER_PLACING, ORDER_TAKING,
+  BILLING; SHIPPING on the line). The guards: `order_role_rule` and its twin
+  `order_item_role_rule` (order kind, hat, the standing role its wearer must hold, dated;
+  null = anyone). Reading: `sales_order_parties` and `purchase_order_parties` give back the
+  columns of Figs 4.3–4.4, `order_item_ship_to` each line's ship-to; views, they store nothing.
 - **W:** Fig 4.1's twin models: sales order + customer and purchase order + supplier, copies of
   each other. Every rule and report written twice, a party that buys and sells is two unrelated
-  rows, one party per order, and no place for a feature or a ship-to per line. (4.4's mirrored
-  party columns bring a little of it back; 4.5 is the way out.)
+  rows, one party per order, and no place for a feature or a ship-to per line. Half a step
+  out: Figs 4.3–4.4's party columns on each subtype, one per hat, mirrored, so every check is
+  written twice and a new hat is a new column. 4.5's rows are the way out.
 - **T:** *(the naive-model trap until practice gives yours)* pricing an old order from today's
   price list: the item keeps the price agreed that day, because price components change. And
   pointing an order at a PARTY: it loses which hat the party wore (placer or bill-to).
 - **D:** order ← item (part of) → product | feature; item → item (ordered for); sales_order
-  and purchase_order (= order) → party_role ×3 and → contact_mechanism ×3; sales_order_item
-  and purchase_order_item (= item) → party_role (ship-to), → contact_mechanism (ship-to);
-  order ← order_role → party, → order_role_type. 4.5: item ← order_item_role → party, →
+  and purchase_order (= order), sales_order_item and purchase_order_item (= item); order ←
+  order_role → party, → order_role_type; item ← order_item_role → party, →
   order_item_role_type; order ← order_contact_mechanism and item ← order_item_contact_mechanism
-  → contact_mechanism, → contact_mechanism_purpose_type (Ch 2). Not built: 4.1's twin model.
+  → contact_mechanism, → contact_mechanism_purpose_type (Ch 2); order_role_rule →
+  order_role_type, → role_type (Ch 2), and its line twin the same. Not built: 4.1's twin model.
 </details>
 
 ---

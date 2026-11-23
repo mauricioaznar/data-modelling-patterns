@@ -358,11 +358,13 @@ insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, 
 
 select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max(order_item_id) from order_item));
 
--- 69 is ABC Subsidiary's PLACING_BUYER role (Ch 4).
-insert into purchase_order (order_id, placed_by_party_role_id, taken_by_party_role_id) values
-  (10001, 69, 84),
-  (10002, 69, 84),
-  (10003, 69, 84);
+insert into purchase_order (order_id) values (10001), (10002), (10003);
+
+-- Ch 4's generic rows: 13 ABC Subsidiary places them, 63 Hartley takes them.
+insert into order_role (order_id, party_id, order_role_type_id, percent_contribution) values
+  (10001, 13, 'PLACED_BY', null), (10001, 63, 'TAKEN_BY', null),
+  (10002, 13, 'PLACED_BY', null), (10002, 63, 'TAKEN_BY', null),
+  (10003, 13, 'PLACED_BY', null), (10003, 63, 'TAKEN_BY', null);
 
 -- A service: nothing to ship, so no ship-to.
 insert into purchase_order_item (order_item_id) values (51), (52), (53);

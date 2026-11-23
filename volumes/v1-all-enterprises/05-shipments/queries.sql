@@ -357,21 +357,14 @@ where not ((o.order_kind = 'SALES'    and sh.shipment_type_id in ('CUSTOMER_SHIP
         or (o.order_kind = 'PURCHASE' and sh.shipment_type_id in ('PURCHASE_SHIPMENT', 'DROP_SHIPMENT')));
 
 -- name: 5.3 — Data-quality check: order lines filled by a shipment bound for somewhere else than the line's ship-to (should be empty)
--- The line's ship-to: 4.3's or 4.4's column, a feature line falling back to
--- its product line, or 4.5's generic SHIPPING row.
+-- The line's ship-to: Ch 4's SHIPPING row (its order_item_ship_to view), a
+-- feature line falling back to its product line.
 with line_ship_to as (
   select oi.order_item_id,
-         coalesce(s.ship_to_contact_mechanism_id, ps.ship_to_contact_mechanism_id,
-                  p.ship_to_contact_mechanism_id, pp.ship_to_contact_mechanism_id,
-                  (select min(g.contact_mechanism_id)
-                   from order_item_contact_mechanism g
-                   where g.order_item_id in (oi.order_item_id, oi.ordered_for_order_item_id)
-                     and g.contact_mechanism_purpose_type_id = 'SHIPPING')) as contact_mechanism_id
+         coalesce(s.ship_to_contact_mechanism_id, ps.ship_to_contact_mechanism_id) as contact_mechanism_id
   from order_item oi
-  left join sales_order_item s      on s.order_item_id = oi.order_item_id
-  left join sales_order_item ps     on ps.order_item_id = oi.ordered_for_order_item_id
-  left join purchase_order_item p   on p.order_item_id = oi.order_item_id
-  left join purchase_order_item pp  on pp.order_item_id = oi.ordered_for_order_item_id
+  join order_item_ship_to s       on s.order_item_id = oi.order_item_id
+  left join order_item_ship_to ps on ps.order_item_id = oi.ordered_for_order_item_id
 )
 select os.order_shipment_id, oi.order_id, oi.order_item_seq_id as order_line, la.display_name as line_ships_to,
        sh.shipment_id, sa.display_name as shipment_goes_to
@@ -382,7 +375,8 @@ join shipment_item si                       on si.shipment_item_id = os.shipment
 join shipment sh                            on sh.shipment_id = si.shipment_id
 join contact_mechanism_display_name la      on la.contact_mechanism_id = l.contact_mechanism_id
 join contact_mechanism_display_name sa      on sa.contact_mechanism_id = sh.shipped_to_contact_mechanism_id
-where l.contact_mechanism_id <> sh.shipped_to_contact_mechanism_id;
+where l.contact_mechanism_id <> sh.shipped_to_contact_mechanism_id
+order by os.order_shipment_id;
 
 -- ============================================================
 -- Fig 5.4 — Shipment receipt for incoming shipments

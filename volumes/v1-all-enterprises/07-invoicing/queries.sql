@@ -261,6 +261,15 @@ from billing_account_role
 group by billing_account_id, party_id, billing_account_role_type_id, from_date
 having count(*) > 1;
 
+-- name: 7.3a — Data-quality check: orders requesting both a bill-to party and a bill-to account (should be empty)
+select o.order_id, o.order_kind, r.party_id as bill_to_party_id,
+       coalesce(so.bill_to_billing_account_id, po.bill_to_billing_account_id) as bill_to_billing_account_id
+from "order" o
+left join sales_order so    on so.order_id = o.order_id
+left join purchase_order po on po.order_id = o.order_id
+join order_role r           on r.order_id = o.order_id and r.order_role_type_id = 'BILL_TO'
+where coalesce(so.bill_to_billing_account_id, po.bill_to_billing_account_id) is not null;
+
 -- ============================================================
 -- Fig 7.4 — Invoice status and terms
 -- ============================================================

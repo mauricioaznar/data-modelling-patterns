@@ -206,15 +206,22 @@ insert into "order" (order_id, order_kind, order_date, entry_date) values
   (300, 'PURCHASE', '2001-03-10', '2001-03-10'),
   (400, 'SALES',    '2001-03-20', '2001-03-20');
 
-insert into sales_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id,
-                         placed_using_contact_mechanism_id, taken_via_contact_mechanism_id, bill_to_contact_mechanism_id) values
-  (100, 60, 32, 67, 32, 33, 32),
-  (200, 60, 32, 67, 32, 33, 32),
-  (400, 60, 32, 67, 32, 33, 32);
+insert into sales_order (order_id) values (100), (200), (400);
+insert into purchase_order (order_id) values (300);
 
-insert into purchase_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id,
-                            placed_using_contact_mechanism_id, taken_via_contact_mechanism_id, bill_to_contact_mechanism_id) values
-  (300, 69, 76, 70, 33, 41, 33);
+-- Ch 4's generic rows (its NOTES, point 8). Parties: 16 ACME, 13 ABC
+-- Subsidiary, 49 General Goods, 12 ABC Corporation.
+insert into order_role (order_id, party_id, order_role_type_id, percent_contribution) values
+  (100, 16, 'PLACED_BY', null), (100, 13, 'TAKEN_BY', null), (100, 16, 'BILL_TO', null),
+  (200, 16, 'PLACED_BY', null), (200, 13, 'TAKEN_BY', null), (200, 16, 'BILL_TO', null),
+  (400, 16, 'PLACED_BY', null), (400, 13, 'TAKEN_BY', null), (400, 16, 'BILL_TO', null),
+  (300, 13, 'PLACED_BY', null), (300, 49, 'TAKEN_BY', null), (300, 12, 'BILL_TO', null);
+
+insert into order_contact_mechanism (order_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values
+  (100, 32, 'ORDER_PLACING'), (100, 33, 'ORDER_TAKING'), (100, 32, 'BILLING'),
+  (200, 32, 'ORDER_PLACING'), (200, 33, 'ORDER_TAKING'), (200, 32, 'BILLING'),
+  (400, 32, 'ORDER_PLACING'), (400, 33, 'ORDER_TAKING'), (400, 32, 'BILLING'),
+  (300, 33, 'ORDER_PLACING'), (300, 41, 'ORDER_TAKING'), (300, 33, 'BILLING');
 
 -- Table 5.4's lines, the prices ours. Each pen line gets a blue feature line
 -- under it, for Table 5.7 (NOTES, point 14). Goods: 2 pen, 3 diskettes, 20
@@ -240,16 +247,23 @@ select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max
 
 -- Everything to ACME's head office, except order 400's pencils. A feature
 -- line ships with its product line (no row of its own).
-insert into sales_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
-  (35, 68, 32), (36, 68, 32), (37, 68, 32), (38, null, null),
-  (39, 68, 32), (40, 68, 32), (41, null, null),
-  (44, 68, 32), (45, 68, 34), (46, 68, 32);
+insert into sales_order_item (order_item_id) values
+  (35), (36), (37), (38), (39), (40), (41), (44), (45), (46);
 
-insert into purchase_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
-  (42, 75, 33),
-  (43, 75, 33),
-  (47, 75, 33),
-  (48, 75, 33);
+insert into purchase_order_item (order_item_id) values (42), (43), (47), (48);
+
+-- The ship-to pairs as rows: 16 ACME, 12 ABC Corporation.
+insert into order_item_role (order_item_id, party_id, order_item_role_type_id) values
+  (35, 16, 'SHIP_TO'), (36, 16, 'SHIP_TO'), (37, 16, 'SHIP_TO'),
+  (39, 16, 'SHIP_TO'), (40, 16, 'SHIP_TO'),
+  (44, 16, 'SHIP_TO'), (45, 16, 'SHIP_TO'), (46, 16, 'SHIP_TO'),
+  (42, 12, 'SHIP_TO'), (43, 12, 'SHIP_TO'), (47, 12, 'SHIP_TO'), (48, 12, 'SHIP_TO');
+
+insert into order_item_contact_mechanism (order_item_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values
+  (35, 32, 'SHIPPING'), (36, 32, 'SHIPPING'), (37, 32, 'SHIPPING'),
+  (39, 32, 'SHIPPING'), (40, 32, 'SHIPPING'),
+  (44, 32, 'SHIPPING'), (45, 34, 'SHIPPING'), (46, 32, 'SHIPPING'),
+  (42, 33, 'SHIPPING'), (43, 33, 'SHIPPING'), (47, 33, 'SHIPPING'), (48, 33, 'SHIPPING');
 
 -- Ours: customer shipment 9500 to ACME, the one carrying the mistakes below.
 insert into shipment (shipment_id, shipment_type_id, estimated_ship_date, estimated_arrival_date,

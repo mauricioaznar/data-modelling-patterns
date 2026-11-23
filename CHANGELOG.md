@@ -3,6 +3,31 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-23
+
+**Built**
+- Ch 4 Orders refactor (points 6, 8, 9): every order in Chs 4–8 is generic rows now
+  (`order_role`, `order_item_role`, the order and item contact-mechanism tables); the party
+  and mechanism columns of Figs 4.3–4.4 and their copied checks are gone. New: views
+  `sales_order_parties`, `purchase_order_parties`, `order_item_ship_to`; the line twin
+  `order_item_role_rule` (5 rules) with its two checks; Ana's SHIP_TO_CUSTOMER role (99).
+  Purchases name our organization as placer (Chloe as ENTERED_BY on 12564); bad rows that
+  only the columns could make are gone, new ones for the line rules. Ch 7's bill-to-account
+  arc became a data-quality query. Card 10's key and the doc's Orders entry updated.
+
+**Decisions**
+- Point 8 confirmed as option C (the user's pick): no comparison columns, a view gives the
+  column shape back. The hybrid (placer and taker as columns on ORDER, asked by the user)
+  rejected: parties would live in two places.
+- Point 6 (the user's call): all three empty subtypes kept, a recorded exception to the
+  attribute-less-subtype convention.
+- Orders refactored now rather than with Agreements (the user's call).
+
+**Next**
+- Orders: the type-names question, then tick its Overview.
+- Agreements (Figs 4.12–4.13) overview, points 23–28; then agreement terms and pricing.
+- Re-import `docs/cards-anki.txt` into Anki (card 10).
+
 ## 2026-11-22
 
 **Built**

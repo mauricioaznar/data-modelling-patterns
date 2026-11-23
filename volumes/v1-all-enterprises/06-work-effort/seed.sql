@@ -178,8 +178,11 @@ insert into work_requirement (requirement_id, product_id) values
 insert into "order" (order_id, order_kind, order_date, entry_date) values
   (23500, 'SALES', '2001-02-05', '2001-02-05');
 
-insert into sales_order (order_id, placed_by_party_role_id, taken_by_party_role_id) values
-  (23500, 60, 80);
+insert into sales_order (order_id) values (23500);
+
+-- Ch 4's generic rows: 16 ACME places it, 53 ABC Manufacturing takes it.
+insert into order_role (order_id, party_id, order_role_type_id, percent_contribution) values
+  (23500, 16, 'PLACED_BY', null), (23500, 53, 'TAKEN_BY', null);
 
 insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, quantity, unit_price, estimated_delivery_date, order_item_kind) values
   (49, 23500, 1, 23, 2500, 2.40, '2001-04-30', 'WORK'),

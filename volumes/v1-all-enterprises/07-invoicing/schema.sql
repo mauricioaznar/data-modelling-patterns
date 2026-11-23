@@ -136,15 +136,15 @@ alter table invoice
   add constraint invoice_billed_to_arc check (num_nonnulls(billed_to_party_id, billing_account_id) = 1);
 
 -- Ch 4's orders: "with a requested bill to" an account, in an arc with the
--- bill-to role (the book's note on Figs 4.3 and 4.5). Both stay optional, so
--- at most one.
+-- bill-to party (the book's note on Figs 4.3 and 4.5). Both stay optional, so
+-- at most one. Ch 4's bill-to is a BILL_TO order role row now (its NOTES,
+-- point 8), so the arc spans two tables: a data-quality query, not a check.
+-- The column sits on each order subtype, which Ch 4 kept for this (point 6).
 alter table sales_order
-  add column bill_to_billing_account_id integer references billing_account,   -- "with a requested bill to"
-  add constraint sales_order_bill_to_arc check (num_nonnulls(bill_to_party_role_id, bill_to_billing_account_id) <= 1);
+  add column bill_to_billing_account_id integer references billing_account;   -- "with a requested bill to"
 
 alter table purchase_order
-  add column bill_to_billing_account_id integer references billing_account,   -- "with a requested bill to"
-  add constraint purchase_order_bill_to_arc check (num_nonnulls(bill_to_party_role_id, bill_to_billing_account_id) <= 1);
+  add column bill_to_billing_account_id integer references billing_account;   -- "with a requested bill to"
 
 -- ============================================================
 -- Fig 7.4 — Invoice status and terms

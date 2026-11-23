@@ -119,30 +119,79 @@ insert into party_contact_mechanism (party_contact_mechanism_id, party_id, conta
 
 select setval(pg_get_serial_sequence('party_contact_mechanism', 'party_contact_mechanism_id'), (select max(party_contact_mechanism_id) from party_contact_mechanism));
 
-insert into sales_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id,
-                         placed_using_contact_mechanism_id, taken_via_contact_mechanism_id, bill_to_contact_mechanism_id) values
-  (12560, 60, 32, 67,   32,   33,   32),     -- Table 4.5: ACME places it from its head office, ABC Subsidiary takes it, ACME pays
-  (12561, 61, 1,  6,    7,    8,    15),     -- Contoso orders from its sales inbox on our website; bill to 1 Market St
-  (12562, 62, 1,  6,    7,    2,    15),     -- Ben places it for Contoso, which pays: four parties, four jobs
-  (12563, 62, 1,  null, null, 1,    null),   -- Ben's own order, by phone: no bill-to, so Ben pays
-  (12565, 62, 1,  null, null, 1,    null),   -- DATA ERROR: Ben's placing role starts 2023-06-01, after this order (caught by a query)
-  (12566, 61, 1,  7,    7,    8,    15);     -- DATA ERROR: billed to Contoso's SHIP_TO role, not its BILL_TO role (caught by a query)
+insert into sales_order (order_id) values
+  (12560), (12561), (12562), (12563), (12565), (12566);
   -- 12567: no row at all. DATA ERROR: a sales order without its sales_order row (caught by a query)
 
--- Ship-to per item. Feature items (5, 6, 8, 10, 12) ship with their product's item.
-update sales_order_item set ship_to_party_role_id = 68, ship_to_contact_mechanism_id = 34 where order_item_id in (1, 2);   -- Table 4.5: 12560's paper and pens to Drident Avenue
-update sales_order_item set ship_to_party_role_id = 68, ship_to_contact_mechanism_id = 32 where order_item_id = 3;         --   and its diskettes to the head office
-update sales_order_item set ship_to_party_role_id = 7, ship_to_contact_mechanism_id = 15 where order_item_id in (4, 9, 20);   -- Contoso's office
-update sales_order_item set ship_to_party_role_id = 7, ship_to_contact_mechanism_id = 30 where order_item_id = 7;             -- the paper goes to the depot
-update sales_order_item set ship_to_party_role_id = 7, ship_to_contact_mechanism_id = 14 where order_item_id = 11;            -- Contoso collects the red pens at our Chatham warehouse (on the review list)
-
+-- The hats and purposes every order uses (4.5's types, seeded here because
+-- every order is recorded the generic way, NOTES point 8). Hats are neutral:
+-- the order's kind says which side is ours (point 9).
 insert into order_role_type (order_role_type_id, description) values
+  ('PLACED_BY',   'Placed the order: the customer on a sale, our organization on a purchase'),
+  ('TAKEN_BY',    'Took the order: our organization on a sale, the supplier on a purchase'),
+  ('BILL_TO',     'Gets the bill'),
   ('SALESPERSON', 'Salesperson: credited with the sale'),
   ('ENTERED_BY',  'Keyed the order in'),
   ('APPROVER',    'Approved the order'),
   ('REVIEWER',    'Reviewed the order');
 
--- Parties: 1 Ana (a contractor since 2023), 3 Chloe (an employee).
+insert into order_item_role_type (order_item_role_type_id, description) values
+  ('SHIP_TO',   'Receives the item'),
+  ('END_USER',  'Will use the item'),
+  ('INSTALLER', 'Installs the item on site');
+
+-- Ch 2's purposes, plus three an order needs. BILLING and SHIPPING are reused.
+insert into contact_mechanism_purpose_type (contact_mechanism_purpose_type_id, description) values
+  ('ORDER_PLACING',    'Where an order is placed from'),
+  ('ORDER_TAKING',     'Where an order is taken'),
+  ('DELIVERY_CONTACT', 'Who to call about a delivery');
+
+-- Each sales order's 4.3 lines as rows. Parties: 16 ACME, 13 ABC Subsidiary,
+-- 5 Contoso, 4 Northwind, 2 Ben.
+insert into order_role (order_id, party_id, order_role_type_id, percent_contribution) values
+  (12560, 16, 'PLACED_BY', null),   -- Table 4.5: ACME places it, ABC Subsidiary takes it, ACME pays
+  (12560, 13, 'TAKEN_BY',  null),
+  (12560, 16, 'BILL_TO',   null),
+  (12561, 5,  'PLACED_BY', null),   -- Contoso orders and pays
+  (12561, 4,  'TAKEN_BY',  null),
+  (12561, 5,  'BILL_TO',   null),
+  (12562, 2,  'PLACED_BY', null),   -- Ben places it for Contoso, which pays: four parties, four jobs
+  (12562, 4,  'TAKEN_BY',  null),
+  (12562, 5,  'BILL_TO',   null),
+  (12563, 2,  'PLACED_BY', null),   -- Ben's own order: no bill-to, so Ben pays
+  (12563, 4,  'TAKEN_BY',  null),
+  (12565, 2,  'PLACED_BY', null),   -- DATA ERROR: Ben is a placing customer only from 2023-06-01, after this order (caught by the rules' query)
+  (12565, 4,  'TAKEN_BY',  null),
+  (12566, 5,  'PLACED_BY', null),
+  (12566, 4,  'TAKEN_BY',  null),
+  (12566, 5,  'BILL_TO',   null);
+
+-- Mechanisms: 32 ACME's head office, 33 ABC's at 100 Main Street, 7
+-- Contoso's sales inbox, 8 our website, 1 and 2 our phone lines, 15
+-- Contoso's office.
+insert into order_contact_mechanism (order_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values
+  (12560, 32, 'ORDER_PLACING'), (12560, 33, 'ORDER_TAKING'), (12560, 32, 'BILLING'),
+  (12561, 7,  'ORDER_PLACING'), (12561, 8,  'ORDER_TAKING'), (12561, 15, 'BILLING'),   -- from its sales inbox on our website; bill to 1 Market St
+  (12562, 7,  'ORDER_PLACING'), (12562, 2,  'ORDER_TAKING'), (12562, 15, 'BILLING'),
+  (12563, 1,  'ORDER_TAKING'),                                                          -- by phone
+  (12565, 1,  'ORDER_TAKING'),
+  (12566, 7,  'ORDER_PLACING'), (12566, 8,  'ORDER_TAKING'), (12566, 15, 'BILLING');
+
+-- Ship-to per item, as rows. Feature items (5, 6, 8, 10, 12) ship with their
+-- product's item. Mechanisms: 34 Drident Avenue, 30 Contoso's depot, 14 our
+-- Chatham warehouse.
+insert into order_item_role (order_item_id, party_id, order_item_role_type_id) values
+  (1, 16, 'SHIP_TO'), (2, 16, 'SHIP_TO'), (3, 16, 'SHIP_TO'),
+  (4, 5,  'SHIP_TO'), (7, 5,  'SHIP_TO'), (9, 5,  'SHIP_TO'), (11, 5, 'SHIP_TO'), (20, 5, 'SHIP_TO');
+
+insert into order_item_contact_mechanism (order_item_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values
+  (1, 34, 'SHIPPING'), (2, 34, 'SHIPPING'),   -- Table 4.5: 12560's paper and pens to Drident Avenue
+  (3, 32, 'SHIPPING'),                        --   and its diskettes to the head office
+  (4, 15, 'SHIPPING'), (9, 15, 'SHIPPING'), (20, 15, 'SHIPPING'),   -- Contoso's office
+  (7, 30, 'SHIPPING'),                        -- the paper goes to the depot
+  (11, 14, 'SHIPPING');                       -- Contoso collects the red pens at our Chatham warehouse (on the review list)
+
+-- Other hats. Parties: 1 Ana (a contractor since 2023), 3 Chloe (an employee).
 insert into order_role (order_id, party_id, order_role_type_id, percent_contribution) values
   (12561, 3, 'SALESPERSON', 60),     -- Chloe and Ana split the copier sale
   (12561, 1, 'SALESPERSON', 40),
@@ -205,13 +254,34 @@ select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max
 -- Contact mechanisms: 2 Northwind's second line, 9 Contoso's phone, 13
 -- Northwind's office (100 Commerce Dr), 14 the Chatham warehouse, 15
 -- Contoso's office, 31 Fantastic's order desk.
-insert into purchase_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id,
-                            placed_using_contact_mechanism_id, taken_via_contact_mechanism_id, bill_to_contact_mechanism_id) values
-  (12564, 66, 37, 64,   2,    31, 13),     -- Chloe places it for Northwind; Northwind pays
-  (12568, 63, 37, null, 2,    31, 13),     -- no bill-to: the placer (Northwind) pays
-  (12569, 63, 6,  64,   2,    9,  13),     -- DATA ERROR: taken by Contoso's BILL_TO_CUSTOMER role, not its SUPPLIER role (caught by a query)
-  (12570, 66, 37, 64,   null, 31, 13),     -- DATA ERROR: Chloe's buyer role starts 2023-09-01, after this order (caught by a query)
-  (12567, null, null, null, null, null, null);   -- DATA ERROR: sales order 12567 keyed on the purchase form (caught by a query)
+insert into purchase_order (order_id) values
+  (12564), (12568), (12569), (12570),
+  (12567);   -- DATA ERROR: sales order 12567 keyed on the purchase form (caught by a query)
+
+-- Each purchase order's 4.4 lines as rows. Our organization places and
+-- pays (rules 9 and 11); the person who raised it is ENTERED_BY. Parties: 4
+-- Northwind, 3 Chloe, 18 Fantastic Supplies, 5 Contoso (our freight supplier).
+insert into order_role (order_id, party_id, order_role_type_id, percent_contribution) values
+  (12564, 4,  'PLACED_BY',  null),   -- Northwind places it, Chloe raised it; Northwind pays
+  (12564, 3,  'ENTERED_BY', null),
+  (12564, 18, 'TAKEN_BY',   null),
+  (12564, 4,  'BILL_TO',    null),
+  (12568, 4,  'PLACED_BY',  null),   -- no bill-to: the placer (Northwind) pays
+  (12568, 18, 'TAKEN_BY',   null),
+  (12569, 4,  'PLACED_BY',  null),   -- freight from Contoso, in its SUPPLIER hat
+  (12569, 5,  'TAKEN_BY',   null),
+  (12569, 4,  'BILL_TO',    null),
+  (12570, 3,  'PLACED_BY',  null),   -- DATA ERROR: Chloe as the placer; a purchase is placed by an organization of ours (caught by the rules' query)
+  (12570, 18, 'TAKEN_BY',   null),
+  (12570, 4,  'BILL_TO',    null);
+
+-- Mechanisms: 2 Northwind's second line, 31 Fantastic's order desk, 9
+-- Contoso's phone, 13 Northwind's office (100 Commerce Dr).
+insert into order_contact_mechanism (order_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values
+  (12564, 2, 'ORDER_PLACING'), (12564, 31, 'ORDER_TAKING'), (12564, 13, 'BILLING'),
+  (12568, 2, 'ORDER_PLACING'), (12568, 31, 'ORDER_TAKING'), (12568, 13, 'BILLING'),
+  (12569, 2, 'ORDER_PLACING'), (12569, 9,  'ORDER_TAKING'), (12569, 13, 'BILLING'),
+                               (12570, 31, 'ORDER_TAKING'), (12570, 13, 'BILLING');
 
 -- Table 4.7's A2395, stored as 2395 (our keys are numbers). ABC buys office
 -- cleaning from a new supplier, for one of its stores.
@@ -263,45 +333,44 @@ insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, 
 
 select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max(order_item_id) from order_item));
 
-insert into purchase_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id,
-                            placed_using_contact_mechanism_id, taken_via_contact_mechanism_id, bill_to_contact_mechanism_id) values
-  (2395, 69, 72, 70, 33, 35, 33);   -- ABC Subsidiary places it, Ace takes it, ABC Corporation pays
+insert into purchase_order (order_id) values (2395);
 
--- Ship-to per item. The freight line (23) is a service: no ship-to.
-insert into purchase_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
-  (16, 65,   14),     -- paper to the Chatham warehouse
-  (17, 65,   14),
-  (18, 65,   13),     -- books to the office
-  (22, 65,   15),     -- a drop ship: our ship-to role, Contoso's address (labelled by a query)
-  (23, null, null),
-  (24, 65,   14),
-  (27, 71,   36),     -- A2395: the cleaning, and the kit, at ABC Retail Store
-  (28, 71,   36),
-  (21, null, null);   -- DATA ERROR: the same clerk's mistake, on 12567's item (caught by a query)
+-- ABC Subsidiary places it, Ace takes it, ABC Corporation pays. Parties: 13
+-- ABC Subsidiary, 43 Ace, 12 ABC Corporation; mechanisms 33 100 Main Street,
+-- 35 Ace's address.
+insert into order_role (order_id, party_id, order_role_type_id, percent_contribution) values
+  (2395, 13, 'PLACED_BY', null),
+  (2395, 43, 'TAKEN_BY',  null),
+  (2395, 12, 'BILL_TO',   null);
+
+insert into order_contact_mechanism (order_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values
+  (2395, 33, 'ORDER_PLACING'), (2395, 35, 'ORDER_TAKING'), (2395, 33, 'BILLING');
+
+insert into purchase_order_item (order_item_id) values
+  (16), (17), (18), (22), (23), (24), (27), (28),
+  (21);   -- DATA ERROR: the same clerk's mistake, on 12567's item (caught by a query)
+
+-- Ship-to per item, as rows. The freight line (23) is a service: no ship-to.
+-- Parties: 4 Northwind, 44 ABC Retail Store. Mechanisms: 14 the Chatham
+-- warehouse, 13 the office, 15 Contoso's office, 36 the store.
+insert into order_item_role (order_item_id, party_id, order_item_role_type_id) values
+  (16, 4, 'SHIP_TO'), (17, 4, 'SHIP_TO'), (18, 4, 'SHIP_TO'), (22, 4, 'SHIP_TO'), (24, 4, 'SHIP_TO'),
+  (27, 44, 'SHIP_TO'), (28, 44, 'SHIP_TO');
+
+insert into order_item_contact_mechanism (order_item_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values
+  (16, 14, 'SHIPPING'), (17, 14, 'SHIPPING'),   -- paper to the Chatham warehouse
+  (18, 13, 'SHIPPING'),                         -- books to the office
+  (22, 15, 'SHIPPING'),                         -- a drop ship: our ship-to hat, Contoso's address (labelled by a query)
+  (24, 14, 'SHIPPING'),
+  (27, 36, 'SHIPPING'), (28, 36, 'SHIPPING');   -- A2395: the cleaning, and the kit, at ABC Retail Store
 
 -- ============================================================
 -- Fig 4.5 — Generic order roles and contact mechanisms
 -- ============================================================
--- Direction-neutral jobs: the order's kind says which side is ours (NOTES, point 9).
-insert into order_role_type (order_role_type_id, description) values
-  ('PLACED_BY', 'Placed the order: the customer on a sale, our buyer on a purchase'),
-  ('TAKEN_BY',  'Took the order: our organization on a sale, the supplier on a purchase'),
-  ('BILL_TO',   'Gets the bill');
-
-insert into order_item_role_type (order_item_role_type_id, description) values
-  ('SHIP_TO',   'Receives the item'),
-  ('END_USER',  'Will use the item'),
-  ('INSTALLER', 'Installs the item on site');
-
--- Ch 2's purposes, plus three an order needs. BILLING and SHIPPING are reused.
-insert into contact_mechanism_purpose_type (contact_mechanism_purpose_type_id, description) values
-  ('ORDER_PLACING',    'Where an order is placed from'),
-  ('ORDER_TAKING',     'Where an order is taken'),
-  ('DELIVERY_CONTACT', 'Who to call about a delivery');
-
--- Order 12571, recorded the generic way only: Ana orders a book and pens for
--- the García-López household, which pays; the book is a gift for Kiri. Its
--- sales_order row has every column empty, so the 4.3 subtype check holds.
+-- The hats, item hats and purposes are seeded with 4.3's orders, which use
+-- them too. Order 12571: Ana orders a book and pens for the García-López
+-- household, which pays; the book is a gift for Kiri, and the lines carry
+-- what 4.3's columns had no place for.
 insert into "order" (order_id, order_kind, order_date, entry_date) values
   (12571, 'SALES', '2025-07-01', '2025-07-01');
 
@@ -323,8 +392,7 @@ insert into order_role (order_id, party_id, order_role_type_id, percent_contribu
   (12571, 4, 'TAKEN_BY',    null),
   (12571, 8, 'BILL_TO',     null),
   (12571, 3, 'SALESPERSON', 100),
-  (12571, 1, 'BILL_TO',     null),   -- DATA ERROR: a second bill-to; a column would have held one (caught by a query; the rules' check too: Ana is no bill-to customer)
-  (12561, 2, 'BILL_TO',     null);   -- DATA ERROR: 12561 already has a bill-to column (Contoso) (caught by a query)
+  (12571, 1, 'BILL_TO',     null);   -- DATA ERROR: a second bill-to; a column would have held one (caught by a query; the rules' check too: Ana is no bill-to customer)
 
 -- Contact mechanisms: 5 Kiri's phone, 6 Ana's e-mail, 8 our website,
 -- 11 the family's house at 742 Evergreen Terrace.
@@ -334,13 +402,15 @@ insert into order_contact_mechanism (order_id, contact_mechanism_id, contact_mec
   (12571, 11, 'BILLING'),
   (12571, 11, 'BILLING');   -- DATA ERROR: the same row twice (caught by a query)
 
--- Item roles: what the columns of 4.3 had no place for. 4 is 12561's copier,
--- recorded the specific way; its installer is a generic row beside it.
+-- Item roles: the end user and installer are what 4.3's columns had no place
+-- for. 4 is 12561's copier, shipped to Contoso; its installer joins it.
 insert into order_item_role (order_item_id, party_id, order_item_role_type_id) values
   (25, 1,  'SHIP_TO'),
   (25, 10, 'END_USER'),    -- the book is Kiri's
   (26, 1,  'SHIP_TO'),
-  (4,  1,  'INSTALLER');   -- Ana, a contractor, installs the copier
+  (4,  1,  'INSTALLER'),   -- Ana, a contractor, installs the copier
+  (26, 8,  'SHIP_TO'),     -- DATA ERROR: a second ship-to on one line (caught by a query; the rules' check too: the household is no ship-to customer)
+  (24, 1,  'INSTALLER');   -- DATA ERROR: an installer on purchase 12570's paper; no purchase rule allows the hat (caught by a query)
 
 insert into order_item_contact_mechanism (order_item_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values
   (25, 11, 'SHIPPING'),
@@ -372,12 +442,24 @@ insert into order_role_rule (order_role_rule_id, order_kind, order_role_type_id,
 
 select setval(pg_get_serial_sequence('order_role_rule', 'order_role_rule_id'), (select max(order_role_rule_id) from order_role_rule));
 
--- 12571's good rows need their wearers' standing roles: Ana places it as a
--- customer, and the household is set up to be billed (97 and 98, added after
--- Ch 9's 96).
+-- The line twin (point 9): the ship-to wears the customer's or our buyer's
+-- ship-to role; an installer is one of our people.
+insert into order_item_role_rule (order_item_role_rule_id, order_kind, order_item_role_type_id, required_role_type_id, from_date, thru_date) values
+  (1, 'SALES',    'SHIP_TO',   'SHIP_TO_CUSTOMER', '2000-01-01', null),
+  (2, 'SALES',    'END_USER',  null,               '2000-01-01', null),
+  (3, 'SALES',    'INSTALLER', 'EMPLOYEE',         '2000-01-01', null),
+  (4, 'SALES',    'INSTALLER', 'CONTRACTOR',       '2000-01-01', null),   -- or a contractor
+  (5, 'PURCHASE', 'SHIP_TO',   'SHIP_TO_BUYER',    '2000-01-01', null);
+
+select setval(pg_get_serial_sequence('order_item_role_rule', 'order_item_role_rule_id'), (select max(order_item_role_rule_id) from order_item_role_rule));
+
+-- 12571's good rows need their wearers' standing roles: Ana places it and
+-- receives it as a customer, and the household is set up to be billed (97 to
+-- 99, added after Ch 9's 96).
 insert into party_role (party_role_id, party_id, role_type_id, from_date, thru_date) values
   (97, 1, 'PLACING_CUSTOMER', '2025-07-01', null),   -- Ana, from her first order
-  (98, 8, 'BILL_TO_CUSTOMER', '2025-07-01', null);   -- the García-López household
+  (98, 8, 'BILL_TO_CUSTOMER', '2025-07-01', null),   -- the García-López household
+  (99, 1, 'SHIP_TO_CUSTOMER', '2025-07-01', null);   -- Ana again
 
 select setval(pg_get_serial_sequence('party_role', 'party_role_id'), (select max(party_role_id) from party_role));
 
@@ -539,17 +621,22 @@ insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, 
 
 select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max(order_item_id) from order_item));
 
-insert into sales_order (order_id, placed_by_party_role_id, taken_by_party_role_id) values
-  (13480, 60, 32);
+insert into sales_order (order_id) values (13480);
+insert into sales_order_item (order_item_id) values (29);
+insert into purchase_order (order_id) values (23490);
+insert into purchase_order_item (order_item_id) values (30);
 
-insert into sales_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
-  (29, 68, 34);
+-- Parties: 16 ACME, 13 ABC Subsidiary, 18 Fantastic, 12 ABC Corporation,
+-- 44 ABC Retail Store. Mechanisms: 34 Drident Avenue, 36 the store.
+insert into order_role (order_id, party_id, order_role_type_id, percent_contribution) values
+  (13480, 16, 'PLACED_BY', null), (13480, 13, 'TAKEN_BY', null),
+  (23490, 13, 'PLACED_BY', null), (23490, 18, 'TAKEN_BY', null), (23490, 12, 'BILL_TO', null);
 
-insert into purchase_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id) values
-  (23490, 69, 37, 70);
+insert into order_item_role (order_item_id, party_id, order_item_role_type_id) values
+  (29, 16, 'SHIP_TO'), (30, 44, 'SHIP_TO');
 
-insert into purchase_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
-  (30, 71, 36);
+insert into order_item_contact_mechanism (order_item_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values
+  (29, 34, 'SHIPPING'), (30, 36, 'SHIPPING');
 
 insert into order_status (status_type_id, order_id, order_item_id, status_datetime) values
   ('ORDER_RECEIVED',    13480, null, '2001-08-20 09:00+00'),
@@ -1129,11 +1216,18 @@ insert into "order" (order_id, order_kind, order_date, entry_date) values
   (12573, 'SALES', '2002-04-15', '2002-04-15'),
   (12574, 'SALES', '2002-09-16', '2002-09-16');
 
-insert into sales_order (order_id, placed_by_party_role_id, taken_by_party_role_id, bill_to_party_role_id,
-                         placed_using_contact_mechanism_id, taken_via_contact_mechanism_id, bill_to_contact_mechanism_id) values
-  (12572, 60, 73, 67, 32, null, 32),
-  (12573, 60, 73, 67, 32, null, 32),
-  (12574, 60, 73, 67, 32, null, 32);
+insert into sales_order (order_id) values (12572), (12573), (12574);
+
+-- Parties: 16 ACME, 12 ABC Corporation.
+insert into order_role (order_id, party_id, order_role_type_id, percent_contribution) values
+  (12572, 16, 'PLACED_BY', null), (12572, 12, 'TAKEN_BY', null), (12572, 16, 'BILL_TO', null),
+  (12573, 16, 'PLACED_BY', null), (12573, 12, 'TAKEN_BY', null), (12573, 16, 'BILL_TO', null),
+  (12574, 16, 'PLACED_BY', null), (12574, 12, 'TAKEN_BY', null), (12574, 16, 'BILL_TO', null);
+
+insert into order_contact_mechanism (order_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values
+  (12572, 32, 'ORDER_PLACING'), (12572, 32, 'BILLING'),
+  (12573, 32, 'ORDER_PLACING'), (12573, 32, 'BILLING'),
+  (12574, 32, 'ORDER_PLACING'), (12574, 32, 'BILLING');
 
 insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, quantity, unit_price, comment) values
   (31, 12572, 1, 1, 600, 7.50, null),
@@ -1143,8 +1237,10 @@ insert into order_item (order_item_id, order_id, order_item_seq_id, product_id, 
 
 select setval(pg_get_serial_sequence('order_item', 'order_item_id'), (select max(order_item_id) from order_item));
 
-insert into sales_order_item (order_item_id, ship_to_party_role_id, ship_to_contact_mechanism_id) values
-  (31, 68, 34),
-  (32, 68, 32),
-  (33, 68, 32),
-  (34, 68, 34);
+insert into sales_order_item (order_item_id) values (31), (32), (33), (34);
+
+insert into order_item_role (order_item_id, party_id, order_item_role_type_id) values
+  (31, 16, 'SHIP_TO'), (32, 16, 'SHIP_TO'), (33, 16, 'SHIP_TO'), (34, 16, 'SHIP_TO');
+
+insert into order_item_contact_mechanism (order_item_id, contact_mechanism_id, contact_mechanism_purpose_type_id) values
+  (31, 34, 'SHIPPING'), (32, 32, 'SHIPPING'), (33, 32, 'SHIPPING'), (34, 34, 'SHIPPING');
