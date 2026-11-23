@@ -230,7 +230,8 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 - **S:** `communication_event` (one contact, occurs via a medium, has a status, optionally in
   the context of a party relationship) · `communication_event_role` (any number of parties take
   part, each in a role: caller, receiver, attendee…) · `communication_event_purpose` (what it was
-  about) · `communication_case` (looking back: groups the events about one issue) ·
+  about) · `communication_case` (looking back: groups the events about one issue; an event
+  joins at most one case, through an optional FK on the event) ·
   `work_effort` via `communication_event_work_effort` (looking forward: the work an event
   triggers, many-to-many).
 - **W:** an event tied to exactly one relationship (Fig 2.7) can't hold a three-way meeting or a
