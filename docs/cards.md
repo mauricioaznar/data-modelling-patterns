@@ -577,10 +577,12 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 15 · V1 Ch 4 · Agreements (Figs 4.12–4.13)
 - **Cue:** "Which standing agreements do we have, with whom, and which of their clauses apply to this order line?"
-- **Hook:** a signed binder, its clauses tabbed by customer, product and region, addenda
-  stapled at the back
+- **Hook:** a tabbed binder, addenda stapled at the back
 - **Mantra:** Agreements name parties by role, maybe a relationship; items nest, apply by
-  organization, product, place; addenda amend, never overwrite.
+  organization, product, place; addenda amend, never overwrite. Any number of parties take
+  typed roles, so three partners fit where one relationship can't. Items are sections,
+  pricing programs, exhibits or sub-agreements, and a clause with no applicability of a kind
+  has no limit there.
 
 <details><summary>Key</summary>
 
@@ -613,10 +615,12 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 
 ### Card 16 · V1 Ch 4 · Agreement terms and pricing (Figs 4.14–4.16)
 - **Cue:** "Under which terms and at which prices did we agree, and which of them govern this order line?"
-- **Hook:** the contract's price sheet held up against each order line, and a tally counter
-  clicking toward the cap
+- **Hook:** a price sheet against an order line; a tally clicks toward the cap
 - **Mantra:** Terms on document or one item, dated inside it; agreed prices are program price
-  components; orders find agreements by rule.
+  components; orders find agreements by rule. Term types are shared with quotes and orders,
+  and a threshold is only real if a query adds it up. A line's governing items are derived:
+  in force on the order date, the other side in a role, the applicability matching; the line
+  stores only the program that priced it.
 
 <details><summary>Key</summary>
 
