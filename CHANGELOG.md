@@ -3,6 +3,17 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-24
+
+**Built**
+- Phone doc "Ch 2 Map and floor plan walk-through" (https://claude.ai/artifact/T6we6JbAcuGd1ikp3GU6p1)
+  for card 3: the map and the floor plan tables, a worked example (Northwind's Chatham
+  warehouse), a drawing of the two nestings, and five did-it-click questions.
+
+**Next**
+- The user reads the doc and sends back what didn't click; those become candidate traps for
+  card 3.
+
 ## 2026-11-23
 
 **Built**
