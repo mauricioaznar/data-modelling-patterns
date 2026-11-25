@@ -3,6 +3,23 @@
 One entry per working session, newest first. Each entry covers what was studied, what was built,
 and any decisions made.
 
+## 2026-11-25
+
+**Built**
+- Card 16's mantra cut to its core (the user's call): terms on the agreement or one item,
+  agreed prices as price components on a pricing program, the order finds the agreement by
+  rule and the line keeps only the program that priced it. Term types, thresholds and the
+  three tests of the rule left to the key. Anki export regenerated.
+- Study doc "Worked examples · cards 3, 13, 14, 15, 16"
+  (https://claude.ai/artifact/QJoUA5i8ymbsqBBnWLw2Nt), ungraded: one full round-style
+  question per card (four parts, Bloom levels named) with the worked rows. Cards 13–14 share
+  Clínica Alba's dental chair, cards 15–16 Brezo's agreement with Hoteles Costa. Its title
+  still reads "…and the Ch 4 map": rename it on claude.ai.
+
+**Next**
+- The user re-imports the Anki export, rehearses card 16 in Work in progress, and reads the
+  worked examples offline; what didn't click becomes candidate traps.
+
 ## 2026-11-24
 
 **Built**

@@ -616,11 +616,9 @@ hook and mantra when the figures land: rewrite any that don't explode, in your o
 ### Card 16 · V1 Ch 4 · Agreement terms and pricing (Figs 4.14–4.16)
 - **Cue:** "Under which terms and at which prices did we agree, and which of them govern this order line?"
 - **Hook:** a price sheet against an order line; a tally clicks toward the cap
-- **Mantra:** Terms on document or one item, dated inside it; agreed prices are program price
-  components; orders find agreements by rule. Term types are shared with quotes and orders,
-  and a threshold is only real if a query adds it up. A line's governing items are derived:
-  in force on the order date, the other side in a role, the applicability matching; the line
-  stores only the program that priced it.
+- **Mantra:** Terms hang on the agreement or one item; agreed prices are price components on
+  a pricing program. No key from the order: the rule finds the agreement, and the line keeps
+  only the program that priced it.
 
 <details><summary>Key</summary>
 
